@@ -46,13 +46,16 @@ var getDicePosition = function (diceCount) {
 
 var main = function (input) {
   var myOutputValue = 'hello world';
-
+  var numberExponential;
+  var index;
   if (gameMode == chooseNumberOfDice) {
     numberOfDice = input;
     gameMode = player1Roll;
     myOutputValue = 'You have selected ' + numberOfDice + ' dice. Click Submit to roll.';
   } else if (gameMode == player1Roll) {
     // get dice array and positions
+    diceArray.length = 0;
+    dicePosition.length = 0;
     diceArray = getNumberOfDiceAndRoll(numberOfDice);
     dicePosition = getDicePosition(numberOfDice);
     // go to player 1 choice
@@ -64,10 +67,11 @@ var main = function (input) {
     console.log('selected position ' + selectedPosition);
     console.log('dice array ' + diceArray);
 
-    var numberExponential = numberOfDice - 1;
+    numberExponential = numberOfDice - 1;
     // player number is 0 + selected dice multiplied by 10^numberofdice -1
     // for each loop the power value decreases
-    var index = 0;
+    index = 0;
+    playerNumber = 0;
     while (index < numberOfDice) {
       playerNumber = playerNumber + (diceArray[selectedPosition[index]]) * 10 ** numberExponential;
       console.log('dice number ' + playerNumber);
@@ -79,6 +83,39 @@ var main = function (input) {
     myOutputValue = 'Player 1, you chose the positions' + selectedPosition + '. <br>Your number is ' + player1Number + '. <br> It is now player 2\'s turn. <br><br>Click Submit to roll.';
     // go to player 2 mode
     gameMode = player2Roll;
+  } else if (gameMode == player2Roll) {
+    // get dice array and positions
+    diceArray.length = 0;
+    dicePosition.length = 0;
+    console.log(diceArray);
+    diceArray = getNumberOfDiceAndRoll(numberOfDice);
+    dicePosition = getDicePosition(numberOfDice);
+    console.log(diceArray);
+    // go to player 2 choice
+    myOutputValue = 'Welcome Player 2. <br><br> You rolled: <br>------dice: ' + diceArray + '<br>positions: ' + dicePosition + '<br><br>Enter the order of dice you want by entering the dice position.';
+    gameMode = player2Choice;
+  } else if (gameMode == player2Choice) {
+    // for each number in user input, create player number
+    selectedPosition = input.split('');
+    console.log('selected position ' + selectedPosition);
+    console.log('dice array ' + diceArray);
+
+    numberExponential = numberOfDice - 1;
+    // player number is 0 + selected dice multiplied by 10^numberofdice -1
+    // for each loop the power value decreases
+    index = 0;
+    playerNumber = 0;
+    while (index < numberOfDice) {
+      playerNumber = playerNumber + (diceArray[selectedPosition[index]]) * 10 ** numberExponential;
+      console.log('dice number ' + playerNumber);
+      index = index + 1;
+      numberExponential = numberExponential - 1;
+    }
+    // set player 2 number as this number
+    player2Number = playerNumber;
+    myOutputValue = 'Player 2, you chose the positions' + selectedPosition + '. <br>Your number is ' + player2Number + '. <br> It is the end of the game. <br><br>Click Submit to see the results.';
+    // go to end game mode
+    gameMode = endGame;
   } else if (gameMode == endGame) {
     if (player1Number > player2Number) {
       myOutputValue = 'Player 1 won! Player 1\'s number was ' + player1Number + ' and Player 2\'s number was ' + player2Number;
