@@ -42,7 +42,7 @@ var winner;
 var getDiceArray = function (diceCount) {
   // reset global values
   diceArray.length = 0;
-
+  // roll each dice and add to array
   var index = 0;
   while (index < diceCount) {
     diceArray.push(getRandomDice());
@@ -56,13 +56,10 @@ var getDiceArray = function (diceCount) {
 var getPlayerNumber = function (array) {
   // reset player number to 0
   playerNumber = 0;
-
   // set highest number as 6
   highestNumber = 6;
-
   // set exponential as number of dice - 1 (ones place does not need to multiply by 10)
   numberExponential = numberOfDice - 1;
-
   // check if dice is highest number then reduce by 1 each loop
   while (highestNumber > 0) {
     var index = 0;
@@ -101,8 +98,10 @@ var main = function (input) {
       // create player names and scores array based on number of players
       index = 0;
       while (index < numberOfPlayers) {
+        // each player starts score of 0
         scores.push(0);
         index = index + 1;
+        // each player is given a name
         players.push(`Player ${index}`);
       }
       console.log(`current scores: ${scores}`);
@@ -129,12 +128,12 @@ var main = function (input) {
 
   // game mode: roll dice for each player
   } else if (gameMode == rollDice) {
-    // if there are still players left to play
+    // if there are still players left to play before the last player
     if (currentPlayerIndex < numberOfPlayers - 1) {
       // get player number from dice array
       diceArray = getDiceArray(numberOfDice);
       playerNumber = getPlayerNumber(diceArray);
-      // add player number to current player
+      // add player number to current player score
       scores[currentPlayerIndex] = scores[currentPlayerIndex] + playerNumber;
       console.log(`current scores: ${scores}`);
       // show result and prompt user to roll for next player
@@ -146,30 +145,33 @@ var main = function (input) {
       // get player number from dice array
       diceArray = getDiceArray(numberOfDice);
       playerNumber = getPlayerNumber(diceArray);
-      // add player number to current player
+      // add player number to last player
       scores[currentPlayerIndex] = scores[currentPlayerIndex] + playerNumber;
       console.log(`current scores: ${scores}`);
-      // reset values for last player, show result and prompt user to continue or end game
+      // show result and prompt user to continue or end game
       gameMode = continueGame;
-      myOutputValue = `${players[currentPlayerIndex]}, your roll was ${diceArray} and your number is ${playerNumber}. <br><br>Your score is ${scores[currentPlayerIndex]}. <br><br>That's the end of Round ${roundCounter}. Click submit to continue or type end to end the game.`;
+      myOutputValue = `${players[currentPlayerIndex]}, your roll was ${diceArray} and your number is ${playerNumber}. <br><br>Your score is ${scores[currentPlayerIndex]}. <br><br>That's the end of Round ${roundCounter}. Click submit to continue the next round or type end and submit to end the game.`;
+      // for the next round, reset current player index and counter for next round + 1
       currentPlayerIndex = 0;
       roundCounter = roundCounter + 1;
     }
 
     // game mode: get user input to continue or end
   } else if (gameMode == continueGame) {
+    // if user choose to end
     if (input == 'end') {
       // go to end game mode
       myOutputValue = 'Calculating results... <br><br>Click submit to see the final scores.';
       gameMode = endGame;
     } else {
+      // if user choose to start next round
       myOutputValue = `Starting Round ${roundCounter}, click submit to roll.`;
       gameMode = rollDice;
     }
 
     // game mode: end game and show results
   } else if (gameMode == endGame) {
-    // get the winning player
+    // get the winning player from scores[] and corresponding players[]
     index = 0;
     while (index < scores.length) {
       console.log(`scores[${index}] is ${scores[index]}`);
@@ -180,6 +182,7 @@ var main = function (input) {
       }
       index = index + 1;
     }
+    // print final player message
     myOutputValue = `The final winner is ${winner}!<br><br>The scores were:<br><br>`;
     // for each player, print out the scores
     index = 0;
@@ -187,12 +190,15 @@ var main = function (input) {
       myOutputValue = myOutputValue + `${players[index]}: ${scores[index]}<br>`;
       index = index + 1;
     }
+    // restart game message
     myOutputValue = myOutputValue + '<br>To restart the game, type the number of players and submit.';
     gameMode = enterNumberOfPlayers;
     // reset global values for game restart
     roundCounter = 1;
     numberOfPlayers = 0;
     numberOfDice = 0;
+    scores.length = 0;
+    players.length = 0;
   }
   return myOutputValue;
 };
