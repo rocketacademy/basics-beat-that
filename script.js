@@ -6,7 +6,8 @@ var playerX = 1; // either player1 or  player2
 var gameInputMode = ''; // choose 'startBase','orderOfDice','evaluate' , // 'startRollingVariable','orderOfPositions','evaluateVariableGame'
 var orderOfDice = ''; // either Dice 1 or 2;
 var gameVersion = ''; // either baseVersion or variableVersion
-// var autoChoose = 'no';
+var arrayDB = [];
+
 
 // Track Dice 1 & 2 values:
 var dice1;
@@ -15,10 +16,14 @@ var dice2;
 // Track numbers outside of (normal) & (variable) main function:
 var playerOneNumber;
 var playerTwoNumber;
+var x = 0; // counter for x number of players
+var totalNumOfPlayers = 0; //track total number of players
+var playerXNumber;
 
 // These arrays holds the transformed numbers input by each player in the (variable) main function.:
 var playerOneInputArray = [];
 var playerTwoInputArray = [];
+var playerXInputArray = [];
 var numOfDice = 0;
 
 // players scores:
@@ -110,85 +115,53 @@ var playBaseVersion = function (input) {
 var playVariableDice = function (input) {
   var myOutputValue;
 
+
   if (gameInputMode == 'startVariable') {
-    myOutputValue = 'Please input the number of dices to be rolled per player.';
-    gameInputMode = 'getUserInput';
+    myOutputValue = 'Please input the number of players that are playing.';
+    gameInputMode = 'numOfUsers';
     playerX = 1; // set player 1 to go first
     return myOutputValue;
 
-  } if (gameInputMode == 'getUserInput') {
+  }
+  if (gameInputMode == 'numOfUsers') {
+    totalNumOfPlayers = input;
+    gameInputMode = 'getUserInput';
+    myOutputValue = `You've chosen ${totalNumOfPlayers} Players to play. <br><br> Please input the number dices to be rolled per player.`;
+    return myOutputValue;
+
+  }
+
+  if (gameInputMode == 'getUserInput') {
     numOfDice = Number(input);
-    console.log(numOfDice);
-    console.log(playerX, 'playerX');
     gameInputMode = 'startRollingVariable';
     return `You entered ${numOfDice} dices for all players. <br><br> Press submit again for Player 1 to begin.`;
+  }
 
-    //******//
-    //can abstract the following into a sub-function of variable game for multiple looping
-  } if (playerX == 1 && gameInputMode == 'startRollingVariable') {
-    var counter = 0;
-    var counterArray = [];
 
-    // input input defined number of random dice rolls into playerOne's empty array
-    while (counter < numOfDice) {
-      playerOneInputArray.push(diceRoll());
-      counterArray.push(counter);
-      counter += 1;
+  while (playerX <= totalNumOfPlayers) {
+    if (gameInputMode == 'startRollingVariable') {
+      myOutputValue = outputPlayerArray(numOfDice, playerX);
+      // playerX += 1;
+      return myOutputValue;
+
+    } else if (gameInputMode == 'orderOfPositions') {
+
+      myOutputValue = convertPositionToNum(input, playerX);
+      playerX += 1;
+      return myOutputValue;
     }
+    console.log(x, 'value of x');
+  }
 
-    myOutputValue = `
-    Player ${playerX}, you rolled:
-    <br>----dice: ${playerOneInputArray}
-    <br>position: ${counterArray}
 
-    <br><br>Enter the order of the positions of the numbers you want.
-    <br><br>Otherwise submit blank for best number.
-    `;
-    gameInputMode = 'orderOfPositions';
-    console.log(playerOneInputArray.length, 'playerOneInputArray length');
-    return myOutputValue;
-
-  } if (playerX == 1 && gameInputMode == 'orderOfPositions') {
-    if (input == '') {
-      return myOutputValue = autoChooseFunction(playerX, playerOneInputArray, 2, 'startRollingVariable') + '<br><br> Player 2 will roll next.'
-
-    } else {
-      return myOutputValue = convertUserInputToSpecificNum(input, playerX, playerOneInputArray, 2, 'startRollingVariable') + '<br><br> Player 2 will roll next.';
-    }
-
-    // Player 2 rolls numOfDice
-  } if (playerX == 2 && gameInputMode == 'startRollingVariable') {
-    var counter = 0;
-    var counterArray = [];
-
-    // Insert input-defined number of random dicerolls into playerTwo's empty array
-    while (counter < numOfDice) {
-      playerTwoInputArray.push(diceRoll());
-      counterArray.push(counter);
-      counter += 1;
-    }
-
-    myOutputValue = `
-    Player ${playerX}, you rolled:
-    <br>----dice: ${playerTwoInputArray}
-    <br>position: ${counterArray}
-
-    <br><br>Enter the order of the positions of the numbers you want.
-    <br><br>Otherwise submit blank for best number.
-    `;
-    gameInputMode = 'orderOfPositions';
-    return myOutputValue;
-
-  } if (playerX == 2 && gameInputMode == 'orderOfPositions') {
-    if (input == '') {
-      return myOutputValue = autoChooseFunction(playerX, playerTwoInputArray, null, 'evaluateVariableGame') + '<br>Press submit again to evaluate the results.';
-    } else {
-      return myOutputValue = convertUserInputToSpecificNum(input, playerX, playerTwoInputArray, null, 'evaluateVariableGame') + '<br>Press submit again to evaluate the results.';
-    }
-
-  } else if (gameInputMode == 'evaluateVariableGame') {
+  if (gameInputMode == 'evaluateVariableGame') {
     gameInputMode = 'restartGame';
     return evaluateGameResult(playerOneNumber, playerTwoNumber);
+
+  } else if (gameInputMode == 'evaluatePlus') {
+    console.log('we here');
+    return evaluatePlus(arrayDB);
+
   } else if (gameInputMode == 'restartGame') {
     return reinitializeGame();
   }
@@ -234,30 +207,24 @@ var resultTemplate = function (playerX, whichDiceFirst, combNumber, gameMode) {
  * @param {array} playerInputArray
  * @param {number} playerNumToPlayNext
  */
-var convertUserInputToSpecificNum = function (input, currentPlayerX, playerInputArray, playerXToPlayNext, gameMode) {
+var convertUserInputToSpecificNum = function (input, playerX, playerInputArray, gameMode) {
   var position = input.split('').map(Number);
   console.log(position);
   var playerNumNewArray = []; // Array of the final permutation of digits selected by a Player
 
-  i = 0;
-  while (i < playerInputArray.length) {
-    playerNumNewArray.push(playerInputArray[position[i]]);
+  var counter = 0;
+  while (counter < playerInputArray.length) {
+    playerNumNewArray.push(playerInputArray[position[counter]]);
     console.log(playerNumNewArray);
-    i += 1;
+    counter += 1;
   }
+  //output player X's number
+  playerXNumber = Number(playerNumNewArray.join(''));
+  myOutputValue = `${playerXNumber} is Player ${playerX}'s number.`;
+  arrayDB.push(playerXNumber); //record Xth player's score into an array;
 
-  if (currentPlayerX == 1) {
-    playerOneNumber = Number(playerNumNewArray.join(''));
-    myOutputValue = `${playerOneNumber} is Player ${playerX}'s number.`;
-  } else if (currentPlayerX == 2) {
-    playerTwoNumber = Number(playerNumNewArray.join(''));
-    myOutputValue = `${playerTwoNumber} is Player ${playerX}'s number.`;
-  }
-
-  // switch game mode to variable and player 2 to play next
+  // switch game mode to variable and player X+1 to play next
   gameInputMode = gameMode;
-  playerX = playerXToPlayNext;
-
   return myOutputValue;
 };
 
@@ -303,11 +270,11 @@ var reinitializeGame = function () {
   return 'Hi, please type \'b\' for base version and \'v\' for variable game mode.';
 };
 
-// Score Function
+// Score Function -- needs to be updated to variable players
 var scoreTracker = function (playerOneNumber, playerTwoNumber) {
   playerOneScore += playerOneNumber;
   playerTwoScore += playerTwoNumber;
-  return `Player 1's score is ${playerOneScore} and Player 2's score is ${playerTwoScore}.`;
+  return `Player 1's total score is ${playerOneScore} and Player 2's total score is ${playerTwoScore}.`;
 };
 
 // Auto-Choose function
@@ -315,13 +282,16 @@ var scoreTracker = function (playerOneNumber, playerTwoNumber) {
  * 
  * @param {number} currentPlayerX 
  * @param {array} playerInputArray 
- * @param {number} nextPlayerX 
+ * @param {number 
  * @param {string} gameMode 
  */
-var autoChooseFunction = function (currentPlayerX, playerInputArray, nextPlayerX, gameMode) {
+var autoChooseFunction = function (playerX, playerInputArray, gameMode) {
   i = 0;
   var highestNumberArray = playerInputArray;
+  console.log(highestNumberArray, 'highestNumberArray');
+
   var highestNumber = 0;
+  playerInputArray = []; //reset each player's input array;
   console.log(playerInputArray, 'playerInputArray');
 
   while (i < highestNumberArray.length) {  //n-1 times comparison on the overall array
@@ -337,21 +307,21 @@ var autoChooseFunction = function (currentPlayerX, playerInputArray, nextPlayerX
     i += 1;
   }
 
-  highestNumber = Number(highestNumberArray.join('')); //hence returns not a user Input but the result
+  highestNumber = Number(highestNumberArray.join('')); //hence returns the best value
+  console.log(highestNumber, 'highestNumber');
+  playerXNumber = highestNumber;
 
-  if (currentPlayerX == 1) {
-    playerOneNumber = highestNumber;
-    myOutputValue = `${playerOneNumber} is Player ${playerX}'s number.`;
-  } else if (currentPlayerX == 2) {
-    playerTwoNumber = highestNumber;
-    myOutputValue = `${playerTwoNumber} is Player ${playerX}'s number.`;
-  }
+  console.log(playerXNumber, 'playerXNumber')
+  myOutputValue = `${playerXNumber} is Player ${playerX}'s number.`;
 
+  arrayDB.push(playerXNumber); //record Xth player's score into an array;
+  highestNumberArray = []; //rest intermediate placeholder array;
+
+  // switch game mode to variable and player X+1 to play next
   gameInputMode = gameMode;
-  playerX = nextPlayerX;
+  console.log(playerX, 'playerX in autochoose function');
 
-  console.log(playerOneNumber, 'P1Num');
-  console.log(playerTwoNumber, 'P2Num');
+  console.log(arrayDB, 'arrayDB');
 
   return myOutputValue;
 
@@ -363,64 +333,70 @@ var autoChooseFunction = function (currentPlayerX, playerInputArray, nextPlayerX
 
 // // Variable Number of Players Function
 
-// var numOfPlayers = function (input) {
+var outputPlayerArray = function (numOfDice, playerX) {
 
-//   var player = {
-//     playerNumber: playerX,
-//     playerInputArray: inputArray,
-//     playerNumber: number
-//   }
-// ]
+  var counter = 0;
+  var counterArray = [];
 
-// }
+  // input input defined number of random dice rolls into each player's empty array
+  while (counter < numOfDice) {
+    playerXInputArray.push(diceRoll());
+    counterArray.push(counter);
+    counter += 1;
+  }
+  console.log(playerX, 'playerX in outputPlayerArray')
+  myOutputValue = `
+    Player ${playerX}, you rolled:
+    <br>----dice: ${playerXInputArray}
+    <br>position: ${counterArray}
 
-// //Global State - 1 player has 1 array in the arrayDB;
+    <br><br>Enter the order of the positions of the numbers you want.
+    <br><br>Otherwise submit blank for best number.
+    `;
+  gameInputMode = 'orderOfPositions';
+  console.log(gameInputMode, 'gameinputmode');
+  return myOutputValue;
 
-// arrayDB = [];
-
-
-// while (i < totalNumOfPlayers) {
-// //if gameInputMode == 'startRollingVariable' then...
-
-// var outputPlayerArray = function (numOfDice) { 
-//     var i = 0;
-//     playerX = i + 1;
-
-//     var playerXInputArray = [];
-//     var counter = 0;
-//     var counterArray = [];
-
-//     // input input defined number of random dice rolls into each player's empty array
-//     while (counter < numOfDice) {
-//       playerXInputArray.push(diceRoll());
-//       counterArray.push(counter);
-//       counter += 1;
-//     }
-//     //arrayDB.push(playerXInputArray); //input the Xth player's into arrayDB, zero-indexed
-
-//     myOutputValue = `
-//     Player ${playerX}, you rolled:
-//     <br>----dice: ${arrayDB[i]}
-//     <br>position: ${counterArray}
-
-//     <br><br>Enter the order of the positions of the numbers you want.
-//     <br><br>Otherwise submit blank for best number.
-//     `;
-//     gameInputMode = 'orderOfPositions';
-//     //console.log(playerOneInputArray.length, 'playerOneInputArray length');
-//     return myOutputValue;
-
-//   } 
+};
 
 
-//   var convertPositionToNum = function(){
-//   if (gameInputMode == 'orderOfPositions') {
-//     if (input == '') {
-//       return myOutputValue = autoChooseFunction(playerX, playerOneInputArray, 2, 'startRollingVariable') + '<br><br> Player 2 will roll next.'
+var convertPositionToNum = function (input) {
+  if (gameInputMode == 'orderOfPositions') {
+    if (input == '') {
+      myOutputValue = autoChooseFunction(playerX, playerXInputArray, 'startRollingVariable');
 
-//     } else {
-//       return myOutputValue = convertUserInputToSpecificNum(input, playerX, playerOneInputArray, 2, 'startRollingVariable') + '<br><br> Player 2 will roll next.';
-//     }
-//   }
+      playerXInputArray = []//reset playerXInputArray for each player
 
-// }
+      if (playerX < totalNumOfPlayers) {
+        myOutputValue += `<br><br> Player ${playerX + 1} will roll next.`
+      } else {
+        myOutputValue += `<br><br> Time to evaluate the results next.`;
+        gameInputMode = 'evaluatePlus';
+        console.log(gameInputMode, 'gameMode')
+      }
+
+    } else if (input != '') {
+      myOutputValue = convertUserInputToSpecificNum(input, playerX, playerXInputArray, 'startRollingVariable');
+      playerXInputArray = []//reset playerXInputArray for each player
+
+      if (playerX < totalNumOfPlayers) {
+        myOutputValue += `<br><br> Player ${playerX + 1} will roll next.`
+      } else {
+        myOutputValue += `<br><br> Time to evaluate the results next.`;
+        gameInputMode = 'evaluatePlus';
+        console.log(gameInputMode, 'gameMode')
+      }
+
+    }
+  }
+  return myOutputValue;
+};
+
+var evaluatePlus = function (arrayDB) {
+  maxValueinArray = Math.max(...arrayDB); //generates the largest number in the array 
+  playerWinner = arrayDB.indexOf(maxValueinArray) + 1; //Position in the array is the same as PlayerX
+
+  myOutputValue = `The ultimate winner is Player ${playerWinner}, with a value of ${maxValueinArray}.`
+
+  return myOutputValue;
+}
