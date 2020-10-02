@@ -43,8 +43,10 @@
   <div id="container">
     <input id="my-input" />
     <button id="my-button">Submit</button>
+    <!-- button id="auto-choose" value="yes">Auto-Choose</button> -->
     <p>Output:</p>
-    <div id="output">Let's Play!</div>
+    <div id="output">Hi, please type 'b' for base version and 'v' for variable game mode.
+    </div>
   </div>
   <!-- Import program logic -->
   <script src="script.js"></script>
@@ -63,6 +65,15 @@
       // Reset input value
       input.value = "";
     });
+    // var button2 = document.querySelector('#auto-choose');
+    // button2.addEventListener('click', function () {
+    //   var autoInput = document.getElementById("auto-choose").value; //Activates computer input mode
+    //   console.log(autoInput);
+    //   var autoChoose = autoChooseFunction(autoInput); //if autoChoose is 1, autoInputFunction will randomly generate a SPS choice by program
+
+    //   var output = document.querySelector('#output');
+    //   output.innerHTML = main(autoChoose); //Outputs the computer chosen result into main function and output into html
+    // });
   </script>
 </body>
 
