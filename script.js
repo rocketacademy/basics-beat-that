@@ -351,12 +351,14 @@ var evaluateVariableGame = function (currentArrayDB) {
     while (i < currentArrayDB.length) {
       cumulativeScoreArrayDB[i] = 0; //create a number in each pos of the array to prevent NaN
       cumulativeScoreArrayDB[i] += currentArrayDB[i]; //Add into each array
+      console.log(currentArrayDB, 'currentArrayDB');
       console.log(cumulativeScoreArrayDB, 'cumulativeScores');
       i += 1;
     }
   } else {
     while (i < currentArrayDB.length) {
       cumulativeScoreArrayDB[i] += currentArrayDB[i]; //sum up the cumulative rounds scores for each player
+      console.log(currentArrayDB, 'currentArrayDB');
       console.log(cumulativeScoreArrayDB, 'cumulativeScores');
       i += 1;
     }
