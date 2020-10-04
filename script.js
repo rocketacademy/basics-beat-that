@@ -76,25 +76,25 @@ var main = function (input) {
   } else if (input == 'player 2') {
     gameMode = player2;
     getPlayerDiceOptions();
-    myOutputValue = `Results <br> Dice roll 1: ${player2diceRollArray[0]} <br> Dice roll 2: ${player2diceRollArray[1]} <br> Form the biggest number you can with both numbers, by specifying if 'dice 1' or 'dice 2' should be the front`;
+    myOutputValue = `Results <br> Dice roll 1: ${player2diceRollArray[0]} <br> Dice roll 2: ${player2diceRollArray[1]} <br> Form the biggest number you can, by specifying if 'dice 1' or 'dice 2' should be in the front`;
   }
   if ((gameMode == player1) && ((input == 'dice 1') || (input == 'dice 2'))) {
     player1FinalNum = Number(getFinalNum(input));
-    myOutputValue = `Player 1, your final number is ${player1FinalNum}`;
+    myOutputValue = `Player 1, your final number is ${player1FinalNum}!<br> Input 'player 2' for player 2 to repeat the process`;
   }
   if ((gameMode == player2) && ((input == 'dice 1') || (input == 'dice 2'))) {
     player2FinalNum = Number(getFinalNum(input));
-    myOutputValue = `Player 2, your final number is ${player2FinalNum}`;
+    myOutputValue = `Player 2, your final number is ${player2FinalNum}! <br> enter 'ready' to find out if player 1 or player 2 won!`;
   }
-  if (input == 'ready') {
-    if (player1FinalNum > player2FinalNum) {
-      myOutputValue = `player 1 wins! <br> player 1 rolled ${player1FinalNum}, player 2 rolled ${player2FinalNum}`;
+  if (input == 'results') {
+    if ((player1FinalNum == null) || (player2FinalNum == null)) {
+      myOutputValue = 'Please ensure that all players have chosen a number';
     } else if (player2FinalNum > player1FinalNum) {
       myOutputValue = `player 2 wins!<br> player 1 rolled ${player1FinalNum}, player 2 rolled ${player2FinalNum}`;
     } else if ((player1FinalNum > 0) && (player2FinalNum > 0) && (player1FinalNum == player2FinalNum)) {
       myOutputValue = `it's a draw! <br> player 1 rolled ${player1FinalNum}, player 2 rolled ${player2FinalNum}`;
-    } else if ((player1FinalNum == null) || (player2FinalNum == null)) {
-      myOutputValue = 'Please ensure that all players have chosen a number';
+    } else if (player1FinalNum > player2FinalNum) {
+      myOutputValue = `player 1 wins! <br> player 1 rolled ${player1FinalNum}, player 2 rolled ${player2FinalNum}`;
     }
     player1diceRollArray = [];
     player2diceRollArray = [];
