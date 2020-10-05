@@ -34,6 +34,8 @@ var player1DiceRolls = [];
 var player2DiceRolls = [];
 var player1Number;
 var player2Number;
+var player1Score = 0;
+var player2Score = 0;
 
 var chooseMode = function (mode) {
   var output;
@@ -71,7 +73,7 @@ var displayOutputForDefault = function (player, diceRolls) {
    You rolled Die 1: ${diceRolls[0]} and Die 2: ${diceRolls[1]}. <br>
    Choose the order of the dice. <br>
    Enter "${DEFAULT_DICE_1}" to choose Die 1 as the first die <br>
-   and "${DEFAULT_DICE_2}" to choose Die 2 as first die;`;
+   and "${DEFAULT_DICE_2}" to choose Die 2 as first die`;
   return output;
 };
 
@@ -118,12 +120,17 @@ var chooseOrderOfDiceForDefault = function (player, order) {
 var displayResultForDefault = function () {
   var output = `${PLAYER_1}'s number is ${player1Number} and ${PLAYER_2}'s number is ${player2Number}. <br>`;
   if (player2Number > player1Number) {
+    player2Score += 1;
     output += `${PLAYER_2} won!`;
   } else if (player1Number > player2Number) {
+    player1Score += 1;
     output += `${PLAYER_1} won!`;
   } else {
     output += 'It\'s a tie!';
   }
+  output += `<br> The current score: <br> ${PLAYER_1}: ${player1Score}<br>${PLAYER_2}: ${player2Score}<br> 
+  Enter "${RESTART}" to restart the game.`;
+  currentMode = RESTART;
   return output;
 };
 
@@ -256,7 +263,7 @@ var displayResultForVariable = function () {
     output += `Player ${i + 1}: ${playersScores[i]}<br>`;
     i += 1;
   }
-  output += 'Enter "r" to restart the game';
+  output += `Enter "${RESTART}" to restart the game`;
   currentMode = RESTART;
   return output;
 };
@@ -268,6 +275,14 @@ var restartGame = function () {
     playersNumbers = [];
     currentPlayer = 0;
     currentMode = VARIABLE_START;
+  } else if (gameMode == DEFAULT) {
+    numberOfPlayers = 2;
+    numberOfDice = 2;
+    player1DiceRolls = [];
+    player2DiceRolls = [];
+    player1Number = 0;
+    player2Number = 0;
+    currentMode = DEFAULT_PLAYER_1_ROLL_DICE;
   }
   output = `The number of players is ${numberOfPlayers} and the number of dice is ${numberOfDice}. Click sumbit to start the game.`;
   return output;
@@ -301,7 +316,8 @@ var main = function (input) {
       break;
     case DEFAULT_RESULT:
       // compare values and show result
-      myOutputValue = displayResultForDefault();
+      currentResult = displayResultForDefault();
+      myOutputValue = currentResult;
       break;
     case VARIABLE_CHOOSE_NUMBER_OF_PLAYERS:
       // choose number of players
