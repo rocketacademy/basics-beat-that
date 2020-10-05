@@ -57,6 +57,12 @@ var chooseMode = function (mode) {
   return output;
 };
 
+var calculateHighestNumber = function (diceRolls) {
+  var diceRollsSorted = diceRolls.slice().sort((a, b) => b - a);
+  var number = parseInt(diceRollsSorted.join(''));
+  return number;
+};
+
 var rollDice = function (noOfDice) {
   var diceRolls = [];
   var index = 0;
@@ -73,7 +79,8 @@ var displayOutputForDefault = function (player, diceRolls) {
    You rolled Die 1: ${diceRolls[0]} and Die 2: ${diceRolls[1]}. <br>
    Choose the order of the dice. <br>
    Enter "${DEFAULT_DICE_1}" to choose Die 1 as the first die <br>
-   and "${DEFAULT_DICE_2}" to choose Die 2 as first die`;
+   and "${DEFAULT_DICE_2}" to choose Die 2 as first die <br><br>
+   Leave it blank to let <br> the computer calculate the best<br> order automatically.`;
   return output;
 };
 
@@ -85,13 +92,13 @@ var displayOutputForVariable = function (player, diceRolls) {
     output += `and Die ${index + 1}: ${diceRolls[index]}. <br>`;
     index += 1;
   }
-  output += 'Choose the order of the dice. <br>';
+  output += 'Choose the order of the dice. <br><br> Leave it blank to let <br> the computer calculate the best<br> order automatically.';
   return output;
 };
 
 var chooseOrderOfDiceForDefault = function (player, order) {
   var output;
-  if (order != DEFAULT_DICE_1 && order != DEFAULT_DICE_2) {
+  if (order != DEFAULT_DICE_1 && order != DEFAULT_DICE_2 && order != '') {
     if (player == PLAYER_1) {
       output = displayOutputForDefault(PLAYER_1, player1DiceRolls);
     } else if (player == PLAYER_2) {
@@ -102,17 +109,21 @@ var chooseOrderOfDiceForDefault = function (player, order) {
       player1Number = player1DiceRolls[0] * 10 + player1DiceRolls[1];
     } else if (order == DEFAULT_DICE_2) {
       player1Number = player1DiceRolls[1] * 10 + player1DiceRolls[0];
+    } else if (order == '') {
+      player1Number = calculateHighestNumber(player1DiceRolls);
     }
     currentMode = DEFAULT_PLAYER_2_ROLL_DICE;
-    output = `Click submit to start ${PLAYER_2}'s turn.`;
+    output = `${PLAYER_1}'s number is ${player1Number}. Click submit to start ${PLAYER_2}'s turn.`;
   } else if (player == PLAYER_2) {
     if (order == DEFAULT_DICE_1) {
       player2Number = player2DiceRolls[0] * 10 + player2DiceRolls[1];
     } else if (order == DEFAULT_DICE_2) {
       player2Number = player2DiceRolls[1] * 10 + player2DiceRolls[0];
+    } else if (order == '') {
+      player2Number = calculateHighestNumber(player2DiceRolls);
     }
     currentMode = DEFAULT_RESULT;
-    output = 'Click submit to show the result.';
+    output = `${PLAYER_2}'s number is ${player2Number}. Click submit to show the result.`;
   }
   return output;
 };
@@ -217,7 +228,6 @@ var calcuateNumberForPlayer = function (player, orderArray) {
       index -= 1;
     }
   }
-
   console.log('Dice Roll', diceRoll);
   console.log('Number', number);
   return number;
@@ -226,9 +236,18 @@ var calcuateNumberForPlayer = function (player, orderArray) {
 var chooseOrderOfDice = function (player, order) {
   var orderArray = order.split('');
   var output;
-  if (isDiceOrderCorrect(orderArray)) {
+  var isDOCorrect = isDiceOrderCorrect(orderArray);
+  if (order == '') {
+    isDOCorrect = true;
+  }
+  if (isDOCorrect) {
     // calcuateNumber
-    var number = calcuateNumberForPlayer(player, orderArray);
+    var number;
+    if (order == '') {
+      number = calculateHighestNumber(playersDiceRolls[player]);
+    } else {
+      number = calcuateNumberForPlayer(player, orderArray);
+    }
     playersNumbers.push(number);
     output = `You are player ${currentPlayer + 1} and your number is ${number}`;
     if (currentPlayer + 1 < numberOfPlayers) {
@@ -241,7 +260,7 @@ var chooseOrderOfDice = function (player, order) {
     }
   } else {
     var playerName = `Player ${player + 1}`;
-    output = displayOutputForVariable(playerName, playersDiceRolls[player]) + '<br>Please enter correct order of dice';
+    output = displayOutputForVariable(playerName, playersDiceRolls[player]) + '<br><br>Please enter correct order of dice or leave it blank.';
   }
   return output;
 };
