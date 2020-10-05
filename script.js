@@ -17,6 +17,7 @@ const VARIABLE_CHOOSE_NUMBER_OF_DICE = 'variable choose number of dice';
 const VARIABLE_START = 'variable start';
 const VARIABLE_RESULT = 'variable result';
 const VARIABLE_CHOOSE_ORDER = 'variable choose order';
+const RESTART = 'r';
 
 var numberOfPlayers;
 var numberOfDice;
@@ -24,6 +25,9 @@ var currentPlayer = 0;
 var listOfPlayers = [];
 var playersDiceRolls = [];
 var playersNumbers = [];
+var gameMode;
+var playersScores = [];
+var currentResult;
 
 var currentMode = CHOOSE_MODE;
 var player1DiceRolls = [];
@@ -36,10 +40,12 @@ var chooseMode = function (mode) {
   switch (mode) {
     case DEFAULT:
       currentMode = DEFAULT_PLAYER_1_ROLL_DICE;
+      gameMode = DEFAULT;
       output = `You have chosen default mode. Please click "submit" to start ${PLAYER_1}'s turn.`;
       break;
     case VARIABLE:
       currentMode = VARIABLE_CHOOSE_NUMBER_OF_PLAYERS;
+      gameMode = VARIABLE;
       output = 'You have chosen variable mode. Please enter number of players.';
       break;
     default:
@@ -121,9 +127,22 @@ var displayResultForDefault = function () {
   return output;
 };
 
+var setupScore = function (noOfPlayers) {
+  var index = 0;
+  while (index < noOfPlayers) {
+    playersScores.push(0);
+    index += 1;
+  }
+};
+
+var increaseScore = function (player) {
+  playersScores[player] += 1;
+};
+
 var chooseNumberOfPlayers = function (noOfPlayers) {
   var output;
   if (!isNaN(noOfPlayers) && noOfPlayers > 1) {
+    setupScore(noOfPlayers);
     numberOfPlayers = noOfPlayers;
     output = `There will be ${numberOfPlayers} players in this game. Please enter number of dice to use for the game.`;
     var index = 0;
@@ -229,7 +248,28 @@ var displayResultForVariable = function () {
   }
   // TODO: check for tie
   var maxValuePlayer = playersNumbers.indexOf(Math.max(...playersNumbers));
-  output += `Player ${maxValuePlayer + 1} won the game!`;
+  output += `Player ${maxValuePlayer + 1} won the game!<br>`;
+  increaseScore(maxValuePlayer);
+  output += 'The current score is as follows: <br>';
+  var i = 0;
+  while (i < numberOfPlayers) {
+    output += `Player ${i + 1}: ${playersScores[i]}<br>`;
+    i += 1;
+  }
+  output += 'Enter "r" to restart the game';
+  currentMode = RESTART;
+  return output;
+};
+
+var restartGame = function () {
+  var output;
+  if (gameMode == VARIABLE) {
+    playersDiceRolls = [];
+    playersNumbers = [];
+    currentPlayer = 0;
+    currentMode = VARIABLE_START;
+  }
+  output = `The number of players is ${numberOfPlayers} and the number of dice is ${numberOfDice}. Click sumbit to start the game.`;
   return output;
 };
 
@@ -284,7 +324,16 @@ var main = function (input) {
       break;
     case VARIABLE_RESULT:
       // compare values and show result
-      myOutputValue = displayResultForVariable();
+      currentResult = displayResultForVariable();
+      myOutputValue = currentResult;
+      break;
+    case RESTART:
+      if (input == RESTART) {
+        currentResult = '';
+        myOutputValue = restartGame();
+      } else {
+        myOutputValue = currentResult;
+      }
       break;
     default:
       break;
