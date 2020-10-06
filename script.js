@@ -100,8 +100,12 @@ var determineWinner = function () {
   return 2;
 };
 
+/**
+ * Play Beat That as per SWE101 game rules
+ * https://swe101.rocketacademy.co/projects/project-2-dice
+ * @param {string} input
+ */
 var main = function (input) {
-  // TODO: determine when game has ended.
   // Roll 2 dice and show the player the values
   if (gameMode === GAME_MODE_DICE_ROLL) {
     // Get dice rolls for curr player and populate the curr player's dice array
