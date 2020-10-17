@@ -41,29 +41,43 @@
 <body>
   <h1 id="header">Dice Game! ⚄</h1>
   <div id="container">
-    <input id="my-input" />
-    <button id="my-button">Submit</button>
+
+    <button id="my-button">Start Game</button>
     <p>Output:</p>
     <div id="output">Let's Play!</div>
-  </div>
-  <!-- Import program logic -->
-  <script src="script.js"></script>
-  <!-- Define button click functionality -->
-  <script>
-    var button = document.querySelector('#my-button');
-    button.addEventListener('click', function () {
-      // Set result to input value
-      var input = document.querySelector('#my-input');
-      var result = main(input.value);
 
-      // Display result in output element
+    <input id="my-input" />
+    <button id="input-button">Submit</button>
+
+    <div id="score">Player 1: 0. Player 2: 0</div>
+    <!-- Import program logic -->
+    <script src="script.js"></script>
+    <!-- Define button click functionality -->
+    <script>
+      var score = document.querySelector('#score');
+      score.innerHTML = getScore();
+
       var output = document.querySelector('#output');
-      output.innerHTML = result;
 
-      // Reset input value
-      input.value = "";
-    });
-  </script>
+      var button = document.querySelector('#my-button');
+      button.addEventListener('click', function () {
+        var result = main();
+
+        // Display result in output element
+        output.innerHTML = result;
+        score.innerHTML = getScore();
+      });
+
+      var button = document.querySelector('#input-button');
+      button.addEventListener('click', function () {
+        var input = document.querySelector('#my-input');
+        var result = main2(input.value);
+
+        // Display result in output element
+        output.innerHTML = result;
+        score.innerHTML = getScore();
+      });  
+    </script>
 </body>
 
 </html>
