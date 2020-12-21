@@ -1,21 +1,20 @@
-// ------------------------------------------------
-// Dice - Beat That! V1
-// ------------------------------------------------
+// -------------------------------------------------------------------
+// Dice - Beat That! V2 (Add Variable Number of Dice)
+// -------------------------------------------------------------------
 
-// Create 2 game modes: rolling & ordering dice number
-const ROLLINGMODE = 'rolling';
-const ORDERINGMODE = 'ordering';
+// Create 3 game modes: number of dice, rolling & ordering dice number
+// Made changes to naming convention of constants
+const ROLLING_MODE = 'ROLLING_MODE';
+const ORDERING_MODE = 'ORDERING_MODE';
+const COMPARE_SCORE_MODE = 'COMPARE_SCORE_MODE';
 
 // Set intial game default mode
-var mode = 'rolling';
+var mode = ROLLING_MODE;
 
 // Create player array
-var players = ['Player 1', 'Player 2'];
+var players = [];
 // Create player id
-var i = 0;
-
-// Create an array to store scores
-var scoreArr = [];
+var id = 0;
 
 // Function to generate random dice number
 var rollDice = function () {
@@ -23,79 +22,122 @@ var rollDice = function () {
   return randInt;
 };
 
-// Store dice numbers outside of main function so as not to get affected by every Submit click
-var diceOne = rollDice();
-var diceTwo = rollDice();
+// For V2, we need 2 arrays, 1 to store n variable number of dice and their respective index
+var diceArray = [];
+var positionOfDiceArr = [];
 
-// -------------------------------------------------
+// Create 2 arrays: to store newly ordered dice and user input
+var orderedDiceArrayScore = [];
+var firstPlayerSetDiceLength = [];
+
+// Function to reset game
+var resetGame = function () {
+  mode = ROLLING_MODE;
+  id = 0;
+  diceArray.length = 0;
+  firstPlayerSetDiceLength.length = 0;
+  orderedDiceArrayScore.length = 0;
+  positionOfDiceArr.length = 0;
+};
+
+// -------------------------------------------------------------------
 // MAIN
-// -------------------------------------------------
+// -------------------------------------------------------------------
 
+// User is asked to input the number of dice he/she wants to play with
 var main = function (input) {
-  var myOutputValue = 'Start Game';
+  var currentPlayer = `Player ${id + 1}`;
+  var myOutputValue = `${currentPlayer}, please input a number greater than 1 but less than 7 to begin...`;
 
-  // -------------------------------------------------
-  // ROLLIING MODE (by default)
-  // -------------------------------------------------
-  if (mode == ROLLINGMODE) {
-    myOutputValue = `Welcome ${players[i]}! <br><br> 
-                     You rolled the following - <br>
-                     Dice 1:  ${diceOne} <br> Dice 2:  ${diceTwo} <br><br> 
-                     Now choose the order of the dice; select either Dice 1 or Dice 2 to be first in order. <br><br>
-                     Enter 1 or 2 to continue.`;
+  if (firstPlayerSetDiceLength.length >= 1) {
+    myOutputValue = `${currentPlayer}, please input same number as 1st Player`;
+  }
 
-    // Check if input is a number & either 1 or 2
-    if (isNaN(Number(input)) == true) {
-      myOutputValue = 'Please insert a number, either 1 or 2.';
-    } else if (input > 2 || input < 0 || input === '0') {
-      myOutputValue = 'Oops. Only numbers 1 or 2 allowed.';
-    }
+  // -------------------------------------------------------------------
+  // ROLLING MODE (by default)
+  // -------------------------------------------------------------------
+  if (input > 1 && input < 7) {
+    if (mode == ROLLING_MODE) {
+      // Initialise first/next Player
+      players.push(currentPlayer);
+      // Cap dice length
+      firstPlayerSetDiceLength.push(input);
 
-    // If the input is as expected, proceed to change game mode to let user choose dice order
-    if (input > 0 && input < 3) {
-      mode = ORDERINGMODE;
+      // Loop to store n number of dice rolls into diceArray
+      for (var n = 0; n < input; n += 1) {
+        var diceRoll = rollDice();
+        // Push diceRoll numbers to diceArray & indexes to indexOfDiceArr
+        diceArray.push(diceRoll);
+        positionOfDiceArr.push(n);
+      }
+
+      // Once diceArray has been populated, switch to ORDERING_MODE
+      if (diceArray.length > 1) {
+        mode = ORDERING_MODE;
+        // inputArray.push(Number(input));
+        myOutputValue = `${players[id]}, you rolled:<br>----Dice: ${diceArray}<br>
+                      Position: ${positionOfDiceArr}<br><br>
+                      Now choose the order of the dice. <br><br>
+                      Enter the order of the dice positions.`;
+      }
+      return myOutputValue;
     }
   }
-  // -------------------------------------------------
+
+  // -------------------------------------------------------------------
   // ORDERING MODE
-  // -------------------------------------------------
-  if (mode == ORDERINGMODE) {
-    var currentPlayerNumber;
+  // -------------------------------------------------------------------
 
-    if (input == 1) {
-      currentPlayerNumber = `${diceOne}${diceTwo}`;
-      myOutputValue = `${players[i]}, you chose Dice 1 first <br>
-                      Your number is ${currentPlayerNumber}. <br><br>`;
-    } else if (input == 2) {
-      currentPlayerNumber = `${diceTwo}${diceOne}`;
-      myOutputValue = `${players[i]}, you chose Dice 2 first <br> 
-                      Your number is  ${currentPlayerNumber}. <br><br>`;
-    }
-    // Print extra instruction message after displaying chosen order of dice roll
-    myOutputValue += `It is now ${players[i + 1]}'s turn <br><br> Click 'Submit' to continue.`;
+  if (mode == ORDERING_MODE) {
+    // Convert each number (String type) of the user input into Number type
+    var newPositions = input.split('').map((i) => Number(i));
 
-    // Store user-ordered dice roll in an array
-    scoreArr.push(currentPlayerNumber);
+    // Run a check for every element of input vs index of diceArr, ensuring they match
+    var inputCheckTest = positionOfDiceArr.every((i) => newPositions.includes(i));
 
-    // Reset game mode
-    mode = ROLLINGMODE;
+    // Check: input is number, has correct length, or has appropriate order of indexes that match
+    if (isNaN(Number(input)) == true) {
+      myOutputValue = 'Please insert numbers only.';
+    } else if (input.length != diceArray.length || input === '0') {
+      myOutputValue = 'Oops. Please enter the order of the positions of the numbers you want.';
+    } else if (inputCheckTest == false) {
+      myOutputValue = 'Uh oh! You entered an invalid order.';
+    } else {
+      // If tests pass - push the order of the dice that user input into new array
+      var orderedDiceArray = [];
 
-    // Re-run diceRoll to get new numbers for next player
-    diceOne = rollDice();
-    diceTwo = rollDice();
-    i += 1; // Move to next player ID
-
-    // Return winning message once we reach Player 2
-    if (i == 2) {
-      myOutputValue = `Player 1: ${scoreArr[0]} <br> Player 2: ${scoreArr[1]} <br><br>`;
-      i = 0; // Reset player Id back to zero to start with Player 1
-      if (scoreArr[0] > scoreArr[1]) {
-        myOutputValue += "Player 1 Wins! 🎉 <br><br> Hit 'Submit' to play again.";
-      } else if (scoreArr[1] > scoreArr[0]) {
-        myOutputValue += "Player 2 Wins! 🎉 <br><br> Hit 'Submit' to play again.";
+      for (var i = 0; i < newPositions.length; i += 1) {
+        var userIndexOrder = newPositions[i];
+        orderedDiceArray.push(diceArray[userIndexOrder]);
       }
-      scoreArr.length = 0; // Reset score list
+
+      // Once in a new array, join the newly ordered dice array together to form new number
+      var userOrderedDice = orderedDiceArray.join('');
+      orderedDiceArrayScore.push(userOrderedDice);
+
+      // If the input is as expected, proceed to change game mode
+      if (orderedDiceArrayScore.length < 2) {
+        id += 1; // Move to next player id
+        diceArray.length = 0; // Reset diceArray
+        positionOfDiceArr.length = 0; // Reset positionOfDiceArr
+        mode = ROLLING_MODE;
+      } else {
+        mode = COMPARE_SCORE_MODE;
+      }
+
+      return `${currentPlayer}, this is your new dice number: <br>${userOrderedDice} <br><br> Hit "Submit" to continue...`;
     }
+  }
+  // -------------------------------------------------------------------
+  // COMPARE SCORES MODE
+  // -------------------------------------------------------------------
+  if (mode == COMPARE_SCORE_MODE) {
+    if (orderedDiceArrayScore[0] > orderedDiceArrayScore[1]) {
+      myOutputValue = `Player 1 Wins with dice roll with score: ${orderedDiceArrayScore[0]}! <br><br>  To play again, hit "Submit"`;
+    } if (orderedDiceArrayScore[1] > orderedDiceArrayScore[0]) {
+      myOutputValue = `Player 2 Wins with dice roll with score: ${orderedDiceArrayScore[1]}! <br><br>  To play again, hit "Submit"`;
+    }
+    resetGame();
   }
   return myOutputValue;
 };
