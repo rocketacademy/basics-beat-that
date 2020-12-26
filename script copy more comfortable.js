@@ -1,31 +1,53 @@
-// 2 player, each have 1 mode
-// they will take turns
-// when click submit, roll 2 dices
-// player will pick the order they want
-// whoever got the higher number won
-
 // global variables
 // player 1 first
+// roll dice game mode first
 var currentPlayer = 1;
 var gameMode = 'rollDice';
 var player1DiceNumbers;
 var player2DiceNumbers;
 var player1FinalNumber;
 var player2FinalNumber;
+var diceNumbers;
+var diceNumbersArray = [];
 
 // generate dice number
 var generateRandomDiceNumber = function () {
-  var diceNumber = Math.floor(Math.random() * 6) + 1;
-  return diceNumber;
+  var randomNumber = Math.floor(Math.random() * 6) + 1;
+  return randomNumber;
 };
 
-// roll 2 dice, return an array of 2 dice numbers
-var roll2Dice = function () {
-  return [generateRandomDiceNumber(), generateRandomDiceNumber()];
+// create a loop to generate the number of dice the user wants to roll
+var rollXNumberOfDice = function (input) {
+  var counter = 0;
+  while (counter < input) {
+    diceNumbers += generateRandomDiceNumber();
+    diceNumbersArray.push(diceNumbers);
+
+    counter += 1;
+  }
+  return diceNumbers;
 };
-// concatenate 2 dice number, input 2 numbers, return a concatenated number
-var concatenate2Numbers = function (number1, number2) {
-  return number1 * 10 + number2;
+
+// indexes is a string of indexes specifying final number order, e.g. "0 3 2 1"
+// output is final number based on player1DiceNumbers
+var generateFinalNumber = function (indexes) {
+  diceNumbers = [1, 3, 4, 5];
+
+  // Split indexes into array of indexes
+  var indexesArray = indexes.split(' '); // "0 3 2 1" becomes ["0", "3", "2", "1"]
+  var finalNumArray = [];
+  for (var finalNumIndex = 0; finalNumIndex < indexesArray.length; finalNumIndex += 1) {
+    // indexPosition contains the index of the finalNumIndex inside the indexesArray
+    var indexPosition = indexesArray.indexOf(String(finalNumIndex));
+    finalNumArray.push(diceNumbers[indexPosition]);
+  }
+
+  var finalNum = 0;
+  for (var i = 0; i < finalNumArray.length; i += 1) {
+    finalNum = finalNum * 10 + finalNumArray[i];
+  }
+
+  return finalNum;
 };
 
 // determine winner, output 1 or 2, representing player 1 or player 2
@@ -38,12 +60,15 @@ var determineWinningPlayer = function () {
 };
 
 var main = function (input) {
+  // TODO:
+  // update roll2Dice to rollXNumberOfDice
+
   if (gameMode == 'rollDice') {
     // run the roll dice function - return an array of 2 numbers
     if (currentPlayer == 1) {
-      player1DiceNumbers = roll2Dice();
+      player1DiceNumbers = rollXNumberOfDice();
     } else if (currentPlayer == 2) {
-      player2DiceNumbers = roll2Dice();
+      player2DiceNumbers = rollXNumberOfDice();
     }
 
     // game mode change to choosing order
@@ -56,7 +81,9 @@ var main = function (input) {
     }
   }
 
-  // made mode is choose order
+  // mode is choose order
+  // TODO: update input to series of indexs
+  // replace concatenate2Number to generateFinalNumber, input series of indexs,
   // if the player input '1', the number will be player1DiceNumbers[0] combine
   // player1DiceNumbers[1]
   if (currentPlayer == 1) {
