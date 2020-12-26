@@ -56,14 +56,14 @@ var main = function (input) {
     }
   }
 
-  // made mode is choose order
+  // mode is choose order
   // if the player input '1', the number will be player1DiceNumbers[0] combine
   // player1DiceNumbers[1]
   if (currentPlayer == 1) {
     if (input == 1) {
       player1FinalNumber = concatenate2Numbers(player1DiceNumbers[0], player1DiceNumbers[1]);
     } else if (input == 2) {
-      player2FinalNumber = concatenate2Numbers(player1DiceNumbers[1], player1DiceNumbers[0]);
+      player2FinalNumber = concatenate2Numbers(player2DiceNumbers[1], player2DiceNumbers[0]);
     }
     // game mode change to player 2 rol dice
     currentPlayer = 2;
