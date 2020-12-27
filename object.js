@@ -30,15 +30,13 @@ var rollDice = function () {
 class Player {
   /**
   * Tracks the initial dice roll, reordered dice & score
-  * @param {String} name unique Player identifier
   * @param {Array<Number>} initialDiceArray original dice number
   * @param {Number} orderedDice store reordered dice number
   * @param {Array<Number>} scoreArray store series of orderedDice for scoring
   */
-  constructor() {
-    this.playerName = '';
+  constructor(orderedDice) {
     this.initialDiceArray = [];
-    this.orderedDice = 0;
+    this.orderedDice = orderedDice;
     this.scoreArray = [];
   }
 
@@ -58,12 +56,8 @@ class Player {
 */
 var createPlayers = function (numberOfPlayers) {
   for (var i = 0; i < numberOfPlayers; i += 1) {
-    // Commenting this code to check back at later time
-    // window['Player' + String(i + 1)] = new Player();
-    // players.push(window['Player' + String(i + 1)]);
-    var player = new Player();
-    player.name = 'Player ' + (i + 1);
-    players.push(player);
+    window['Player' + String(i + 1)] = new Player();
+    players.push(window['Player' + String(i + 1)]);
   }
 };
 
@@ -124,17 +118,18 @@ var rearrangeDice = function (userOrder, current) {
 };
 
 /**
-* Return a log of Players' scores sorted with the max score first
+* Return a log of Players' scores
 */
 var showLeaderboard = function () {
   var displayMessage = 'Leaderboard: <br>';
 
-  players.sort((a, b) => b.orderedDice - a.orderedDice);
+  allPlayerScoreArray.sort();
 
-  for (var i = 0; i < players.length; i += 1) {
-    var current = players[i];
-    displayMessage += current.name + ':  ' + current.orderedDice + '<br>';
+  for (var i = 0; i < allPlayerScoreArray.length; i += 1) {
+    displayMessage += allPlayerScoreArray[i] + '<br>';
   }
+
+  //
 
   return displayMessage;
 };
@@ -188,7 +183,7 @@ var main = function (input) {
       // Push the new dice order to Player's score
       currentPlayer.scoreArray.push(currentPlayer.orderedDice);
       // Push the to an overall score list (used in `showLeaderboard()`)
-      allPlayerScoreArray.push(currentPlayer.orderedDice);
+      allPlayerScoreArray.push(currentPlayer);
 
       mode = CHOOSE_DICENUMBER_MODE;
       trackPlayer += 1;
@@ -205,13 +200,10 @@ var main = function (input) {
 
   // 4
   if (mode === SCORING_MODE) {
-    // Sort each Player's score in players array
-    players.sort((a, b) => b.orderedDice - a.orderedDice);
+    // Retrieve highest score and find matching index
+    var maxScore = Math.max(...allPlayerScoreArray);
+    var scoreIndex = allPlayerScoreArray.indexOf(maxScore);
 
-    // Retrieve highest score found as 1st value in sorted `players` array
-    var winner = players[0].name;
-    var winnerScore = players[0].orderedDice;
-
-    return `And the winner is... <br><br>🎉 Congrats Player ${winner}, you've won with a score of ${winnerScore}! 🎉 <br><br> ⌨︎ ${showLeaderboard()}`;
+    return `And the winner is... <br><br>🎉 Congrats Player ${scoreIndex + 1}, you've won with a score of ${maxScore}! 🎉 <br><br> ⌨︎ ${showLeaderboard()}`;
   }
 };
