@@ -1,69 +1,67 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Dice - SWE101</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-<head>
-  <title>Dice - SWE101</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+      #header {
+        text-align: center;
+      }
 
-    #header {
-      text-align: center;
-    }
+      #container {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: pink;
+        max-width: 300px;
+      }
 
-    #container {
-      margin: 20px auto;
-      padding: 20px;
-      background-color: pink;
-      max-width: 300px;
-    }
+      input {
+        width: 70%;
+        margin-right: 4px;
+      }
 
-    input {
-      width: 70%;
-      margin-right: 4px;
-    }
+      button {
+        font-size: 7px;
+        width: 20%;
+      }
 
-    button {
-      font-size: 7px;
-      width: 20%;
-    }
+      #output {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: grey;
+        width: 100%;
+      }
+    </style>
+  </head>
 
-    #output {
-      margin: 20px auto;
-      padding: 20px;
-      background-color: grey;
-      width: 100%;
-    }
-  </style>
-</head>
+  <body>
+    <h1 id="header">Dice Game! ⚄</h1>
+    <div id="container">
+      <input id="my-input" />
+      <button id="my-button">Submit</button>
+      <p>Output:</p>
+      <div id="output">Let's Play! Please enter number of players</div>
+    </div>
+    <!-- Import program logic -->
+    <script src="script.js"></script>
+    <!-- Define button click functionality -->
+    <script>
+      var button = document.querySelector("#my-button");
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var input = document.querySelector("#my-input");
+        var result = main(input.value);
 
-<body>
-  <h1 id="header">Dice Game! ⚄</h1>
-  <div id="container">
-    <input id="my-input" />
-    <button id="my-button">Submit</button>
-    <p>Output:</p>
-    <div id="output">Let's Play!</div>
-  </div>
-  <!-- Import program logic -->
-  <script src="script.js"></script>
-  <!-- Define button click functionality -->
-  <script>
-    var button = document.querySelector('#my-button');
-    button.addEventListener('click', function () {
-      // Set result to input value
-      var input = document.querySelector('#my-input');
-      var result = main(input.value);
+        // Display result in output element
+        var output = document.querySelector("#output");
+        output.innerHTML = result;
 
-      // Display result in output element
-      var output = document.querySelector('#output');
-      output.innerHTML = result;
-
-      // Reset input value
-      input.value = "";
-    });
-  </script>
-</body>
-
+        // Reset input value
+        input.value = "";
+      });
+    </script>
+  </body>
 </html>
