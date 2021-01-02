@@ -1,22 +1,10 @@
-// Random Dice Roll Generator
-var randomDiceRoll = function () {
-  var randomDecimal = Math.random() * 6;
-  var randomInteger = Math.floor(randomDecimal);
-  var randomDiceNum = randomInteger + 1;
-  return randomDiceNum;
-};
-
 // Global Variables for Normal Dice Game
-var p1DiceOne = 0;
-var p1DiceTwo = 0;
-var p2DiceOne = 0;
-var p2DiceTwo = 0;
 var player1CombinedNum = 0;
 var player2CombinedNum = 0;
-p1DiceOne = randomDiceRoll();
-p1DiceTwo = randomDiceRoll();
-p2DiceOne = randomDiceRoll();
-p2DiceTwo = randomDiceRoll();
+var p1DiceOne;
+var p1DiceTwo;
+var p2DiceOne;
+var p2DiceTwo;
 
 // Global Variables for Variable Dice Game
 var gameMode = 'Enter Mode';
@@ -33,6 +21,14 @@ var p2DicePosition = [];
 var dicePosition = [];
 var diceValues = [];
 
+// Random Dice Roll Generator
+var getRandomDiceRoll = function () {
+  var randomDecimal = Math.random() * 6;
+  var randomInteger = Math.floor(randomDecimal);
+  var randomDiceNum = randomInteger + 1;
+  return randomDiceNum;
+};
+
 // Helper function to list the indexes in the array
 var getDicePosition = function (diceLength) {
   var index = 0;
@@ -47,7 +43,7 @@ var getDicePosition = function (diceLength) {
 var getNumOfDiceAndRoll = function (diceLength) {
   var index = 0;
   while (index < diceLength) {
-    diceValues.push(randomDiceRoll());
+    diceValues.push(getRandomDiceRoll());
     index = index + 1;
   } return diceValues;
 };
@@ -65,10 +61,26 @@ var generatePlayerScore = function (input) {
   return playerScore;
 };
 
+// Helper function for determining winner
+var determineWinner = function (p1Total, p2Total) {
+  var myOutputValue = '';
+  if (p1Total > p2Total) {
+    myOutputValue = 'Player 1 wins! Enter "normal" or "variable" to restart game.';
+  }
+  else if (p1Total < p2Total) {
+    myOutputValue = 'Player 2 wins!  Enter "normal" or "variable" to restart game.';
+  }
+  else {
+    myOutputValue = 'It is a draw!  Enter "normal" or "variable" to restart game.';
+  }
+  return myOutputValue;
+};
+
 // Start Game
 var main = function (input) {
   var myOutputValue = '';
   var invalidMessage = 'Please enter a valid position number';
+
   // User to choose which mode to play: Normal or Variable Dice Mode
   if (gameMode == 'Enter Mode') {
     if (input == 'normal') {
@@ -86,7 +98,7 @@ var main = function (input) {
 
   // Ask player1 how many dice they want to play with
   if (gameMode == 'Player 1 Variable Dice Mode') {
-    if (isNaN(Number(input)) == false && input != '') {
+    if (!isNaN(Number(input)) && input != '') {
       numOfDice = input;
       // List the index position of the dice values in order using the helper function
       // Match it to Player 1
@@ -107,7 +119,7 @@ var main = function (input) {
 
   if (gameMode == 'Player 1 Enter Positions') {
   // Check if input is a number and is not an empty string.
-    if (isNaN(Number(input)) == false && input != '') {
+    if (!isNaN(Number(input)) && input != '') {
       // Put input into helper function to generate player's score
       generatePlayerScore(input);
       player1Score = Number(playerScore);
@@ -142,7 +154,7 @@ var main = function (input) {
 
   if (gameMode == 'Player 2 Enter Position') {
     // Check if input is a number and is not an empty string.
-    if (isNaN(Number(input)) == false && input != '' && input.length == p2DiceValues.length) {
+    if (!isNaN(Number(input)) && input != '' && input.length == p2DiceValues.length) {
       // Put input into helper function to generate player's score
       generatePlayerScore(input);
       player2Score = Number(playerScore);
@@ -161,15 +173,7 @@ var main = function (input) {
   }
   // Determine the winner by comparing scores.
   if (gameMode == 'Compare Scores') {
-    if (totalp1Score > totalp2Score) {
-      myOutputValue = 'Player 1 score: ' + totalp1Score + '<br>Player 2 score: ' + totalp2Score + '. <br><br>Player 1 wins! Key in "normal" or "variable" to restart game.';
-    }
-    else if (totalp1Score < totalp2Score) {
-      myOutputValue = 'Player 1 score: ' + totalp1Score + '<br>Player 2 score: ' + totalp2Score + '. <br><br>Player 2 wins! Key in "normal" or "variable" to restart game.';
-    }
-    else {
-      myOutputValue = 'It is a draw! Key in "normal" or "variable" to restart game.';
-    }
+    myOutputValue = determineWinner(totalp1Score, totalp2Score);
     // Change game mode to the start before returning it.
     gameMode = 'Enter Mode';
     return myOutputValue;
@@ -177,11 +181,14 @@ var main = function (input) {
 
   // Start Normal Dice Game
   // On Click, player 1 rolls 2 dice.
+
   if (gameMode == 'normal') {
+    p1DiceOne = getRandomDiceRoll();
+    p1DiceTwo = getRandomDiceRoll();
     gameMode = 'Player 1 Choose';
-    myOutputValue = 'Welcome Player 1. <br>You rolled Dice 1: ' + p1DiceOne + ' and Dice 2: ' + p1DiceTwo + '.<br>Choose the order of the dice.';
-    return myOutputValue;
+    return 'Welcome Player 1. <br>You rolled Dice 1: ' + p1DiceOne + ' and Dice 2: ' + p1DiceTwo + '.<br>Choose the order of the dice.';
   }
+
   // On Click, player 1 chooses which dice goes first.
   if (gameMode == 'Player 1 Choose') {
     gameMode = 'Player 2 Rolls';
@@ -194,6 +201,9 @@ var main = function (input) {
     // If input is 1 or 2, the numbers will be concatenated to form a 2 digit number.
     if (input == 1) {
       player1CombinedNum = p1DiceOne * 10 + p1DiceTwo;
+      console.log(p1DiceOne);
+      console.log(p1DiceTwo);
+      console.log(player1CombinedNum);
     }
     else if (input == 2) {
       player2CombinedNum = p1DiceTwo * 10 + p1DiceOne;
@@ -203,6 +213,8 @@ var main = function (input) {
   }
   // On Click, player 2 rolls 2 dice.
   if (gameMode == 'Player 2 Rolls') {
+    p2DiceOne = getRandomDiceRoll();
+    p2DiceTwo = getRandomDiceRoll();
     gameMode = 'Player 2 Choose';
     return 'Welcome Player 2. <br>You rolled Dice 1: ' + p2DiceOne + ' and Dice 2: ' + p2DiceTwo + '.<br>Choose the order of the dice.';
     // On Click, player 2 chooses which dice goes first.
@@ -221,17 +233,10 @@ var main = function (input) {
     }
     myOutputValue = 'Player 2, you chose Dice ' + input + ' first. <br>Your number is ' + player2CombinedNum;
     gameMode = 'Determine Winner';
+    return myOutputValue;
   }
   if (gameMode == 'Determine Winner') {
-    if (player1CombinedNum > player2CombinedNum) {
-      myOutputValue = myOutputValue + '. Player 1 wins! Enter "normal" or "variable" to restart game.';
-    }
-    else if (player1CombinedNum < player2CombinedNum) {
-      myOutputValue = myOutputValue + '. Player 2 wins!  Enter "normal" or "variable" to restart game.';
-    }
-    else {
-      myOutputValue = myOutputValue + '. It is a draw!  Enter "normal" or "variable" to restart game.';
-    }
+    myOutputValue = determineWinner(player1CombinedNum, player2CombinedNum);
   }
   gameMode = 'Enter Mode';
   return myOutputValue;
