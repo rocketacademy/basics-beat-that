@@ -22,7 +22,6 @@ var diceRoll = function () {
   // Add 1 to get valid dice rolls of 1 through 6 inclusive.
   var diceNumber = randomInteger + 1;
 
-  console.log('dice roll called');
   return diceNumber;
 };
 
