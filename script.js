@@ -50,7 +50,7 @@ var showPlayerDiceRolls = function () {
   return output;
 };
 
-var printNumber = function (diceRollArray, firstNumber) {
+var getOrderedNumber = function (diceRollArray, firstNumber) {
   var numberString = '';
   var number = 0;
 
@@ -84,10 +84,10 @@ var showWinner = function () {
 var showOrderedNumber = function (firstNumber) {
   var output = '';
   if (playerTurn == 0) {
-    player1OrderedNumber = printNumber(player1DiceRolls, firstNumber);
+    player1OrderedNumber = getOrderedNumber(player1DiceRolls, firstNumber);
     output = 'Player ' + (playerTurn + 1) + ', you chose Dice ' + firstNumber + ' first.<br/>Your number is <strong>' + player1OrderedNumber + '</strong>.';
   } else {
-    player2OrderedNumber = printNumber(player2DiceRolls, firstNumber);
+    player2OrderedNumber = getOrderedNumber(player2DiceRolls, firstNumber);
     // since player 2 is the last player, we show winner
     output = 'Player ' + (playerTurn + 1) + ', you chose Dice ' + firstNumber + ' first.<br/>Your number is <strong>' + player2OrderedNumber + '</strong>.' + showWinner();
   }
