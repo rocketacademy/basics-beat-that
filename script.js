@@ -16,6 +16,7 @@ var gameMode = SELECT_NUMBER_OF_DICES;
 var ROLL_DICES_INSTRUCTIONS = ' Please hit Submit to roll your dices.';
 var CHOOSE_DICE_ORDER_INSTRUCTIONS = '<br /><br />Please enter a number to choose the order of the dice. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, and enter <code>3102</code>, your combined number will be <code>6321</code>.';
 
+// default dice roll function
 var diceRoll = function () {
   // Generate a decimal from 0 through 6, inclusive of 0 and exclusive of 6.
   var randomDecimal = Math.random() * 6;
@@ -30,6 +31,8 @@ var diceRoll = function () {
   return diceNumber;
 };
 
+// returns the ordered or combined number based on
+// user input `order` and the array of dice rolls `diceRollArray`
 var getOrderedNumber = function (diceRollArray, order) {
   // split the order (as string)
   // turn them all into numbers,
@@ -52,10 +55,15 @@ var getOrderedNumber = function (diceRollArray, order) {
   return number;
 };
 
-var getIndexOrderGreaterThanDiceCount = function (item) {
+// checks if an individual array item (or digit)
+// is greater or equal to number of dices
+// to be paired with Array.findIndex()
+var getIndexOrderGreaterEqualDiceCount = function (item) {
   return item >= diceCount;
 };
 
+// given an array, prints out all of its items
+// neatly comma formatted with spaces after comma.
 var showCommaFormattedArrayItems = function (arr) {
   var itemsText = '';
   var counter = 0;
@@ -70,6 +78,8 @@ var showCommaFormattedArrayItems = function (arr) {
   return itemsText;
 };
 
+// returns string, verbose version of using showCommaFormattedArrayItems()
+// to list all the dice rolls for Player X.
 var showPlayerDiceRolls = function () {
   var counter = 0;
   var output = 'Welcome Player ' + (playerTurn + 1) + '.';
@@ -116,6 +126,8 @@ var showWinner = function () {
   return output;
 };
 
+// returns string, shows both the order as submitted by user
+// and the ordered/combined number based on rolls and order.
 var showOrderedNumber = function (order) {
   var output = '';
   if (playerTurn == 0) {
@@ -162,8 +174,12 @@ var main = function (input) {
   } else if (input.length != diceCount) {
     // input validation: length of string entered > dice count
     myOutputValue = 'You have previously selected to roll ' + diceCount + ' dices. However, your number is ' + input + '. You need to Submit a number with exactly ' + diceCount + ' digits!' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
-  } else if (input.split('').findIndex(getIndexOrderGreaterThanDiceCount) > -1) {
-    // input validation: any of the digits in the input is greater or equal than dice count
+  } else if (input.split('').findIndex(getIndexOrderGreaterEqualDiceCount) > -1) {
+    // input validation: any of the digits in the input is greater or equal than dice count,
+    // see above else if block. if a digit is found, returns its index (0 or greater).
+    // if a digit is not found, returns -1. Logic: if you have 4 dices, in the order the user
+    // submits, it doesn't make sense to have a digit with 4 or larger (index 4 exceeds array
+    // length of 4).
     myOutputValue = 'You have previously selected to roll ' + diceCount + ' dices. However, your number is ' + input + '. Your number cannot have any digits equal or more than ' + diceCount + '!' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
   } else {
     myOutputValue = showOrderedNumber(input);
