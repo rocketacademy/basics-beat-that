@@ -116,10 +116,14 @@ var showPlayerDiceRolls = function () {
 var showWinner = function () {
   var output = '';
   var counter = 0;
+  // get the biggest combined/ordered number in the current round
   var biggestOrderedNumber = Math.max(...orderedNumbers);
+  // identify the first individual to get the biggest combined/ordered number
   // find index only picks out the first index found
   var firstWinner = orderedNumbers.findIndex((number) => number == biggestOrderedNumber);
-  // filter picks out the list
+  // identify a list of individuals (if there is more that 1)
+  // with the biggest combined/ordered number
+  // unlike firstIndex, filter will create a new array with all matching items
   var winnersList = orderedNumbers.filter((number) => number == biggestOrderedNumber);
   while (counter < playerCount) {
     // first player
@@ -139,6 +143,18 @@ var showWinner = function () {
   } else {
     output = output + '<br /><strong>Player ' + (firstWinner + 1) + ' wins!</strong><br/>';
   }
+  return output;
+};
+
+var showScores = function () {
+  var output = '<br/><br/><u>The current scores:</u>';
+
+  var counter = 0;
+  while (counter < orderedNumbers.length) {
+    output = output + '<br/><strong>Player ' + (counter + 1) + ':</strong> ' + scores[counter];
+    counter += 1;
+  }
+
   return output;
 };
 
@@ -245,6 +261,9 @@ var main = function (input) {
 
         counter += 1;
       }
+
+      // show score if last player
+      myOutputValue = myOutputValue + showScores();
 
       // last player completed, so reset states
       playerTurn = 0;
