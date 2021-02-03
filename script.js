@@ -56,6 +56,20 @@ var getIndexOrderGreaterThanDiceCount = function (item) {
   return item >= diceCount;
 };
 
+var showCommaFormattedArrayItems = function (arr) {
+  var itemsText = '';
+  var counter = 0;
+  while (counter < arr.length) {
+    itemsText = itemsText + arr[counter];
+    counter += 1;
+    if (counter != arr.length) {
+      itemsText = itemsText + ', ';
+    }
+  }
+
+  return itemsText;
+};
+
 var showPlayerDiceRolls = function () {
   var counter = 0;
   var output = 'Welcome Player ' + (playerTurn + 1) + '.';
@@ -77,7 +91,15 @@ var showPlayerDiceRolls = function () {
     counter += 1;
   }
 
-  output = output + '.' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
+  // show summarised rolls
+  if (playerTurn == 0) {
+    output = output + '.<br/><br/>To summarise, you rolled <code>[' + showCommaFormattedArrayItems(player1DiceRolls) + ']</code>.';
+  } else {
+    output = output + '.<br/><br/>To summarise, you rolled <code>[' + showCommaFormattedArrayItems(player2DiceRolls) + ']</code>.';
+  }
+
+  // show choose dice order instructions
+  output = output + CHOOSE_DICE_ORDER_INSTRUCTIONS;
   return output;
 };
 
