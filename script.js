@@ -8,8 +8,11 @@ var playerCount = 2;
 var diceCount = 0;
 var playerTurn = 0;
 // diceRolls will be a 2D array - an array containing 1 array of dice rolls per player
+// index 0 for player 1, index 1 for player 2, etc. index ordering is the same for
+// orderedNumbers and scores
 var diceRolls = [];
 var orderedNumbers = [];
+var scores = [];
 var gameMode = SELECT_NUMBER_OF_DICES;
 
 // initialize string constants
@@ -226,6 +229,23 @@ var main = function (input) {
       // change to next player
       playerTurn += 1;
     } else {
+      // finalize total scores for all players
+      var counter = 0;
+      while (counter < orderedNumbers.length) {
+        // since scores is initialized as an empty array, we check
+        // if an existing number value has been stored in it. if
+        // there hasn't been any (ie, scores[counter] is `undefined`),
+        // store it with .push(). otherwise, just increment the
+        // existing store with the new combined number
+        if (Number.isNaN(Number(scores[counter]))) {
+          scores.push(orderedNumbers[counter]);
+        } else {
+          scores[counter] += orderedNumbers[counter];
+        }
+
+        counter += 1;
+      }
+
       // last player completed, so reset states
       playerTurn = 0;
       diceRolls = [];
