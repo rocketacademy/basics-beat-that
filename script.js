@@ -1,15 +1,20 @@
-// initialize constants
-var DICE_COUNT = 2;
+// initialize game mode constants
+var SELECT_NUMBER_OF_DICES = 'select number of dices';
 var ROLL_DICES = 'roll dices';
 var CHOOSE_DICE_ORDER = 'choose dice order';
 
 // initialize variables
+var diceCount = 0;
 var playerTurn = 0;
 var player1DiceRolls = [];
 var player2DiceRolls = [];
 var player1OrderedNumber = 0;
 var player2OrderedNumber = 0;
-var gameMode = ROLL_DICES;
+var gameMode = SELECT_NUMBER_OF_DICES;
+
+// initialize string constants
+var ROLL_DICES_INSTRUCTIONS = ' Please hit Submit to roll your dices.';
+var CHOOSE_DICE_ORDER_INSTRUCTIONS = '<br /><br />Please enter a number to choose the order of the dice. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, and enter <code>3102</code>, your combined number will be <code>6321</code>.';
 
 var diceRoll = function () {
   // Generate a decimal from 0 through 6, inclusive of 0 and exclusive of 6.
@@ -25,11 +30,37 @@ var diceRoll = function () {
   return diceNumber;
 };
 
+var getOrderedNumber = function (diceRollArray, order) {
+  // split the order (as string)
+  // turn them all into numbers,
+  // to be used as indexes for diceRollArray
+  var orderArray = order.split('').map(Number);
+  var number = 0;
+
+  var counter = 0;
+  while (counter < orderArray.length) {
+    var digitIndex = orderArray[counter];
+    // ** is the power operator, Math.pow(10, (orderArray.length - 1 - counter))
+    // is the equivalent. Tracing the logic:
+    // say, dice roll contains [2, 3, 1, 6] and input is "3102"
+    // on first iteration, it will be 0 + 6 * 10 ^ (4 - 1 - 0) = 6000;
+    // on second iteration, it will be 6000 + 3 * 10 ^ (4 - 1 - 1) = 6300; etc etc
+    number = number + diceRollArray[digitIndex] * 10 ** (orderArray.length - 1 - counter);
+    counter += 1;
+  }
+
+  return number;
+};
+
+var getIndexOrderGreaterThanDiceCount = function (item) {
+  return item >= diceCount;
+};
+
 var showPlayerDiceRolls = function () {
   var counter = 0;
   var output = 'Welcome Player ' + (playerTurn + 1) + '.';
 
-  while (counter < DICE_COUNT) {
+  while (counter < diceCount) {
     var playerDiceRoll = diceRoll();
     if (playerTurn == 0) {
       player1DiceRolls.push(playerDiceRoll);
@@ -38,34 +69,16 @@ var showPlayerDiceRolls = function () {
     }
 
     if (counter == 0) {
-      output = output + '<br />You rolled ' + playerDiceRoll + ' for Dice ' + (counter + 1);
+      output = output + '<br />You rolled <strong>' + playerDiceRoll + '</strong> for Dice ' + (counter + 1);
     } else {
-      output = output + ' and ' + playerDiceRoll + ' for Dice ' + (counter + 1);
+      output = output + ', and <strong>' + playerDiceRoll + '</strong> for Dice ' + (counter + 1);
     }
 
     counter += 1;
   }
 
-  output = output + '.<br/>Choose the order of the dice.';
+  output = output + '.' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
   return output;
-};
-
-var getOrderedNumber = function (diceRollArray, firstNumber) {
-  var numberString = '';
-  var number = 0;
-
-  // adding an empty string in between concatenates the numbers
-  // (eg "1" + "2" = "12") as opposed to doing mathematical
-  // addition (eg 1 + 2 = 3)
-  if (firstNumber == 1) {
-    numberString = diceRollArray[0] + '' + diceRollArray[1];
-  } else {
-    numberString = diceRollArray[1] + '' + diceRollArray[0];
-  }
-
-  number = Number(numberString);
-
-  return number;
 };
 
 // prints winner/loser/draw
@@ -81,15 +94,15 @@ var showWinner = function () {
   return output;
 };
 
-var showOrderedNumber = function (firstNumber) {
+var showOrderedNumber = function (order) {
   var output = '';
   if (playerTurn == 0) {
-    player1OrderedNumber = getOrderedNumber(player1DiceRolls, firstNumber);
-    output = 'Player ' + (playerTurn + 1) + ', you chose Dice ' + firstNumber + ' first.<br/>Your number is <strong>' + player1OrderedNumber + '</strong>.';
+    player1OrderedNumber = getOrderedNumber(player1DiceRolls, order);
+    output = 'Player ' + (playerTurn + 1) + ', your order is <code>' + order + '</code>.<br/>Your number is <strong>' + player1OrderedNumber + '</strong>.';
   } else {
-    player2OrderedNumber = getOrderedNumber(player2DiceRolls, firstNumber);
+    player2OrderedNumber = getOrderedNumber(player2DiceRolls, order);
     // since player 2 is the last player, we show winner
-    output = 'Player ' + (playerTurn + 1) + ', you chose Dice ' + firstNumber + ' first.<br/>Your number is <strong>' + player2OrderedNumber + '</strong>.' + showWinner();
+    output = 'Player ' + (playerTurn + 1) + ', your order is <code>' + order + '</code>.<br/>Your number is <strong>' + player2OrderedNumber + '</strong>.' + showWinner();
   }
   return output;
 };
@@ -97,6 +110,20 @@ var showOrderedNumber = function (firstNumber) {
 var main = function (input) {
   var myOutputValue = '';
   var numberInput = Number(input);
+
+  // game mode: select number of dices
+  if (gameMode == SELECT_NUMBER_OF_DICES) {
+    if (input.trim() == '' || Number.isNaN(numberInput) || numberInput < 2) {
+      myOutputValue = 'You need to select 2 or more dices! Please enter the number of dices and hit Submit.';
+    } else {
+      diceCount = numberInput;
+      myOutputValue = 'You have selected ' + diceCount + ' dices. Welcome Player ' + (playerTurn + 1) + '.' + ROLL_DICES_INSTRUCTIONS;
+      // switch game mode
+      gameMode = ROLL_DICES;
+    }
+
+    return myOutputValue;
+  }
 
   // game mode: roll dices
   if (gameMode == ROLL_DICES) {
@@ -107,10 +134,17 @@ var main = function (input) {
   }
 
   // game mode:  select dice order
-  if (input.trim() == '' || Number.isNaN(numberInput) || numberInput < 1 || numberInput > 2) {
-    myOutputValue = 'Player ' + (playerTurn + 1) + ', please select a number between 1 and 2.';
+  // input validation: empty input or not a number
+  if (input.trim() == '' || Number.isNaN(numberInput)) {
+    myOutputValue = 'Please enter a valid number' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
+  } else if (input.length != diceCount) {
+    // input validation: length of string entered > dice count
+    myOutputValue = 'You have previously selected to roll ' + diceCount + ' dices. However, your number is ' + input + '. You need to Submit a number with exactly ' + diceCount + ' digits!' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
+  } else if (input.split('').findIndex(getIndexOrderGreaterThanDiceCount) > -1) {
+    // input validation: any of the digits in the input is greater or equal than dice count
+    myOutputValue = 'You have previously selected to roll ' + diceCount + ' dices. However, your number is ' + input + '. Your number cannot have any digits equal or more than ' + diceCount + '!' + CHOOSE_DICE_ORDER_INSTRUCTIONS;
   } else {
-    myOutputValue = showOrderedNumber(numberInput);
+    myOutputValue = showOrderedNumber(input);
 
     if (playerTurn == 0) {
       // change players from Player 1 to Player 2
@@ -123,7 +157,7 @@ var main = function (input) {
       player1OrderedNumber = 0;
       player2OrderedNumber = 0;
     }
-    myOutputValue = myOutputValue + '<br />It is now Player ' + (playerTurn + 1) + '\'s turn.';
+    myOutputValue = myOutputValue + '<br /><br />It is now Player ' + (playerTurn + 1) + '\'s turn. You have previously selected to have ' + diceCount + ' dices.' + ROLL_DICES_INSTRUCTIONS;
 
     gameMode = ROLL_DICES;
   }
