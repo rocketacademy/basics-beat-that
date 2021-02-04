@@ -37,7 +37,7 @@ var diceRoll = function () {
 // returns the ordered or combined number based on
 // user input `order` and the array of dice rolls `diceRollArray`
 var getOrderedNumber = function (diceRollArray) {
-  // .sort(): compared current item `a` with next item `b`
+  // .sort(): compared current item `currentItem` with next item `nextItem`
   // if (nextItem - currentItem) is less than 0, move `nextItem`
   // in an index lower than `currentItem`, ie. `nextItem` comes first.
   // if (nextItem - currentItem) is 0 or more, leave the current `nextItem` and
