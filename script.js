@@ -1,8 +1,16 @@
 // initialize game mode constants
+var SELECT_COMBINED_NUMBER_MODE = 'select combined number mode';
 var SELECT_NUMBER_OF_PLAYERS = 'select number of players';
 var SELECT_NUMBER_OF_DICES = 'select number of dices';
 var ROLL_DICES = 'roll dices';
 var CHOOSE_DICE_ORDER = 'choose dice order';
+
+// initialize string constants
+var LARGEST_COMBINED_NUMBER_MODE = 'largest';
+var SMALLEST_COMBINED_NUMBER_MODE = 'smallest';
+var ROLL_DICES_INSTRUCTIONS = ' Please hit Submit to roll your dices.';
+var CHOOSE_DICE_ORDER_INSTRUCTIONS_LARGEST = '<br /><br />Please hit Submit and we will automatically generate the <u>largest</u> combined number for you. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, your <u>largest</u> combined number will be <code>6321</code>.';
+var CHOOSE_DICE_ORDER_INSTRUCTIONS_SMALLEST = '<br /><br />Please hit Submit and we will automatically generate the <u>smallest</u> combined number for you. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, your <u>smallest</u> combined number will be <code>1236</code>.';
 
 // initialize variables
 var playerCount = 0;
@@ -14,11 +22,8 @@ var playerTurn = 0;
 var diceRolls = [];
 var orderedNumbers = [];
 var scores = [];
-var gameMode = SELECT_NUMBER_OF_PLAYERS;
-
-// initialize string constants
-var ROLL_DICES_INSTRUCTIONS = ' Please hit Submit to roll your dices.';
-var CHOOSE_DICE_ORDER_INSTRUCTIONS = '<br /><br />Please hit Submit and we will automatically generate the highest combined number for you. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, your highest combined number will be <code>6321</code>.';
+var gameMode = SELECT_COMBINED_NUMBER_MODE;
+var combinedNumberMode = LARGEST_COMBINED_NUMBER_MODE;
 
 // default dice roll function
 var diceRoll = function () {
@@ -38,12 +43,22 @@ var diceRoll = function () {
 // returns the ordered or combined number based on
 // user input `order` and the array of dice rolls `diceRollArray`
 var getOrderedNumber = function (diceRollArray) {
-  // .sort(): compared current item `currentItem` with next item `nextItem`
-  // if (nextItem - currentItem) is less than 0, move `nextItem`
-  // in an index lower than `currentItem`, ie. `nextItem` comes first.
-  // if (nextItem - currentItem) is 0 or more, leave the current `nextItem` and
-  // `currentItem` as they are.
-  var sortedArray = diceRollArray.sort((currentItem, nextItem) => nextItem - currentItem);
+  var sortedArray = diceRollArray;
+
+  if (combinedNumberMode == LARGEST_COMBINED_NUMBER_MODE) {
+    // .sort(): compared current item `currentItem` with next item `nextItem`
+    // if (nextItem - currentItem) is less than 0, move `nextItem`
+    // in an index lower than `currentItem`, ie. `nextItem` comes first.
+    // if (nextItem - currentItem) is 0 or more, leave the current `nextItem` and
+    // `currentItem` as they are.
+    sortedArray = sortedArray.sort((currentItem, nextItem) => nextItem - currentItem);
+  } else {
+    // for the smallest combined number mode, we flip the condition
+    // thus, we check for (currentItem - nextItem) instead of
+    // (nextItem - currentItem)
+    sortedArray = sortedArray.sort((currentItem, nextItem) => currentItem - nextItem);
+  }
+
   // join the items in the array together into a string
   var stringifiedArray = sortedArray.join('');
   // turn the string back into a number
@@ -95,7 +110,12 @@ var showPlayerDiceRolls = function () {
   output = output + '.<br/><br/>To summarise, you rolled <code>[' + showCommaFormattedArrayItems(diceRolls[playerTurn]) + ']</code>.';
 
   // show choose dice order instructions
-  output = output + CHOOSE_DICE_ORDER_INSTRUCTIONS;
+  if (combinedNumberMode == LARGEST_COMBINED_NUMBER_MODE) {
+    output = output + CHOOSE_DICE_ORDER_INSTRUCTIONS_LARGEST;
+  } else {
+    output = output + CHOOSE_DICE_ORDER_INSTRUCTIONS_SMALLEST;
+  }
+
   return output;
 };
 
@@ -105,13 +125,29 @@ var showWinner = function () {
   var counter = 0;
   // get the biggest combined/ordered number in the current round
   var biggestOrderedNumber = Math.max(...orderedNumbers);
-  // identify the first individual to get the biggest combined/ordered number
-  // find index only picks out the first index found
-  var firstWinner = orderedNumbers.findIndex((number) => number == biggestOrderedNumber);
-  // identify a list of individuals (if there is more that 1)
-  // with the biggest combined/ordered number
-  // unlike firstIndex, filter will create a new array with all matching items
-  var winnersList = orderedNumbers.filter((number) => number == biggestOrderedNumber);
+  // get the smallest combined/ordered number in the current round
+  var smallestOrderedNumber = Math.min(...orderedNumbers);
+  // initialize first winner to be index -1 (does not exist)
+  var firstWinner = -1;
+  // initialize winnersList to be an empty array
+  var winnersList = [];
+
+  if (combinedNumberMode == LARGEST_COMBINED_NUMBER_MODE) {
+    // identify the first individual to get the biggest combined/ordered number
+    // find index only picks out the first index found
+    firstWinner = orderedNumbers.findIndex((number) => number == biggestOrderedNumber);
+    // identify a list of individuals (if there is more that 1)
+    // with the biggest combined/ordered number
+    // unlike firstIndex, filter will create a new array with all matching items
+    winnersList = orderedNumbers.filter((number) => number == biggestOrderedNumber);
+  } else {
+    // identify the first individual to get the smallest combined/ordered number
+    firstWinner = orderedNumbers.findIndex((number) => number == smallestOrderedNumber);
+    // identify a list of individuals (if there is more that 1)
+    // with the smallest combined/ordered number
+    winnersList = orderedNumbers.filter((number) => number == smallestOrderedNumber);
+  }
+
   while (counter < playerCount) {
     // first player
     if (counter == 0) {
@@ -163,10 +199,26 @@ var showOrderedNumber = function () {
 var main = function (input) {
   var myOutputValue = '';
   var numberInput = Number(input);
+  var trimmedInput = input.trim();
+
+  if (gameMode == SELECT_COMBINED_NUMBER_MODE) {
+    if (trimmedInput.toLowerCase() == SMALLEST_COMBINED_NUMBER_MODE) {
+      combinedNumberMode = SMALLEST_COMBINED_NUMBER_MODE;
+      myOutputValue = 'You have decided to play the game mode where we generate the <strong>smallest</strong> number from each players\' combined dice rolls.';
+    } else {
+      myOutputValue = 'You will be continuing in the default game mode where we generate the <strong>largest</strong> number from each players\' combined dice rolls.';
+    }
+
+    myOutputValue = myOutputValue + '<br /><br />Now, please enter the number of players (2 or more), and hit Submit.';
+    // switch modes
+    gameMode = SELECT_NUMBER_OF_PLAYERS;
+
+    return myOutputValue;
+  }
 
   // game mode: select number of players
   if (gameMode == SELECT_NUMBER_OF_PLAYERS) {
-    if (input.trim() == '' || Number.isNaN(numberInput) || numberInput < 2) {
+    if (trimmedInput == '' || Number.isNaN(numberInput) || numberInput < 2) {
       myOutputValue = 'You need to have 2 or more players! Please enter a valid number of players and hit Submit.';
     } else {
       playerCount = numberInput;
@@ -180,7 +232,7 @@ var main = function (input) {
 
   // game mode: select number of dices
   if (gameMode == SELECT_NUMBER_OF_DICES) {
-    if (input.trim() == '' || Number.isNaN(numberInput) || numberInput < 2) {
+    if (trimmedInput == '' || Number.isNaN(numberInput) || numberInput < 2) {
       myOutputValue = 'You need to select 2 or more dices! Please enter the number of dices and hit Submit.';
     } else {
       diceCount = numberInput;
