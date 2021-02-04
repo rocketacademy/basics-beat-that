@@ -21,6 +21,14 @@ var playerTurn = 0;
 // orderedNumbers and scores
 var diceRolls = [];
 var orderedNumbers = [];
+// each individual item in scores will look like this: [playerIndex, playerScore]
+// it should be ordered with Player 1 (index 0) being the first item
+// for example:
+//  [
+//    [0, 2134],
+//    [1, 3634],
+//    [2, 2351]
+//  ]
 var scores = [];
 var gameMode = SELECT_COMBINED_NUMBER_MODE;
 var combinedNumberMode = LARGEST_COMBINED_NUMBER_MODE;
@@ -167,11 +175,33 @@ var showWinner = function () {
 };
 
 var showScores = function () {
-  var output = '<br/><br/><u>The current scores:</u>';
+  var output = '<br/><br/><h3><u>Leaderboard</u></h3>';
+
+  // duplicate current scores into leaderboard as a shallow copy.
+  // unlike a deep copy, a shallow copy will not make a reference
+  // to the original array. to do so, we use the spread operator
+  // [...scores] as opposed to just scores. because if we do
+  // leaderboard = scores, any modification to leaderboard (like
+  // sorting) will also modify scores.
+  var leaderboard = [...scores];
+
+  // sort leaderboard
+  // each item in leaderboard is structured as [playerIndex, playerScore]
+  // if (nextItem[1] - currentItem[1]) is negative, move nextItem
+  // before currentItem, ie. nextItem comes first
+  leaderboard = leaderboard.sort((currentItem, nextItem) => nextItem[1] - currentItem[1]);
+
+  if (combinedNumberMode == SMALLEST_COMBINED_NUMBER_MODE) {
+    // for the smallest number mode, we simply reverse the array
+    leaderboard = leaderboard.reverse();
+  }
 
   var counter = 0;
-  while (counter < orderedNumbers.length) {
-    output = output + '<br/><strong>Player ' + (counter + 1) + ':</strong> ' + scores[counter];
+  while (counter < leaderboard.length) {
+    if (counter != 0) {
+      output = output + '<br/>';
+    }
+    output = output + '<strong>' + (counter + 1) + '.</strong> Player ' + (leaderboard[counter][0] + 1) + ': ' + leaderboard[counter][1];
     counter += 1;
   }
 
@@ -260,14 +290,22 @@ var main = function (input) {
     var counter = 0;
     while (counter < orderedNumbers.length) {
       // since scores is initialized as an empty array, we check
-      // if an existing number value has been stored in it. if
-      // there hasn't been any (ie, scores[counter] is `undefined`),
-      // store it with .push(). otherwise, just increment the
-      // existing store with the new combined number
-      if (Number.isNaN(Number(scores[counter]))) {
-        scores.push(orderedNumbers[counter]);
+      // if an inner array stored in it. if there hasn't been any
+      // (ie, scores[counter] is `undefined`), create an inner
+      // array and store it with .push(). inner array will be structured
+      // like this: [playerIndex, score], where the first index refers to Player
+      // 1 (index 0), and the second index is the score for the player
+      if (!Array.isArray(scores[counter])) {
+        var playerIndex = counter;
+        var playerScore = orderedNumbers[counter];
+        var pair = [playerIndex, playerScore];
+
+        scores.push(pair);
       } else {
-        scores[counter] += orderedNumbers[counter];
+        // if there is already an inner array, we assume it is already
+        // structured like [playerIndex, playerScore]. Since index 1 (second item)
+        // of the inner array is the score, we just increment it
+        scores[counter][1] += orderedNumbers[counter];
       }
 
       counter += 1;
