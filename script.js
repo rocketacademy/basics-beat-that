@@ -43,20 +43,17 @@ var diceRoll = function () {
 // returns the ordered or combined number based on
 // user input `order` and the array of dice rolls `diceRollArray`
 var getOrderedNumber = function (diceRollArray) {
-  var sortedArray = diceRollArray;
+  // initialize sorted array from largest number to smallest
+  // .sort(): compared current item `currentItem` with next item `nextItem`
+  // if (nextItem - currentItem) is less than 0, move `nextItem`
+  // in an index lower than `currentItem`, ie. `nextItem` comes first.
+  // if (nextItem - currentItem) is 0 or more, leave the current `nextItem` and
+  // `currentItem` as they are.
+  var sortedArray = diceRollArray.sort((currentItem, nextItem) => nextItem - currentItem);
 
-  if (combinedNumberMode == LARGEST_COMBINED_NUMBER_MODE) {
-    // .sort(): compared current item `currentItem` with next item `nextItem`
-    // if (nextItem - currentItem) is less than 0, move `nextItem`
-    // in an index lower than `currentItem`, ie. `nextItem` comes first.
-    // if (nextItem - currentItem) is 0 or more, leave the current `nextItem` and
-    // `currentItem` as they are.
-    sortedArray = sortedArray.sort((currentItem, nextItem) => nextItem - currentItem);
-  } else {
-    // for the smallest combined number mode, we flip the condition
-    // thus, we check for (currentItem - nextItem) instead of
-    // (nextItem - currentItem)
-    sortedArray = sortedArray.sort((currentItem, nextItem) => currentItem - nextItem);
+  if (combinedNumberMode == SMALLEST_COMBINED_NUMBER_MODE) {
+    // for the smallest number mode, we simply reverse the array
+    sortedArray = sortedArray.reverse();
   }
 
   // join the items in the array together into a string
