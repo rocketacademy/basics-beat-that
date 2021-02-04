@@ -17,7 +17,7 @@ var gameMode = SELECT_NUMBER_OF_DICES;
 
 // initialize string constants
 var ROLL_DICES_INSTRUCTIONS = ' Please hit Submit to roll your dices.';
-var CHOOSE_DICE_ORDER_INSTRUCTIONS = '<br /><br />Please enter a number to choose the order of the dice. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, and enter <code>3102</code>, your combined number will be <code>6321</code>.';
+var CHOOSE_DICE_ORDER_INSTRUCTIONS = '<br /><br />Please hit Submit and we will automatically generate the highest combined number for you. For example, if you rolled <code>[2, 3, 1, 6]</code> for 4 dices, your highest combined number will be <code>6321</code>.';
 
 // default dice roll function
 var diceRoll = function () {
@@ -36,33 +36,19 @@ var diceRoll = function () {
 
 // returns the ordered or combined number based on
 // user input `order` and the array of dice rolls `diceRollArray`
-var getOrderedNumber = function (diceRollArray, order) {
-  // split the order (as string)
-  // turn them all into numbers,
-  // to be used as indexes for diceRollArray
-  var orderArray = order.split('').map(Number);
-  var number = 0;
+var getOrderedNumber = function (diceRollArray) {
+  // .sort(): compared current item `a` with next item `b`
+  // if (nextItem - currentItem) is less than 0, move `nextItem`
+  // in an index lower than `currentItem`, ie. `nextItem` comes first.
+  // if (nextItem - currentItem) is 0 or more, leave the current `nextItem` and
+  // `currentItem` as they are.
+  var sortedArray = diceRollArray.sort((currentItem, nextItem) => nextItem - currentItem);
+  // join the items in the array together into a string
+  var stringifiedArray = sortedArray.join('');
+  // turn the string back into a number
+  var stringToNum = Number(stringifiedArray);
 
-  var counter = 0;
-  while (counter < orderArray.length) {
-    var digitIndex = orderArray[counter];
-    // ** is the power operator, Math.pow(10, (orderArray.length - 1 - counter))
-    // is the equivalent. Tracing the logic:
-    // say, dice roll contains [2, 3, 1, 6] and input is "3102"
-    // on first iteration, it will be 0 + 6 * 10 ^ (4 - 1 - 0) = 6000;
-    // on second iteration, it will be 6000 + 3 * 10 ^ (4 - 1 - 1) = 6300; etc etc
-    number = number + diceRollArray[digitIndex] * 10 ** (orderArray.length - 1 - counter);
-    counter += 1;
-  }
-
-  return number;
-};
-
-// checks if an individual array item (or digit)
-// is greater or equal to number of dices
-// to be paired with Array.findIndex()
-var getIndexOrderGreaterEqualDiceCount = function (item) {
-  return item >= diceCount;
+  return stringToNum;
 };
 
 // given an array, prints out all of its items
@@ -160,36 +146,17 @@ var showScores = function () {
 
 // returns string, shows both the order as submitted by user
 // and the ordered/combined number based on rolls and order.
-var showOrderedNumber = function (order) {
-  var combinedNumber = getOrderedNumber(diceRolls[playerTurn], order);
+var showOrderedNumber = function () {
+  var combinedNumber = getOrderedNumber(diceRolls[playerTurn]);
   // set combined number within the orderedNumbers array
   orderedNumbers[playerTurn] = combinedNumber;
-  var output = 'Player ' + (playerTurn + 1) + ', your order is <code>' + order + '</code>.<br/>Your number is <strong>' + combinedNumber + '</strong>.';
+  var output = 'Player ' + (playerTurn + 1) + ', your combined number is <strong>' + combinedNumber + '</strong>.';
 
   // last player
   if (playerTurn == playerCount - 1) {
     output = output + showWinner();
   }
   return output;
-};
-
-var hasRepeatedCharacters = function (str) {
-  // turn the string into an array
-  var strArr = str.split('');
-  var index = 0;
-
-  // this loop just checks if you get the same index value
-  // if you search for an item from the start vs from the back.
-  // if you get different values, it means there are repeated
-  // characters in the string - return true;
-  while (index < strArr.length - 1) {
-    if (str.indexOf(str[index]) != str.lastIndexOf(str[index])) {
-      return true;
-    }
-    index += 1;
-  }
-
-  return false;
 };
 
 var main = function (input) {
@@ -218,62 +185,41 @@ var main = function (input) {
     return myOutputValue;
   }
 
-  var previousRollString = '<br/><br/>You previously rolled <code>[' + showCommaFormattedArrayItems(diceRolls[playerTurn]) + ']</code>.';
+  // game mode:  select dice order{
+  myOutputValue = showOrderedNumber();
 
-  // game mode:  select dice order
-  // input validation: empty input or not a number
-  if (input.trim() == '' || Number.isNaN(numberInput)) {
-    myOutputValue = 'Please enter a valid number!' + previousRollString + CHOOSE_DICE_ORDER_INSTRUCTIONS;
-  } else if (input.length != diceCount) {
-    // input validation: length of string entered > dice count
-    myOutputValue = 'You have previously selected to roll ' + diceCount + ' dices. However, your number is ' + input + '. You need to Submit a number with exactly ' + diceCount + ' digits!' + previousRollString + CHOOSE_DICE_ORDER_INSTRUCTIONS;
-  } else if (input.split('').findIndex(getIndexOrderGreaterEqualDiceCount) > -1) {
-    // input validation: any of the digits in the input is greater or equal than dice count,
-    // see above else if block. if a digit is found, returns its index (0 or greater).
-    // if a digit is not found, returns -1. Logic: if you have 4 dices, in the order the user
-    // submits, it doesn't make sense to have a digit with 4 or larger (index 4 exceeds array
-    // length of 4).
-    myOutputValue = 'You have previously selected to roll ' + diceCount + ' dices. However, your number is ' + input + '. Your number cannot have any digits equal or more than ' + diceCount + '!' + previousRollString + CHOOSE_DICE_ORDER_INSTRUCTIONS;
-  } else if (hasRepeatedCharacters(input)) {
-    // input validation: no repeated characters in setting the order of your dice rolls
-    // to combine into a number. If you roll [1, 1, 6], it's cheating to input 222!
-    myOutputValue = 'Your number is ' + input + '. Your number cannot have any repeated digits or characters!' + previousRollString + CHOOSE_DICE_ORDER_INSTRUCTIONS;
+  if (playerTurn < playerCount - 1) {
+    // change to next player
+    playerTurn += 1;
   } else {
-    myOutputValue = showOrderedNumber(input);
-
-    if (playerTurn < playerCount - 1) {
-      // change to next player
-      playerTurn += 1;
-    } else {
-      // finalize total scores for all players
-      var counter = 0;
-      while (counter < orderedNumbers.length) {
-        // since scores is initialized as an empty array, we check
-        // if an existing number value has been stored in it. if
-        // there hasn't been any (ie, scores[counter] is `undefined`),
-        // store it with .push(). otherwise, just increment the
-        // existing store with the new combined number
-        if (Number.isNaN(Number(scores[counter]))) {
-          scores.push(orderedNumbers[counter]);
-        } else {
-          scores[counter] += orderedNumbers[counter];
-        }
-
-        counter += 1;
+    // finalize total scores for all players
+    var counter = 0;
+    while (counter < orderedNumbers.length) {
+      // since scores is initialized as an empty array, we check
+      // if an existing number value has been stored in it. if
+      // there hasn't been any (ie, scores[counter] is `undefined`),
+      // store it with .push(). otherwise, just increment the
+      // existing store with the new combined number
+      if (Number.isNaN(Number(scores[counter]))) {
+        scores.push(orderedNumbers[counter]);
+      } else {
+        scores[counter] += orderedNumbers[counter];
       }
 
-      // show score if last player
-      myOutputValue = myOutputValue + showScores();
-
-      // last player completed, so reset states
-      playerTurn = 0;
-      diceRolls = [];
-      orderedNumbers = [];
+      counter += 1;
     }
-    myOutputValue = myOutputValue + '<br /><br />It is now Player ' + (playerTurn + 1) + '\'s turn. You have previously selected to have ' + diceCount + ' dices.' + ROLL_DICES_INSTRUCTIONS;
 
-    gameMode = ROLL_DICES;
+    // show score if last player
+    myOutputValue = myOutputValue + showScores();
+
+    // last player completed, so reset states
+    playerTurn = 0;
+    diceRolls = [];
+    orderedNumbers = [];
   }
+  myOutputValue = myOutputValue + '<br /><br />It is now Player ' + (playerTurn + 1) + '\'s turn. You have previously selected to have ' + diceCount + ' dices.' + ROLL_DICES_INSTRUCTIONS;
+
+  gameMode = ROLL_DICES;
 
   return myOutputValue;
 };
