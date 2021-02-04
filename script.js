@@ -1,10 +1,11 @@
 // initialize game mode constants
+var SELECT_NUMBER_OF_PLAYERS = 'select number of players';
 var SELECT_NUMBER_OF_DICES = 'select number of dices';
 var ROLL_DICES = 'roll dices';
 var CHOOSE_DICE_ORDER = 'choose dice order';
 
 // initialize variables
-var playerCount = 2;
+var playerCount = 0;
 var diceCount = 0;
 var playerTurn = 0;
 // diceRolls will be a 2D array - an array containing 1 array of dice rolls per player
@@ -13,7 +14,7 @@ var playerTurn = 0;
 var diceRolls = [];
 var orderedNumbers = [];
 var scores = [];
-var gameMode = SELECT_NUMBER_OF_DICES;
+var gameMode = SELECT_NUMBER_OF_PLAYERS;
 
 // initialize string constants
 var ROLL_DICES_INSTRUCTIONS = ' Please hit Submit to roll your dices.';
@@ -162,6 +163,20 @@ var showOrderedNumber = function () {
 var main = function (input) {
   var myOutputValue = '';
   var numberInput = Number(input);
+
+  // game mode: select number of players
+  if (gameMode == SELECT_NUMBER_OF_PLAYERS) {
+    if (input.trim() == '' || Number.isNaN(numberInput) || numberInput < 2) {
+      myOutputValue = 'You need to have 2 or more players! Please enter a valid number of players and hit Submit.';
+    } else {
+      playerCount = numberInput;
+      myOutputValue = 'You have selected to have ' + playerCount + ' players. Now, please enter the number of dices (2 or more) each player will play per round.';
+      // switch game mode
+      gameMode = SELECT_NUMBER_OF_DICES;
+    }
+
+    return myOutputValue;
+  }
 
   // game mode: select number of dices
   if (gameMode == SELECT_NUMBER_OF_DICES) {
