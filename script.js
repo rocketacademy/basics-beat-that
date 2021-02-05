@@ -11,12 +11,15 @@ var getDiceRoll = function () {
   return diceNumber;
 };
 // Game modes
+var gameNumberOfDice = 'gameNumberOfDice';
 var gameModeDiceRoll = 'gameModeDiceRoll';
 var gameModeChooseDiceOrder = 'gameModeChooseDiceOrder';
-
+var gameMode = '';
+// number of dice used and its counter
+var numberOfDiceUsed = [];
+var diceCounter = 0;
 // start the game with the dice roll
-var gameMode = gameModeDiceRoll;
-
+gameMode = gameNumberOfDice;
 // track the current player, with player 1 being first
 var currentPlayer = 1;
 
@@ -30,6 +33,12 @@ var player2Num;
 
 /// Get dice rolls for current player and populate curr player's dice array (rewrote)
 // Return the new dice rolls
+// Create a code that gets number of rolls based on user input
+
+// if (diceCounter < numberOfDiceUsed){
+// diceCounter = diceCounter+1
+// }
+
 var getDiceRolls = function () {
   var newDiceRolls = [getDiceRoll(), getDiceRoll()];
 
@@ -43,7 +52,6 @@ var getDiceRolls = function () {
 
   return newDiceRolls;
 };
-
 // Return a number that is the concatenation of num1 and num2 (NH 50-73)
 
 var concatenate2Numbers = function (num1, num2) {
@@ -76,6 +84,15 @@ var getPlayerNumber = function (firstNumeralIndex) {
 // BeatThatGame
 
 var main = function (input) {
+  var myOutputValue = '';
+  // start the game with number of dice (Not Used Yet)
+  if (gameMode == 'gameNumberOfDice') {
+    numberOfDiceUsed = Number(input);
+    if (isNaN(Number(numberOfDiceUsed))) return 'please choose a number.';
+
+    gameMode = 'gameModeDiceRoll';
+    return 'you chose to use ' + numberOfDiceUsed + ' dice for this game. Press Submit to continue';
+  }
   // Roll 2 dice and show the player the values
   if (gameMode == gameModeDiceRoll) {
     // Get dice rolls for current player and populate the curr player's dice array
