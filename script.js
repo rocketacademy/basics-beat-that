@@ -1,7 +1,8 @@
 // create modes for different gamemodes
 var diceGame = 'random dice roll';
 var players = 'player rolls dice';
-var combination = 'player chooses combination choice';
+var combination1 = 'player 1 chooses combination choice';
+var combination2 = 'player 2 chooses combination choice';
 var finalResult = 'final results for both players';
 var gameMode = players;
 
@@ -29,8 +30,8 @@ var player1Random = function () {
     console.log(counter);
     counter = counter + 1;
     console.log(counter + ' counter2');
-    return player1Roll;
   }
+  return player1Roll;
 };
 
 var player2Random = function () {
@@ -42,8 +43,8 @@ var player2Random = function () {
     console.log(counter);
     counter = counter + 1;
     console.log(counter + ' counter2');
-    return player2Roll;
   }
+  return player2Roll;
 };
 
 var main = function (input) {
@@ -57,43 +58,63 @@ var main = function (input) {
     // player 1 types in roll and the game mode changes to dice game
     if (input == 'roll') {
       gameMode = diceGame;
-      player1Random();
       console.log(player1Roll);
       myOutputValue = 'Player 1 has rolled ' + player1Random() + ' <br> please choose ur combination';
-      gameMode = combination;
+      gameMode = combination1;
     }
     return myOutputValue;
   }
   // player 1 enters his choice of combination
-  if (gameMode == combination && input <= 67) {
-    beatThat.push(input);
-    console.log(beatThat);
-    myOutputValue = 'player 1 has chosen ' + beatThat[0] + ' as his combination <br> Player 2 may now begin his turn';
-    gameMode = diceGame;
+  // input has to be numbers in player1Roll
+  if (gameMode == combination1 && input <= 66) {
+    if ((input == player1Roll[0] + '' + player1Roll[1]) || (input == player1Roll[1] + '' + player1Roll[0])) {
+      console.log(player1Roll + 'player 1 dice roll');
+      beatThat.push(input);
+      console.log(beatThat);
+      myOutputValue = 'player 1 has chosen ' + beatThat[0] + ' as his combination <br> Player 2 may now type roll to begin his turn';
+      gameMode = diceGame;
+      return myOutputValue;
+    }
+
+    myOutputValue = 'invalid option, choose either ' + player1Roll;
     return myOutputValue;
   }
   // player 2 turn
-  if (input == 'roll') {
-    player2Random();
-    console.log(player2Roll);
+  if (gameMode == diceGame && input == 'roll') {
     myOutputValue = 'Player 2 has rolled ' + player2Random() + ' <br> please choose ur combination';
-    gameMode = finalResult;
+    console.log(player2Roll);
+    gameMode = combination2;
     return myOutputValue;
   }
-  // player 2 combination and final results
-  if (gameMode == finalResult && input <= 67) {
-    beatThat.push(input);
+  if (gameMode == combination2 && input <= 66) {
+    if (input == player2Roll[0] + '' + player2Roll[1] || input == player2Roll[1] + '' + player2Roll[0]) {
+      beatThat.push(input);
+      myOutputValue = 'Player 2 has chosen ' + beatThat[1] + ' <br> click submit to view the final winner!';
+      gameMode = finalResult;
+      return myOutputValue;
+    }
+
+    myOutputValue = 'invalid option, choose either ' + player2Roll;
+    return myOutputValue;
+  }
+
+  // player 2 combination and final resultss
+  if (gameMode == finalResult && input.trim() == '') {
     console.log(beatThat);
     // final winner
-    if (beatThat[0] >= beatThat[1]) {
+    if (beatThat[0] > beatThat[1]) {
       myOutputValue = 'Player 1 has selected ' + beatThat[0] + ' while Player 2 has selected ' + beatThat[1] + '<br> the winner is Player 1!';
+      return myOutputValue;
     }
-    else {
+    if (beatThat[1] > beatThat[0]) {
       myOutputValue = 'Player 1 has selected ' + beatThat[0] + ' while Player 2 has selected ' + beatThat[1] + '<br> the winner is Player 2!'; }
+    return myOutputValue;
   }
-  return myOutputValue;
+  if (gameMode == finalResult && input.trim() != '') {
+    myOutputValue = 'dont type anything you baka!';
+    return myOutputValue;
+  }
 };
 
-// };
 // player chooses higher possible combination and stores it in array
 // displays both players number and determine who wins
