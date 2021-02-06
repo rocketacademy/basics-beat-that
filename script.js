@@ -1,111 +1,130 @@
-/* There are 2 players and players take turns.
+//initialize game mode constants
+var SELECT_NUMBER_OF_PLAYERS = 'select number of players';
+var SELECT_NUMBER_OF_DICES = 'select number of dices'; 
 
-placeholder: Welcome Player 1.
-
-input 1: player 1 run program (play clicks Submit)
-output: computer shows 2 dice rolls 
-"You rolled 3 for Dice 1 and 6 for Dice 2.
-Choose the order of the dice."
-
-input 2: player 1 choose dice roll #1 or #2
-output: Player 1, you chose Dice 2 first. Your number is 63. It is now Player 2's turn.
-
-input 3: player 2 rolls 
-output: computer shows 2 dice rolls 
-"You rolled 3 for Dice 1 and 6 for Dice 2.
-Choose the order of the dice."
-
-input 4: player 2 rolls 
-output: computers shows 2 dice rolls 
-
-*/ 
-
-// default
-var mode = 'Player 1 turn';
-var message = '';
-var winner = '';
-
-
-var playerOneFirstRoll = 0;
-var playerOneSecondRoll = 0;
-var playerTwoFirstRoll = 0;
-var playerTwoSecondRoll = 0;
+// initialize variables 
+// random computer rolls (unordered)
+var playerOneRoll = []; 
+var playerTwoRoll = [];
 
 var playerOneChoice = 0;
 var playerTwoChoice = 0;
 
-// computer generates dice roll string
-var diceRoll = function () {
+var playerOneLog = 0;
+var playerTwoLog = 0;
+var totalLog = 0;
+
+var mode = SELECT_NUMBER_OF_PLAYERS;
+var message = '';
+var winner = '';
+
+var numPlayers = 0;
+
+
+// generates dice roll in number  
+var rollDice = function () {
   // avoid rolling 0
   var randomDecimal = 1 + Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
-  return parseInt(randomInteger);
+  return randomInteger;
+}
+
+// takes number of dice that user wants to play with, and returns numbers in an array
+var playerOptions = [];
+var rollMultipleDice = function (diceNumber, playerOptions) {
+
+  for (var i = 0; i < diceNumber; i += 1) {
+    playerOptions.push(rollDice());
+  }
+  return playerOptions;
+} 
+
+// input: array of numbers [2,1,6] 
+// output: largest number out of an array of numbers = 621
+var createLargestCombination = function (diceRollArray) {
+
+  // input: array of numbers 
+  // return array in from highest to lowest [6,2,1]
+  var sortedArray = diceRollArray.sort ( (currentItem, nextItem) => nextItem - currentItem);
+
+  //'6' + '2' + '1' = '621' = 621
+
+  // join the items in the array together into a string
+  var stringifiedArray = sortedArray.join('');
+
+  // turn the string back into a number
+  var stringToNum = Number(stringifiedArray);
+
+  return stringToNum;
+
 }
 
 var main = function (input) {
-  
-  // default mode: player 1 starts 
+
+  // (1) save the number of players throughout the game
+  if (mode == SELECT_NUMBER_OF_PLAYERS) {
+    numPlayers = input;
+
+  }
+
+  // (2) save the number of dice throughout game
+
+
+  // (3) roll dice –> for each player, roll multiple dice + store the largest combination in an array 
+
+
+  // determineWinner helper function (compare all the players rolls), highest number will be the winner 
+
+
+
+
+
+
+  // default mode: player 1 starts
+  // output: rauto generate highest combined number from dice rolls
   if (mode == 'Player 1 turn') {
-    // player 1 rolls random dice twice 
-    playerOneFirstRoll = diceRoll();
-    playerOneSecondRoll = diceRoll();
 
-    message = 'Player 1, you rolled ' + playerOneFirstRoll + ' for dice 1 and ' + playerOneSecondRoll + ' for dice 2.' + '<br>' + 'Choose 1 or 2.';
+    diceNumber = input; 
 
-    // player 1 chooses one dice
-    mode = 'Player 1 choice';
-    console.log(mode);
-    return message; 
-  }
-  
-  // after player 1 rolls, player 1 chooses 
-  else if (mode == 'Player 1 choice') { 
-    // default: dice 1 is player 1's choice, concantenate dice 1,2
-    playerOneChoice = playerOneFirstRoll + playerOneSecondRoll;
+    // player 1 rolls unordered dice -> [6,2,1]
+    // generate highest combination -> 621 
+    playerOneChoice = createLargestCombination (rollMultipleDice (diceNumber, playerOneRoll));
 
-    // dice 2 is player 1's choice, concantenate dice 2,1
-    if (input == '2') {
-      playerOneChoice = playerOneSecondRoll + playerOneFirstRoll;
-    }
-    message = 'Player 1, you chose dice ' + input +  ' first. Your number is ' + playerOneChoice + '. It is now Player 2\'s turn. Click Submit';
+    console.log('player one choice ' + playerOneChoice);
+    console.log('player one roll ' + playerOneRoll);
 
-    mode = 'Player 2 turn'
-    return message;
+    mode = 'Player 2 turn';
+
+    return 'Player 1: you rolled ' + playerOneRoll + '<br>Your largest combination is ' + playerOneChoice + ' which is the number that Player 2 must beat. Player 2 roll!';
   }
 
-  // after player 1 chooses, player 2 rolls
-  else if (mode == 'Player 2 turn') { 
-    playerTwoFirstRoll = diceRoll();
-    playerTwoSecondRoll = diceRoll();
+  // player 2 clicks to roll 
+  // output: auto generate highest combined number from dice rolls
+  else if (mode == 'Player 2 turn') {
 
-    message = 'Player 2, you rolled ' + playerTwoFirstRoll + ' for dice 1 and ' + playerTwoSecondRoll + ' for dice 2.' + '<br>' + 'Choose 1 or 2.';
-    mode = 'Player 2 choice';
+    // player 2 rolls unordered dice -> [6,2,1]
+    // generate highest combination -> 621 
+    playerTwoChoice = createLargestCombination (rollMultipleDice (diceNumber, playerTwoRoll)); 
 
-    return message;
-  }
+    console.log ('player 2 choice' + playerTwoChoice);
+    console.log('player 2 roll ' + playerTwoRoll);
 
-  // after player 2 rolls, player 2 chooses
-  else if (mode == 'Player 2 choice') {
+    // after both players have rolled, then total games will +1 
+    totalLog += 1; 
     
-    // default: dice 1 is player 2's choice, concantenate dice 1,2
-    playerTwoChoice = playerTwoFirstRoll + playerTwoSecondRoll;
-
-    // dice 2 is player 1's choice, concantenate dice 2,1
-    if (input == '2') {
-      playerTwoChoice = playerTwoSecondRoll + playerTwoFirstRoll;
-    }
-    
-    // default for winning 
+    // decides who win
     if (playerOneChoice > playerTwoChoice) {
-      winner = 'Player 1';
+      playerOneLog += 1;
+      winner = 'Player 1, you win! '
     }
     else {
-      winner = 'Player 2';
+      playerTwoLog += 1;
+      winner = 'Player 2, you win! '
     }
 
-    message = 'Player 2, you chose dice ' + input +  ' first. Your number is ' + playerTwoChoice + '. ' + '<br>' + 'Player 1: ' + playerOneChoice + '<br>' + 'Player 2: ' + playerTwoChoice + '<br>' + winner + ' wins!';
-    mode = 'Player 1 turn'
+    return 'Player 2, you rolled ' + playerTwoRoll +  '<br>Your largest combination is ' + playerTwoChoice +'. <br>'+ winner + '<br> Player 1: ' + playerOneLog + '/' + totalLog + '<br>Player 2: ' + playerTwoLog + '/' + totalLog; 
 
-    return message;
-  }
+  } 
+  mode = 'Player 1 turn';
 }
+  
