@@ -1,5 +1,4 @@
-// ######## MORE COMFORTABLE : 1. Variable Number of Dice  2. Score  3. Auto-Choose
-// ========project covers questions upto "auto-chose" in more comfortable ======
+// ######## MORE COMFORTABLE :  Variable Number of players.
 
 
 // random number
@@ -16,25 +15,6 @@ function storeRolledNumbers(dices) {
   }
   return diceRollArray;
 }
-// user inputs string with represent the indices. breakdown the string and form the order
-function numberFromIndexes(stringNumber) {
-  let arrayOfIndexes = stringNumber.split('').map(Number);
-  return arrayOfIndexes;
-}
-
-// this function is to generate numbers from choses indexes by player.
-function indexesToNumbers(indexes, rolls) {
-  let indexesLength = indexes.length;
-  let rollslength = rolls.length;
-  let numberArray = [];
-  let finalNumber = 0;
-  for (let i = 0; i < indexesLength; i++) {
-    let number = rolls[indexes[i]];
-    numberArray.push(number);
-    finalNumber += (number * (10 ** (rollslength - 1 - i)));
-  }
-  return finalNumber;
-}
 
 // this function is to generate largest number from random numbers automatically.
 function autoGenNumber(rolledNumArray) {
@@ -48,19 +28,25 @@ function autoGenNumber(rolledNumArray) {
     rolledNumArray = array.splice(array.indexOf(max), 1);
     console.log(array + ' array after splice');
   }
-  return finalNumber
-  // return Math.max.apply(null, rolledNumArray);
+  return finalNumber;
 }
 
 // dafault mode at the start of the game.
-let mode = 'num of dice';
+let mode = 'num of players';
 let numOfDice;
 let rolledNumbers;
+let numOfPlayers = 0;
 let player1score = 0;
 let player2score = 0;
-let playerTurn = 'player1'
+let numOfRounds = 1;
+let totalScore = [];
 function main(input) {
   let result = 'enter number of dice you want to play with';
+  if (mode == 'num of players') {
+    numOfPlayers = input;
+    mode = 'num of dice';
+    return 'number of players set. enter the number of dice.';
+  }
   if (mode == 'num of dice') {
     numOfDice = input;
     mode = 'play';
@@ -68,37 +54,28 @@ function main(input) {
   }
   if (mode == 'play') {
     rolledNumbers = storeRolledNumbers(numOfDice);
-    // mode = 'chose order';
     mode = 'auto order';
     result = ` here is the array of your rolled numbers ${rolledNumbers}`;
-    // return result + ' Enter the indexes to generate THE NUMBER.';
     return result + ' hit submit to auto generate THE NUMBER.';
   }
-  // if (mode == 'chose order') 
   if (mode == 'auto order') {
-    let resultOfDiceRoll = rolledNumbers;
-    let indexes = numberFromIndexes(input);
-    // ** for maual number genenration use score.
-    // let score = indexesToNumbers(indexes, resultOfDiceRoll);
     let largestNumInArray = autoGenNumber(rolledNumbers);
     console.log(largestNumInArray + ' largest num in array');
-    if (playerTurn == 'player1') {
-      // player1score += score;
-      player1score += largestNumInArray;
-      playerTurn = 'player2';
-      // result = `score of last round ${score}. so far player1's total score is: ${player1score}. And player2's total score id: ${player2score}. Now it's player2's turn.`;
-      result = `score of last round ${largestNumInArray}. so far player1's total score is: ${player1score}. And player2's total score id: ${player2score}. Now it's player2's turn.`;
-    }
-    else {
-      // player2score += score;
-      player2score += largestNumInArray;
-      // result = `score of last round ${score}. so far player1's total score is: ${player1score}. And player2's total score id: ${player2score}. Now it's player1's turn.`;
-      result = `score of last round ${largestNumInArray}. so far player1's total score is: ${player1score}. And player2's total score id: ${player2score}. Now it's player1's turn.`;
-    }
+    totalScore.push(largestNumInArray);
+    console.log(totalScore);
+    console.log(numOfRounds + ' num of rounds');
+    console.log(totalScore + ' total score');
+    let playerTotalNumber = totalScore[numOfRounds - 1];
+    console.log(playerTotalNumber + ' player total number');
+    result = `score of last round ${largestNumInArray}. Score of player${numOfRounds} is ${playerTotalNumber}`;
   }
+  numOfRounds += 1;
   mode = 'num of dice';
-  if (player1score > player2score) { result = result + ' player 1 is leading'; }
-  else if (player1score < player2score) { result = result + ' player 2 is leading'; }
-  else { result = result + ' No one is leading at the moment'; }
+  if (numOfRounds > numOfPlayers) {
+    mode = 'num of players';
+    result = result + ' GAME OVER. Enter number of players to play again.';
+    numOfRounds = 1;
+    totalScore = [];
+  }
   return result;
 }
