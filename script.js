@@ -1,4 +1,4 @@
-// ######## MORE COMFORTABLE :  Leaderboard.
+// ######## MORE COMFORTABLE :  Knockout Mode.
 
 
 // random number
@@ -41,6 +41,33 @@ function autoGenNumber(rolledNumArray, gameMode) {
   return finalNumber;
 }
 
+function findWinner(totalScore, result) {
+  let winner;
+  let outPut;
+  if (gameModeInput == 'lowest') {
+    let minTotalScore = Math.min.apply(null, totalScore);
+    for (let i = 0; i < totalScore.length; i++) {
+      if (minTotalScore == totalScore[i]) {
+        winner = i;
+      }
+    }
+    winner = 'Player' + (winner + 1);
+
+    outPut = result + `. <br>The winner is ${winner} with ${minTotalScore} score.<br> the scores are : ${totalScore.sort().reverse()}. <br>now ${winner} will play with next player `;
+  }
+  else if (gameModeInput == 'highest') {
+    let maxTotalScore = Math.max.apply(null, totalScore);
+    for (let i = 0; i < totalScore.length; i++) {
+      if (maxTotalScore == totalScore[i]) {
+        winner = i;
+      }
+    }
+    winner = 'Player' + (winner + 1);
+    outPut = result + `.  <br>The winner is ${winner} with ${maxTotalScore} score. <br> the scores are : ${totalScore.sort()}<br> now ${winner} will play with next player`;
+  }
+  return outPut;
+}
+
 // dafault mode at the start of the game.
 let mode = 'num of players';
 let numOfDice;
@@ -51,10 +78,14 @@ let player2score = 0;
 let numOfRounds = 1;
 let totalScore = [];
 let gameModeInput;
+let roundsInCurentGame = 0;
+let playerNumber = 0;
+let currentAvailablePlayer;
 function main(input) {
   let result = 'enter number of dice you want to play with';
   if (mode == 'num of players') {
     numOfPlayers = input;
+    currentAvailablePlayer = numOfPlayers;
     mode = 'num of dice';
     return 'number of players set. enter the number of dice.';
   }
@@ -79,37 +110,35 @@ function main(input) {
     console.log(totalScore + ' total score');
     let playerTotalNumber = totalScore[numOfRounds - 1];
     console.log(playerTotalNumber + ' player total number');
-    result = `score of last round ${largestNumInArray}. Score of player${numOfRounds} is ${playerTotalNumber}`;
-  }
-  numOfRounds += 1;
-  mode = 'num of dice';
-  if (numOfRounds > numOfPlayers) {
-    let winner;
-    if (gameModeInput == 'lowest') {
-      let minTotalScore = Math.min.apply(null, totalScore);
-      for (let i = 0; i < totalScore.length; i++) {
-        if (minTotalScore == totalScore[i]) {
-          winner = i;
-        }
-      }
-      winner = 'Player' + (winner + 1);
-      result = result + `. GAME OVER. The winner is ${winner} with ${minTotalScore} score.<br> the scores are : ${totalScore.sort().reverse()} Enter number of players to play again.`;
-    }
-    else if (gameModeInput == 'highest') {
-      let maxTotalScore = Math.max.apply(null, totalScore);
-      for (let i = 0; i < totalScore.length; i++) {
-        if (maxTotalScore == totalScore[i]) {
-          winner = i;
-        }
-      }
-      winner = 'Player' + (winner + 1);
-      result = result + `. GAME OVER. The winner is ${winner} with ${maxTotalScore} score. <br> the scores are : ${totalScore.sort()}<br> Enter number of players to play again.`;
-    }
-    numOfRounds = 1;
-    totalScore = [];
-    mode = 'num of players';
+    playerNumber += 1;
+    result = `score of last round ${largestNumInArray}.`;
   }
 
+  roundsInCurentGame += 1;
+  if (roundsInCurentGame == 2) {
+    currentAvailablePlayer = Number(currentAvailablePlayer) - 1;
+  }
+
+  numOfRounds += 1;
+  mode = 'num of dice';
+  if (roundsInCurentGame == 2 && currentAvailablePlayer == 1) {
+    console.log('this loop is running');
+    let localizedResult = 'GAME OVER.';
+    result = findWinner(totalScore, result);
+    result = localizedResult + result;
+    numOfRounds = 1;
+    totalScore = [];
+    mode = 'num of dice';
+    playerNumber = 0;
+  }
+  else if (roundsInCurentGame == 2) {
+    let localizedResult = 'ROUND OVER.'
+    result = findWinner(totalScore, result);
+    result = localizedResult + result;
+    roundsInCurentGame = 0;
+    totalScore = [];
+    mode = 'num of dice';
+  }
 
   return result;
 }
