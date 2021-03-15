@@ -1,4 +1,4 @@
-// ######## MORE COMFORTABLE :  Lowest Combined Number Mode.
+// ######## MORE COMFORTABLE :  Leaderboard.
 
 
 // random number
@@ -17,17 +17,26 @@ function storeRolledNumbers(dices) {
 }
 
 // this function is to generate largest number from random numbers automatically.
-function autoGenNumber(rolledNumArray) {
+function autoGenNumber(rolledNumArray, gameMode) {
   let array = rolledNumArray;
   let finalNumber = 0;
   let length = array.length;
   for (let i = 0; array.length >= 1; i++) {
-    let smallest = Math.min.apply(null, array);
-    console.log('smallest number: ' + smallest);
-    finalNumber = finalNumber * 10 + smallest;
-    console.log('final number: ' + finalNumber);
-    rolledNumArray = array.splice(array.indexOf(smallest), 1);
-    console.log(array + ' array after splice');
+    if (gameMode == 'highest') {
+      let max = Math.max.apply(null, array);
+      finalNumber = finalNumber * 10 + max;
+      console.log(finalNumber + ' final number');
+      rolledNumArray = array.splice(array.indexOf(max), 1);
+      console.log(array + ' array after splice');
+    }
+    else if (gameMode == 'lowest') {
+      let smallest = Math.min.apply(null, array);
+      console.log('smallest number: ' + smallest);
+      finalNumber = finalNumber * 10 + smallest;
+      console.log('final number: ' + finalNumber);
+      rolledNumArray = array.splice(array.indexOf(smallest), 1);
+      console.log(array + ' array after splice');
+    }
   }
   return finalNumber;
 }
@@ -41,6 +50,7 @@ let player1score = 0;
 let player2score = 0;
 let numOfRounds = 1;
 let totalScore = [];
+let gameModeInput;
 function main(input) {
   let result = 'enter number of dice you want to play with';
   if (mode == 'num of players') {
@@ -57,10 +67,11 @@ function main(input) {
     rolledNumbers = storeRolledNumbers(numOfDice);
     mode = 'auto order';
     result = ` here is the array of your rolled numbers ${rolledNumbers}`;
-    return result + ' hit submit to auto generate THE NUMBER.';
+    return result + ' enter Game Mode (highest/lowest) to auto generate THE NUMBER.';
   }
   if (mode == 'auto order') {
-    let largestNumInArray = autoGenNumber(rolledNumbers);
+    gameModeInput = input;
+    let largestNumInArray = autoGenNumber(rolledNumbers, input);
     console.log(largestNumInArray + ' largest num in array');
     totalScore.push(largestNumInArray);
     console.log(totalScore);
@@ -73,18 +84,32 @@ function main(input) {
   numOfRounds += 1;
   mode = 'num of dice';
   if (numOfRounds > numOfPlayers) {
-    mode = 'num of players';
     let winner;
-    let minTotalScore = Math.min.apply(null, totalScore);
-    for (let i = 0; i < totalScore.length; i++) {
-      if (minTotalScore == totalScore[i]) {
-        winner = i;
+    if (gameModeInput == 'lowest') {
+      let minTotalScore = Math.min.apply(null, totalScore);
+      for (let i = 0; i < totalScore.length; i++) {
+        if (minTotalScore == totalScore[i]) {
+          winner = i;
+        }
       }
+      winner = 'Player' + (winner + 1);
+      result = result + `. GAME OVER. The winner is ${winner} with ${minTotalScore} score.<br> the scores are : ${totalScore.sort().reverse()} Enter number of players to play again.`;
     }
-    winner = 'Player' + (winner + 1);
-    result = result + `. GAME OVER. The winner is ${winner} with ${minTotalScore} score.Enter number of players to play again.`;
+    else if (gameModeInput == 'highest') {
+      let maxTotalScore = Math.max.apply(null, totalScore);
+      for (let i = 0; i < totalScore.length; i++) {
+        if (maxTotalScore == totalScore[i]) {
+          winner = i;
+        }
+      }
+      winner = 'Player' + (winner + 1);
+      result = result + `. GAME OVER. The winner is ${winner} with ${maxTotalScore} score. <br> the scores are : ${totalScore.sort()}<br> Enter number of players to play again.`;
+    }
     numOfRounds = 1;
     totalScore = [];
+    mode = 'num of players';
   }
+
+
   return result;
 }
