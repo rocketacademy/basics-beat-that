@@ -1,4 +1,4 @@
-// ######## MORE COMFORTABLE :  Variable Number of players.
+// ######## MORE COMFORTABLE :  Lowest Combined Number Mode.
 
 
 // random number
@@ -22,10 +22,11 @@ function autoGenNumber(rolledNumArray) {
   let finalNumber = 0;
   let length = array.length;
   for (let i = 0; array.length >= 1; i++) {
-    let max = Math.max.apply(null, array);
-    finalNumber = finalNumber * 10 + max;
-    console.log(finalNumber + ' final number');
-    rolledNumArray = array.splice(array.indexOf(max), 1);
+    let smallest = Math.min.apply(null, array);
+    console.log('smallest number: ' + smallest);
+    finalNumber = finalNumber * 10 + smallest;
+    console.log('final number: ' + finalNumber);
+    rolledNumArray = array.splice(array.indexOf(smallest), 1);
     console.log(array + ' array after splice');
   }
   return finalNumber;
@@ -73,7 +74,15 @@ function main(input) {
   mode = 'num of dice';
   if (numOfRounds > numOfPlayers) {
     mode = 'num of players';
-    result = result + ' GAME OVER. Enter number of players to play again.';
+    let winner;
+    let minTotalScore = Math.min.apply(null, totalScore);
+    for (let i = 0; i < totalScore.length; i++) {
+      if (minTotalScore == totalScore[i]) {
+        winner = i;
+      }
+    }
+    winner = 'Player' + (winner + 1);
+    result = result + `. GAME OVER. The winner is ${winner} with ${minTotalScore} score.Enter number of players to play again.`;
     numOfRounds = 1;
     totalScore = [];
   }
