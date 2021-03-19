@@ -1,85 +1,68 @@
-// first initialise first player mode
-var mode = 'dice roll Mode';
+// initialise first mode asking input
+var mode = 'need input';
 
-// tracking of players
-var player = 1;
-
-// player 1 array for dice roll storage
-var rS1 = [];
-var rS2 = [];
-
-// player 2 array for dice roll storage
-var rS3 = [];
-var rS4 = [];
+// two dice array for ramdom dice roll
+var diceOne = [];
+var diceTwo = [];
 
 // player 1 and 2 number
-var p1num = '';
-var p2num = '';
+var player1Dice = [];
+var player2Dice = [];
 
 // random dice generator for two dice
-var generateDice1 = function () {
-  var diceOne = Math.floor(Math.random() * 6) + 1;
-  return diceOne;
+var generateDiceNum = function () {
+  return Math.ceil(Math.random() * 6);
 };
 
-var generateDice2 = function () {
-  var diceTwo = Math.floor(Math.random() * 6) + 1;
-  return diceTwo;
-};
+// function to concat first dice number
+function concatDiceNum1() {
+  return (diceOne[diceOne.length - 1]).toString() + (diceTwo[diceTwo.length - 1]).toString();
+}
+// function to concat second dice number
+function concatDiceNum2() {
+  return (diceTwo[diceTwo.length - 1]).toString() + (diceOne[diceOne.length - 1]).toString();
+}
 
 var main = function (input) {
-  // push random dice rolls to each array
-
-  // dice roll mode 1
+  // if input is empty, goto need input mode
   if (input == '') {
-    rS1.push(generateDice1());
-    rS2.push(generateDice2());
-    mode = 'player 1';
-    return 'Player 1' + '<br><br>' + 'Dice 1: You rolled ' + rS1[rS1.length - 1] + ' 🎲' + '<br><br>' + 'Dice 2: You rolled ' + rS2[rS2.length - 1] + ' 🎲' + '<br><br>' + 'Type either "dice1" or "dice2" to pick your first numeral of the combined number';
+    mode = 'need input';
+    return 'To play the game: input "p1" for player 1 to roll or "p2" for player 2 to roll' + '<br>' + 'you can change to player 2 after player 1 picks the dice number.';
   }
-
-  // user picks the dice
+  // if input is "p1" goto player1 mode
+  if (input == 'p1') {
+    mode = 'player1';
+    diceOne.push(generateDiceNum());
+    diceTwo.push(generateDiceNum());
+    return 'Player 1' + '<br><br>' + 'Dice 1: You rolled ' + diceOne[diceOne.length - 1] + ' 🎲' + '<br><br>' + 'Dice 2: You rolled ' + diceTwo[diceTwo.length - 1] + ' 🎲' + '<br><br>' + 'Type either "dice1" or "dice2" to pick your first numeral of the combined number';
+  }
+  // if input is "p2" goto player2 mode
+  if (input == 'p2') {
+    mode = 'player2';
+    diceOne.push(generateDiceNum());
+    diceTwo.push(generateDiceNum());
+    return 'Player 2' + '<br><br>' + 'Dice 1: You rolled ' + diceOne[diceOne.length - 1] + ' 🎲' + '<br><br>' + 'Dice 2: You rolled ' + diceTwo[diceTwo.length - 1] + ' 🎲' + '<br><br>' + 'Type either "dice1" or "dice2" to pick your first numeral of the combined number';
+  }
+  // if user input "dice1" goto dice1 concat mode
   if (input == 'dice1') {
-    return 'Player 1 your number is ' + (rS1[rS1.length - 1]) + (rS2[rS2.length - 1]) + '<br>' + 'Please type "end" to switch to player 2';
+    mode = 'dice1 concat mode';
+    player1Dice.push(concatDiceNum1());
+    return 'Your number is ' + concatDiceNum1() + '<br>' + "Input 'beat-that' to compare your number with the other player!";
   }
-
+  // if user input "dice2" goto dice2 concat mode
   if (input == 'dice2') {
-    return 'Player 1 your number is ' + rS2[rS2.length - 1] + rS1[rS1.length - 1] + '<br>' + 'Please type "end" to switch to player 2';
+    mode = 'dice2 concat mode';
+    player2Dice.push(concatDiceNum2());
+    return 'Your number is ' + concatDiceNum2() + '<br>' + "Input 'beat-that' to compare your number with the other player!";
   }
-
-  if (mode == 'player 1') {
-    if (input == '') {
-      mode = 'player 2';
-      rS3.push(generateDice1());
-      rS4.push(generateDice2());
-      return 'Player 2' + '<br><br>' + 'Dice 1: You rolled ' + rS3[rS3.length - 1] + ' 🎲' + '<br><br>' + 'Dice 2: You rolled ' + rS4[rS4.length - 1] + ' 🎲' + '<br><br>' + 'Type either "dice1" or "dice2" to pick your first numeral of the combined number';
+  // if input is "beat-that" goto dice comparison mode
+  if (input == 'beat-that') {
+    mode = 'comparison mode';
+    if (player1Dice.slice(-1) > player2Dice.slice(-1)) {
+      return 'Player 1 dice number is: ' + player1Dice.slice(-1) + '<br>' + 'Player 2 dice number is: ' + player2Dice.slice(-1) + '<br>' + 'Player 1 Wins!';
     }
-    var counter = 0;
-    while (counter < (input == 'end')) {
-      counter = counter + 1; }
-
-    if (input == 'dice1') {
-      mode = 'player 2 d1 pick mode';
-      return 'Player 2 your number is ' + (rS3[rS3.length - 1]) + (rS4[rS4.length - 1]);
-    }
-
-    if (input == 'dice2') {
-      mode = 'player 2 d2 pick mode';
-      return 'Player 2 your number is ' + (rS4[rS4.length - 1]) + (rS3[rS3.length - 1]);
+    if (player2Dice.slice(-1) > player1Dice.slice(-1)) {
+      return 'Player 1 dice number is: ' + player1Dice.slice(-1) + '<br>' + 'Player 2 dice number is: ' + player2Dice.slice(-1) + '<br>' + 'Player 2 Wins!';
     }
   }
 };
-
-/*
-var combineDice = function () {
-// user picks the dice
-  if (input == 'dice1') {
-    mode = 'player 2 d1 pick mode';
-    return 'Player 2 your number is ' + (rS3[rS3.length - 1]) + (rS4[rS4.length - 1]);
-  }
-
-  if (input == 'dice2') {
-    mode = 'player 2 d2 pick mode';
-    return 'Player 2 your number is ' + (rS4[rS4.length - 1]) + (rS3[rS3.length - 1]);
-  }
-}; */
