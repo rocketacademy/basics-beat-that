@@ -29,11 +29,11 @@ var main = function (input){
         if (mode = 'dice rolled for player 1' && input == 'yes') {
         mode == 'change configuration of both numbers for player 1';
         var callChangePositioningFunc = changePosition1();
-            return 'your rolls are ' + player1sRolls;
+            return 'hello,your rolls are ' + player1sRolls;
         } else if (input == 'no') {
             mode == 'want to keep these numbers the same for player 1';
             player1sRolls = [displayFirstRoll, display2ndRoll];
-            return 'your rolls are ' + player1sRolls;
+            return 'hello,your rolls are ' + player1sRolls;
           }
         }
       }
