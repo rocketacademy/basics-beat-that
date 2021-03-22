@@ -1,24 +1,29 @@
-/* Base Level
-var diceNumbers =[];
-var rollNumber =0;
+/* Base Code
+//array to store final number concatenated by the players
 var diceRolls = [];
+//random number rolled by dice 1
 var dice1 = 0;
+//random number rolled by dice 2
 var dice2 = 0;
+//number of turns completed. Each round there will be 2 turns since there are only 2 players
 var playerCount = 0;
 var main = function (input) {
   while (playerCount<2){
+    //generate dice roll numbers
     if (input == ''){
       dice1=Math.floor(Math.random()*6+1);
       dice2=Math.floor(Math.random()*6+1);
       console.log(playerCount);
       return `Your dice numbers are ${dice1} and ${dice2}. To put ${dice1} as your first number, enter "Dice 1". Otherwise, enter "Dice 2" to put ${dice2} as your first number`
     }
+    //add final number concatenated by players to an array to be stored so the numbers can compared at the end of the game to see who won
     if (input =='Dice 1'){
       playerNumber=`${dice1}${dice2}`
       diceRolls.push(Number(playerNumber));
       playerCount = playerCount + 1
       return `Your number is ${playerNumber}`
     }
+    //add final number concatenated by players to an array to be stored so the numbers can compared at the end of the game to see who won
     if (input =='Dice 2'){
       playerNumber=`${dice2}${dice1}`
       diceRolls.push(Number(playerNumber));
@@ -26,6 +31,7 @@ var main = function (input) {
       return `Your number is ${playerNumber}`
     }
   }
+  //when playerCount == 2, all players have finished their turns and the winner will be announced
   if (diceRolls[0]>diceRolls[1]){
     return `Congratulations Player 1, your number ${diceRolls[0]} is the largest`
   }
@@ -34,58 +40,73 @@ var main = function (input) {
   }
 }
 */
-/* more comfortable level
-//numbers rolled
+
+/* variable dice mode
+//numbers the player receives from rolling the dices
 var diceNumbers =[];
-//roll counts
+//number of dices that has been rolled
 var rollNumber =0;
-//numbers formed based on player's choice
+//array to store final numbers concatenated by the players
 var diceRolls = [];
-//keep tracks if both players had rolled the dices
+//number of turns completed. Each round there will be 2 turns since there are only 2 players
 var playerCount = 0;
-var mode = ''
-//sequence inputed by player for numbers rolled
+// there are 2 modes:
+// initiate: default mode at the start of the game where players have to choose the number of dices to be rolled
+// rolled: mode once the number of dices to be used has been determined and the first player roll his dice
+//
+var mode = 'initiate'
+//player's input on the sequence that they want to arrange the numbers by
 var sequence = [];
-// set number of dice to be rolled
+// number of dices to be rolled for each turn
 var numberOfRolls =0;
+
+//generates numbers rolled for the player
+var playerRollsDices = function (){
+  while(rollNumber<numberOfRolls){
+    dice = Math.floor(Math.random()*6+1);
+    diceNumbers.push(dice);
+    rollNumber = rollNumber + 1;
+  }
+}
+
+//creates the highest number formed by the player
+var playerHighestNumber = function(){
+  for (var i=0; i<diceNumbers.length; i++){
+      playerNumber =playerNumber+`${diceNumbers[parseInt(sequence[i])]}`;      
+  }
+  diceRolls.push(parseInt(playerNumber));
+}
 var main = function (input) {
   while (playerCount<2){
+    //initiate game by asking for number of dices to be rolled
     if (input == ''){
       return 'Enter the number of dices that you want to roll'
     }
+    //choice on number of dices to be rolled is set and the dices for the first player is rolled
     if (isNaN(parseInt(input))==false && mode!="rolled"){
       numberOfRolls = Number(input);
-      mode = 'rolled'
-      while(rollNumber<numberOfRolls){
-        dice = Math.floor(Math.random()*6+1);
-        diceNumbers.push(dice);
-        rollNumber = rollNumber + 1;
-      }
+      mode = 'rolled';
+      playerRollsDices();
       return `The numbers you rolled are ${diceNumbers}. Please choose the sequence of your number`
     }
+    //rolls dice for subsequent turns
     if (input =="Roll"){
       rollNumber = 0;
-      while(rollNumber<numberOfRolls){
-        dice = Math.floor(Math.random()*6+1);
-        diceNumbers.push(dice);
-        rollNumber = rollNumber + 1;
-      }
+      playerRollsDices();
       return `The numbers you rolled are ${diceNumbers}. Please choose the sequence of your number`
     }
+    //concatenate the numbers rolled into the player's final number based on the sequence defined by the player
     else{
       sequence = input.split("");
-      //console.log(sequence);
       playerNumber ='';
-      for (var i=0; i<diceNumbers.length; i++){
-        playerNumber =playerNumber+`${diceNumbers[parseInt(sequence[i])]}`;
-        
-      }
+      playerHighestNumber();
+      //reset the array of the values rolled by the current player for the next turn
       diceNumbers.length = 0;
-      diceRolls.push(parseInt(playerNumber));
       playerCount = playerCount+1;
       return `Your number is ${playerNumber}. The next player please enter 'Roll' to start your turn`
     }
   }
+  //when playerCount == 2, all players have finished their turns and the winner will be announced
   if (diceRolls[0]>diceRolls[1]){
     return `Congratulations Player 1, your number ${diceRolls[0]} is the largest`
   }
@@ -94,176 +115,3 @@ var main = function (input) {
   }
 }
 */
-/* score
-//numbers rolled
-var diceNumbers =[];
-//roll counts
-var rollNumber =0;
-//numbers formed based on player's choice
-var diceRolls = [];
-//keep tracks if both players had rolled the dices
-var playerCount = 0;
-//mode for the dice
-var mode = ''
-//sequence inputed by player for numbers rolled
-var sequence = [];
-// set number of dice to be rolled
-var numberOfRolls =0;
-var player1Score = 0;
-var player2Score = 0;
-//mode the game is on
-var gameMode = 'continuous';
-var main = function (input) {
-  while (gameMode=='continuous'){
-    while (playerCount<2){
-      if (input == ''){
-        return 'Enter the number of dices that you want to roll'
-      }
-      if (isNaN(parseInt(input))==false && mode!="rolled"){
-        numberOfRolls = Number(input);
-        mode = 'rolled'
-        while(rollNumber<numberOfRolls){
-          dice = Math.floor(Math.random()*6+1);
-          diceNumbers.push(dice);
-          rollNumber = rollNumber + 1;
-        }
-        return `The numbers you rolled are ${diceNumbers}. Please choose the sequence of your number`
-      }
-      if (input =="Roll"){
-        rollNumber = 0;
-        while(rollNumber<numberOfRolls){
-          dice = Math.floor(Math.random()*6+1);
-          diceNumbers.push(dice);
-          rollNumber = rollNumber + 1;
-        }
-        return `The numbers you rolled are ${diceNumbers}. Please choose the sequence of your number`
-      }
-      else{
-        sequence = input.split("");
-        //console.log(sequence);
-        playerNumber ='';
-        for (var i=0; i<diceNumbers.length; i++){
-          playerNumber =playerNumber+`${diceNumbers[parseInt(sequence[i])]}`;
-          
-        }
-        diceNumbers.length = 0;
-        diceRolls.push(parseInt(playerNumber));
-        playerCount = playerCount+1;
-        return `Your number is ${playerNumber}. The next player please enter 'Roll' to start your turn or leave the input empty if the round has ended`
-      }
-    }
-    playerCount = 0;
-    mode ='reset'
-    if (diceRolls[0]>diceRolls[1]){
-      player1Score=player1Score+1;
-      return `Player 1 has won this round. The scores are Player 1: ${player1Score} and Player 2:${player2Score}`
-    }
-    if (diceRolls[1]>diceRolls[0]){
-      player2Score=player2Score+1;
-      return `Player 2 has won this round. The scores are Player 1: ${player1Score} and Player 2:${player2Score}`
-    }
-}
-}
-*/ 
-
-//numbers rolled
-var diceNumbers =[];
-//roll counts
-var rollNumber =0;
-//numbers formed based on player's choice
-var diceRolls = [];
-//keep tracks if both players had rolled the dices
-var playerCount = 0;
-//mode for the dice
-var mode = ''
-//sequence inputed by player for numbers rolled
-var sequence = [];
-// set number of dice to be rolled
-var numberOfRolls =0;
-var player1Score = 0;
-var player2Score = 0;
-//number of dices to be rolled
-var numberOfRolls =0;
-//mode the game is on
-var gameMode = 'continuous';
-var main = function (input) {
-  while (gameMode=='continuous'){
-    while (playerCount<2){
-      if (input == ''){
-        return 'Enter the number of dices that you want to roll'
-      }
-      if (isNaN(parseInt(input))==false && mode!="rolled"){
-        numberOfRolls = Number(input);
-        mode = 'rolled';
-        playerNumber ='';
-        while(rollNumber<numberOfRolls){
-          dice = Math.floor(Math.random()*6+1);
-          diceNumbers.push(dice);
-          rollNumber = rollNumber + 1;
-        }
-        while (numberOfRolls>0){
-          largestNumber = Math.max.apply(null,diceNumbers);
-          indexRemoved = diceNumbers.indexOf(largestNumber)-1;
-          console.log(largestNumber);
-          console.log(indexRemoved);
-          diceNumbers = diceNumbers.splice(indexRemoved,1);
-          playerNumber=playerNumber + `${largestNumber}`;
-          numberOfRolls = numberOfRolls -1;
-        }
-        diceRolls.push(parseInt(playerNumber));
-        playerCount = playerCount+1;
-        return `Your largest number is ${playerNumber}. The next player please enter 'Roll' to start your turn or leave the input empty if the round has ended`
-      }
-      if (input =='Roll'){
-        playerNumber ='';
-        while(rollNumber<numberOfRolls){
-          dice = Math.floor(Math.random()*6+1);
-          diceNumbers.push(dice);
-          rollNumber = rollNumber + 1;
-        }
-        while (numberOfRolls>0){
-          largestNumber = Math.max.apply(null,diceNumbers);
-          indexRemoved = diceNumbers.indexOf(largestNumber)-1;
-          console.log(largestNumber);
-          console.log(indexRemoved);
-          diceNumbers = diceNumbers.splice(indexRemoved,1);
-          playerNumber=playerNumber + `${largestNumber}`;
-          numberOfRolls = numberOfRolls -1;
-        }
-        diceRolls.push(parseInt(playerNumber));
-        playerCount = playerCount+1;
-        return `Your largest number is ${playerNumber}. The next player please enter 'Roll' to start your turn or leave the input empty if the round has ended`
-      }
-      /*if (input =="Roll"){
-        var playerNumber ='';
-        var rollNumber = 0;
-        while(rollNumber<numberOfRolls){
-          dice = Math.floor(Math.random()*6+1);
-          diceNumbers.push(dice);
-          rollNumber = rollNumber + 1;
-        }
-        while (diceNumbers.length!=0){
-          largestNumber = Math.max.apply(null,diceNumbers);
-          indexRemoved = diceNumbers.indexOf(largestNumber);
-          diceNumbers = diceNumbers.splice(indexRemoved);
-          playerNumber=playerNumber + `${largestNumber}`;
-        }
-        diceRolls.push(parseInt(playerNumber));
-        playerCount = playerCount+1;
-        return `Your largest number is ${playerNumber}. The next player please enter 'Roll' to start your turn or leave the input empty if the round has ended`
-      }
-    }
-    */
-    playerCount = 0;
-    mode ='reset'
-    if (diceRolls[0]>diceRolls[1]){
-      player1Score=player1Score+1;
-      return `Player 1 has won this round. The scores are Player 1: ${player1Score} and Player 2:${player2Score}`
-    }
-    if (diceRolls[1]>diceRolls[0]){
-      player2Score=player2Score+1;
-      return `Player 2 has won this round. The scores are Player 1: ${player1Score} and Player 2:${player2Score}`
-    }
-}
-}
-}
