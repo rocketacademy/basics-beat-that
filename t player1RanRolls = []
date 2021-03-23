@@ -1,0 +1,65 @@
+[33mcommit 89277cdd06ad8f2f768f05ed1a3c32cd8792102e[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: isaac-prog <panda_mm88@yahoo.com>
+Date:   Sat Mar 13 10:30:45 2021 +0800
+
+    Project-draft
+
+[33mcommit 3059db8e7075066087d7577e8aeed6983ae587d6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Mon Jan 18 16:30:50 2021 +0800
+
+    replace output innerText with innerHTML for consistency with videos
+
+[33mcommit 7431ed141c950fd1073bd8934f59187ff2c9442b[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Mon Jan 18 14:37:23 2021 +0800
+
+    revert colours to same as videos
+
+[33mcommit 5b7c012040ba98b5be39b9e45ef5e28379590646[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Sat Jan 16 22:12:15 2021 +0800
+
+    update output div to take text instead of HTML in starter code
+
+[33mcommit bffd110d346c48b02afbd9392267f6fb620758fb[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Sat Jan 16 16:40:59 2021 +0800
+
+    fix starter css
+
+[33mcommit ea1fef2ecb7851d6d7932d5d126c6d41ca1e15d1[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Tue Jan 5 20:13:26 2021 +0800
+
+    remove outdate vscode settings, change output box colour to silver
+
+[33mcommit e1167351b83c73aa6d313b3e6234508461476f12[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Tue Dec 29 12:14:54 2020 +0800
+
+    prettier index.html
+
+[33mcommit efc3b3769487d23c4dfc8e847c614e1d10cc1591[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Thu Dec 17 16:24:25 2020 +0800
+
+    remove block scope rule for var
+
+[33mcommit a7ad29d077db910c925cce6c5a1c77e8f5ff1dc1[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Tue Oct 6 14:44:23 2020 +0800
+
+    turn off eslint destructuring rule for swe101
+
+[33mcommit ee448f2f983fc87b4dc528154572d396062e38b3[m
+Author: Kai Yuan Neo <kai@rocketacademy.co>
+Date:   Tue Oct 6 14:00:11 2020 +0800
+
+    add brace style to eslintrc and fix project name in package-lock.json
+
+[33mcommit 6ccec9bf54e1f0cf06f8862614891aad5beb9079[m
+Author: awongh <akira@awongh.com>
+Date:   Thu Sep 24 19:06:09 2020 +0800
+
+    first commit
