@@ -35,16 +35,39 @@ function findLeadingPlayer(scorePlayer1, scorePlayer2) {
   }
   return winningMessage;
 }
+function autoGenNumber(rolledNumArray) {
+  let array = rolledNumArray;
+  let finalNumber = 0;
+  let length = array.length;
+  for (let i = 0; array.length >= 1; i++) {
+    let max = Math.max.apply(null, array);
+    finalNumber = finalNumber * 10 + max;
+    rolledNumArray = array.splice(array.indexOf(max), 1);
+  }
+  return finalNumber;
+}
+function setMode(userInput, currentMode) {
+  let mode;
+  if (userInput == 'manual') {
+    mode = 'manual';
+  }
+  else if (userInput == 'auto') {
+    mode = 'auto';
+  }
+  return mode;
+}
 
 let player1Total = 0;
 let player2Total = 0;
 let firstRoll; let secondRoll;
 let currentTurn = 'player1'; let changedTurn;
 let diceOrder;
-let mode = 'playing';
 let roundsPlayed = 0;
 let player1AllScores = [];
 let player2AllScores = [];
+let player1Dices = [];
+let player2Dices = [];
+let mode = 'playing';
 
 var main = function (input) {
   // on submit dice is rolled
@@ -53,33 +76,53 @@ var main = function (input) {
   if (mode == 'playing') {
     firstRoll = rollDice();
     secondRoll = rollDice();
-    message = `Welcome ${currentTurn}. <br> You rolled ${firstRoll} for Dice 1 and ${secondRoll} for Dice 2.<br> Choose the order of the dice (i.e dice1 or dice2).`;
+    message = `Welcome ${currentTurn}. <br> You rolled ${firstRoll} for Dice 1 and ${secondRoll} for Dice 2.<br> type 'manual' or 'auto' to chose mode to generate number.`;
     mode = 'choosing';
-    console.log(`current mode changed to ${mode}`);
+    return message;
   }
-  else if (mode == 'choosing') {
+  if (mode == 'choosing') {
+    mode = setMode(input);
+    if (mode == 'manual') {
+      return `${mode} is set. <br> Choose the order of the dice (i.e dice1 or dice2).`;
+    }
+    return `${mode} is set. <br> press 'submit' to see auto chosen number.`
+  }
+  if (mode == 'manual') {
     console.log('choosing mode works');
     resultedNumber = arrangeDice(input, firstRoll, secondRoll);
-    if (currentTurn == 'player1') {
-      changedTurn = 'player2';
-      player1Total += resultedNumber;
-      player1AllScores.push(resultedNumber);
-    }
-    else {
-      changedTurn = 'player1';
-      player2Total += resultedNumber;
-      player2AllScores.push(resultedNumber);
-    }
-    message = `${currentTurn}, you chose ${diceOrder} first. <br>Your number is ${resultedNumber}.<br>
-    It is now ${changedTurn}'s turn.`;
-    if (currentTurn == 'player1') {
-      currentTurn = 'player2';
-      console.log(`playing turn changed to ${currentTurn}`);
-    }
-    mode = 'playing';
-    roundsPlayed += 1;
-    console.log(`roundsPlayer: ${roundsPlayed}`);
   }
+  else if (mode == 'auto' && currentTurn == 'player1') {
+    player1Dices.push(firstRoll);
+    player1Dices.push(secondRoll);
+    resultedNumber = autoGenNumber(player1Dices);
+  }
+  else if (mode == 'auto' && currentTurn == 'player2') {
+    player2Dices.push(firstRoll);
+    player2Dices.push(secondRoll);
+    resultedNumber = autoGenNumber(player2Dices);
+  }
+  if (currentTurn == 'player1') {
+    changedTurn = 'player2';
+    player1Total += resultedNumber;
+    player1AllScores.push(resultedNumber);
+  }
+  else {
+    changedTurn = 'player1';
+    player2Total += resultedNumber;
+    player2AllScores.push(resultedNumber);
+  }
+
+  message = `${currentTurn}, you chose ${diceOrder} first. <br>Your number is ${resultedNumber}.<br>
+    It is now ${changedTurn}'s turn.`;
+
+  if (currentTurn == 'player1') {
+    currentTurn = 'player2';
+    console.log(`playing turn changed to ${currentTurn}`);
+  }
+  mode = 'playing';
+  roundsPlayed += 1;
+  console.log(`roundsPlayer: ${roundsPlayed}`);
+
   if (roundsPlayed == 2) {
     console.log('player1 total: ' + player1Total + ' and player 2 total is: ' + player2Total);
     message = findLeadingPlayer(player1Total, player2Total) + `<br> player1's scores are: ${player1AllScores.sort().reverse()} <br> player2's scores are: ${player2AllScores.sort().reverse()}`;
