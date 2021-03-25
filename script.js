@@ -25,10 +25,10 @@ function findWinner(scorePlayer1, scorePlayer2) {
   let score1 = Number(scorePlayer1);
   let score2 = Number(scorePlayer2);
   if (score1 > score2) {
-    winningMessage = 'player1 wins! Let\'s play again.';
+    winningMessage = 'player1 is leading! Let\'s play again.';
   }
   else {
-    winningMessage = 'player2 wins! Let\'s play again.';
+    winningMessage = 'player2 is leading! Let\'s play again.';
   }
   return winningMessage;
 }
