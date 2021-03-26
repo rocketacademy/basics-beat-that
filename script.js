@@ -10,13 +10,11 @@ var randomDice1 = 0;
 var randomDice2 = 0;
 
 // There are 2 dice.
-// dice 1
 var diceRoll1 = function () {
   var randomDiceNum = Math.floor(Math.random() * 6) + 1;
   return randomDiceNum;
 };
 
-// dice 2
 var diceRoll2 = function () {
   var randomDiceNum2 = Math.floor(Math.random() * 6) + 1;
   return randomDiceNum2;
