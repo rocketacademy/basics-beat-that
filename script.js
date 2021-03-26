@@ -1,112 +1,97 @@
-// both players names are blank
+// intialise mode in the begining
+var mode = 'player 1 mode';
 
-var main = function (input){
+// create two arrays for each dice
+var player1sChanged = [];
+var player2sChanged = [];
+// this 'changed' name for this variable just denotes that i am gonna change this variable
+// create an array for the dice concat numbers
+var player1KeptDaSame = [];
+var player2KeptDaSame = [];
 
-  var player1sRolls = [];
-  mode = 'game mode locked in';
-  // i want to express the numbers rolled into an array
-  var configurationFrDiceNumber1 = function(){
-    var displayFirstRoll = yourRandomRoll1();
-    var display2ndRoll = yourRandomRoll2();
-    console.log('rolled both dice time to facilitate the switched arrangement')
-    mode = 'dice rolled for player 1';
-    player1sRolls.push(displayFirstRoll);
-    player1sRolls.push(display2ndRoll);
-    // push both numbers into the array
-    
-  
-    
-    var changePositionForP1 = function () {
-      mode = 'change configuration of both numbers for player 1';
-      player1sRolls.pop(displayFirstRoll);
-      player1sRolls.push(displayFirstRoll);
-      console.log('arrangement changed')
-      // remove the first number, then add it back to the end of the array
-    }
-  
+// both players names are blank, i will clone the 'changed' array using the concat fucntion in line 32, this denotes the unchanged rolls.
+// while the 'changed' variable(that is in the name in lines 5 & 6) contains the changed rolls should they want
 
-    var bothCases = function(){
-        if (mode = 'dice rolled for player 1' && input == 'yes') {
-        mode == 'change configuration of both numbers for player 1';
-        var callChangePositioningFunc = changePosition1();
-            return 'hello,your rolls are ' + player1sRolls;
-        } else if (input == 'no') {
-            mode == 'want to keep these numbers the same for player 1';
-            player1sRolls = [displayFirstRoll, display2ndRoll];
-            return 'hello,your rolls are ' + player1sRolls;
-          }
-        }
-      }
-      
-
-      // repeat lines 38-69 again for player 2
-      var configurationFrDiceNumber2 = function () {
-        player2sRolls = [];
-        var displayFirstRoll = opponentRoll1();
-        var display2ndRoll = opponentRoll2();
-        // call both functions
-        player2sRolls.push(computerRandomGenNumber1);
-        player2sRolls.push(computerRandomGenNumber2);
-        // push both numbers into the array
-
-        mode = 'change configuration of both numbers for player 2';
-        // text for when the mode is about to switch
-
-        player2sRolls.pop(computerRandomGenNumber1);
-        player2sRolls.push(computerRandomGenNumber1);
-        // remove the first number, then add it back to the end of the array
-        mode = 'dice rolled for player 2';
-        
-        // pretext1 is for when the mode is about to switch
-        var changePosition2 = function () {
-          player2sRolls.pop(displayFirstRoll);
-          player2sRolls.push(displayFirstRoll);
-        };
-        // remove the first number, then add it back to the end of the array
-
-        
-
-        if (mode = 'dice rolled for player 2' && input == 'yes') {
-          mode == 'change configuration of both numbers for player 2';
-          var callChangePositioningFunc = changePositionForP1();
-          return 'your rolls are ' + player1sRolls;
-        } else if (input == 'no') {
-          mode == 'want to keep these numbers the same for player 2';
-          player2sRolls = [computerRandomGenNumber1, computerRandomGenNumber2];
-          return 'your rolls are ' + player2sRolls;
-        }
-      }
-    
-    // my final 'number' is that array
-  
- 
-  var comparisonOfBothNumbers = function () {
-    if (player1sRolls > player2sRolls) {
-      return 'player 1 you win! you rolled ' + player1sRolls + 'while player 2 rolled ' + player2sRolls;
-    } else if (player2sRolls > player1sRolls) {
-      return 'player 2 you win!! you rolled ' + player2sRolls + 'while player 1 rolled ' + player1sRolls;
-    }
-  }
+// generate random dice roll will use this singular function to roll the dice
+var randomDiceRoll = function () {
+  return Math.floor(Math.random() * 6) + 1;
 };
-  
 
-  var gameSystem = function () {
-  // encapsulate the whole game mechanics in this 1 function, makes it convenient
-    var yourRandomRoll1 = function () {
-      var randomGenNumber = Math.floor(Math.random() * 6) + 1;
-      return randomGenNumber;
-    }
-    var yourRandomRoll2 = function () {
-      var randomGenNumber2 = Math.floor(Math.random() * 6) + 1;
-      return randomGenNumber2;
-    }
-    var opponentRoll1 = function () {
-      var computerRandomGenNumber1 = Math.floor(Math.random() * 6) + 1;
-      return computerRandomGenNumber1;
-    }
-    var opponentRoll2 = function () {
-      var computerRandomGenNumber2 = Math.floor(Math.random() * 6) + 1;
-      return computerRandomGenNumber2;
-    }
+var main = function (input) {
+  if (input == '') {
+    mode = 'rolling dice mode for player 1';
+    console.log(mode);
+    // if in player 1 mode output randomly generated dice roll
+    player1sChanged.push(randomDiceRoll(), randomDiceRoll());
+
+    mode = 'dice concat mode for player 1';
+    console.log(mode);
+    console.log('type ok after you say yes or no');
+    // user interface
+    return 'player 1 your rolls are ' + player1sChanged + ' do you want to change the configuration of your numbers?';
   }
 
+  var player1KeptDaSame = player1sChanged.concat(player1KeptDaSame);
+
+  if (input == 'no' && mode == 'dice concat mode for player 1') {
+    return 'your dice arrangement is the same, at' + player1KeptDaSame;
+  }
+  if (input == 'yes' && mode == 'dice concat mode for player 1') {
+    var temp = this.player1sChanged[0];
+    this.player1sChanged[0] = this.player1sChanged[1];
+    this.player1sChanged[1] = temp;
+    // this is a way to switch the arrangement of the members of the array when the user types 'yes'
+    mode = 'now it is player 2s turn! player 1s dice configuration has been completed!';
+    console.log('PLAYER 1s TURN IS OVER');
+    console.log(mode);
+
+    return 'your configuration has been changed to ' + player1sChanged;
+  }
+  // exact flow for player 2
+  // PLAYER 1s TURN IS OVER
+  if (input == 'ok') {
+    mode = 'rolling dice mode for player 2';
+    console.log(mode);
+    // if in player 1 mode output randomly generated dice roll
+    player2sChanged.push(randomDiceRoll(), randomDiceRoll());
+
+    mode = 'dice concat mode for player 2';
+    console.log(mode);
+    console.log('type next after you say yes or no');
+    return 'player 2 your rolls are ' + player2sChanged + ' do you want to change the configuration of your numbers?';
+  }
+
+  var player2KeptDaSame = player2sChanged.concat(player2KeptDaSame);
+
+  if (input == 'no' && mode == 'dice concat mode for player 2') {
+    return 'your dice arrangement is the same, at' + player2KeptDaSame;
+  }
+  if (input == 'yes' && mode == 'dice concat mode for player 2') {
+    var temp = this.player2sChanged[0];
+    this.player2sChanged[0] = this.player2sChanged[1];
+    this.player2sChanged[1] = temp;
+
+    mode = 'player 2s coniguration has been changed.';
+    console.log('PLAYER 2S TURN IS OVER');
+    return 'player 2,your configuration has been changed to ' + player2sChanged;
+  }
+
+  // PLAYER 2'S TURN IS OVER
+
+  if (player1sChanged > player2sChanged || player1KeptDaSame > player2KeptDaSame || player1KeptDaSame > player2sChanged || player1sChanged > player2KeptDaSame && input == 'next') {
+    // if  player 2 inputs next after their turn finishes we will reach this part of the game
+    // i put all the possible variations of variables in all the if statements, like whether both players say yes or no respectively, i put all those situations here
+    console.log('decision time');
+    mode = 'player 1 wins';
+    return 'congrats player 1! you win!';
+  }
+  if (player1sChanged == player2sChanged || player1sChanged == player2KeptDaSame || player2sChanged == player1KeptDaSame || player2KeptDaSame == player2sChanged) {
+    mode = 'tie';
+    return 'its a tie!!';
+  }
+  if (player2sChanged > player1sChanged || player2KeptDaSame > player1KeptDaSame || player2KeptDaSame > player1sChanged || player2sChanged > player1KeptDaSame) {
+    mode = 'player 2 wins';
+    return 'congrats player 2! you win!';
+  }
+  // game is now over
+};
