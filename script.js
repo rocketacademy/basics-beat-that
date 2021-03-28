@@ -75,6 +75,23 @@ function iterateNumOfPlayers(totalPlayers, mode, userInput) {
   console.log('players score array: ' + playersScoreArray);
   return playersScoreArray;
 }
+function rollDiceNTimes(numberOfDices) {
+  let diceArray = [];
+  for (let i = 0; i < numberOfDices; i++) {
+    let num = rollDice();
+    diceArray.push(num);
+  }
+  return diceArray;
+}
+function generateNumFromIndex(userInput, rolledArray) {
+  let finalNumber = 0;
+  let indexNumber = userInput.split('').map(Number);
+  console.log('indexNumber: ' + indexNumber);
+  for (let i = 0; i < indexNumber.length; i++) {
+    finalNumber = finalNumber * 10 + rolledArray[indexNumber[i]];
+  }
+  return finalNumber;
+}
 let firstRoll; let secondRoll;
 let currentTurn = 'player1'; let changedTurn;
 let diceOrder;
@@ -83,6 +100,9 @@ let mode = 'set num of players';
 let numOfPlayers = 0;
 let playerDices = [];
 let autoArrange = [];
+let numOfDices = 0;
+let playersArray;
+let nDiceMode = false;
 
 var main = function (input) {
   // on submit dice is rolled
@@ -90,9 +110,24 @@ var main = function (input) {
   let resultedNumber;
   if (mode == 'set num of players') {
     numOfPlayers = input;
-    mode = 'playing';
-    return `Number of players set to ${numOfPlayers} <p> Player1 is the default first player. <p> press 'submit' to start playing`;
+    mode = 'num of dices';
+    return `Number of players set to ${numOfPlayers} <p> Player1 is the default first player. <p> Play basic (2 dices), press submit <p> or Enter number of dices to play n - dice mode. `;
   }
+  //
+  if (mode == 'num of dices') {
+    numOfDices = input;
+    // mode = 'playing';
+    if (numOfDices != '') {
+      mode = 'n dices';
+      nDiceMode = true;
+      return `Number of Dices set to ${numOfDices} <p> Player1 is the default first player. <p> press 'submit' to start playing`;
+    }
+    if (numOfDices == 0) {
+      mode = 'playing';
+      return 'play in normal mode. hit submit to start.';
+    }
+  }
+
   if (roundsPlayed < numOfPlayers) {
     if (mode == 'playing') {
       firstRoll = rollDice();
@@ -100,6 +135,17 @@ var main = function (input) {
       message = `Welcome ${currentTurn}. <p> You rolled ${firstRoll} for Dice 1 and ${secondRoll} for Dice 2.<p> type 'manual' or 'auto' to chose mode to generate number.`;
       mode = 'choosing';
       return message;
+    }
+    if (mode == 'n dices') {
+      playersArray = rollDiceNTimes(numOfDices);
+      message = `Your dice rolls are ${playersArray}. <p> input the indexes to order the numbers`;
+      mode = 'input indexes';
+      return message;
+    }
+    if (mode == 'input indexes') {
+      let inputIndexes = input;
+      resultedNumber = generateNumFromIndex(inputIndexes, playersArray);
+      console.log('resulted number ' + resultedNumber);
     }
     if (mode == 'choosing') {
       mode = setMode(input);
@@ -128,6 +174,9 @@ var main = function (input) {
     currentTurn = 'player' + (roundsPlayed + 1);
     message += `next player is ${currentTurn}`;
     mode = 'playing';
+    if (nDiceMode) {
+      mode = 'n dices';
+    }
     return message;
   }
   if (roundsPlayed == numOfPlayers) {
@@ -140,10 +189,12 @@ var main = function (input) {
     }
     // reset the rounds
     let result = findWinner(playerDices, winningMode);
-    message = ` the winner of the round is : ${result}. <p> scores of all players: ${playerDices.sort().reverse()} <p> Game is Reset. Enter number of players to play again.`;
+    message = ` the winner of the round is : ${result}. <p> scores of all players: ${playerDices.sort().reverse()} <p> Game is Reset. <p> <b>Enter number of players to play again.`;
     roundsPlayed = 0;
     currentTurn = 'player1';
     mode = 'set num of players';
+    nDiceMode = false;
+    playerDices = [];
   }
   return message;
 };
