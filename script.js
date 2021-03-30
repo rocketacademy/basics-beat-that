@@ -1,4 +1,4 @@
-/* Base Code
+//-------------------------------------------Base Code---------------------------------------
 //array to store final number concatenated by the players
 var diceRolls = [];
 //random number rolled by dice 1
@@ -39,9 +39,9 @@ var main = function (input) {
     return `Congratulations Player 2, your number ${diceRolls[1]} is the largest`
   }
 }
-*/
 
-/* variable dice mode
+
+//----------------------------------variable dice mode--------------------------------------
 //numbers the player receives from rolling the dices
 var diceNumbers =[];
 //number of dices that has been rolled
@@ -114,4 +114,3 @@ var main = function (input) {
     return `Congratulations Player 2, your number ${diceRolls[1]} is the largest`
   }
 }
-*/
