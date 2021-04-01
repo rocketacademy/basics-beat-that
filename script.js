@@ -38,7 +38,7 @@ var winningCondition = function () {
   return message;
 };
 
-// player one pick dice logic
+// player 1 pick dice logic
 var player1Or2PickDice1OrDice2First = function (input, playersHighestNum) {
   var message = '';
   // If player 1 or 2 pick dice 1
@@ -75,7 +75,7 @@ var player1Or2PickDice1OrDice2First = function (input, playersHighestNum) {
 var main = function (input) {
   var myOutputValue = 'have bug';
 
-  // Player 1 roll the two dice.
+  // Player 1 roll the 2 dice.
   if (mode == 'player 1 roll dice') {
     myOutputValue = roll2Dice('Player 1');
   }
