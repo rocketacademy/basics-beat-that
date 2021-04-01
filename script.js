@@ -2,134 +2,97 @@
 // 1) player 1 roll . 2) player 1 pick to make the highest number.
 // 3) player 2 roll. 4) player 2 pick to make the highest number.
 var mode = 'player 1 roll dice';
-
 // store player 1 highest number
-var playerOneHighestNum = 0;
+var player1HighestNum = 0;
+var player2HighestNum = 0;
 
 var randomDice1 = 0;
 var randomDice2 = 0;
 
-// There are 2 dice.
-var diceRoll1 = function () {
+// Generate random number from 1-6.
+var diceRoll = function () {
   var randomDiceNum = Math.floor(Math.random() * 6) + 1;
   return randomDiceNum;
 };
 
-var diceRoll2 = function () {
-  var randomDiceNum2 = Math.floor(Math.random() * 6) + 1;
-  return randomDiceNum2;
-};
-
-// player one roll 2 dice logic
-var rollTwoDiceForPlayerOne = function () {
+// player 1 and player 2 roll 2 dice logic
+var roll2Dice = function (player1Or2) {
   var message = '';
-  randomDice1 = 0;
-  randomDice2 = 0;
-  randomDice1 = diceRoll1();
-  randomDice2 = diceRoll2();
+  randomDice1 = diceRoll();
+  randomDice2 = diceRoll();
   console.log(randomDice1);
   console.log(randomDice2);
-  message = 'Welcome player 1.<br> You rolled '
+  message = 'Welcome ' + player1Or2 + '<br> You rolled '
     + randomDice1 + ' for dice 1 and ' + randomDice2 + ' for dice 2 <br> choose the order of the dice';
   return message;
 };
 
-// player one pick dice logic
-var playerOnePickDiceOneOrDiceTwo = function (input) {
-  var message = '';
-  playerOneHighestNum = 0;
-  // If player 1 pick dice 1
-  if (input == '1') {
-    playerOneHighestNum = randomDice1 + '' + randomDice2;
-    message = 'Player 1, you chose Dice 1 first.<br> Your number is ' + playerOneHighestNum + '. <br> It is now player 2 turn';
-    console.log('player 1');
-    console.log(playerOneHighestNum);
+// whoever have the highest total value win
+var winningCondition = function () {
+  if (player1HighestNum > player2HighestNum) {
+    var message = 'Player 1 win! <br> Player 1 total point ' + player1HighestNum + '<br> Player 2 total point ' + player2HighestNum;
     return message;
   }
-  // if player 1 pick dice 2
-  if (input == '2') {
-    playerOneHighestNum = randomDice2 + '' + randomDice1;
-    message = 'Player 1, you chose Dice 2 first.<br> Your number is ' + playerOneHighestNum + '. <br> It is now player 2 turn';
-    console.log('player 1');
-    console.log(playerOneHighestNum);
-    return message;
-  }
-};
 
-// player two roll 2 dice logic
-var rollTwoDiceForPlayerTwo = function () {
-  var message = '';
-  randomDice1 = 0;
-  randomDice2 = 0;
-  randomDice1 = diceRoll1();
-  randomDice2 = diceRoll2();
-  console.log(randomDice1);
-  console.log(randomDice2);
-  message = 'Welcome player 2.<br> You rolled '
-     + randomDice1 + ' for dice 1 and ' + randomDice2 + ' for dice 2 <br> choose the order of the dice';
+  message = 'Player 2 win! <br> Player 1 total point ' + player1HighestNum + '<br> Player 2 total point ' + player2HighestNum;
   return message;
 };
-// player two pick dice logic
-var playerTwoPickDiceOneOrDiceTwo = function (input) {
-  var message = '';
-  var playerTwoHighestNum = 0;
-  // If player 2 pick dice 1
-  if (input == '1') {
-    playerTwoHighestNum = randomDice1 + '' + randomDice2;
-    console.log('player 2 ');
-    console.log(playerTwoHighestNum);
-    console.log('Player 1 ');
-    console.log(playerOneHighestNum);
-    // If player 1 combine number is higher than player 2 combine number.
-    // player 1 win. Else player 2 win.
-    if (playerOneHighestNum > playerTwoHighestNum) {
-      message = 'Player 2, you chose Dice 1 first.<br> You number '
-     + playerTwoHighestNum + '.<br> Player 1 win ';
-      return message;
-    }
-    message = 'Player 2, you chose Dice 1 first.<br> You number '
-     + playerTwoHighestNum + '<br>Player 2 win ';
-    return message;
 
-    // If player 2 pick dice 2
-  } if (input == '2') {
-    playerTwoHighestNum = randomDice2 + '' + randomDice1;
-    console.log('player 2 ');
-    console.log(playerTwoHighestNum);
-    console.log('player 1');
-    console.log(playerOneHighestNum);
-    // If player 2 combine number is higher than player 1 combine number.
-    // player 2 win. Else player 1
-    if (playerTwoHighestNum > playerOneHighestNum) {
-      message = 'Player 2, you chose Dice 2 first.<br> You number is '
-      + playerTwoHighestNum + '<br> Player 2 win ';
+// player one pick dice logic
+var player1Or2PickDice1OrDice2First = function (input, playersHighestNum) {
+  var message = '';
+  // If player 1 or 2 pick dice 1
+  if (input == '1') {
+    playersHighestNum = randomDice1 + '' + randomDice2;
+    if (mode == 'player 1 pick dice 1 or 2') {
+      message = 'Player 1, you chose Dice 1 first.<br> Your number is ' + playersHighestNum + '<br> Computer turn';
+      player1HighestNum = playersHighestNum;
+      return message;
+    } if (mode == 'player 2 pick dice 1 or 2') {
+      player2HighestNum = playersHighestNum;
+      message = winningCondition();
       return message;
     }
-    message = 'Player 2, you chose Dice 2 first.<br> You number is '
-    + playerTwoHighestNum + '<br> Player 1 win ';
-    return message;
+  }
+  // if player 1 or 2 pick dice 2
+  if (input == '2') {
+    playersHighestNum = randomDice2 + '' + randomDice1;
+    if (mode == 'player 1 pick dice 1 or 2') {
+      message = 'Player 1, you chose Dice 2 first.<br> Your number is ' + playersHighestNum + '<br> Computer turn';
+      player1HighestNum = playersHighestNum;
+      return message;
+    } if (mode == 'player 2 pick dice 1 or 2') {
+      player2HighestNum = playersHighestNum;
+      message = winningCondition();
+
+      return message;
+    }
   }
 };
+
+// compare both player total value
 
 var main = function (input) {
   var myOutputValue = 'have bug';
 
   // Player 1 roll the two dice.
   if (mode == 'player 1 roll dice') {
-    myOutputValue = rollTwoDiceForPlayerOne();
+    myOutputValue = roll2Dice('Player 1');
   }
 
   // player 1 pick dice 1 or dice 2 first to make the highest number.
   if (mode == 'player 1 pick dice 1 or 2') {
-    myOutputValue = playerOnePickDiceOneOrDiceTwo(input);
+    myOutputValue = player1Or2PickDice1OrDice2First(input, player1HighestNum);
+    console.log(player1HighestNum);
   }
   // player 2 roll 2 dice
   if (mode == 'player 2 roll dice') {
-    myOutputValue = rollTwoDiceForPlayerTwo();
+    myOutputValue = roll2Dice('Player 2');
   }
   // player 2 pick dice 1 or dice 2 first to make the highest number.
   if (mode == 'player 2 pick dice 1 or 2') {
-    myOutputValue = playerTwoPickDiceOneOrDiceTwo(input);
+    myOutputValue = player1Or2PickDice1OrDice2First(input, player2HighestNum);
+    console.log(player2HighestNum);
   }
 
   // 1) player 1 roll . 2) player 1 pick to make the highest number.
