@@ -39,6 +39,47 @@ var playTurn = function () {
   return outputMessage;
 };
 
+var chooseDiceOrder = function (input, playerOneTurn) {
+  if (playerOneTurn == true) {
+    finalNumber =
+      String(playerOneRolls[input - 1]) +
+      String(playerOneRolls[Math.abs(input - 2)]);
+    console.log("player 1 roll:");
+    console.log(finalNumber);
+    playerOneScore += Number(finalNumber);
+    return finalNumber;
+  } else if (playerOneTurn == false) {
+    finalNumber =
+      String(playerTwoRolls[input - 1]) +
+      String(playerTwoRolls[Math.abs(input - 2)]);
+    console.log("player 2 roll:");
+    console.log(finalNumber);
+    playerTwoScore += Number(finalNumber);
+    return finalNumber;
+  }
+};
+
+// function for displaying the score message in the output
+var scoreMessage = function (playerOneScore, playerTwoScore) {
+  if (playerOneScore > playerTwoScore) {
+    return `Player 1 is the current leader!<br><br>
+    The current scores are as follows:<br>
+    Player 1: ${playerOneScore}<br>
+    Player 2: ${playerTwoScore}`;
+  } else if (playerTwoScore > playerOneScore) {
+    return `Player 2 is the current leader!<br><br>
+    The current scores are as follows:<br>
+    Player 1: ${playerOneScore}<br>
+    Player 2: ${playerTwoScore}`;
+  } else {
+    // this means it's a tie:
+    return `It's a tie!<br><br>
+    The current scores are as follows:<br>
+    Player 1: ${playerOneScore}<br>
+    Player 2: ${playerTwoScore}`;
+  }
+};
+
 var main = function (input) {
   var myOutputValue = "";
 
@@ -54,48 +95,11 @@ var main = function (input) {
     // reset finalNumber at start of each player choice
     var finalNumber = "";
 
-    // If player chose Dice 2 first
-    if (input == 2) {
-      if (playerOneTurn == true) {
-        finalNumber = String(playerOneRolls[1]) + String(playerOneRolls[0]);
-        playerOneScore += Number(finalNumber);
-      } else {
-        finalNumber = String(playerTwoRolls[1]) + String(playerTwoRolls[0]);
-        playerTwoScore += Number(finalNumber);
-      }
-      // Make sure this new roll gets added to the player's running score
-    } else {
-      if (playerOneTurn == true) {
-        finalNumber = String(playerOneRolls[0]) + String(playerOneRolls[1]);
-        playerOneScore += Number(finalNumber);
-      } else {
-        finalNumber = String(playerTwoRolls[0]) + String(playerTwoRolls[1]);
-        playerTwoScore += Number(finalNumber);
-      }
-    }
+    // allow player to choose dice order
+    chooseDiceOrder(input, playerOneTurn);
 
     // moving on to next player's turn, reverse playerRolled to be false
     playerRolled = false;
-
-    var scoreMessage = function (playerOneScore, playerTwoScore) {
-      if (playerOneScore > playerTwoScore) {
-        return `Player 1 is the current leader!<br><br>
-        The current scores are as follows:<br>
-        Player 1: ${playerOneScore}<br>
-        Player 2: ${playerTwoScore}`;
-      } else if (playerTwoScore > playerOneScore) {
-        return `Player 2 is the current leader!<br><br>
-        The current scores are as follows:<br>
-        Player 1: ${playerOneScore}<br>
-        Player 2: ${playerTwoScore}`;
-      } else {
-        // this means it's a tie:
-        return `It's a tie!<br><br>
-        The current scores are as follows:<br>
-        Player 1: ${playerOneScore}<br>
-        Player 2: ${playerTwoScore}`;
-      }
-    };
 
     // determining next player
     // display scores
