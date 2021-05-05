@@ -8,9 +8,12 @@ var currentGameMode = MODE_NUM_PLAYERS;
 var numberOfPlayers = 2;
 var numberOfDice = 2;
 
-//Initialize array of player dice arrays, as well as the rearranged version
+//an array of player dice arrays
 var playerDice = [];
 var rearrangedDice = [];
+
+var playerRunningSums = [];
+var winningOrder = [];
 
 //initializes game mode index to 0, which is MODE_NUM_PLAYERS
 var gameModeIndex = 0;
@@ -41,18 +44,33 @@ var rollAllDice = function () {
     ". Please hit Submit to proceed to the rearrange-dice stage. If your die result was 364 for example, you may type 231 to rearrange the 2nd die roll first, the 3rd die roll second, and the 1st die roll last. You may also type auto to automatically rearrange."
   );
 };
-
-//Initialize global variable for tracking which player is currently rearranging their dice
 var reorderDicePlayerCounter = 0;
 var reorderDice = function (input) {
+  // if(input == 'auto') {
+  //   rearrangedDice = playerDice;
+  //   for(var playerCounter = 0; playerCounter < numberOfPlayers; playerCounter++){
+
+  //     for(var diceCounter = 0; diceCounter < numberOfDice; diceCounter++) {
+
+  //         currentPlayer = rearrangedDice[playerCounter];
+  //         currentDie = currentPlayer[diceCounter];
+
+  //         if (currentDie < currentPlayer[diceCounter+1]) {
+  //           currentPlayer[diceCounter] = currentPlayer[diceCounter+1];
+  //           currentPl[diceCounter+1] = currentDie;
+  //         }
+
+  //     }
+
+  //   }
+  // }
+
   //reads the desired player order
   var playerOrdering = input;
 
   for (var diceCounter = 0; diceCounter < numberOfDice; diceCounter++) {
     //sees the index position of the first die in the rearranged order, and so on
     var diceIndex = parseInt(playerOrdering[diceCounter]) - 1;
-
-    //fills in the rearranged dice array according to the player's desired order
     rearrangedDice[reorderDicePlayerCounter][diceCounter] =
       playerDice[reorderDicePlayerCounter][diceIndex];
   }
@@ -60,7 +78,6 @@ var reorderDice = function (input) {
     `Player ${reorderDicePlayerCounter + 1} has rearranged their dice to ` +
     `${rearrangedDice[reorderDicePlayerCounter]} according to ${playerOrdering}. `;
 
-  //conditional to add line of text showing next player's dice and requesting their input for dice order
   if (reorderDicePlayerCounter < numberOfPlayers - 1) {
     myOutputValue =
       myOutputValue +
@@ -69,19 +86,15 @@ var reorderDice = function (input) {
       } please select your desired order. Your dice are ${
         playerDice[reorderDicePlayerCounter + 1]
       }`;
-  }
-
-  //else, all players are done rearranging, and we request Submit to proceed to the next mode
-  else {
+  } else {
     myOutputValue =
       myOutputValue +
       "All players have finished rearranging their dice, click Submit to see who wins!";
+    gameModeFunctions.push(determineGameResult);
   }
   reorderDicePlayerCounter += 1;
   return myOutputValue;
 };
-
-//function to set the number of players, called in MODE_NUM_PLAYERS. player and rearranged dice arrays are populated here using the input number of players
 var setNumPlayers = function (inputNumPlayers) {
   numberOfPlayers = inputNumPlayers;
 
@@ -91,41 +104,89 @@ var setNumPlayers = function (inputNumPlayers) {
     playerCounter++
   ) {
     rearrangedDice.push([]);
-  }
-  for (
-    var playerCounter = 0;
-    playerCounter < numberOfPlayers;
-    playerCounter++
-  ) {
     playerDice.push([]);
-  }
-  for (
-    var playerCounter = 0;
-    playerCounter < numberOfPlayers;
-    playerCounter++
-  ) {
+    playerRunningSums.push(0);
     gameModeFunctions.push(reorderDice);
   }
+
   return `You have selected to play with ${numberOfPlayers} players. Please select how many dice to roll per player.`;
 };
-
 var setNumDice = function (inputNumDice) {
   numberOfDice = inputNumDice;
   return `You have selected to play with ${inputNumDice} dice per player. Please hit Submit to roll the dice and begin the game. Good luck!`;
 };
 
-//array containing the different game modes
 var gameModeFunctions = [setNumPlayers, setNumDice, rollAllDice];
 
-//main function that runs through the game modes 1 by 1, starting from 0 index. input to the main function is passed to the appropriate function called based on the gameModeIndex
-var main = function (input) {
-  if (gameModeIndex < gameModeFunctions.length) {
-    var gameModeFunction = gameModeFunctions[gameModeIndex];
-    gameModeIndex += 1;
-    return gameModeFunction(input);
+// var findLargestNumber = function(arrayOfNumbers) {
+//   arrayOfNumbers.sort.sort(function(a, b){return b-a});
+
+// }
+
+var makeArrayIntoNumber = function (arrayOfNumbers) {
+  var stringOfNumber = "";
+  for (var digitsCounter = 0; digitsCounter < numberOfDice; digitsCounter++) {
+    stringOfNumber = stringOfNumber + String(arrayOfNumbers[digitsCounter]);
   }
+  return Number(stringOfNumber);
 };
 
+var determineGameResult = function () {
+  var rearrangedDiceInNumbers = [];
+
+  for (
+    var playerCounter2 = 0;
+    playerCounter2 < numberOfPlayers;
+    playerCounter2++
+  ) {
+    var tempNumberToPush = makeArrayIntoNumber(rearrangedDice[playerCounter2]);
+
+    rearrangedDiceInNumbers.push(tempNumberToPush);
+    playerRunningSums[playerCounter2] =
+      playerRunningSums[playerCounter2] + tempNumberToPush;
+  }
+
+  var currentBiggestNumber = 0;
+  var currentBiggestIndex = 0;
+  var playerRankedDice = [];
+  var playerRanking = [];
+
+  var outMessage = "";
+  //outer loop to determine ranking for all players
+  for (
+    var playerCounter4 = 0;
+    playerCounter4 < numberOfPlayers;
+    playerCounter4++
+  ) {
+    //inner loop finds the player with the largest number (1st place) and saves his number and index position
+    for (
+      var playerCounter3 = 0;
+      playerCounter3 < numberOfPlayers;
+      playerCounter3++
+    ) {
+      if (rearrangedDiceInNumbers[playerCounter3] >= currentBiggestNumber) {
+        currentBiggestNumber = rearrangedDiceInNumbers[playerCounter3];
+        currentBiggestIndex = playerCounter3;
+      }
+    }
+
+    //once out of inner loop, push the current winning number and position into player ranking arrays
+    if (!playerRanking[0]) {
+      outMessage += "Winner is ";
+    }
+
+    playerRankedDice.push(currentBiggestNumber);
+    playerRanking.push(currentBiggestIndex);
+
+    outMessage += `Player ${
+      currentBiggestIndex + 1
+    } with a dice sum of : ${currentBiggestNumber}<br/>`;
+
+    rearrangedDiceInNumbers[currentBiggestIndex] = 0;
+    currentBiggestNumber = 0;
+  }
+  return outMessage;
+};
 var rollDice = function () {
   // Generate a decimal from 0 through 6, inclusive of 0 and exclusive of 6.
   var randomDecimal = Math.random() * 6;
@@ -138,4 +199,12 @@ var rollDice = function () {
   var diceNumber = randomInteger + 1;
 
   return diceNumber;
+};
+
+var main = function (input) {
+  if (gameModeIndex < gameModeFunctions.length) {
+    var gameModeFunction = gameModeFunctions[gameModeIndex];
+    gameModeIndex += 1;
+    return gameModeFunction(input);
+  }
 };
