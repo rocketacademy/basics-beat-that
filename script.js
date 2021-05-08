@@ -107,7 +107,7 @@ var main = function (input) {
     decisionTurn = true;
     return `player ${
       playerTurn + 1
-    }, you have rolled ${variableDiceRolls}<br><br> Please choose the order in which you want these numbers to be in`;
+    }, you have rolled ${variableDiceRolls}<br><br> please choose the order in which you want these numbers to be in`;
   }
   //decision turn
   else {
@@ -152,7 +152,7 @@ var main = function (input) {
     output += `<br><br>Overall scores:`;
 
     for (var i = 0; i < playerWins.length; i++) {
-      output += `<br><br>player ${i + 1} has ${playerWins[i]}`;
+      output += `<br><br>player ${i + 1} has ${playerWins[i]} win`;
     }
   }
 
