@@ -1,1 +1,1 @@
-# # Rocket Academy Coding Basics: Beat That!
+# Rocket Academy Coding Basics: Beat That!
