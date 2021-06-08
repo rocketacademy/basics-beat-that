@@ -1,0 +1,12 @@
+# This is a basic workflow to help you get started with Actions
+name: New Pull Request - Lint
+on: pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install
+    - name: Run ESLint
+      run: npx eslint . --ext .js
