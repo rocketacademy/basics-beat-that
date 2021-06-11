@@ -4,7 +4,8 @@ var PLAYER2 = `Player 2`;
 var PLAYER1_CHOOSE_DICE_ORDER = `Player 1 choose dice order`;
 var PLAYER2_CHOOSE_DICE_ORDER = `Player 2 choose dice order`;
 var COMPARE_SCORE = `Compare Score`;
-
+var totalScorePlayer1 = 0;
+var totalScorePlayer2 = 0;
 // set initial stage to player 1
 var gameMode = PLAYER1;
 // global var to store players' dicerolls and assigned to array
@@ -18,6 +19,7 @@ var player2Score = ``;
 // default messages for output
 var selectDiceOrderMessage = `Select which dice number to go first by entering 1 for Dice 1 or 2 for Dice 2.`;
 var submitToRestartGameMessage = `<br><br>Click Submit for Player 1 to roll again`;
+var totalScoreMessage = `Your total score now is`;
 
 // create diceRoll function
 var rollDice = function () {
@@ -63,7 +65,8 @@ var getPlayersScore = function (input) {
       );
       console.log(`P1 player score 2 ` + player1Score);
     }
-    return `Player 1, your score is ${player1Score}. <br><br>Click Submit for Player 2 to roll the dices!`;
+    totalScorePlayer1 = totalScorePlayer1 + player1Score;
+    return `Player 1, your score is ${player1Score}. <br><br> ${totalScoreMessage} ${totalScorePlayer1} <br><br>Click Submit for Player 2 to roll the dices!`;
   }
   if (gameMode == PLAYER2_CHOOSE_DICE_ORDER) {
     if (input == 1) {
@@ -78,19 +81,34 @@ var getPlayersScore = function (input) {
       );
       console.log(`P2 player score 2 ` + player2Score);
     }
-    return `Player 2, your score is ${player2Score}. <br><br>Click Submit to see who won the game!`;
+    totalScorePlayer2 = totalScorePlayer2 + player2Score;
+    return `Player 2, your score is ${player2Score}. <br><br>${totalScoreMessage} ${totalScorePlayer2} <br><br>Click Submit to see who won the game!`;
   }
 };
 
 var compareScore = function () {
   if (player1Score > player2Score) {
-    return `Congrats Player 1, you Won. <br><br> Your score of ${player1Score} is higher than Player 2 score of ${player2Score}${submitToRestartGameMessage}`;
+    return `Congrats Player 1, you won this round. <br><br> Your score of ${player1Score} is higher than Player 2 score of ${player2Score}${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
   }
   if (player1Score < player2Score) {
-    return `Congrats Player 2, you Won. <br><br>Your score of ${player2Score} is higher than Player 1 score of ${player1Score}${submitToRestartGameMessage}`;
+    return `Congrats Player 2, you won this round. <br><br>Your score of ${player2Score} is higher than Player 1 score of ${player1Score}${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
   }
   if (player1Score == player2Score) {
-    return `Oops its a draw! <br><br>Both of you have the same score of ${player1Score}!${submitToRestartGameMessage}`;
+    return `Oops its a draw! <br><br>Both of you have the same score of ${player1Score}!${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
+  }
+};
+
+var determineLeaderNow = function () {
+  if (totalScorePlayer1 > totalScorePlayer2) {
+    return `LeaderBoard<br>1. Player 1, Total Score: ${totalScorePlayer1}<br> 2. Player 2, Total Score: ${totalScorePlayer2}`;
+  }
+
+  if (totalScorePlayer1 < totalScorePlayer2) {
+    return `LeaderBoard<br>1. Player 2, Total Score: ${totalScorePlayer2}<br> 2. Player 1, Total Score: ${totalScorePlayer1}`;
+  }
+
+  if (totalScorePlayer1 == totalScorePlayer2) {
+    return `LeaderBoard<br>1. Player 1, Total Score: ${totalScorePlayer1}<br> 1. Player 2, Total Score: ${totalScorePlayer2}`;
   }
 };
 
