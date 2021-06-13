@@ -14,6 +14,13 @@ var main = function (input) {
   } else if (mode == "player1pick" || mode == "player2pick") {
     if (input == 1 || input == 2) {
       return pickprocess(input, outcome1, outcome2);
+    } else {
+      myOutputValue =
+        `Please only pick 1 or 2!` +
+        "<br>" +
+        `1: ${outcome1}` +
+        "<br>" +
+        `2: ${outcome2}`;
     }
     return myOutputValue;
   }
@@ -41,8 +48,6 @@ var dicerolltwice = function () {
   var rollDice2 = diceroll();
   outcome1 = rollDice1 * 10 + rollDice2;
   outcome2 = rollDice2 * 10 + rollDice1;
-  console.log(outcome1);
-  console.log(outcome2);
   var myOutputValue =
     `You have rolled ${rollDice1} and ${rollDice2}! Type either 1 or 2 to pick your combined number: ` +
     "<br>" +
@@ -51,8 +56,10 @@ var dicerolltwice = function () {
     `2: ${outcome2}`;
   if (mode == "player1start") {
     mode = "player1pick";
+    myOutputValue = "Player 1:" + "<br>" + myOutputValue;
   } else {
     mode = "player2pick";
+    myOutputValue = "Player 2:" + "<br>" + myOutputValue;
   }
   return myOutputValue;
 };
@@ -67,6 +74,13 @@ var pickprocess = function (input, outcome1, outcome2) {
     } else {
       p2Choice = outcome1;
       p2Score = p2Score + p2Choice;
+      var winnerDecided = faceoff(p1Choice, p2Choice);
+      var leaderboardScore = leaderboard(p1Score, p2Score);
+      return (myOutputValue =
+        `Player 2, you have picked ${p2Choice}.` +
+        "<br>" +
+        winnerDecided +
+        leaderboardScore);
     }
   } else if (input == 2) {
     if (mode == "player1pick") {
@@ -77,21 +91,41 @@ var pickprocess = function (input, outcome1, outcome2) {
     } else {
       p2Choice = outcome2;
       p2Score = p2Score + p2Choice;
+      var winnerDecided = faceoff(p1Choice, p2Choice);
+      var leaderboardScore = leaderboard(p1Score, p2Score);
+      return (myOutputValue =
+        `Player 2, you have picked ${p2Choice}.` +
+        "<br>" +
+        winnerDecided +
+        leaderboardScore);
     }
+  } else {
+    myOutputValue = "Please only enter either 1 or 2 to pick!";
   }
-  var winnerDecided = faceoff(p1Choice, p2Choice);
-  return (myOutputValue =
-    `Player 2, you have picked ${p2Choice}.` +
-    "<br>" +
-    winnerDecided +
-    "<br>" +
-    `Player 1 Total score: ${p1Score}` +
-    "<br>" +
-    `Player 2 Total score: ${p2Score}` +
-    "<br> <br>" +
-    "Player 1, click submit to roll again!");
+  return myOutputValue;
 };
 
+var leaderboard = function (p1Score, p2Score) {
+  if (p1Score > p2Score) {
+    return (
+      "<br>" +
+      `1st Place - Player 1 Total score: ${p1Score}` +
+      "<br>" +
+      `2nd Place - Player 2 Total score: ${p2Score}` +
+      "<br> <br>" +
+      "Player 1, click submit to roll again!"
+    );
+  } else if (p2Score > p1Score) {
+    return (
+      "<br>" +
+      `1st Place - Player 2 Total score: ${p2Score}` +
+      "<br>" +
+      `2nd Place - Player 1 Total score: ${p1Score}` +
+      "<br> <br>" +
+      "Player 1, click submit to roll again!"
+    );
+  }
+};
 var inputDisplay = function () {
   if (mode == "player1start") {
     return "Player 1, please roll.";
