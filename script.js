@@ -15,22 +15,18 @@ var ROLL_DICE_MODE = "ROLL DICE";
 var CHOOSE_ORDER_MODE = "CHOOSE ORDER";
 var gameMode = ROLL_DICE_MODE;
 var input = "";
+var winner = "";
 
 // Start with Player 1
 
 var main = function (input) {
   var myOutputValue = "";
-  var winner = "";
   myOutputValue = basicGame(input);
   return myOutputValue;
 };
 
-// 2 dice rolls and shows output
-// picks order of dice
-// 2nd player plays
-// higher number wins
-
 var basicGame = function (input) {
+  // Starts off by rolling dice and asks player to choose order
   if (gameMode == ROLL_DICE_MODE) {
     Dice1 = rollDice();
     Dice2 = rollDice();
@@ -45,38 +41,38 @@ var basicGame = function (input) {
   if (chosenOrder == 1) {
     if (currentPlayer == PLAYER1) {
       player1Number = Number(`${Dice1}${Dice2}`);
-      myOutputValue = `${chosenOutputMessage} ${player1Number}`;
+      myOutputValue = `${chosenOutputMessage} ${player1Number}. It is now Player 2's turn. Please click submit to play.`;
     } else if (currentPlayer == PLAYER2) {
       player2Number = Number(`${Dice1}${Dice2}`);
-      myOutputValue = `${chosenOutputMessage} ${player2Number} Player ${winner} wins!`;
+      winner = generateWinner(player1Number, player2Number);
+      myOutputValue = `${chosenOutputMessage} ${player2Number}. Player ${winner} wins! Click submit to play again.`;
     }
   } else {
     if (currentPlayer == PLAYER1) {
       player1Number = Number(`${Dice2}${Dice1}`);
-      myOutputValue = `${chosenOutputMessage} ${player1Number}.`;
+      myOutputValue = `${chosenOutputMessage} ${player1Number}. It is now Player 2's turn. Please click submit to play.`;
     } else if (currentPlayer == PLAYER2) {
       player2Number = Number(`${Dice2}${Dice1}`);
-      myOutputValue = `${chosenOutputMessage} ${player2Number}. Player ${winner} wins!`;
+      winner = generateWinner(player1Number, player2Number);
+      myOutputValue = `${chosenOutputMessage} ${player2Number}. Player ${winner} wins! Click submit to play again.`;
     }
   }
-  // switches to other player and restarts game
+  // Switches to other player and restarts game
   var nextPlayer = (currentPlayer % 2) + 1;
   currentPlayer = nextPlayer;
   gameMode = ROLL_DICE_MODE;
 
-  winner = generateWinner(player1Number, player2Number);
-
   return myOutputValue;
 };
 
-// higher number wins
+// Higher number wins
 var generateWinner = function (player1Number, player2Number) {
   if (player1Number > player2Number) {
     return PLAYER1;
   } else return PLAYER2;
 };
 
-// dice function
+// Simple Dice Function
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
