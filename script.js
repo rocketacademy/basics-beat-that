@@ -8,31 +8,47 @@ var currentplayer = 0;
 
 var main = function (input) {
   //Arranging the order of dice is false initially and player just roll dice
-  if (arrangeOrder == false) {
-    if (input == 0) {
-      input = 2;
-    }
-    var output = rollTheDice(input);
-    arrangeOrder = true;
-    return output;
-  }
-  //Arranging the order of dice
-  if (arrangeOrder == true) {
-    var scoring = arrangeDice(input);
-    var statementOne = scoring;
-    if (!isNaN(scoring)) {
-      switchPlayercalculateScore(playerNum, scoring);
+  var diceResults = 0;
+  var highestCombinedNumber = 0;
+  var playeraction = "";
+  var currentplayer = 0;
 
-      if (playerOneScore > playerTwoScore) {
-        statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 1 score: ${playerOneScore}<br>Player 2 score: ${playerTwoScore}<br><br>It is now Player ${playerNum}'s turn.`;
-        return statementOne;
-      }
-      if (playerTwoScore > playerOneScore) {
-        statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 2 score: ${playerTwoScore}<br>Player 1 score: ${playerOneScore}<br><br>It is now Player ${playerNum}'s turn.`;
-        return statementOne;
-      }
-    } else return statementOne;
+  //if (arrangeOrder == false) {
+  if (input == 0 || input == 1) {
+    input = 2;
   }
+  diceResults = rollTheDice(input);
+  highestCombinedNumber = selectionSort(diceResults);
+  combinedScoring = combinedScore(highestCombinedNumber);
+  var playeraction = playerAction(diceResults, input, combinedScoring);
+  currentplayer = switchPlayercalculateScore(playerNum, combinedScoring);
+  var output = `Welcome Player ${currentplayer} <br> ${playeraction}. <br><br> Player 1 score is ${playerOneScore}<br> Player 2 score is ${playerTwoScore}`;
+
+  // arrangeOrder = true;
+  return output;
+  // }
+
+  // if (arrangeOrder == true) {
+  //   switchPlayercalculateScore(playerNum, combinedScoring);
+  //   return output;
+  // }
+  // //Arranging the order of dice
+  // if (arrangeOrder == true) {
+  //   var scoring = arrangeDice(input);
+  //   var statementOne = scoring;
+  //   if (!isNaN(scoring)) {
+  //     switchPlayercalculateScore(playerNum, scoring);
+
+  //     if (playerOneScore > playerTwoScore) {
+  //       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 1 score: ${playerOneScore}<br>Player 2 score: ${playerTwoScore}<br><br>It is now Player ${playerNum}'s turn.`;
+  //       return statementOne;
+  //     }
+  //     if (playerTwoScore > playerOneScore) {
+  //       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 2 score: ${playerTwoScore}<br>Player 1 score: ${playerOneScore}<br><br>It is now Player ${playerNum}'s turn.`;
+  //       return statementOne;
+  //     }
+  //   } else return statementOne;
+  // }
 };
 
 //Roll the dice
@@ -43,21 +59,19 @@ var diceroll = function () {
   return diceOutcome;
 };
 
-//State for the roll dice outcome and order
-var playerAction = function (diceResults, numberOfRolls) {
+//Output player dice results and combined number
+var playerAction = function (diceResults, numberOfRolls, combinedScoring) {
   var returnStatement = `You rolled ${diceResults[0]} for Dice 1 `;
   for (i = 1; i < numberOfRolls; i++) {
     returnStatement += `and ${diceResults[i]} for Dice ${i + 1} `;
   }
-  var highestCombinedNumber = selectionSort(diceResults);
-  console.log(highestCombinedNumber);
-  var combinedScoring = combinedScore(highestCombinedNumber);
+
   var finalStatement =
     returnStatement +
     ".<br>Choose the order of the dice. Your highest combined number is " +
     combinedScoring;
 
-  return `${finalStatement}`;
+  return finalStatement;
 };
 
 // Arrange dice
@@ -88,9 +102,8 @@ var rollTheDice = function (numberOfRolls) {
     diceResults.push(rolldice);
   }
   console.log(diceResults);
-  var playeraction = playerAction(diceResults, numberOfRolls);
-  var myOutputValue = `Welcome Player ${playerNum} <br> ${playeraction}`;
-  return myOutputValue;
+
+  return diceResults;
 };
 
 //Switch player and calculate score of each player
@@ -105,7 +118,7 @@ var switchPlayercalculateScore = function (number, score) {
     playerTwoScore += score;
   }
 
-  return;
+  return currentplayer;
 };
 
 //Sort the score according to DESC order
