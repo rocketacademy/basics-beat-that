@@ -6,6 +6,8 @@ var concastenateNumber1=``
 var concastenateNumber2=``
 var concastenateNumberPlayer1=[]
 var concastenateNumberPlayer2=[]
+var player1NumberWin=0
+var player2NumberWin=0
 var main = function (input) {
   // diceNumberPlayer1=[]
   // diceNumberPlayer2=[]
@@ -83,22 +85,42 @@ var result = function(){
   currPlayer=1
   console.log(concastenateNumberPlayer1,concastenateNumberPlayer2)
   if(concastenateNumberPlayer1[0]>concastenateNumberPlayer2[0]){
+    player1NumberWin+=1
     diceNumberPlayer1=[]
     diceNumberPlayer2=[]
     concastenateNumberPlayer1=[]
     concastenateNumberPlayer2=[]
-    return `player 1 win yay`
+    if(player1NumberWin>player2NumberWin){
+      return `Player 1 win yay<br>1. Player 1 win :${player1NumberWin}<br>2. Player 2 win :${player2NumberWin}`
+    }
+    if(player1NumberWin<player2NumberWin){
+      return `Player 1 win yay<br>1. Player 2 win :${player2NumberWin}<br>2. Player 1 win :${player1NumberWin}`
+    }
+    return `Player 1 win yay<br>1. Player 2 win :${player2NumberWin}<br>1. Player 1 win :${player1NumberWin}`
   }
   if(concastenateNumberPlayer1[0]<concastenateNumberPlayer2[0]){
+    player2NumberWin+=1
     diceNumberPlayer1=[]
     diceNumberPlayer2=[]
     concastenateNumberPlayer1=[]
     concastenateNumberPlayer2=[]
-    return `player 2 win yay`
+     if(player1NumberWin>player2NumberWin){
+      return `Player 2 win yay<br>1. Player 1 win :${player1NumberWin}<br>2. Player 2 win :${player2NumberWin}`
+    }
+    if(player1NumberWin<player2NumberWin){
+      return `Player 2 win yay<br>1. Player 2 win :${player2NumberWin}<br>2. Player 1 win :${player1NumberWin}`
+    }
+    return `Player 2 win yay<br>1. Player 2 win :${player2NumberWin}<br>1. Player 1 win :${player1NumberWin}`
   }
     diceNumberPlayer1=[]
     diceNumberPlayer2=[]
     concastenateNumberPlayer1=[]
     concastenateNumberPlayer2=[]
-  return `draw`
+    if(player1NumberWin>player2NumberWin){
+      return `draw<br>1. Player 1 win :${player1NumberWin}<br>2. Player 2 win :${player2NumberWin}`
+    }
+    if(player1NumberWin<player2NumberWin){
+      return `draw<br>1. Player 2 win :${player2NumberWin}<br>2. Player 1 win :${player1NumberWin}`
+    }
+    return `draw<br>1. Player 2 win :${player2NumberWin}<br>1. Player 1 win :${player1NumberWin}`
 }
