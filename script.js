@@ -8,22 +8,9 @@ var p2Choice = 0;
 var p1Score = 0;
 var p2Score = 0;
 var main = function (input) {
-  var myOutputValue = "";
-  if (mode == "player1start" || mode == "player2start") {
-    return dicerolltwice();
-  } else if (mode == "player1pick" || mode == "player2pick") {
-    if (input == 1 || input == 2) {
-      return pickprocess(input, outcome1, outcome2);
-    } else {
-      myOutputValue =
-        `Please only pick 1 or 2!` +
-        "<br>" +
-        `1: ${outcome1}` +
-        "<br>" +
-        `2: ${outcome2}`;
-    }
-    return myOutputValue;
-  }
+  var twoDiceRolls = dicerolltwice();
+  var pickingprocess = pickprocess(twoDiceRolls, outcome1, outcome2);
+  return pickingprocess;
 };
 
 var diceroll = function () {
@@ -49,60 +36,91 @@ var dicerolltwice = function () {
   outcome1 = rollDice1 * 10 + rollDice2;
   outcome2 = rollDice2 * 10 + rollDice1;
   var myOutputValue =
-    `You have rolled ${rollDice1} and ${rollDice2}! Type either 1 or 2 to pick your combined number: ` +
+    `You have rolled ${rollDice1} and ${rollDice2}!` +
     "<br>" +
     `1: ${outcome1}` +
     "<br>" +
     `2: ${outcome2}`;
   if (mode == "player1start") {
-    mode = "player1pick";
     myOutputValue = "Player 1:" + "<br>" + myOutputValue;
   } else {
-    mode = "player2pick";
     myOutputValue = "Player 2:" + "<br>" + myOutputValue;
   }
   return myOutputValue;
 };
 
-var pickprocess = function (input, outcome1, outcome2) {
-  if (input == 1) {
-    if (mode == "player1pick") {
+var pickprocess = function (myOutputValue, outcome1, outcome2) {
+  if (outcome1 > outcome2) {
+    if (mode == "player1start") {
       mode = "player2start";
       p1Choice = outcome1;
       p1Score = p1Score + p1Choice;
-      return `Player 1, you have picked ${p1Choice}. Now, player 2 will roll.`;
+      return (
+        `${myOutputValue}` +
+        "<br>" +
+        `Player 1, your highest roll is ${outcome1}. Now, player 2 will roll.`
+      );
     } else {
       p2Choice = outcome1;
       p2Score = p2Score + p2Choice;
       var winnerDecided = faceoff(p1Choice, p2Choice);
       var leaderboardScore = leaderboard(p1Score, p2Score);
-      return (myOutputValue =
-        `Player 2, you have picked ${p2Choice}.` +
+      return (
+        `${myOutputValue}` +
+        "<br>" +
+        `Player 2, your highest roll is ${outcome1}.` +
         "<br>" +
         winnerDecided +
-        leaderboardScore);
+        leaderboardScore
+      );
     }
-  } else if (input == 2) {
-    if (mode == "player1pick") {
+  } else {
+    if (mode == "player1start") {
       mode = "player2start";
       p1Choice = outcome2;
       p1Score = p1Score + p1Choice;
-      return `Player 1, you have picked ${p1Choice}. Now, player 2 will roll.`;
+      return (
+        `${myOutputValue}` +
+        "<br>" +
+        `Player 1, your highest roll is ${outcome2}. Now, player 2 will roll.`
+      );
     } else {
       p2Choice = outcome2;
       p2Score = p2Score + p2Choice;
       var winnerDecided = faceoff(p1Choice, p2Choice);
       var leaderboardScore = leaderboard(p1Score, p2Score);
-      return (myOutputValue =
-        `Player 2, you have picked ${p2Choice}.` +
+      return (
+        `${myOutputValue}` +
+        "<br>" +
+        `Player 2, your highest roll is ${outcome2}.` +
         "<br>" +
         winnerDecided +
-        leaderboardScore);
+        leaderboardScore
+      );
     }
-  } else {
-    myOutputValue = "Please only enter either 1 or 2 to pick!";
   }
-  return myOutputValue;
+};
+
+var leaderboard = function (p1Score, p2Score) {
+  if (p1Score > p2Score) {
+    return (
+      "<br>" +
+      `1st Place - Player 1 Total score: ${p1Score}` +
+      "<br>" +
+      `2nd Place - Player 2 Total score: ${p2Score}` +
+      "<br> <br>" +
+      "Player 1, click submit to roll again!"
+    );
+  } else if (p2Score > p1Score) {
+    return (
+      "<br>" +
+      `1st Place - Player 2 Total score: ${p2Score}` +
+      "<br>" +
+      `2nd Place - Player 1 Total score: ${p1Score}` +
+      "<br> <br>" +
+      "Player 1, click submit to roll again!"
+    );
+  }
 };
 
 var leaderboard = function (p1Score, p2Score) {
