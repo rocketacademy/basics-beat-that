@@ -1,127 +1,204 @@
-// Global variable to track game version
+// Track number of players in the game
+var numPlayers = 0;
+
+// Track number of dice to use
+var numDice = 0;
+
+// Track game version
 var gameVersion = "";
 
-// Global variable to track the game mode, ie. if it's player 1's or player 2's turn.
-var gameMode = "1";
+// Track game mode - allows the game to move into the different player stages eg. rolling dice, getting sequence etc
+var gameMode = 1;
 
-// Global variable to track the player's number selections.
-var player1Final = "";
-var player2Final = "";
-var player1Temp = [];
-var player2Temp = [];
+// Variable to store a player's dice rolls
+var playerRoll = [];
 
-// Global variable to track players' scores.
-var player1Total = 0;
-var player2Total = 0;
+// Variable to store all player's combined numbers
+var playerCombinedNums = [];
 
-// Request for user input for game version.
+// Variable to track running scores of each player.
+var runningScore = [];
+
+// Function to get user inout for game version.
 var getVersion = function (input) {
   gameVersion = input;
-  return `You have selected the ${gameVersion} version. <br> Click "submit" to start the game.`;
+  return `In this mode, the ${gameVersion} number will win the game. <br><br> Please input the number of players.`;
 };
 
-// Random number generator between 1 to 6
-var generateDiceNumber = function () {
+// Function to generate dice roll
+var diceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
 
-// Function to roll 2 dices and assign them to an array.
-var diceRoll = function () {
-  var dice1 = generateDiceNumber();
-  var dice2 = generateDiceNumber();
-  var diceCombi = [dice1, dice2];
-  return diceCombi;
+//Request for player input to get number of players in game.
+var getPlayers = function (input) {
+  numPlayers = input;
+  return `Welcome! There are ${numPlayers} players in this game. <br><br> Please select how many dice you want to play with. `;
 };
 
-// Function to display message for each roll from player 1 and player 2. Function takes an array as a parameter.
-var displayRoll = function (playerRoll) {
-  var playerNum = `Welcome Player 1.`;
-  if (gameMode == 2) {
-    playerNum = `Welcome Player 2.`;
+// Get player input to number of dice used in game.
+var getNumDice = function (input) {
+  numDice = input;
+  return `You will be playing with ${numDice} dice in this game. <br><br> Player 1, please click "submit" to roll the dice.`;
+};
+
+// Get player to roll dice.
+var getPlayerRoll = function () {
+  var index = 0;
+  var playerDiceRoll = [];
+  while (index < numDice) {
+    playerDiceRoll.push(diceRoll());
+    index += 1;
   }
-  return `${playerNum} <br> You rolled ${playerRoll[0]} for Dice 1 and ${playerRoll[1]} for Dice 2. <br> Input the number of the dice to determine the first numeral.`;
+  return playerDiceRoll;
 };
 
-// Function takes in player seleted dice number, and sets it as the first numeral. Reads 2 parameters, user input and array with dice numbers.
-var sequenceNumber = function (userNum, diceNum) {
-  return "" + diceNum[userNum - 1] + diceNum[diceNum.length - userNum];
-};
-
-// Game logic to check for the larger number between player 1 and 2's selections and print winning player message.
-// Checks for game version. If normal version, larger number wins. If reverse version, lower number wins.
-var compareNumbers = function (player1, player2) {
-  if (gameVersion == "reverse") {
-    if (Number(player1) < Number(player2)) {
-      return `Player 1 has ${player1} and Player 2 has ${player2}. <br> Player 1 wins! <br> Player 1, please click "submit" to play again.`;
-    }
-    return `Player 1 has ${player1} and Player 2 has ${player2}. <br> Player 2 wins! <br> Player 1, please click "submit" to play again`;
-  } else {
-    if (Number(player1) > Number(player2)) {
-      return `Player 1 has ${player1} and Player 2 has ${player2}. <br> Player 1 wins! <br> Player 1, please click "submit" to play again.`;
-    }
-    return `Player 1 has ${player1} and Player 2 has ${player2}. <br> Player 2 wins! <br> Player 1, please click "submit" to play again`;
+// Get player to select the sequence of the dice. Function takes in the sequence input, and the array of dice rolls.
+var getSequence = function (input, diceArray) {
+  var combinedNum = 0;
+  var autoCombinedNum = 0;
+  var indexArray = input.split("").map(Number);
+  // This loop takes in the user input sequence and generate the combined number.
+  for (var i = 0; i < indexArray.length; i += 1) {
+    combinedNum = combinedNum * 10 + diceArray[indexArray[i]];
   }
-};
-
-// Function to print leaderboard. Show total scores of each player and rank them in decreasing order.
-var showLeaderboard = function (score1, score2) {
-  if (gameVersion == "reverse") {
-    if (score2 < score1) {
-      return `Player 2: ${score2} <br> Player 1: ${score1}`;
+  // This loop auto generates the highest/lowest number depending on the game version.
+  var index = 0;
+  var maxIndex = 0;
+  var maxNum = 0;
+  var tempArray = diceArray;
+  while (autoCombinedNum.toString().length <= diceArray.length + 1) {
+    if (gameVersion == "highest") {
+      while (index < tempArray.length) {
+        if (tempArray[index] > maxNum) {
+          maxNum = tempArray[index];
+          maxIndex = index;
+          index += 1;
+        } else {
+          index += 1;
+        }
+      }
+      autoCombinedNum = autoCombinedNum * 10 + maxNum;
+      tempArray.splice(maxIndex, 1);
+      maxNum = 0;
+      index = 0;
     } else {
-      return `Player 1: ${score1} <br> Player 2: ${score2}`;
-    }
-  } else {
-    if (score2 > score1) {
-      return `Player 2: ${score2} <br> Player 1: ${score1}`;
-    } else {
-      return `Player 1: ${score1} <br> Player 2: ${score2}`;
+      maxNum = 7;
+      while (index < tempArray.length) {
+        if (tempArray[index] < maxNum) {
+          maxNum = tempArray[index];
+          maxIndex = index;
+          index += 1;
+        } else {
+          index += 1;
+        }
+      }
+      autoCombinedNum = autoCombinedNum * 10 + maxNum;
+      tempArray.splice(maxIndex, 1);
+      maxNum = 7;
+      index = 0;
     }
   }
+
+  return [combinedNum, autoCombinedNum];
 };
 
-// Game logic for normal version ie. largest number wins.
-var playNormalGame = function (input) {
-  var outputValue = "";
-  if (gameMode == "1") {
-    player1Temp = diceRoll();
-    outputValue = displayRoll(player1Temp);
-    gameMode = "Player 1 sequence";
-    return outputValue;
-  } else if (gameMode == "Player 1 sequence") {
-    player1Final = sequenceNumber(input, player1Temp);
-    player1Total += Number(player1Final);
-    gameMode = "2";
-    return `It is Player 2's turn to roll the dice. Player 2, please click "submit".`;
-  } else if (gameMode == "2") {
-    player2Temp = diceRoll();
-    outputValue = displayRoll(player2Temp);
-    gameMode = "Player 2 sequence";
-    return outputValue;
-  } else if (gameMode == "Player 2 sequence") {
-    player2Final = sequenceNumber(input, player2Temp);
-    player2Total += Number(player2Final);
-    gameMode = "check";
-    return `Both players have made their choices! Let's reveal the winner!`;
+// Compare the numbers of the players and declare the winning player. Function takes in the array of combined players numbers. Returns the highest number and the winning player.
+var compareNumbers = function (input) {
+  var maxNum = input[0];
+  var maxIndex = 0;
+  var index = 0;
+  if (gameVersion == "highest") {
+    while (index < input.length) {
+      if (input[index] > maxNum) {
+        maxNum = input[index];
+        maxIndex = index;
+        index += 1;
+      } else {
+        index += 1;
+      }
+    }
+    playerCount = 0;
   } else {
-    outputValue = `${compareNumbers(
-      player1Final,
-      player2Final
-    )} <br><br> <========LEADERBOARD=========> <br> ${showLeaderboard(
-      player1Total,
-      player2Total
-    )}`;
-    gameMode = "1";
-    return outputValue;
+    while (index < input.length) {
+      if (input[index] < maxNum) {
+        maxNum = input[index];
+        maxIndex = index;
+        index += 1;
+      } else {
+        index += 1;
+      }
+    }
+    playerCount = 0;
   }
+  return [maxNum, maxIndex + 1];
 };
+
+// Show leaderboard. Function takes in array of running scores.
+var showLeaderboard = function (input) {
+  var output = "";
+  for (var i = 0; i < input.length; i += 1) {
+    output += `Player ${i + 1}: ${input[i]} <br>`;
+  }
+  return output;
+};
+
+// Variable to initialise while loop. Left out of main fuction so it does not reset to 0 everytime "submit" is clicked.
+var playerCount = 0;
 
 var main = function (input) {
-  if (gameVersion == "" && input == "") {
-    return `Please select either "normal" or "reverse" version of the game.`;
-  } else if (gameVersion == "" && input != "") {
+  if (gameVersion == "") {
     return getVersion(input);
+  } else if (numPlayers == 0) {
+    return getPlayers(input);
+  } else if (numPlayers != 0 && numDice == 0) {
+    return getNumDice(input);
   } else {
-    return playNormalGame(input);
+    while (playerCount < numPlayers) {
+      if (gameMode == 1) {
+        playerRoll = getPlayerRoll();
+        gameMode = 2;
+        return `Hello Player ${
+          playerCount + 1
+        }! <br> You have rolled ${playerRoll}. <br> Please select the sequeuce of your dice. <br> Please enter the index of the dice roll (use zero indexing).`;
+      } else if (gameMode == 2) {
+        gameMode = 1;
+        var thisPlayerNum = getSequence(input, playerRoll);
+        if (runningScore.length < playerCount + 1) {
+          runningScore.push(thisPlayerNum[0]);
+        } else {
+          runningScore[playerCount] += thisPlayerNum[0];
+        }
+        playerCombinedNums.push(thisPlayerNum[0]);
+        if (playerCount == numPlayers - 1) {
+          var outputValue = `Player ${
+            playerCount + 1
+          } <br> You have formed the number ${
+            thisPlayerNum[0]
+          } <br> The auto generated ${gameVersion} number is ${
+            thisPlayerNum[1]
+          }. <br><br> Click "submit" to see the results`;
+          playerCount += 1;
+        } else {
+          var outputValue = `Player ${
+            playerCount + 1
+          } <br> You have formed the number ${
+            thisPlayerNum[0]
+          } <br> The auto generated ${gameVersion} number is ${
+            thisPlayerNum[1]
+          }.  <br><br> Click "submit" for the next player to roll the dice.`;
+          playerCount += 1;
+        }
+        return outputValue;
+      }
+    }
+    var winningItems = compareNumbers(playerCombinedNums);
+    // Assign empty array again to restart game.
+    playerCombinedNums = [];
+    return `Player ${winningItems[1]} won with the ${gameVersion} number of ${
+      winningItems[0]
+    }!<br><br> ========= LEADERBOARD ========= <br> ${showLeaderboard(
+      runningScore
+    )} <br><br> Click "submit" to play another round!`;
   }
 };
