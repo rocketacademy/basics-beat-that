@@ -25,7 +25,7 @@ var stage1 = function () {
   diceRoll1 = rollDice();
   diceRoll2 = rollDice();
   gameMode = PENDING_ORDER;
-  return `${currentTurn} rolled two dice... 🎲🎲<br>Dice 1 rolled ${diceRoll1}<br>.Dice 2 rolled ${diceRoll2}.<br>Enter "1" to have Dice 1 be the first digit in your number, or "2" to have Dice 2 be the first digit your number.`;
+  return `${currentTurn} rolled two dice... 🎲🎲<br>Dice 1 rolled ${diceRoll1}.<br>Dice 2 rolled ${diceRoll2}.<br>Enter "1" to have Dice 1 be the first digit in your number, or "2" to have Dice 2 be the first digit your number.`;
 };
 
 // Second stage of player turn: select order of dice digits
