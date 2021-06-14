@@ -33,7 +33,6 @@ var autoGenerateCombinedNumber = function (diceRollNumbersArray) {
   for (var counter = 0; counter < diceRollNumbersArray.length; counter += 1) {
     sortedCombinedNumber = sortedCombinedNumber + diceRollNumbersArray[counter];
   }
-  sortedCombinedNumber = Number(sortedCombinedNumber);
   return sortedCombinedNumber;
 };
 
@@ -45,6 +44,7 @@ var main = function (input) {
       // Create two arrays containing check-values for each player -- one array to check if each player has rolled the dice. The other array to check if each player has chosen whch dice roll of theirs they want to choose as their first to create the combined number.
       playerRollCheckArray.push(0);
       playersCombinedNumberCheckArray.push(0);
+      playersCombinedNumberArray.push(0);
     }
     return "Choose the number of dice each player rolls";
   }
@@ -68,9 +68,9 @@ var main = function (input) {
         }
         // After player rolls the two dice, make him choose what dice goes first and create the player's combined number (not applicable for autogenerate number version)
 
-        playersCombinedNumberArray[player] = autoGenerateCombinedNumber(
-          playerRollsArray[player]
-        );
+        playersCombinedNumberArray[player] =
+          playersCombinedNumberArray[player] +
+          parseInt(autoGenerateCombinedNumber(playerRollsArray[player]));
         return playerRollMessage;
       }
 
@@ -101,7 +101,10 @@ var main = function (input) {
   var scoreboard = "";
   var winner = 0;
   if (gameStatus == "scoreboard") {
+    gameStatus = "gamePlay";
+    playerRollsArray = [];
     for (var player = 0; player < numberOfPlayers; player += 1) {
+      playerRollCheckArray[player] = 0;
       // Creating the scoreboard
       if (
         playersCombinedNumberArray[player] > playersCombinedNumberArray[winner]
