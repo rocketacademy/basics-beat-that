@@ -1,17 +1,20 @@
 // Constants
-const PENDING_ROLL = "pending dice roll";
-const PENDING_ORDER = "pending order";
-const PENDING_RESULT = "pending final game results";
-const PLAYER_1 = "Player 1";
-const PLAYER_2 = "Player 2";
+const CHOOSE_NUM_PLAYERS = "choose number of players";
+const CHOOSE_WIN_CNDTN = "choose the win condition";
+const CHOOSE_KNOCKOUT = "choose knockout mode";
+const SETTINGS_CHOSEN = "all settings chosen";
+const HIGHEST = "highest"; // to be used in winCndtn
+const LOWEST = "lowest"; // to be used in winCndtn
+const ON = "on"; // to be used in koSetting
+const OFF = "off"; // to be used in koSetting
 
 // Global variables
-var gameMode = PENDING_ROLL; // Initialise game in this mode
-var player1Score;
-var player2Score;
-var currentTurn = PLAYER_1; // Player 1 starts first in the game
-var diceRoll1;
-var diceRoll2;
+var gameMode = CHOOSE_NUM_PLAYERS; // Initialise game in this mode
+var numPlayers;
+var numDices;
+var winCndtn;
+var koSetting; // Knockout Mode on or off?
+var players = []; // Array of player objects that will be updated as the game progresses
 
 // Generate a number between 1-6
 var rollDice = function () {
@@ -20,71 +23,72 @@ var rollDice = function () {
   return randomRoll;
 };
 
-// First stage of player turn: roll two dice
-var stage1 = function () {
-  diceRoll1 = rollDice();
-  diceRoll2 = rollDice();
-  gameMode = PENDING_ORDER;
-  return `${currentTurn} rolled two dice... 🎲🎲<br>Dice 1 rolled ${diceRoll1}.<br>Dice 2 rolled ${diceRoll2}.<br>Enter "1" to have Dice 1 be the first digit in your number, or "2" to have Dice 2 be the first digit your number.`;
+var stage1 = function (chosenNumber) {
+  var resultMessage;
+  // Input validation: if user does not enter a number that is greater than 1, as we need min 2 players to play
+  if (!(Number(chosenNumber) > 1)) {
+    resultMessage = `You have entered an invalid input.<br>Please enter a number greater than 1.`;
+    return resultMessage;
+  }
+  // Valid input, so we update numPlayers based on input
+  numPlayers = Number(chosenNumber);
+  // Create object for each player and update players array
+  for (var i = 0; i < numPlayers; i++) {
+    var player = { playerNum: i + 1, playerScore: 0 };
+    players.push(player);
+  }
+  // Output the result message
+  resultMessage = `You have selected to play the game with ${numPlayers} players.<br><br>Now enter "${HIGHEST}" to have the the win condition be ${"lowest number wins".italics()}, or enter "${LOWEST}" to have the win condition be ${"lowest number wins".italics()}.`;
+  gameMode = CHOOSE_WIN_CNDTN; // Update game mode to next stage
+  return resultMessage;
 };
 
-// Second stage of player turn: select order of dice digits
-var stage2 = function (orderInput) {
-  let resultMessage;
-  // Input validation
-  if (Number(orderInput) != 1 && Number(orderInput) != 2) {
-    resultMessage = `You have entered an invalid input.<br>Please enter "1" to have Dice 1 be the first digit in your number, or "2" to have Dice 2 be the first digit your number.<br> In case you have forgotten, Dice 1 rolled ${diceRoll1} and Dice 2 rolled ${diceRoll2}.`;
+var stage2 = function (chosenCndtn) {
+  var resultMessage;
+  // Input validation: if user does not enter the number 1 or 2
+  if (chosenCndtn != HIGHEST && chosenCndtn != LOWEST) {
+    resultMessage = `You have entered an invalid input.<br><br>Please enter "${HIGHEST}" to have the the win condition be ${"lowest number wins".italics()}, or enter "${LOWEST}" to have the win condition be ${"lowest number wins".italics()}.`;
     return resultMessage;
   }
-  // Update player's score based on their input of the order of dice digits
-  if (currentTurn == PLAYER_1) {
-    if (orderInput == 1) {
-      player1Score = Number(`${diceRoll1}${diceRoll2}`);
-    } else {
-      player1Score = Number(`${diceRoll2}${diceRoll1}`);
-    }
-    currentTurn = PLAYER_2; // Change to Player 2's turn to play next
-    gameMode = PENDING_ROLL; // Player 2 needs to roll two dice
-    resultMessage = `${PLAYER_1}, your number is ${player1Score}!<br>It is now ${PLAYER_2}'s turn - click on "Submit" to roll two dice. 🎲🎲`;
-    return resultMessage;
-  }
-  if (currentTurn == PLAYER_2) {
-    if (orderInput == 1) {
-      player2Score = Number(`${diceRoll1}${diceRoll2}`);
-    } else {
-      player2Score = Number(`${diceRoll2}${diceRoll1}`);
-    }
-    gameMode = PENDING_RESULT; // Both players have finished their turns, so it's time to output the final results
-    resultMessage = `${PLAYER_2}, your number is ${player2Score}!<br>Click on "Submit" to find out who is the winner. Drumroll... 🥁`;
-    return resultMessage;
-  }
+  // Valid input, so we update winCndtn based on input
+  winCndtn = chosenCndtn;
+  resultMessage = `You have selected the win condition as ${(
+    winCndtn + " number wins"
+  ).italics()}.<br><br>Now enter "${ON}" to have Knockout Mode turned on, or enter "${OFF}" to have Knockout Mode turned off.`;
+  gameMode = CHOOSE_KNOCKOUT; // Update game mode to next stage
+  return resultMessage;
 };
 
-// Final stage of the game: publish results after both players have played their turn
-var stage3 = function () {
-  let resultMessage = `${PLAYER_1}'s number is ${player1Score} and ${PLAYER_2}'s number is ${player2Score}.<br>`;
-  if (player1Score > player2Score) {
-    resultMessage += `The winner is ${PLAYER_1}! Congratulations! 🥳🥳<br>`;
-  } else if (player2Score > player1Score) {
-    resultMessage += `The winner is ${PLAYER_2}! Congratulations! 🥳🥳<br>`;
-  } else {
-    resultMessage += `How boring, it's a draw...<br>`;
+var stage3 = function (onOrOff) {
+  var resultMessage;
+  // Input validation: if user does not enter "on" or "off"
+  if (onOrOff != ON && onOrOff != OFF) {
+    resultMessage = `You have entered an invalid input.<br><br>Please enter "${ON}" to have Knockout Mode turned on, or enter "${OFF}" to have Knockout Mode turned off.`;
+    return resultMessage;
   }
-  resultMessage += `If you would like to play again, click on "Submit" to roll two dice for ${PLAYER_1} as part of a new game.`;
-  // Reset the game in case they want to play again
-  gameMode = PENDING_ROLL;
-  currentTurn = PLAYER_1;
+  // Valid input, so we update koSetting based on input
+  koSetting = onOrOff;
+  gameMode = SETTINGS_CHOSEN;
+  resultMessage = `You have selected Knockout Mode to be turned ${koSetting}.<br><br>These are the settings that you have chosen:<br>Number of players: ${numPlayers}<br>Win condition: ${winCndtn} number wins<br>Knockout Mode: ${koSetting}<br><br>You are now ready to start the first round of Beat That!<br>Enter the number of dice that will be rolled for each player in this round.`;
   return resultMessage;
 };
 
 var main = function (input) {
-  let myOutputValue;
-  if (gameMode == PENDING_ROLL) {
-    myOutputValue = stage1();
-  } else if (gameMode == PENDING_ORDER) {
-    myOutputValue = stage2(input);
-  } else if (gameMode == PENDING_RESULT) {
-    myOutputValue = stage3();
+  var myOutputValue;
+  if (gameMode == CHOOSE_NUM_PLAYERS) {
+    myOutputValue = stage1(input);
+    return myOutputValue;
   }
-  return myOutputValue;
+  if (gameMode == CHOOSE_WIN_CNDTN) {
+    myOutputValue = stage2(input);
+    return myOutputValue;
+  }
+  if (gameMode == CHOOSE_KNOCKOUT) {
+    myOutputValue = stage3(input);
+    return myOutputValue;
+  }
+  if (gameMode == SETTINGS_CHOSEN) {
+    myOutputValue = stage4(input);
+    return myOutputValue;
+  }
 };
