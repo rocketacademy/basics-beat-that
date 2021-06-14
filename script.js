@@ -1,7 +1,9 @@
 var die1;
 var die2;
-var player1Results;
-var player2Results;
+var player1Score = [];
+var player1SumOfScore;
+var player2Score = [];
+var player2SumOfScore;
 var player = 1;
 var mode = "dice roll";
 
@@ -20,10 +22,13 @@ var main = function (input) {
       } else if (Number(input) == 2) {
         concatDiceResult = `${die2}`.concat(`${die1}`);
       }
-      player1Results = concatDiceResult;
+      player1Score.push("" + concatDiceResult);
+      player1SumOfScore = player1Score.reduce(function (a, b) {
+        return a + b;
+      }, 0);
       player = 2;
       mode = "dice roll";
-      outputMessage = `Player 1, you chose Dice ${input} first. <br>Your number is ${player1Results}. <br>It is now Player 2's turn.`;
+      outputMessage = `Player 1, you chose Dice ${input} first. <br>Your number is ${concatDiceResult}. <br>It is now Player 2's turn.`;
     }
     return outputMessage;
   }
@@ -40,17 +45,19 @@ var main = function (input) {
       } else if (Number(input) == 2) {
         concatDiceResult = `${die2}`.concat(`${die1}`);
       }
-      player2Results = concatDiceResult;
-
+      player2Score.push("" + concatDiceResult);
+      player2SumOfScore = player2Score.reduce(function (a, b) {
+        return a + b;
+      }, 0);
       mode = "dice roll";
-      if (player2Results > player1Results) {
-        var winnerIs = "Player 2 wins!";
-      } else if (player2Results < player1Results) {
-        winnerIs = "Player 1 wins!";
-      } else if (player2Results == player1Results) {
+      if (player2SumOfScore > player1SumOfScore) {
+        var winnerIs = "Player 2 is in the lead!";
+      } else if (player2SumOfScore < player1SumOfScore) {
+        winnerIs = "Player 1 is in the lead!";
+      } else if (player2Score == player1Score) {
         WinnerIs = "It's a draw!";
       }
-      outputMessage = `Player 2, you chose Dice ${input} first. <br>Your number is ${player2Results}. <br>${winnerIs}`;
+      outputMessage = `Player 2, you chose Dice ${input} first. <br>Your number is ${concatDiceResult}. <br>${winnerIs}`;
     }
     return outputMessage;
   }
