@@ -1,20 +1,22 @@
-// common var
+// var for game stage
 var PLAYER1 = `Player 1`;
 var PLAYER2 = `Player 2`;
 var PLAYER1_CHOOSE_DICE_ORDER = `Player 1 choose dice order`;
 var PLAYER2_CHOOSE_DICE_ORDER = `Player 2 choose dice order`;
 var COMPARE_SCORE = `Compare Score`;
+var LOWER_SCORE_WINS = "Lower score wins";
+
+// store players' score for each round
+var player1Score = 0;
+var player2Score = 0;
+// store players' accumulated score
 var totalScorePlayer1 = 0;
 var totalScorePlayer2 = 0;
 // set initial stage to player 1
-var gameMode = PLAYER1;
+var gameStage = PLAYER1;
 // global var to store players' dicerolls and assigned to array
 var player1DiceNums = [];
 var player2DiceNums = [];
-
-// store players' score
-var player1Score = ``;
-var player2Score = ``;
 
 // default messages for output
 var selectDiceOrderMessage = `Select which dice number to go first by entering 1 for Dice 1 or 2 for Dice 2.`;
@@ -30,36 +32,32 @@ var rollDice = function () {
 
 // create function for players' 2 dice rolls
 var playerDiceRolls = function () {
-  var myOutputValue = ``;
   var dice1 = rollDice();
   var dice2 = rollDice();
   console.log(`dice 1:` + dice1);
   console.log(`dice 2:` + dice2);
   var diceNums = [dice1, dice2];
   console.log(`p1 dice nums` + diceNums);
-  if (gameMode == PLAYER1) {
+  if (gameStage == PLAYER1) {
     player1DiceNums = diceNums;
     console.log(`p1globalnums ` + player1DiceNums);
-    return `Hi ${gameMode}, you rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br>${selectDiceOrderMessage}`;
-  }
-  if (gameMode == PLAYER2) {
+    return `Hi ${gameStage}, you rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br>${selectDiceOrderMessage}`;
+  } else {
     player2DiceNums = diceNums;
     console.log(`p2globalnums ` + player2DiceNums);
-    return `Hi ${gameMode}, you rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br>${selectDiceOrderMessage}`;
+    return `Hi ${gameStage}, you rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br>${selectDiceOrderMessage}`;
   }
-  return myOutputValue;
 };
 
-// calculating players' score from the 2 dice rolls
+// calculating players' score based on the dice order they selected
 var getPlayersScore = function (input) {
-  if (gameMode == PLAYER1_CHOOSE_DICE_ORDER) {
+  if (gameStage == PLAYER1_CHOOSE_DICE_ORDER) {
     if (input == 1) {
       player1Score = Number(
         String(player1DiceNums[0]) + String(player1DiceNums[1])
       );
       console.log(`p1 player score 1 ` + player1Score);
-    }
-    if (input == 2) {
+    } else {
       player1Score = Number(
         String(player1DiceNums[1]) + String(player1DiceNums[0])
       );
@@ -68,14 +66,13 @@ var getPlayersScore = function (input) {
     totalScorePlayer1 = totalScorePlayer1 + player1Score;
     return `Player 1, your score is ${player1Score}. <br><br> ${totalScoreMessage} ${totalScorePlayer1} <br><br>Click Submit for Player 2 to roll the dices!`;
   }
-  if (gameMode == PLAYER2_CHOOSE_DICE_ORDER) {
+  if (gameStage == PLAYER2_CHOOSE_DICE_ORDER) {
     if (input == 1) {
       player2Score = Number(
         String(player2DiceNums[0]) + String(player2DiceNums[1])
       );
       console.log(`P2 player score 1 ` + player2Score);
-    }
-    if (input == 2) {
+    } else {
       player2Score = Number(
         String(player2DiceNums[1]) + String(player2DiceNums[0])
       );
@@ -86,69 +83,65 @@ var getPlayersScore = function (input) {
   }
 };
 
+// comparing the players total score
 var compareScore = function () {
   if (player1Score > player2Score) {
-    return `Congrats Player 1, you won this round. <br><br> Your score of ${player1Score} is higher than Player 2 score of ${player2Score}${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
+    return `Congrats Player 1, you won this round. <br><br> Your score: ${player1Score} <br> Player 2 score: ${player2Score}${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
   }
   if (player1Score < player2Score) {
-    return `Congrats Player 2, you won this round. <br><br>Your score of ${player2Score} is higher than Player 1 score of ${player1Score}${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
+    return `Congrats Player 2, you won this round. <br><br>Your score: ${player2Score} <br> Player 1 score: ${player1Score}${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
   }
   if (player1Score == player2Score) {
-    return `Oops its a draw! <br><br>Both of you have the same score of ${player1Score}!${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
+    return `Oops its a draw! <br><br>Both of you have the same score :${player1Score}!${submitToRestartGameMessage}<br><br> ${determineLeaderNow()}`;
   }
 };
 
+// creating leaderboard
 var determineLeaderNow = function () {
   if (totalScorePlayer1 > totalScorePlayer2) {
     return `LeaderBoard<br>1. Player 1, Total Score: ${totalScorePlayer1}<br> 2. Player 2, Total Score: ${totalScorePlayer2}`;
-  }
-
-  if (totalScorePlayer1 < totalScorePlayer2) {
+  } else {
     return `LeaderBoard<br>1. Player 2, Total Score: ${totalScorePlayer2}<br> 2. Player 1, Total Score: ${totalScorePlayer1}`;
-  }
-
-  if (totalScorePlayer1 == totalScorePlayer2) {
-    return `LeaderBoard<br>1. Player 1, Total Score: ${totalScorePlayer1}<br> 1. Player 2, Total Score: ${totalScorePlayer2}`;
   }
 };
 
 var main = function (input) {
   var myOutputValue = ``;
-
   // set initial stage for player 1 to roll dice
-  if (gameMode == PLAYER1) {
+  if (gameStage == PLAYER1) {
     myOutputValue = playerDiceRolls();
-    gameMode = PLAYER1_CHOOSE_DICE_ORDER;
+    gameStage = PLAYER1_CHOOSE_DICE_ORDER;
     return myOutputValue;
   }
 
-  if (gameMode == PLAYER1_CHOOSE_DICE_ORDER) {
+  // set stage for player 1 to choose dice order and switch over to player 2
+  if (gameStage == PLAYER1_CHOOSE_DICE_ORDER) {
     if (!(input == 1 || input == 2)) {
       return `Pls enter 1 or 2 to choose dice order!`;
     }
     myOutputValue = getPlayersScore(input);
-    gameMode = PLAYER2;
+    gameStage = PLAYER2;
     return myOutputValue;
   }
-
-  if (gameMode == PLAYER2) {
+  // player 2 turn to roll dice
+  if (gameStage == PLAYER2) {
     myOutputValue = playerDiceRolls();
-    gameMode = PLAYER2_CHOOSE_DICE_ORDER;
+    gameStage = PLAYER2_CHOOSE_DICE_ORDER;
     return myOutputValue;
   }
-
-  if (gameMode == PLAYER2_CHOOSE_DICE_ORDER) {
+  // player 2 turn to choose dice order
+  if (gameStage == PLAYER2_CHOOSE_DICE_ORDER) {
     if (!(input == 1 || input == 2)) {
       return `Pls enter 1 or 2 to choose dice order!`;
     }
     myOutputValue = getPlayersScore(input);
-    gameMode = COMPARE_SCORE;
+    gameStage = COMPARE_SCORE;
     return myOutputValue;
   }
-
-  if (gameMode == COMPARE_SCORE) {
+  // comparing score
+  if (gameStage == COMPARE_SCORE) {
     myOutputValue = compareScore();
-    gameMode = PLAYER1;
+    gameStage = PLAYER1;
     return myOutputValue;
   }
 };
