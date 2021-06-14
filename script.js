@@ -1,147 +1,95 @@
-// Two players take turns to roll 2 dice, and then decides the order to concatenate the two dice rolls
+// A number of players take turns to roll 2 dice, and then decides the order to concatenate the two dice rolls
 // (e.g. If the two dice rolls 2 and 5,  The user will decide 25 or 52). The player with the higher combined number wins.
+// Create an array of player rolls, an array of players' combined scores, and two check arrays -- to check if a player has rolled and to check if a player has selected his/her combined score
 
+var numberOfDiceRolls = 2;
+var gameStatus = "chooseNumberPlayers";
+var numberOfPlayers = 0;
+var playerRollCheckArray = [];
+var playersCombinedNumberCheckArray = [];
+var playersCombinedNumberArray = [];
+var playerRollsArray = [];
+// Function to simulate a dice roll
 var diceRoll = function () {
   var randomDecimal = Math.random();
   var diceNumber = Math.floor(randomDecimal * 6) + 1;
   return diceNumber;
 };
 
-console.log(diceRoll());
-
-var player1Dice1 = 0;
-var player1Dice2 = 0;
-var player2Dice1 = 0;
-var player2Dice2 = 0;
-var player1DiceOrder = 0;
-var player2DiceOrder = 0;
-var player1CombinedNumber = "";
-var player2CombinedNumber = "";
-var player1Score = 0;
-var player2Score = 0;
-
-var rollTwoDice = function () {
-  diceRollOne = diceRoll();
-  diceRollTwo = diceRoll();
-  return [diceRollOne, diceRollTwo];
+// Function to simulate X number of dice rolls and return the dice rolls to an array. Input of the function is the number of dice to roll
+var rollXdice = function (numberOfDiceToRoll) {
+  diceRolls = [];
+  for (var counter = 0; counter < numberOfDiceToRoll; counter += 1) {
+    diceRolls.push(diceRoll());
+  }
+  return diceRolls;
 };
 
 var main = function (input) {
-  // Player 1 rolls two dice. Values of both dice rolls goes into a variable each
-  if (player1Dice1 == 0) {
-    player1CombinedNumber = "";
-    player2CombinedNumber = "";
-    player1Dice1 = diceRoll();
-    player1Dice2 = diceRoll();
-    return (
-      "Player 1<br><br>" +
-      "Dice 1: " +
-      player1Dice1 +
-      "<br>" +
-      "Dice 2: " +
-      player1Dice2 +
-      '<br>Choose which dice to go first, "1" or "2"'
-    );
-  }
-  if (player2Dice1 == 0) {
-    // If player 1 has not selected his dice to go first, get him to choose which dice to go first
-    if (player1DiceOrder != 1 && player1DiceOrder != 2) {
-      player1DiceOrder = input;
-      // Create player 1's combined number
-      if (player1DiceOrder == 1) {
-        player1CombinedNumber = "" + player1Dice1 + player1Dice2;
-        return (
-          "Player 1, your combined dice number is " +
-          player1CombinedNumber +
-          "<br><br>Player 2, your turn to roll your two dice. Click submit!"
-        );
-      }
-      if (player1DiceOrder == 2) {
-        player1CombinedNumber = "" + player1Dice2 + player1Dice1;
-        return (
-          "Player 1, your combined dice number is " +
-          player1CombinedNumber +
-          "<br><br>Player 2, your turn to roll your two dice. Click submit!"
-        );
-      }
-      if (player1DiceOrder != 1 && player1DiceOrder != 2) {
-        return 'Player 1, choose a valid dice to go first, "1" or "2"';
-      }
+  if (gameStatus == "chooseNumberPlayers") {
+    numberOfPlayers = input;
+    gameStatus = "gamePlay";
+    for (var player = 0; player < numberOfPlayers; player += 1) {
+      // Create two arrays containing check-values for each player -- one array to check if each player has rolled the dice. The other array to check if each player has chosen whch dice roll of theirs they want to choose as their first to create the combined number.
+      playerRollCheckArray.push(0);
+      playersCombinedNumberCheckArray.push(0);
     }
-    // If player 2 hasnt' rolled yet, player 2 rolls two dice. Values of both dice goes into a variable each
-  }
-  if (player2Dice1 == 0) {
-    player2Dice1 = diceRoll();
-    player2Dice2 = diceRoll();
-    return (
-      "Player 2<br><br>" +
-      "Dice 1: " +
-      player2Dice1 +
-      "<br>" +
-      "Dice 2: " +
-      player2Dice2 +
-      '<br>Choose which dice to go first, "1" or "2"'
-    );
+    return "Player 1 - click submit to roll your two dice!";
   }
 
-  // If player 2 has not selected his dice to go first, get him to choose which dice to go first
-  if (player2DiceOrder != 1 && player2DiceOrder != 2) {
-    player2DiceOrder = input;
-    // Create player 2's combined number
-    if (player2DiceOrder == 1) {
-      player2CombinedNumber = "" + player2Dice1 + player2Dice2;
-    }
-    if (player2DiceOrder == 2) {
-      player2CombinedNumber = "" + player2Dice2 + player2Dice1;
-    }
-    if (player2DiceOrder != 2 && player2DiceOrder != 1) {
-      return 'Player 2, choose a valid dice to go first, "1" or "2"';
+  if (gameStatus == "gamePlay") {
+    // players will take turns to roll their dice
+    for (var player = 0; player < numberOfPlayers; player += 1) {
+      if (playerRollCheckArray[player] == 0) {
+        playerRollsArray.push(rollXdice(numberOfDiceRolls));
+        playerRollCheckArray[player] = 1;
+        // After player rolls the two dice, make him choose what dice goes first and create the player's combined number
+        return (
+          "Player " +
+          (player + 1) +
+          ", you rolled a " +
+          playerRollsArray[player][0] +
+          " and " +
+          playerRollsArray[player][1] +
+          ".<br><br>" +
+          "Choose which dice roll to go first."
+        );
+      }
+      if (playersCombinedNumberCheckArray[player] == 0) {
+        var firstRoll = input;
+        var secondRoll = 2;
+        if (firstRoll == 2) {
+          secondRoll = 1;
+        }
+        console.log(firstRoll, secondRoll);
+        playersCombinedNumberArray[player] = Number(
+          "" +
+            playerRollsArray[player][firstRoll - 1] +
+            playerRollsArray[player][secondRoll - 1]
+        );
+        playersCombinedNumberCheckArray[player] = 1;
+        return "Your  combined number is " + playersCombinedNumberArray[player];
+      }
+
+      if (player + 1 == numberOfPlayers) {
+        // If the last player is reached and they have rolled and selected their number to go first, show the scoreboard
+        gameStatus = "scoreboard";
+        return "Click submit to show the scoreboard!";
+      }
     }
   }
-  // if (Number(player2CombinedNumber) > Number(player1CombinedNumber)) {
-  //   player1Dice1 = 0;
-  //   player1Dice2 = 0;
-  //   player2Dice1 = 0;
-  //   player2Dice2 = 0;
-  //   player1DiceOrder = 0;
-  //   player2DiceOrder = 0;
-  //   return (
-  //     "Player 1: " +
-  //     player1CombinedNumber +
-  //     "<br>Player 2: " +
-  //     player2CombinedNumber +
-  //     "<br><br>Player 2 wins!<br><br>Click submit for the next player 1 to roll the dice for a new game"
-  //   );
-  // }
-  // if (Number(player1CombinedNumber) > Number(player2CombinedNumber)) {
-  //   player1Dice1 = 0;
-  //   player1Dice2 = 0;
-  //   player2Dice1 = 0;
-  //   player2Dice2 = 0;
-  //   player1DiceOrder = 0;
-  //   player2DiceOrder = 0;
-  //   return (
-  //     "Player 1: " +
-  //     player1CombinedNumber +
-  //     "<br>Player 2: " +
-  //     player2CombinedNumber +
-  //     "<br><br>Player 1 wins!<br><br>Click submit for the next player 1 to roll the dice for a new game"
-  //   );
-  // }
-  player1Dice1 = 0;
-  player1Dice2 = 0;
-  player2Dice1 = 0;
-  player2Dice2 = 0;
-  player1DiceOrder = 0;
-  player2DiceOrder = 0;
-  player1Score = player1Score + Number(player1CombinedNumber);
-  player2Score = player2Score + Number(player2CombinedNumber);
-  var scoreboardOutput =
-    "Scoreboard<br><br>Player 1: " +
-    player1Score +
-    "<br>Player 2: " +
-    player2Score +
-    "<br><br>Player 1, click submit to roll the dice for the next round";
-
-  return scoreboardOutput;
+  var scoreboard = "";
+  if (gameStatus == "scoreboard") {
+    for (var player = 0; player < numberOfPlayers; player += 1) {
+      // Creating the scoreboard
+      scoreboard =
+        scoreboard +
+        "Player " +
+        (player + 1) +
+        ": " +
+        playersCombinedNumberArray[player] +
+        "<br><br>";
+    }
+    return scoreboard;
+  }
 };
