@@ -1,26 +1,98 @@
-var mode = "start";
-var combinedDiceRoll1 = 0;
-var combinedDiceRoll2 = 0;
+var mode = "selectNoOfPlayers";
 var outcome1 = 0;
 var outcome2 = 0;
-var p1Choice = 0;
-var p2Choice = 0;
-var p1Score = 0;
-var p2Score = 0;
 var noOfPlayers = 0;
+var prevNoOfPlayers = 0;
+var playersHighestRolls = [];
+var leaderboardScoreArray = [];
+var rollDice1 = 0;
+var rollDice2 = 0;
+var index = 0;
+var currentPlayer = 1;
 var main = function (input) {
-  if (mode == "start") {
-    if (input == "normal") {
-      mode = "player1startnormal";
-    } else if (input == "lowest") {
-      mode = "player1startlowest";
+  if (mode == "selectNoOfPlayers") {
+    if (Number.isNaN(Number(input))) {
+      return "Please input a number";
     } else {
-      return "please only enter normal or lowest!";
+      //reset index and currentPlayer
+      index = 0;
+      currentPlayer = 1;
+      noOfPlayers = Number(input);
+      if (input < 2) {
+        return `Please input a number of at least 2 or higher!`;
+      }
+      if (leaderboardScoreArray[0] == undefined) {
+        var leaderboardArrayIndex = 0;
+        while (leaderboardArrayIndex < noOfPlayers) {
+          leaderboardScoreArray.push(0);
+          leaderboardArrayIndex = leaderboardArrayIndex + 1;
+        }
+      } else if (leaderboardScoreArray[noOfPlayers] == undefined) {
+        while (prevNoOfPlayers < noOfPlayers) {
+          leaderboardScoreArray.push(0);
+          prevNoOfPlayers = prevNoOfPlayers + 1;
+        }
+      }
+      mode = "gameMode";
+      return `You have declared ${noOfPlayers} players to play in this round. Player 1, please roll.`;
     }
+  } else if (mode == "gameMode" || mode == "selectMode") {
+    var highestRollOutput = "";
+    var myOutputValue = "";
+    while (index < noOfPlayers) {
+      if (mode == "gameMode") {
+        rollDice1 = diceroll();
+        rollDice2 = diceroll();
+        outcome1 = rollDice1 * 10 + rollDice2;
+        outcome2 = rollDice2 * 10 + rollDice1;
+        mode = "selectMode";
+        myOutputValue = `You have rolled ${rollDice1} and ${rollDice2}. Player ${currentPlayer}, please select which dice to put first. <br><br>1.${rollDice1}<br>2.${rollDice2}<br>`;
+        return myOutputValue;
+      } else if (mode == "selectMode") {
+        if (input == 1) {
+          mode = "gameMode";
+          playersHighestRolls.push(outcome1);
+          highestRollOutput = outcome1;
+        } else if (input == 2) {
+          mode = "gameMode";
+          playersHighestRolls.push(outcome2);
+          highestRollOutput = outcome2;
+        } else {
+          return `Please input only 1 or 2! <br><br>1.${rollDice1}<br>2.${rollDice2}<br>`;
+        }
+        index = index + 1;
+        var nextPlayertext = ``;
+        if (index < noOfPlayers) {
+          nextPlayertext = `<br><br> Player ${currentPlayer + 1}, please roll.`;
+        } else if (index == noOfPlayers) {
+          nextPlayertext = `<br><br>The results will now be tabulated.`;
+        }
+        myOutputValue =
+          myOutputValue +
+          `Player ${currentPlayer}, your roll is ${highestRollOutput}.` +
+          nextPlayertext;
+        leaderboardScoreArray[currentPlayer - 1] =
+          leaderboardScoreArray[currentPlayer - 1] + highestRollOutput;
+        currentPlayer = currentPlayer + 1;
+      }
+      return myOutputValue;
+    }
+    if (index == noOfPlayers) {
+      var winningOutcome = faceoff(playersHighestRolls);
+      var leaderboardText = leaderboard(
+        playersHighestRolls,
+        leaderboardScoreArray
+      );
+      myOutputValue =
+        myOutputValue + winningOutcome + "<br><br>" + leaderboardText;
+      playersHighestRolls = [];
+      prevNoOfPlayers = noOfPlayers;
+      return myOutputValue;
+    }
+  } else {
+    mode = "selectNoOfPlayers";
+    return `Uhhh... That wasn't supposed to happen. Please try again.`;
   }
-  var twoDiceRolls = dicerolltwice();
-  var pickingprocess = pickprocess(twoDiceRolls, outcome1, outcome2);
-  return pickingprocess;
 };
 
 var diceroll = function () {
@@ -29,195 +101,40 @@ var diceroll = function () {
   return randomDiceNumber;
 };
 
-var faceoff = function (p1Choice, p2Choice) {
-  if (mode == "player2startnormal") {
-    mode = "start";
-    if (p1Choice > p2Choice) {
-      return `Player 1 wins with a value of ${p1Choice} over ${p2Choice}!`;
-    } else if (p2Choice > p1Choice) {
-      return `Player 2 wins with a value of ${p2Choice} over ${p1Choice}!`;
-    } else {
-      return "There is no winner!";
-    }
-  } else if ("player2startlowest") {
-    mode = "start";
-    if (p2Choice > p1Choice) {
-      return `Player 1 wins as the value of ${p1Choice} is lower than ${p2Choice}!`;
-    } else if (p1Choice > p2Choice) {
-      return `Player 2 wins as the value of ${p2Choice} is lower than ${p1Choice}!`;
-    } else {
-      return "There is no winner!";
-    }
-  }
-};
-
-var dicerolltwice = function () {
-  var rollDice1 = diceroll();
-  var rollDice2 = diceroll();
-  outcome1 = rollDice1 * 10 + rollDice2;
-  outcome2 = rollDice2 * 10 + rollDice1;
-  console.log(outcome1);
-  console.log(outcome2);
-  var myOutputValue =
-    `You have rolled ${rollDice1} and ${rollDice2}!` +
-    "<br>" +
-    `1: ${outcome1}` +
-    "<br>" +
-    `2: ${outcome2}`;
-  if (mode == "player1startnormal" || mode == "player1startlowest") {
-    myOutputValue = "Player 1:" + "<br>" + myOutputValue;
-  } else {
-    myOutputValue = "Player 2:" + "<br>" + myOutputValue;
-  }
-  return myOutputValue;
-};
-
-var pickprocess = function (myOutputValue, outcome1, outcome2) {
-  if (outcome1 > outcome2) {
-    if (mode == "player1startnormal") {
-      mode = "player2startnormal";
-      p1Choice = outcome1;
-      p1Score = p1Score + p1Choice;
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 1, your highest roll is ${outcome1}. Now, player 2 will roll.`
-      );
-    }
-    if (mode == "player2startnormal") {
-      p2Choice = outcome1;
-      p2Score = p2Score + p2Choice;
-      var winnerDecided = faceoff(p1Choice, p2Choice);
-      var leaderboardScore = leaderboard(p1Score, p2Score);
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 2, your highest roll is ${outcome1}.` +
-        "<br>" +
-        winnerDecided +
-        leaderboardScore
-      );
-    }
-    if (mode == "player1startlowest") {
-      mode = "player2startlowest";
-      p1Choice = outcome2;
-      p1Score = p1Score + p1Choice;
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 1, your lowest roll is ${outcome2}. Now, player 2 will roll.`
-      );
-    }
-    if (mode == "player2startlowest") {
-      p2Choice = outcome2;
-      p2Score = p2Score + p2Choice;
-      var winnerDecided = faceoff(p1Choice, p2Choice);
-      var leaderboardScore = leaderboard(p1Score, p2Score);
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 2, your lowest roll is ${outcome2}.` +
-        "<br>" +
-        winnerDecided +
-        leaderboardScore
-      );
-    }
-  } else {
-    if (mode == "player1startnormal") {
-      mode = "player2startnormal";
-      p1Choice = outcome2;
-      p1Score = p1Score + p1Choice;
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 1, your highest roll is ${outcome2}. Now, player 2 will roll.`
-      );
-    }
-    if (mode == "player2startnormal") {
-      p2Choice = outcome2;
-      p2Score = p2Score + p2Choice;
-      var winnerDecided = faceoff(p1Choice, p2Choice);
-      var leaderboardScore = leaderboard(p1Score, p2Score);
-      console.log(leaderboardScore);
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 2, your highest roll is ${outcome2}.` +
-        "<br>" +
-        winnerDecided +
-        leaderboardScore
-      );
-    }
-    if (mode == "player1startlowest") {
-      mode = "player2startlowest";
-      p1Choice = outcome1;
-      p1Score = p1Score + p1Choice;
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 1, your lowest roll is ${outcome1}. Now, player 2 will roll.`
-      );
-    }
-    if (mode == "player2startlowest") {
-      p2Choice = outcome1;
-      console.log(p2Choice);
-      p2Score = p2Score + p2Choice;
-      console.log(p2Score);
-      var winnerDecided = faceoff(p1Choice, p2Choice);
-      var leaderboardScore = leaderboard(p1Score, p2Score);
-      console.log(leaderboardScore);
-      return (
-        `${myOutputValue}` +
-        "<br>" +
-        `Player 2, your lowest roll is ${outcome1}.` +
-        "<br>" +
-        winnerDecided +
-        leaderboardScore
-      );
-    }
-  }
-};
-
-var leaderboard = function (p1Score, p2Score) {
+var leaderboard = function (playersHighestRolls, leaderboardScoreArray) {
+  var index = 0;
   var myOutputValue = "";
-  if (mode == "player1startnormal") {
-    if (p1Score > p2Score) {
-      myOutputValue =
-        "<br>" +
-        `1st Place - Player 1 Total score: ${p1Score}` +
-        "<br>" +
-        `2nd Place - Player 2 Total score: ${p2Score}` +
-        "<br> <br>" +
-        "Player 1, type normal to play Normal mode again or type lowest to play reverse!";
-    } else if (p2Score > p1Score) {
-      myOutputValue =
-        "<br>" +
-        `1st Place - Player 2 Total score: ${p2Score}` +
-        "<br>" +
-        `2nd Place - Player 1 Total score: ${p1Score}` +
-        "<br> <br>" +
-        "Player 1, type normal to play Normal mode again or type lowest to play reverse!";
-    }
-  } else if (mode == "player1startlowest") {
-    if (p1Score > p2Score) {
-      myOutputValue =
-        "<br>" +
-        `1st Place - Player 2 Total score: ${p2Score}` +
-        "<br>" +
-        `2nd Place - Player 1 Total score: ${p1Score}` +
-        "<br> <br>" +
-        "Player 1, type lowest to play Reverse mode again or type normal to play normal dice!";
-    } else if (p2Score > p1Score) {
-      myOutputValue =
-        "<br>" +
-        `1st Place - Player 1 Total score: ${p1Score}` +
-        "<br>" +
-        `2nd Place - Player 2 Total score: ${p2Score}` +
-        "<br> <br>" +
-        "Player 1, type lowest to play Reverse mode again or type normal to play normal dice!";
-    }
+  while (index < playersHighestRolls.length) {
+    myOutputValue =
+      myOutputValue +
+      `Player ${index + 1} has a total score of: ${
+        leaderboardScoreArray[index]
+      } <br><br>`;
+    index = index + 1;
   }
+  mode = "selectNoOfPlayers";
+  myOutputValue =
+    myOutputValue +
+    `<br><br> Please enter the number of players to play again!`;
   return myOutputValue;
+};
+
+var faceoff = function (playersHighestRolls) {
+  var max = playersHighestRolls[0];
+  var index = 0;
+  var winnerText = "";
+  while (index < playersHighestRolls.length) {
+    if (playersHighestRolls[index] > max) {
+      max = playersHighestRolls[index];
+      winnerText = `The winner is Player ${
+        index + 1
+      } who rolled the highest value of ${max}`;
+    } else if (max == playersHighestRolls[0]) {
+      winnerText = `The winner is Player 1 who rolled the highest value of ${max}`;
+    }
+    index = index + 1;
+  }
+  return winnerText;
 };
 
 var inputDisplay = function () {
