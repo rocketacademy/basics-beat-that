@@ -5,51 +5,143 @@ var diceTwo = "";
 var playerOneScore = 0;
 var playerTwoScore = 0;
 var currentplayer = 0;
+var scoreBoard = 0;
+var gameMode = "normal";
+var gameModechosen = false;
+var NumberOfPlayersChosen = false;
+var numberOfPlayers = 0;
+var list = [];
+var firstRound = true;
 
 var main = function (input) {
   //Arranging the order of dice is false initially and player just roll dice
   var diceResults = 0;
   var highestCombinedNumber = 0;
   var playeraction = "";
-  var currentplayer = 0;
+  var lowestCombinedNumber = 0;
+  var finalScoreboard = "";
+  var sortedList = "";
 
-  //if (arrangeOrder == false) {
-  if (input == 0 || input == 1) {
-    input = 2;
+  // select game mode
+  if (input == "normal" || input == "reversed") {
+    gameMode = input;
+    gameModechosen = true;
+    return `You have chosen ${gameMode} mode. Choose the number of players.`;
   }
-  diceResults = rollTheDice(input);
-  highestCombinedNumber = selectionSort(diceResults);
-  combinedScoring = combinedScore(highestCombinedNumber);
-  var playeraction = playerAction(diceResults, input, combinedScoring);
-  currentplayer = switchPlayercalculateScore(playerNum, combinedScoring);
-  var output = `Welcome Player ${currentplayer} <br> ${playeraction}. <br><br> Player 1 score is ${playerOneScore}<br> Player 2 score is ${playerTwoScore}`;
 
-  // arrangeOrder = true;
-  return output;
-  // }
+  // select number of players
+  if (gameModechosen == true && !NumberOfPlayersChosen) {
+    numberOfPlayers = input;
+    NumberOfPlayersChosen = true;
+    return `You have selected ${numberOfPlayers} players. For Player 1, enter the number of dice you want to roll.`;
+  }
+  // Play game in normal gamemode
+  if (
+    gameMode == "normal" &&
+    gameModechosen == true &&
+    NumberOfPlayersChosen == true
+  ) {
+    if (input == 0 || input == 1) {
+      input = 2;
+    }
+    diceResults = rollTheDice(input);
+    highestCombinedNumber = selectionSort(diceResults, gameMode);
+    combinedScoring = combinedScore(highestCombinedNumber);
+    playeraction = playerAction(diceResults, input, combinedScoring, gameMode);
+    console.log(playeraction);
 
-  // if (arrangeOrder == true) {
-  //   switchPlayercalculateScore(playerNum, combinedScoring);
-  //   return output;
-  // }
-  // //Arranging the order of dice
-  // if (arrangeOrder == true) {
-  //   var scoring = arrangeDice(input);
-  //   var statementOne = scoring;
-  //   if (!isNaN(scoring)) {
-  //     switchPlayercalculateScore(playerNum, scoring);
+    //Add array of objects to a list when list is empty
+    if (firstRound == true) {
+      //Array of Objects - Combine player string and score together
+      var scoreBoard = {
+        player: `Player ${playerNum}`,
+        score: combinedScoring,
+      };
+      list.push(scoreBoard);
+    } else {
+      list[playerNum - 1].score += combinedScoring;
+    }
+    //Store an existing list in a new list to be used for sorting
+    sortedList = [...list];
 
-  //     if (playerOneScore > playerTwoScore) {
-  //       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 1 score: ${playerOneScore}<br>Player 2 score: ${playerTwoScore}<br><br>It is now Player ${playerNum}'s turn.`;
-  //       return statementOne;
-  //     }
-  //     if (playerTwoScore > playerOneScore) {
-  //       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 2 score: ${playerTwoScore}<br>Player 1 score: ${playerOneScore}<br><br>It is now Player ${playerNum}'s turn.`;
-  //       return statementOne;
-  //     }
-  //   } else return statementOne;
-  // }
+    finalScoreboard = finalScoreboardStatement(
+      selectionSortForScoreboard(sortedList, gameMode)
+    );
+
+    var output = `Welcome Player ${playerNum} <br> ${playeraction}. <br><br> ${sortedList[0].player} is the winner!<br>${finalScoreboard} `;
+    playerNum++;
+    if (playerNum - 1 == numberOfPlayers) {
+      console.log("read");
+      playerNum = 1;
+      firstRound = false;
+    }
+    return output;
+  }
+
+  //Play game in reversed gamemode
+  if (
+    gameMode == "reversed" &&
+    gameModechosen == true &&
+    NumberOfPlayersChosen == true
+  ) {
+    if (input == 0 || input == 1) {
+      input = 2;
+    }
+    diceResults = rollTheDice(input);
+    lowestCombinedNumber = selectionSort(diceResults, gameMode);
+    combinedScoring = combinedScore(lowestCombinedNumber);
+    playeraction = playerAction(diceResults, input, combinedScoring, gameMode);
+
+    if (firstRound == true) {
+      var scoreBoard = {
+        player: `Player ${playerNum}`,
+        score: combinedScoring,
+      };
+      list.push(scoreBoard);
+    } else {
+      list[playerNum - 1].score += combinedScoring;
+    }
+    sortedList = [...list];
+
+    finalScoreboard = finalScoreboardStatement(
+      selectionSortForScoreboard(sortedList, gameMode)
+    );
+    var output = `Welcome Player ${playerNum} <br> ${playeraction}. <br><br> ${sortedList[0].player} is the winner!<br>${finalScoreboard} `;
+    playerNum++;
+    if (playerNum - 1 == numberOfPlayers) {
+      console.log("read");
+      playerNum = 1;
+      firstRound = false;
+    }
+    return output;
+  } else return `Choose your gamemode: normal or reversed`;
 };
+
+// arrangeOrder = true;
+
+// }
+
+// if (arrangeOrder == true) {
+//   switchPlayercalculateScore(playerNum, combinedScoring);
+//   return output;
+// }
+// //Arranging the order of dice
+// if (arrangeOrder == true) {
+//   var scoring = arrangeDice(input);
+//   var statementOne = scoring;
+//   if (!isNaN(scoring)) {
+//     switchPlayercalculateScore(playerNum, scoring);
+
+//     if (playerOneScore > playerTwoScore) {
+//       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 1 score: ${playerOneScore}<br>Player 2 score: ${playerTwoScore}<br><br>It is now Player ${playerNum}'s turn.`;
+//       return statementOne;
+//     }
+//     if (playerTwoScore > playerOneScore) {
+//       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 2 score: ${playerTwoScore}<br>Player 1 score: ${playerOneScore}<br><br>It is now Player ${playerNum}'s turn.`;
+//       return statementOne;
+//     }
+//   } else return statementOne;
+// }
 
 //Roll the dice
 var diceroll = function () {
@@ -60,20 +152,162 @@ var diceroll = function () {
 };
 
 //Output player dice results and combined number
-var playerAction = function (diceResults, numberOfRolls, combinedScoring) {
+var playerAction = function (
+  diceResults,
+  numberOfRolls,
+  combinedScoring,
+  gameMode
+) {
+  //Initiate results for first roll.
   var returnStatement = `You rolled ${diceResults[0]} for Dice 1 `;
-  for (i = 1; i < numberOfRolls; i++) {
-    returnStatement += `and ${diceResults[i]} for Dice ${i + 1} `;
+  var finalStatement = "";
+  //repeat statements for subsequent rolls
+  if (gameMode == "normal") {
+    for (i = 1; i < numberOfRolls; i++) {
+      returnStatement += `and ${diceResults[i]} for Dice ${i + 1} `;
+    }
+
+    finalStatement =
+      returnStatement +
+      ".<br>Choose the order of the dice. Your highest combined number is " +
+      combinedScoring;
+
+    return finalStatement;
+  }
+  if (gameMode == "reversed") {
+    for (i = 1; i < numberOfRolls; i++) {
+      returnStatement += `and ${diceResults[i]} for Dice ${i + 1} `;
+    }
+
+    finalStatement =
+      returnStatement +
+      ".<br>Choose the order of the dice. Your lowest combined number is " +
+      combinedScoring;
+    return finalStatement;
+  }
+};
+//List of dice results
+var rollTheDice = function (numberOfRolls) {
+  var diceResults = [];
+  for (i = 0; i < numberOfRolls; i++) {
+    rolldice = diceroll();
+    diceResults.push(rolldice);
   }
 
-  var finalStatement =
-    returnStatement +
-    ".<br>Choose the order of the dice. Your highest combined number is " +
-    combinedScoring;
-
-  return finalStatement;
+  return diceResults;
 };
 
+//Switch player and calculate score of each player
+var switchPlayercalculateScore = function (number, score) {
+  if (number == 1) {
+    currentplayer = 1;
+    playerNum = 2;
+    playerOneScore += score;
+  } else if (number == 2) {
+    currentplayer = 2;
+    playerNum = 1;
+    playerTwoScore += score;
+  }
+
+  return currentplayer;
+};
+
+//Sort the score according to order
+var selectionSort = function (diceResults, gameMode) {
+  //Sort the score according to DESC order
+  if (gameMode == "normal") {
+    for (var i = 0; i < diceResults.length; i++) {
+      //set min to the current iteration of i
+      var min = i;
+      for (var j = i + 1; j < diceResults.length; j++) {
+        if (diceResults[j] > diceResults[min]) {
+          min = j;
+        }
+      }
+      var temp = diceResults[i];
+      diceResults[i] = diceResults[min];
+      diceResults[min] = temp;
+    }
+    return diceResults;
+  }
+  //Sort the score according to ASC order
+  if (gameMode == "reversed") {
+    for (var i = 0; i < diceResults.length; i++) {
+      //set min to the current iteration of i
+      var min = i;
+      for (var j = i + 1; j < diceResults.length; j++) {
+        if (diceResults[j] < diceResults[min]) {
+          min = j;
+        }
+      }
+      var temp = diceResults[i];
+      diceResults[i] = diceResults[min];
+      diceResults[min] = temp;
+    }
+    return diceResults;
+  }
+};
+
+//Change score from array to Score
+var combinedScore = function (array) {
+  var combinedScore = 0;
+  var j = 0;
+
+  for (i = array.length - 1; i >= 0; i--) {
+    combinedScore += Math.pow(10, i) * array[j];
+    j++;
+  }
+
+  return combinedScore;
+};
+
+//Sort the score according to  order
+var selectionSortForScoreboard = function (listing, gameMode) {
+  //Sort the score according to DESC order
+  if (gameMode == "normal") {
+    for (var i = 0; i < listing.length; i++) {
+      //set min to the current iteration of i
+      var min = i;
+      for (var j = i + 1; j < listing.length; j++) {
+        if (listing[j].score > listing[min].score) {
+          min = j;
+        }
+      }
+      var temp = listing[i];
+      listing[i] = listing[min];
+      listing[min] = temp;
+    }
+    console.log(listing);
+    return listing;
+  }
+
+  //Sort the score according to ASC order
+  if (gameMode == "reversed") {
+    for (var i = 0; i < listing.length; i++) {
+      //set min to the current iteration of i
+      var min = i;
+      for (var j = i + 1; j < listing.length; j++) {
+        if (listing[j].score < listing[min].score) {
+          min = j;
+        }
+      }
+      var temp = listing[i];
+      listing[i] = listing[min];
+      listing[min] = temp;
+    }
+    return listing;
+  }
+};
+
+//Print statement for final scoreboard
+var finalScoreboardStatement = function (finalList) {
+  var statement = "";
+  for (i = 0; i < finalList.length; i++) {
+    statement += `${finalList[i].player} Score: ${finalList[i].score} <br>`;
+  }
+
+  return statement;
+};
 // Arrange dice
 // var arrangeDice = function (input) {
 //   if (input == 1) {
@@ -95,58 +329,3 @@ var playerAction = function (diceResults, numberOfRolls, combinedScoring) {
 // };
 
 //roll the dice
-var rollTheDice = function (numberOfRolls) {
-  var diceResults = [];
-  for (i = 0; i < numberOfRolls; i++) {
-    rolldice = diceroll();
-    diceResults.push(rolldice);
-  }
-  console.log(diceResults);
-
-  return diceResults;
-};
-
-//Switch player and calculate score of each player
-var switchPlayercalculateScore = function (number, score) {
-  if (number == 1) {
-    currentplayer = 1;
-    playerNum = 2;
-    playerOneScore += score;
-  } else if (number == 2) {
-    currentplayer = 2;
-    playerNum = 1;
-    playerTwoScore += score;
-  }
-
-  return currentplayer;
-};
-
-//Sort the score according to DESC order
-var selectionSort = function (diceResults) {
-  for (var i = 0; i < diceResults.length; i++) {
-    //set min to the current iteration of i
-    var min = i;
-    for (var j = i + 1; j < diceResults.length; j++) {
-      if (diceResults[j] > diceResults[min]) {
-        min = j;
-      }
-    }
-    var temp = diceResults[i];
-    diceResults[i] = diceResults[min];
-    diceResults[min] = temp;
-  }
-  return diceResults;
-};
-
-//Combined
-var combinedScore = function (array) {
-  var combinedScore = 0;
-  var j = 0;
-
-  for (i = array.length - 1; i >= 0; i--) {
-    combinedScore += Math.pow(10, i) * array[j];
-    j++;
-  }
-
-  return combinedScore;
-};
