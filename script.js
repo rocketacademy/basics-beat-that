@@ -107,9 +107,8 @@ var playRound = function (numDice) {
     resultMsg += `Player ${players[p].playerNum} rolled ${diceRolls}.<br>This represents a score of ${roundScore}.<br><br>`;
   }
   // Add the current leaderboard to the result message
-  resultMsg += `<br>${createLeaderboard(
-    players
-  )}<br><br>Enter the number of dice that will be rolled for each player in the next round.`;
+  resultMsg += `${createLeaderboard(players)}<br><br>
+  Enter the number of dice that will be rolled for each player in the next round.`;
   return resultMsg;
 };
 
@@ -205,9 +204,8 @@ var createLeaderboard = function (players) {
   // Get the array of sorted player scores
   var scoreArray = sortedPlayers.map((x) => x.playerScore);
   // Output the leaderboard with some basic formatting
-  var leaderboard = `Here is the current leaderboard:<br><br>Player Number: ${playerNumArray.join(
-    " | "
-  )}<br>Score: ${scoreArray.join(" | ")}`;
+  var leaderboard = `Here is the current leaderboard:<br><br>
+  Player Number: ${playerNumArray.join(" | ")}<br>Score: ${scoreArray.join(" | ")}`;
   return leaderboard;
 };
 
