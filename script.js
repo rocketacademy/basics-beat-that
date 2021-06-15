@@ -86,16 +86,20 @@ var stage4 = function (numDiceInput) {
 };
 
 var playRound = function (numDice, numPlayers) {
+  var resultMsg = "";
   for (var p = 0; p < numPlayers; p++) {
     var diceRolls = [];
     for (var i = 0; i < numDice; i++) {
       diceRolls.push(rollDice());
     }
-    console.log(`Player ${p + 1} rolled ${diceRolls}`);
+    resultMsg += `Player ${p + 1} rolled ${diceRolls}.<br>`;
     var roundScore = calcNumber(diceRolls);
     players[p].playerScore += roundScore;
   }
-  return createLeaderboard(players);
+  resultMsg += `<br>${createLeaderboard(
+    players
+  )}<br><br>Enter the number of dice that will be rolled for each player in the next round.`;
+  return resultMsg;
 };
 
 var calcNumber = function (diceRolls) {
@@ -129,7 +133,7 @@ var createLeaderboard = function (players) {
   }
   var playerNumArray = sortedPlayers.map((x) => x.playerNum);
   var scoreArray = sortedPlayers.map((x) => x.playerScore);
-  var leaderboard = `Here are the current player scores:<br><br>Player Number: ${playerNumArray.join(
+  var leaderboard = `Here is the current leaderboard:<br><br>Player Number: ${playerNumArray.join(
     " | "
   )}<br>Score: ${scoreArray.join(" | ")}`;
   return leaderboard;
