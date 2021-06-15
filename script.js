@@ -1,7 +1,6 @@
 var mode = "numberOfPlayers";
 var noOfPlayers = 0;
 var noOfDice = 0;
-var prevNoOfPlayers = 0;
 var highestRollOutput = [];
 var leaderboardScoreArray = [];
 var currentPlayer = 0;
@@ -16,7 +15,7 @@ var main = function (input) {
       return "please input a number higher than 0!";
     }
     mode = "numberOfDice";
-    noOfPlayers = Number(input);
+    noOfPlayers = input;
     index = 0;
     while (index < noOfPlayers) {
       leaderboardScoreArray.push(0);
@@ -34,8 +33,8 @@ var main = function (input) {
     currentPlayer = 0;
     return `There are ${noOfDice} dice in play for this game. Player 1, it is your turn to roll.`;
   }
-  var gameOutput = gameFunc(noOfPlayers, noOfDice, input);
-  return gameOutput;
+  var diceRolls = dicerolltwice(noOfPlayers, noOfDice, input);
+  return diceRolls;
 };
 
 var diceroll = function () {
@@ -44,29 +43,54 @@ var diceroll = function () {
   return randomDiceNumber;
 };
 
-var gameFunc = function (noOfPlayers, noOfDice, input) {
+var dicerolltwice = function (noOfPlayers, noOfDice, input) {
   var myOutputValue = "";
   if (mode == "faceOff") {
-    var max = playersHighestRolls[0];
-    var index = 0;
+    var currentWinnerScore = playersHighestRolls[0];
+    var currentOpposer = 1;
+    var currentWinner = 1;
     var winnerText = "";
-    while (index < playersHighestRolls.length) {
-      winnerText = `The winner is Player 1 who rolled the highest value of ${max}`;
-      if (playersHighestRolls[index] > max) {
-        max = playersHighestRolls[index];
-        winnerText = `The winner is Player ${
-          index + 1
-        } who rolled the highest value of ${max}`;
+    myOutputValue = `Player 1 will now face off against Player 2.<br><br>`;
+    while (currentOpposer < playersHighestRolls.length) {
+      if (playersHighestRolls[currentOpposer] > currentWinnerScore) {
+        winnerText =
+          myOutputValue +
+          `Player ${
+            currentOpposer + 1
+          } has won over Player ${currentWinner} with a roll of ${
+            playersHighestRolls[currentOpposer]
+          } over ${currentWinnerScore}!<br><br>`;
+        currentWinnerScore = playersHighestRolls[currentOpposer];
+        currentWinner = currentOpposer + 1;
+      } else {
+        winnerText =
+          myOutputValue +
+          `Player ${currentWinner} has maintained their title against ${
+            currentOpposer + 1
+          } with a roll of ${currentWinnerScore} over ${
+            playersHighestRolls[currentOpposer]
+          }!<br><br>`;
       }
-      index = index + 1;
+      if (currentOpposer + 1 == playersHighestRolls.length) {
+        myOutputValue = winnerText + "The winner has been decided! <br><br>";
+      } else {
+        myOutputValue =
+          winnerText +
+          `Now, onto the next round: Player ${currentWinner} vs Player ${
+            currentOpposer + 2
+          }<br><br>`;
+      }
+      currentOpposer = currentOpposer + 1;
     }
+    myOutputValue =
+      myOutputValue +
+      `Player ${currentWinner} emerges as the ultimate champion for this round!`;
     var leaderboardText = leaderboard(
       playersHighestRolls,
       leaderboardScoreArray
     );
     myOutputValue =
       myOutputValue +
-      winnerText +
       "<br><br>" +
       leaderboardText +
       `<br><br> You can resubmit the number of dice that you want to play with!`;
@@ -99,19 +123,17 @@ var gameFunc = function (noOfPlayers, noOfDice, input) {
     if (currentPlayer == noOfPlayers) {
       mode = "faceOff";
     }
-    //Resetting the combinedNum after each iteration
     playersHighestRolls[currentPlayer - 1] = combinedNum;
     return `Your combined number is ${combinedNum}. Now, the next player will go. If the last player has already went, then the results will be computed.`;
   }
 };
 
-var leaderboard = function (playerHighestRoll, leaderboardScoreArray) {
-  //need to figure out how to display leaderboard in order
+var leaderboard = function (playersHighestRolls, leaderboardScoreArray) {
   var index = 0;
   var myOutputValue = "";
-  while (index < playerHighestRoll.length) {
+  while (index < playersHighestRolls.length) {
     leaderboardScoreArray[index] =
-      leaderboardScoreArray[index] + playerHighestRoll[index];
+      leaderboardScoreArray[index] + playersHighestRolls[index];
     myOutputValue =
       myOutputValue +
       `Player ${index + 1} has a total score of: ${
