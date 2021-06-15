@@ -75,6 +75,7 @@ var stage3 = function (onOrOff) {
   return resultMessage;
 };
 
+// Choose number of dice to be rolled for the round and then play the round
 var stage4 = function (numDiceInput) {
   var resultMessage;
   // Input validation: need at least 1 die to be rolled. Limit number of dice to 8 for performance reasons.
