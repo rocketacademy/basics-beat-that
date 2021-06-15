@@ -1,98 +1,41 @@
-var mode = "selectNoOfPlayers";
-var outcome1 = 0;
-var outcome2 = 0;
+var mode = "numberOfPlayers";
 var noOfPlayers = 0;
+var noOfDice = 0;
 var prevNoOfPlayers = 0;
-var playersHighestRolls = [];
+var highestRollOutput = [];
 var leaderboardScoreArray = [];
-var rollDice1 = 0;
-var rollDice2 = 0;
-var index = 0;
-var currentPlayer = 1;
+var currentPlayer = 0;
+var diceRollsArray = [];
+var playersHighestRolls = [];
 var main = function (input) {
-  if (mode == "selectNoOfPlayers") {
+  if (mode == "numberOfPlayers") {
+    currentPlayer = 0;
     if (Number.isNaN(Number(input))) {
-      return "Please input a number";
-    } else {
-      //reset index and currentPlayer
-      index = 0;
-      currentPlayer = 1;
-      noOfPlayers = Number(input);
-      if (input < 2) {
-        return `Please input a number of at least 2 or higher!`;
-      }
-      if (leaderboardScoreArray[0] == undefined) {
-        var leaderboardArrayIndex = 0;
-        while (leaderboardArrayIndex < noOfPlayers) {
-          leaderboardScoreArray.push(0);
-          leaderboardArrayIndex = leaderboardArrayIndex + 1;
-        }
-      } else if (leaderboardScoreArray[noOfPlayers] == undefined) {
-        while (prevNoOfPlayers < noOfPlayers) {
-          leaderboardScoreArray.push(0);
-          prevNoOfPlayers = prevNoOfPlayers + 1;
-        }
-      }
-      mode = "gameMode";
-      return `You have declared ${noOfPlayers} players to play in this round. Player 1, please roll.`;
+      return "Please input a number!";
+    } else if (input == 0) {
+      return "please input a number higher than 0!";
     }
-  } else if (mode == "gameMode" || mode == "selectMode") {
-    var highestRollOutput = "";
-    var myOutputValue = "";
+    mode = "numberOfDice";
+    noOfPlayers = Number(input);
+    index = 0;
     while (index < noOfPlayers) {
-      if (mode == "gameMode") {
-        rollDice1 = diceroll();
-        rollDice2 = diceroll();
-        outcome1 = rollDice1 * 10 + rollDice2;
-        outcome2 = rollDice2 * 10 + rollDice1;
-        mode = "selectMode";
-        myOutputValue = `You have rolled ${rollDice1} and ${rollDice2}. Player ${currentPlayer}, please select which dice to put first. <br><br>1.${rollDice1}<br>2.${rollDice2}<br>`;
-        return myOutputValue;
-      } else if (mode == "selectMode") {
-        if (input == 1) {
-          mode = "gameMode";
-          playersHighestRolls.push(outcome1);
-          highestRollOutput = outcome1;
-        } else if (input == 2) {
-          mode = "gameMode";
-          playersHighestRolls.push(outcome2);
-          highestRollOutput = outcome2;
-        } else {
-          return `Please input only 1 or 2! <br><br>1.${rollDice1}<br>2.${rollDice2}<br>`;
-        }
-        index = index + 1;
-        var nextPlayertext = ``;
-        if (index < noOfPlayers) {
-          nextPlayertext = `<br><br> Player ${currentPlayer + 1}, please roll.`;
-        } else if (index == noOfPlayers) {
-          nextPlayertext = `<br><br>The results will now be tabulated.`;
-        }
-        myOutputValue =
-          myOutputValue +
-          `Player ${currentPlayer}, your roll is ${highestRollOutput}.` +
-          nextPlayertext;
-        leaderboardScoreArray[currentPlayer - 1] =
-          leaderboardScoreArray[currentPlayer - 1] + highestRollOutput;
-        currentPlayer = currentPlayer + 1;
-      }
-      return myOutputValue;
+      leaderboardScoreArray.push(0);
+      index = index + 1;
     }
-    if (index == noOfPlayers) {
-      var winningOutcome = faceoff(playersHighestRolls);
-      var leaderboardText = leaderboard(
-        playersHighestRolls,
-        leaderboardScoreArray
-      );
-      myOutputValue =
-        myOutputValue + winningOutcome + "<br><br>" + leaderboardText;
-      playersHighestRolls = [];
-      prevNoOfPlayers = noOfPlayers;
-      return myOutputValue;
+    return `There are ${noOfPlayers} players for this game. Now, please enter the number of dice you wish to use.`;
+  } else if (mode == "numberOfDice") {
+    if (Number.isNaN(Number(input))) {
+      return "Please input a number!";
+    } else if (input == 0) {
+      return "please input a number higher than 0!";
     }
-  } else {
-    mode = "selectNoOfPlayers";
-    return `Uhhh... That wasn't supposed to happen. Please try again.`;
+    mode = "gameMode";
+    noOfDice = input;
+    currentPlayer = 0;
+    return `There are ${noOfDice} dice in play for this game. Player 1, it is your turn to roll.`;
   }
+  var gameOutput = gameFunc(noOfPlayers, noOfDice, input);
+  return gameOutput;
 };
 
 var diceroll = function () {
@@ -101,10 +44,74 @@ var diceroll = function () {
   return randomDiceNumber;
 };
 
-var leaderboard = function (playersHighestRolls, leaderboardScoreArray) {
+var gameFunc = function (noOfPlayers, noOfDice, input) {
+  var myOutputValue = "";
+  if (mode == "faceOff") {
+    var max = playersHighestRolls[0];
+    var index = 0;
+    var winnerText = "";
+    while (index < playersHighestRolls.length) {
+      winnerText = `The winner is Player 1 who rolled the highest value of ${max}`;
+      if (playersHighestRolls[index] > max) {
+        max = playersHighestRolls[index];
+        winnerText = `The winner is Player ${
+          index + 1
+        } who rolled the highest value of ${max}`;
+      }
+      index = index + 1;
+    }
+    var leaderboardText = leaderboard(
+      playersHighestRolls,
+      leaderboardScoreArray
+    );
+    myOutputValue =
+      myOutputValue +
+      winnerText +
+      "<br><br>" +
+      leaderboardText +
+      `<br><br> You can resubmit the number of dice that you want to play with!`;
+    mode = "numberOfDice";
+    return myOutputValue;
+  }
+  if (mode == "gameMode") {
+    if (currentPlayer < noOfPlayers) {
+      index = 0;
+      while (index < noOfDice) {
+        diceRollsArray.push(diceroll());
+        index = index + 1;
+      }
+      myOutputValue = `Player ${
+        currentPlayer + 1
+      },You have rolled ${diceRollsArray}! <br> 
+      Enter the order of the dice to give the highest possible number! The dice order starts from 0.`;
+      currentPlayer = currentPlayer + 1;
+      mode = "selectMode";
+      return myOutputValue;
+    }
+  } else if (mode == "selectMode") {
+    indexesArray = input.split("").map(Number);
+    combinedNum = 0;
+    for (var i = 0; i < indexesArray.length; i += 1) {
+      combinedNum = combinedNum * 10 + diceRollsArray[indexesArray[i]];
+    }
+    mode = "gameMode";
+    diceRollsArray = [];
+    if (currentPlayer == noOfPlayers) {
+      mode = "faceOff";
+    }
+    //Resetting the combinedNum after each iteration
+    playersHighestRolls[currentPlayer - 1] = combinedNum;
+    return `Your combined number is ${combinedNum}. Now, the next player will go. If the last player has already went, then the results will be computed.`;
+  }
+};
+
+var leaderboard = function (playerHighestRoll, leaderboardScoreArray) {
+  //need to figure out how to display leaderboard in order
   var index = 0;
   var myOutputValue = "";
-  while (index < playersHighestRolls.length) {
+  while (index < playerHighestRoll.length) {
+    leaderboardScoreArray[index] =
+      leaderboardScoreArray[index] + playerHighestRoll[index];
     myOutputValue =
       myOutputValue +
       `Player ${index + 1} has a total score of: ${
@@ -112,38 +119,19 @@ var leaderboard = function (playersHighestRolls, leaderboardScoreArray) {
       } <br><br>`;
     index = index + 1;
   }
-  mode = "selectNoOfPlayers";
-  myOutputValue =
-    myOutputValue +
-    `<br><br> Please enter the number of players to play again!`;
   return myOutputValue;
 };
 
-var faceoff = function (playersHighestRolls) {
-  var max = playersHighestRolls[0];
-  var index = 0;
-  var winnerText = "";
-  while (index < playersHighestRolls.length) {
-    if (playersHighestRolls[index] > max) {
-      max = playersHighestRolls[index];
-      winnerText = `The winner is Player ${
-        index + 1
-      } who rolled the highest value of ${max}`;
-    } else if (max == playersHighestRolls[0]) {
-      winnerText = `The winner is Player 1 who rolled the highest value of ${max}`;
-    }
-    index = index + 1;
-  }
-  return winnerText;
-};
-
 var inputDisplay = function () {
-  // change to new lowest and normal modes
-  if (mode == "start") {
-    return "Please input whether you would like to play lowest or normal mode.";
-  } else if (mode == "player1startnormal" || mode == "player1startlowest") {
-    return "It is Player 1's turn.";
-  } else if (mode == "player2startnormal" || mode == "player2startlowest") {
-    return "It is Player 2's turn.";
+  if (mode == "numberOfPlayers") {
+    return "Please input the number of Players for this round.";
+  } else if (mode == "numberOfDice") {
+    return "Please input the number of Dice in play for this round.";
+  } else if (mode == "gameMode") {
+    return `Player ${currentPlayer + 1}, it is your turn.`;
+  } else if (mode == "selectMode") {
+    return `Player ${currentPlayer}, please select your die in order starting from 0.`;
+  } else if (mode == "faceOff") {
+    return "The game has ended!";
   }
 };
