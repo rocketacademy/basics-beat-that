@@ -81,7 +81,7 @@ var gameFirstStep = function (mainDice1, mainDice2, playerNumberFirstStep) {
   );
   return defaultMessage;
 };
-//second step of the game where the player gets to input which value he wants to be first
+//second step of the game where the player gets to input which value they wants to be first
 var gameSecondStep = function (
   playerInput,
   playerNumberSecondStep,
@@ -93,7 +93,7 @@ var gameSecondStep = function (
   var defaultMessage = secondMessage(playerNumberSecondStep);
   return defaultMessage;
 };
-
+// kinda useless, i wanted to create a function that would make the main function as clean as possible
 var playerGameSequence = function (
   diceGameSeq1,
   diceGameSeq2,
