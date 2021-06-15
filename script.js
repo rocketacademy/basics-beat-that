@@ -54,9 +54,8 @@ var stage2 = function (chosenCndtn) {
   }
   // Valid input, so we update winCndtn based on input
   winCndtn = chosenCndtn;
-  resultMessage = `You have selected the win condition as ${(
-    winCndtn + " number wins"
-  ).italics()}.<br><br>Now enter "${ON}" to have Knockout Mode turned on, or enter "${OFF}" to have Knockout Mode turned off.`;
+  resultMessage = `You have selected the win condition as ${(winCndtn + " number wins").italics()}.<br><br>
+  Now enter "${ON}" to have Knockout Mode turned on, or enter "${OFF}" to have Knockout Mode turned off.`;
   gameMode = CHOOSE_KNOCKOUT; // Update game mode to next stage
   return resultMessage;
 };
