@@ -7,14 +7,16 @@ var Dice1 = "";
 var Dice2 = "";
 var player1Number = "";
 var player2Number = "";
-var player1NumRounds = 0;
-var player2NumRounds = 0;
-var player1NumWins = 0;
-var player2NumWins = 0;
+var player1Score = "";
+var player2Score = "";
+// var player1NumRounds = 0;
+// var player2NumRounds = 0;
+// var player1NumWins = 0;
+// var player2NumWins = 0;
 var ROLL_DICE_MODE = "ROLL DICE";
 var CHOOSE_ORDER_MODE = "CHOOSE ORDER";
 var gameMode = ROLL_DICE_MODE;
-var input = "";
+// var input = "";
 var winner = "";
 
 // Start with Player 1
@@ -80,18 +82,18 @@ var rollDice = function () {
   return diceNumber;
 };
 
-var increaseNumRoundsPlayer = function () {
-  if (currentPlayer == PLAYER1) {
-    player1NumRounds += 1;
-  } else {
-    player2NumRounds += 1;
-  }
-};
+// var increaseNumRoundsPlayer = function () {
+//   if (currentPlayer == PLAYER1) {
+//     player1NumRounds += 1;
+//   } else {
+//     player2NumRounds += 1;
+//   }
+// };
 
-var increaseNumWins = function () {
-  if (currentPlayer == PLAYER1) {
-    player1NumWins += 1;
-  } else {
-    player2NumWins += 1;
-  }
-};
+// var increaseNumWins = function () {
+//   if (currentPlayer == PLAYER1) {
+//     player1NumWins += 1;
+//   } else {
+//     player2NumWins += 1;
+//   }
+// };
