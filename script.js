@@ -4,7 +4,6 @@ var PLAYER2 = `Player 2`;
 var PLAYER1_CHOOSE_DICE_ORDER = `Player 1 choose dice order`;
 var PLAYER2_CHOOSE_DICE_ORDER = `Player 2 choose dice order`;
 var COMPARE_SCORE = `Compare Score`;
-var LOWER_SCORE_WINS = "Lower score wins";
 
 // store players' score for each round
 var player1Score = 0;
