@@ -23,7 +23,7 @@ var main = function (input) {
   var sortedList = "";
 
   // select game mode
-  if (input == "normal" || input == "reversed") {
+  if (input == "normal" || input == "reversed" || input == "knockout") {
     gameMode = input;
     gameModechosen = true;
     return `You have chosen ${gameMode} mode. Choose the number of players.`;
@@ -35,11 +35,12 @@ var main = function (input) {
     NumberOfPlayersChosen = true;
     return `You have selected ${numberOfPlayers} players. For Player 1, enter the number of dice you want to roll.`;
   }
-  // Play game in normal gamemode
+  // Play game in normal or knockout gamemodes
   if (
-    gameMode == "normal" &&
-    gameModechosen == true &&
-    NumberOfPlayersChosen == true
+    gameMode == "normal" ||
+    (gameMode == "knockout" &&
+      gameModechosen == true &&
+      NumberOfPlayersChosen == true)
   ) {
     if (input == 0 || input == 1) {
       input = 2;
@@ -50,32 +51,74 @@ var main = function (input) {
     playeraction = playerAction(diceResults, input, combinedScoring, gameMode);
     console.log(playeraction);
 
-    //Add array of objects to a list when list is empty
-    if (firstRound == true) {
-      //Array of Objects - Combine player string and score together
+    //running normal gamemode
+    if (gameMode == "normal") {
+      //Add array of objects to a list when list is empty
+      if (firstRound == true) {
+        //Array of Objects - Combine player string and score together
+        var scoreBoard = {
+          player: `Player ${playerNum}`,
+          score: combinedScoring,
+        };
+        list.push(scoreBoard);
+      } else {
+        list[playerNum - 1].score += combinedScoring;
+      }
+      //Store an existing list in a new list to be used for sorting
+      sortedList = [...list];
+
+      finalScoreboard = finalScoreboardStatement(
+        selectionSortForScoreboard(sortedList, gameMode)
+      );
+
+      var output = `Welcome Player ${playerNum} <br> ${playeraction}. <br><br> ${sortedList[0].player} is the winner!<br>${finalScoreboard} `;
+      playerNum++;
+      if (playerNum - 1 == numberOfPlayers) {
+        console.log("read");
+        playerNum = 1;
+        firstRound = false;
+      }
+      return output;
+    }
+    //running knockout gamemode
+    if (gameMode == "knockout") {
       var scoreBoard = {
         player: `Player ${playerNum}`,
         score: combinedScoring,
       };
+      console.log(scoreBoard);
       list.push(scoreBoard);
-    } else {
-      list[playerNum - 1].score += combinedScoring;
-    }
-    //Store an existing list in a new list to be used for sorting
-    sortedList = [...list];
 
-    finalScoreboard = finalScoreboardStatement(
-      selectionSortForScoreboard(sortedList, gameMode)
-    );
+      console.log(list[0].score);
+      //initate the first round
+      if (playerNum == 1) {
+        playerNum++;
+        return `${list[0].player} is the winner. <br> ${playeraction}. <br><br> Your Score is ${list[0].score}<br> It is player ${playerNum}'s turn.`;
+      }
+      console.log(playerNum);
+      //compare if second player is higher than first player
+      if (list[1].score > list[0].score) {
+        playerNum++;
+        var output = `You are ${list[1].player}.<br><br>${list[1].player} is the winner. <br> ${playeraction}. <br><br> ${list[1].player} score is ${list[1].score}<br>${list[0].player} score is ${list[0].score}. <br> It is player ${playerNum}'s turn.`;
+        list[0] = list[1];
+        list.pop(scoreBoard);
+        console.log(list);
 
-    var output = `Welcome Player ${playerNum} <br> ${playeraction}. <br><br> ${sortedList[0].player} is the winner!<br>${finalScoreboard} `;
-    playerNum++;
-    if (playerNum - 1 == numberOfPlayers) {
-      console.log("read");
-      playerNum = 1;
-      firstRound = false;
+        return output;
+      }
+      //compare if first player is higher than second player.
+      if (list[0].score > list[1].score) {
+        playerNum++;
+        var output = `You are ${list[1].player}.<br><br> ${list[0].player} is the winner. <br> ${playeraction}. <br><br> ${list[0].player} score is ${list[0].score}<br>${list[1].player} score is ${list[1].score}<br> It is player ${playerNum}'s turn.`;
+        list.pop(scoreBoard);
+
+        return output;
+      }
+
+      if (playerNum - 1 == numberOfPlayers) {
+        return `The knockout game has ended <br> ${list[0].player} is the overall winner with a score of ${list[0].score}. `;
+      } else return "Roll again.";
     }
-    return output;
   }
 
   //Play game in reversed gamemode
@@ -114,7 +157,7 @@ var main = function (input) {
       firstRound = false;
     }
     return output;
-  } else return `Choose your gamemode: normal or reversed`;
+  } else return `Choose your gamemode: normal, reversed or knockout.`;
 };
 
 // arrangeOrder = true;
@@ -162,14 +205,14 @@ var playerAction = function (
   var returnStatement = `You rolled ${diceResults[0]} for Dice 1 `;
   var finalStatement = "";
   //repeat statements for subsequent rolls
-  if (gameMode == "normal") {
+  if (gameMode == "normal" || gameMode == "knockout") {
     for (i = 1; i < numberOfRolls; i++) {
       returnStatement += `and ${diceResults[i]} for Dice ${i + 1} `;
     }
 
     finalStatement =
       returnStatement +
-      ".<br>Choose the order of the dice. Your highest combined number is " +
+      ".<br> Your highest combined number is " +
       combinedScoring;
 
     return finalStatement;
@@ -181,7 +224,7 @@ var playerAction = function (
 
     finalStatement =
       returnStatement +
-      ".<br>Choose the order of the dice. Your lowest combined number is " +
+      ".<br> Your lowest combined number is " +
       combinedScoring;
     return finalStatement;
   }
@@ -215,7 +258,7 @@ var switchPlayercalculateScore = function (number, score) {
 //Sort the score according to order
 var selectionSort = function (diceResults, gameMode) {
   //Sort the score according to DESC order
-  if (gameMode == "normal") {
+  if (gameMode == "normal" || gameMode == "knockout") {
     for (var i = 0; i < diceResults.length; i++) {
       //set min to the current iteration of i
       var min = i;
