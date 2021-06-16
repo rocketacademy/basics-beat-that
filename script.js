@@ -41,7 +41,7 @@ var basicGame = function (input) {
   // To allow for change of modes to lowest
   if (input == "lowest") {
     gameMode = LOWEST_NUMBER_MODE;
-    return `The player with the lowest number now wins!`;
+    return `The player with the lowest number now wins! Click submit to begin.`;
   }
   // Game starts by rolling 2 dice and asks player to choose the order
   if (gameStage == ROLL_DICE_STAGE) {
@@ -59,6 +59,11 @@ var basicGame = function (input) {
 };
 
 var lowestCombinedGame = function (input) {
+  if (input == "normal") {
+    gameMode = NORMAL_MODE;
+    return `The normal Beat That dice game has been selected! Click submit to begin.`;
+  }
+
   if (gameStage == ROLL_DICE_STAGE) {
     gameStage = CHOOSE_ORDER_STAGE;
     return generateDiceRolls();
@@ -90,7 +95,7 @@ var generateLowestNumberWinner = function (player2Number, player1Number) {
   return myOutputValue;
 };
 
-// Lists the 2 players and their scores in decreasing order
+// Lists the 2 players and their scores in decreasing order; assumes winner according to normal rules
 var generateLeaderboard = function (player1Score, player2Score) {
   if (player1Score >= player2Score) {
     return `Leaderboard <br> Player 1: ${player1Score} <br> 
@@ -102,7 +107,7 @@ var generateLeaderboard = function (player1Score, player2Score) {
 };
 
 // Output number for player dependent on choice
-var generatePlayerNumber = function (input) {
+var generatePlayerCombinedNumber = function (input) {
   var chosenOrder = Number(input);
   // Concatenate dice rolls based on user choice
   console.log(chosenOrder);
@@ -120,7 +125,7 @@ var generateNextPlayer = function () {
 
 // Results for normal game
 var generateResults = function (input) {
-  generatePlayerNumber(input);
+  generatePlayerCombinedNumber(input);
   var chosenOutputMessage = `Player ${currentPlayer}, you have chosen ${currPlayerNum}.`;
 
   if (currentPlayer == PLAYER1) {
@@ -132,7 +137,7 @@ var generateResults = function (input) {
     player2Score += Number(currPlayerNum);
     winner = generateWinner(player1Number, player2Number);
     leader = generateLeaderboard(player1Score, player2Score);
-    myOutputValue = `${chosenOutputMessage} <br> ${winner} <br> <br> ${leader} <br> Click submit to play again.`;
+    myOutputValue = `${chosenOutputMessage} <br> ${winner} <br> <br> ${leader} <br> Click submit to play again. <br><br> Input "lowest" to play lowest combined number mode.`;
   }
 
   return myOutputValue;
@@ -140,7 +145,7 @@ var generateResults = function (input) {
 
 // Results for lowest combined mode (not sure how to simplify it further cos it is quite repetitive as above function except for the way to determine the winner)
 var generateResultsForLowestGame = function (input) {
-  generatePlayerNumber(input);
+  generatePlayerCombinedNumber(input);
   var chosenOutputMessage = `Player ${currentPlayer}, you have chosen ${currPlayerNum}.`;
 
   if (currentPlayer == PLAYER1) {
@@ -152,18 +157,30 @@ var generateResultsForLowestGame = function (input) {
     player2Score += Number(currPlayerNum);
     winner = generateLowestNumberWinner(player2Number, player1Number);
     leader = generateLeaderboard(player1Score, player2Score);
-    myOutputValue = `${chosenOutputMessage} <br> ${winner} <br> <br> ${leader} <br> Click submit to play again.`;
+    myOutputValue = `${chosenOutputMessage} <br> ${winner} <br> <br> ${leader} <br> Click submit to play again. <br><br> Input "normal" to play lowest combined number mode`;
   }
 
   return myOutputValue;
 };
 
-var autoGenerateIdealNumber = function () {};
+var autoGenerateNumber = function (gameMode, Dice1, Dice2) {
+  if (gameMode == NORMAL_MODE) {
+    if (Dice1 >= Dice2) {
+      return Number(`${Dice1}${Dice2}`);
+    } else return Number(`${Dice2}${Dice1}`);
+  }
+  if (gameMode == LOWEST_NUMBER_MODE) {
+    if (Dice1 <= Dice2) {
+      return Number(`${Dice1}${Dice2}`);
+    } else return Number(`${Dice2}${Dice1}`);
+  }
+};
 
 var generateDiceRolls = function () {
   Dice1 = rollDice();
   Dice2 = rollDice();
-  return `Player ${currentPlayer}: You have rolled ${Dice1} and ${Dice2}. <br><br> Please choose the order of the dice: "1" for ${Dice1}${Dice2} and "2" for ${Dice2}${Dice1}.`;
+  var autoNumber = autoGenerateNumber(gameMode, Dice1, Dice2);
+  return `Player ${currentPlayer}: You have rolled ${Dice1} and ${Dice2}. <br><br> Please choose the order of the dice: "1" for ${Dice1}${Dice2} and "2" for ${Dice2}${Dice1}. <br><br> The ideal choice for your game mode would be ${autoNumber}`;
 };
 
 // Simple Dice Function
