@@ -7,8 +7,8 @@ var Dice1 = "";
 var Dice2 = "";
 var player1Number = "";
 var player2Number = "";
-var player1Score = "";
-var player2Score = "";
+// var player1Score = "";
+// var player2Score = "";
 // var player1NumRounds = 0;
 // var player2NumRounds = 0;
 // var player1NumWins = 0;
@@ -28,37 +28,34 @@ var main = function (input) {
 };
 
 var basicGame = function (input) {
-  // Starts off by rolling dice and asks player to choose order
+  // Game starts by rolling 2 dice and asks player to choose the order
   if (gameMode == ROLL_DICE_MODE) {
     Dice1 = rollDice();
     Dice2 = rollDice();
     gameMode = CHOOSE_ORDER_MODE;
     return `Player ${currentPlayer}: You have rolled ${Dice1} and ${Dice2}. <br> Please choose which dice you would like first: "1" for ${Dice1}${Dice2} and "2" for ${Dice2}${Dice1}.`;
   }
-
+  var currPlayerNum = "";
   var chosenOrder = Number(input);
-  var chosenOutputMessage = `Player ${currentPlayer}: You have chosen`;
-  // concatenate dice rolls based on user choice
-  // immediately determines winner after player 2 chooses
+
+  // Concatenate dice rolls based on user choice
   if (chosenOrder == 1) {
-    if (currentPlayer == PLAYER1) {
-      player1Number = Number(`${Dice1}${Dice2}`);
-      myOutputValue = `${chosenOutputMessage} ${player1Number}. It is now Player 2's turn. Please click submit to play.`;
-    } else if (currentPlayer == PLAYER2) {
-      player2Number = Number(`${Dice1}${Dice2}`);
-      winner = generateWinner(player1Number, player2Number);
-      myOutputValue = `${chosenOutputMessage} ${player2Number}. Player ${winner} wins! Click submit to play again.`;
-    }
+    currPlayerNum = Number(`${Dice1}${Dice2}`);
   } else {
-    if (currentPlayer == PLAYER1) {
-      player1Number = Number(`${Dice2}${Dice1}`);
-      myOutputValue = `${chosenOutputMessage} ${player1Number}. It is now Player 2's turn. Please click submit to play.`;
-    } else if (currentPlayer == PLAYER2) {
-      player2Number = Number(`${Dice2}${Dice1}`);
-      winner = generateWinner(player1Number, player2Number);
-      myOutputValue = `${chosenOutputMessage} ${player2Number}. Player ${winner} wins! Click submit to play again.`;
-    }
+    currPlayerNum = Number(`${Dice2}${Dice1}`);
   }
+
+  var chosenOutputMessage = `Player ${currentPlayer}: You have chosen ${currPlayerNum}`;
+
+  if (currentPlayer == PLAYER1) {
+    player1Number = currPlayerNum;
+    myOutputValue = `${chosenOutputMessage}. It is now Player 2's turn. Please click submit to play.`;
+  } else if (currentPlayer == PLAYER2) {
+    player2Number = currPlayerNum;
+    winner = generateWinner(player1Number, player2Number);
+    myOutputValue = `${chosenOutputMessage}. ${winner} Click submit to play again.`;
+  }
+
   // Switches to other player and restarts game
   var nextPlayer = (currentPlayer % 2) + 1;
   currentPlayer = nextPlayer;
@@ -70,8 +67,8 @@ var basicGame = function (input) {
 // Higher number wins
 var generateWinner = function (player1Number, player2Number) {
   if (player1Number > player2Number) {
-    return PLAYER1;
-  } else return PLAYER2;
+    return `Player ${PLAYER1} wins!`;
+  } else return `Player ${PLAYER2} wins!`;
 };
 
 // Simple Dice Function
