@@ -72,7 +72,7 @@ function decideLeader() {
   } else if (player2SumOfScore == player1SumOfScore) {
     winnerIs = "It's a draw!";
   }
-  return `<br>Player 1's score is ${player1SumOfScore}.Player 2's score is ${player2SumOfScore}. ${winnerIs};
+  return `<br>Player 1's score is ${player1SumOfScore}.Player 2's score is ${player2SumOfScore}. ${winnerIs}`;
 }
 
 // roll both dice
