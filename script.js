@@ -1,6 +1,5 @@
 var die1;
 var die2;
-var player1Number;
 var player1Score = [];
 var player1SumOfScore = 0;
 var player2Number;
@@ -46,7 +45,7 @@ var main = function (input) {
       mode = "dice roll";
       player = 1;
       var gameLeader = decideLeader();
-      outputMessage = `Player 2, you chose Dice ${input} first. <br>Your number is ${player2Number}. <br>${gameLeader} <br>It is Player 1's turn.`;
+      outputMessage = `Player 2, you chose Dice ${input} first. <br>Your number is ${player2Number}.<br>${gameLeader} <br>It is Player 1's turn.`;
     }
     return outputMessage;
   }
@@ -73,7 +72,7 @@ function decideLeader() {
   } else if (player2SumOfScore == player1SumOfScore) {
     winnerIs = "It's a draw!";
   }
-  return winnerIs;
+  return `<br>Player 1's score is ${player1SumOfScore}.Player 2's score is ${player2SumOfScore}. ${winnerIs};
 }
 
 // roll both dice
