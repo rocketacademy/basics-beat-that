@@ -1,3 +1,10 @@
+var REVERSE = "reverse";
+var NORMAL = "normal";
+var REVERSE_MODE = "reverse mode";
+var NORMAL_MODE = "normal mode";
+// Game type to switch between normal and reverse modes
+var gameType = NORMAL_MODE;
+
 // Game state to switch between players and dice roll
 var gameMode = 1;
 
@@ -46,9 +53,9 @@ var letPlayerChooseOrder = function (input) {
 var playerChoice = "";
 var playerOneResults = function (input) {
   playerChoice = letPlayerChooseOrder(input);
+  playerOneScore = Number(playerScore);
+  playerOneTotalScore = playerOneTotalScore + playerOneScore;
   if (gameMode == 2) {
-    playerOneScore = Number(playerScore);
-    playerOneTotalScore = playerOneTotalScore + playerOneScore;
     var playerOneOutputMessage = `Player 1: <br> You have chosen ${playerOneScore} as your score. <br> <br>It's Player 2's turn. <br> <br> Please click submit to play!`;
   }
   // Reroll dice so that player 2 has unique numbers
@@ -61,14 +68,14 @@ var playerOneResults = function (input) {
 // Output each players result
 // Tell players who won
 var playerTwoResults = function (input) {
+  var playerTwoOutputMessage = "";
   playerChoice = letPlayerChooseOrder(input);
-  if (gameMode == 4) {
-    playerTwoScore = Number(playerScore);
-    playerTwoTotalScore = playerTwoTotalScore + playerTwoScore;
-    var leader = determineLeader();
+  playerTwoScore = Number(playerScore);
+  playerTwoTotalScore = playerTwoTotalScore + playerTwoScore;
 
-    var playerTwoOutputMessage = `Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${leader}   <br><br><br> Click submit to play again!😊`;
-  }
+  var leader = determineLeader();
+  playerTwoOutputMessage = `Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${leader}   <br><br><br> Click submit to play again!😊`;
+
   // Reroll dice so that player 1 has unique numbers for next turn
   randomNum1 = diceRoll();
   randomNum2 = diceRoll();
@@ -93,10 +100,57 @@ var determineLeader = function () {
   }
 };
 
+var determineReverseLeader = function () {
+  var findMinValue = Math.min(playerOneTotalScore, playerTwoTotalScore);
+  if (
+    findMinValue == playerOneTotalScore &&
+    findMinValue != playerTwoTotalScore
+  ) {
+    return `Leaderboard: <br>Player 1: ${playerOneTotalScore} points <br>Player 2: ${playerTwoTotalScore} points`;
+  } else if (
+    findMinValue == playerOneTotalScore &&
+    findMinValue == playerTwoTotalScore
+  ) {
+    return `Leaderboard: <br>Players 1 & 2: ${playerTwoTotalScore} points`;
+  } else {
+    return `Leaderboard: <br>Player 2: ${playerTwoTotalScore} points <br>Player 1: ${playerOneTotalScore} points`;
+  }
+};
+var determineReverseWinner = function (input) {
+  playerChoice = letPlayerChooseOrder(input);
+  playerTwoScore = Number(playerScore);
+  playerTwoTotalScore = playerTwoTotalScore + playerTwoScore;
+  var message = "";
+  var reverseLeader = determineReverseLeader();
+  var findMinValueRound = Math.min(playerOneScore, playerTwoScore);
+  if (
+    findMinValueRound == playerOneScore &&
+    findMinValueRound != playerTwoScore
+  ) {
+    message = `Player 1 wins with ${playerOneScore} points! <br> <br>${reverseLeader} `;
+  } else if (
+    findMinValueRound == playerOneScore &&
+    findMinValueRound == playerTwoScore
+  ) {
+    message = `It's a draw! <br><br> ${reverseLeader}`;
+  } else {
+    message = `Player 2 wins with ${playerTwoScore} points! <br> <br>${reverseLeader} `;
+  }
+  return `REVERSE BEAT THAT!: <br><br><br>Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${message}  <br><br><br> Click submit to play again!😊`;
+};
+
 // Change game state between players
 var main = function (input) {
   var myOutputValue = "";
   // gameMode 1 for player 1's dice result, gameMode 3 for player 2's dice result
+  if (input == REVERSE) {
+    gameType = REVERSE_MODE;
+    return `You have selected reverse Beat That! <br> Please select the lowest number to win!`;
+  }
+  if (input == NORMAL) {
+    gameType = NORMAL_MODE;
+    return `You have selected normal Beat That! <br> Please select the highest number to win!`;
+  }
   if (gameMode == 1 || gameMode == 3) {
     myOutputValue = generateTwoDigitNum();
     gameMode += 1;
@@ -106,7 +160,12 @@ var main = function (input) {
     gameMode += 1;
     return myOutputValue;
   } else if (gameMode == 4) {
-    myOutputValue = playerTwoResults(input);
+    // Change game type to determine winning rules
+    if (gameType == NORMAL_MODE) {
+      myOutputValue = playerTwoResults(input);
+    } else if (gameType == REVERSE_MODE) {
+      myOutputValue = determineReverseWinner(input);
+    }
     gameMode = 1;
     return myOutputValue;
   }
