@@ -11,8 +11,13 @@ var gameMode = GAME_MODE_PLAYER_ONE_ROLL;
 // Arrays and variables to capture user dice rolls and number results
 var player1DiceRolls = [];
 var player1Number = 0;
+var player1NumberList = [];
+var player1Score = 0;
 var player2DiceRolls = [];
 var player2Number = 0;
+var player2NumberList = [];
+var player2Score = 0;
+var diceIndex = 0;
 
 // Dice Roll function
 var rollDice = function () {
@@ -43,19 +48,29 @@ var playerOneChoose = function () {
   // User input validation
   if (userInput != 1 && userInput != 2) {
     return `You have entered invalid input. Please enter either "1" or "2" to choose the dice order.`;
-  } // User makes a choice
-  else if (userInput == 1) {
+  }
+
+  // User makes a choice
+  if (userInput == 1) {
     player1Number = Number(
-      String(player1DiceRolls[0]) + String(player1DiceRolls[1])
+      String(player1DiceRolls[diceIndex]) +
+        String(player1DiceRolls[diceIndex + 1])
     );
   } else {
     player1Number = Number(
-      String(player1DiceRolls[1]) + String(player1DiceRolls[0])
+      String(player1DiceRolls[diceIndex + 1]) +
+        String(player1DiceRolls[diceIndex])
     );
   }
 
+  // Add number result to array
+  player1NumberList.push(player1Number);
+
+  // Generate score
+  player1Score = generateScore(player1NumberList);
+
   // Generate output text
-  outputText = `Player 1, you chose Dice ${userInput} first. <br> Your number is ${player1Number}. <br> It is now Player 2's turn.`;
+  outputText = `Player 1, you chose Dice ${userInput} first. <br> Your number is ${player1Number}. <br> Your number(s) generated so far: ${player1NumberList}. <br> Your score is ${player1Score}. <br> It is now Player 2's turn.`;
 
   // Move the game forward
   gameMode = GAME_MODE_PLAYER_TWO_ROLL;
@@ -90,22 +105,33 @@ var playerTwoChoose = function () {
   } // User makes a choice
   else if (userInput == 1) {
     player2Number = Number(
-      String(player2DiceRolls[0]) + String(player2DiceRolls[1])
+      String(player2DiceRolls[diceIndex]) +
+        String(player2DiceRolls[diceIndex + 1])
     );
   } else {
     player2Number = Number(
-      String(player2DiceRolls[1]) + String(player2DiceRolls[0])
+      String(player2DiceRolls[diceIndex + 1]) +
+        String(player2DiceRolls[diceIndex])
     );
   }
 
+  // Add number result to array
+  player2NumberList.push(player2Number);
+
+  // Generate score
+  player2Score = generateScore(player2NumberList);
+
   // Decide who the winner
-  var winnerText = decideWinner();
+  var winnerText = decideWinnerByScore();
 
   // Generate output text
-  outputText = `Player 2, you chose Dice ${userInput} first. <br> Your number is ${player2Number}. <br><br> Since Player 1's number is ${player1Number}. <br> the winner is ${winnerText}! <br><br> Please click Submit to restart the game.`;
+  outputText = `Player 2, you chose Dice ${userInput} first. <br> Your number is ${player2Number}. <br> Your number(s) generated so far: ${player2NumberList}. <br> Your score is ${player2Score}. <br><br> Since Player 1's score is ${player1Score}, <br> the leader is ${winnerText}! <br><br> Please click 'Submit' to play again.`;
 
-  // Restart the game
+  // Restart the game or play again
   gameMode = GAME_MODE_PLAYER_ONE_ROLL;
+
+  // Update dice index count
+  diceIndex += 2;
 
   return outputText;
 };
@@ -117,6 +143,26 @@ var decideWinner = function () {
   } else {
     return "Player 2";
   }
+};
+
+// Decide who the temporary leader is by score
+var decideWinnerByScore = function () {
+  if (player1Score > player2Score) {
+    return "Player 1";
+  } else {
+    return "Player 2";
+  }
+};
+
+// Generate score - running sum of all numbers that player has generated so far
+var generateScore = function (array) {
+  var score = 0;
+  var index = 0;
+  while (index < array.length) {
+    score = score + array[index];
+    index += 1;
+  }
+  return score;
 };
 
 var main = function (input) {
