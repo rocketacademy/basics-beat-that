@@ -14,21 +14,9 @@ var diceRoll = function () {
   return randomInteger;
 };
 
-// Create two random numbers which do not change until after player one/two output statement is generated
-var randomNum1 = diceRoll();
-var randomNum2 = diceRoll();
-
-// Tell player to choose order of numbers
-var generateTwoDigitNum = function () {
-  var player = 0;
-  if (gameMode == 1) {
-    player = 1;
-  } else {
-    player = 2;
-  }
-
-  return `Player ${player}: <br> You rolled ${randomNum1} & ${randomNum2}. <br> If you would like to concatenate the numbers in this order type '1'. <br> If you would like to switch the order, type '2'.`;
-};
+// Global variable to store diceRoll values stored as integers
+var diceInt1 = 0;
+var diceInt2 = 0;
 
 // Global variable to track each players score
 var playerOneScore = 0;
@@ -38,52 +26,48 @@ var playerScore = 0;
 var playerOneTotalScore = 0;
 var playerTwoTotalScore = 0;
 
-// Allow player to choose which number goes first
-var letPlayerChooseOrder = function (input) {
-  if (input == "1") {
-    playerScore = `${randomNum1}${randomNum2}`;
-  } else if (input == "2") {
-    playerScore = `${randomNum2}${randomNum1}`;
-  }
+// Auto generate highest number
+var generateHighestNum = function () {
+  var highestNum = Math.max(diceInt1, diceInt2);
+  var lowestNum = Math.min(diceInt1, diceInt2);
+  playerScore = `${highestNum}${lowestNum}`;
   return playerScore;
 };
 
-// Store player one's choice in global variable
+// Store player one's auto results in global variable for normal mode
 // Output results for player 1
-var playerChoice = "";
-var playerOneResults = function (input) {
-  playerChoice = letPlayerChooseOrder(input);
+var playerHighScore = "";
+var playerOneNormalResults = function () {
+  diceInt1 = Number(diceRoll());
+  diceInt2 = Number(diceRoll());
+  playerHighScore = generateHighestNum();
   playerOneScore = Number(playerScore);
   playerOneTotalScore = playerOneTotalScore + playerOneScore;
-  if (gameMode == 2) {
-    var playerOneOutputMessage = `Player 1: <br> You have chosen ${playerOneScore} as your score. <br> <br>It's Player 2's turn. <br> <br> Please click submit to play!`;
-  }
-  // Reroll dice so that player 2 has unique numbers
-  randomNum1 = diceRoll();
-  randomNum2 = diceRoll();
+
+  var playerOneOutputMessage = `Player 1: <br> The AI has chosen ${playerOneScore} as your score. <br> <br>It's Player 2's turn. <br> <br> Please click submit to play!`;
+
   return playerOneOutputMessage;
 };
 
-// Store player two's choice in global variable
+// Store player two's auto results in global variable
 // Output each players result
 // Tell players who won
-var playerTwoResults = function (input) {
+var playerTwoNormalResults = function () {
+  diceInt1 = Number(diceRoll());
+  diceInt2 = Number(diceRoll());
   var playerTwoOutputMessage = "";
-  playerChoice = letPlayerChooseOrder(input);
+  playerHighScore = generateHighestNum();
   playerTwoScore = Number(playerScore);
   playerTwoTotalScore = playerTwoTotalScore + playerTwoScore;
 
-  var leader = determineLeader();
-  playerTwoOutputMessage = `Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${leader}   <br><br><br> Click submit to play again!😊`;
+  var leader = determineNormalLeader();
+  playerTwoOutputMessage = `Player 2: <br> The AI has chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${leader}   <br><br><br> Click submit to play again!😊`;
 
-  // Reroll dice so that player 1 has unique numbers for next turn
-  randomNum1 = diceRoll();
-  randomNum2 = diceRoll();
   return playerTwoOutputMessage;
 };
 
-// Determine winner
-var determineLeader = function () {
+// Determine leader using overall score
+var determineNormalLeader = function () {
   var findMaxValue = Math.max(playerOneTotalScore, playerTwoTotalScore);
   if (
     findMaxValue == playerOneTotalScore &&
@@ -100,6 +84,7 @@ var determineLeader = function () {
   }
 };
 
+// Determine reverse game leader using overall score
 var determineReverseLeader = function () {
   var findMinValue = Math.min(playerOneTotalScore, playerTwoTotalScore);
   if (
@@ -116,9 +101,38 @@ var determineReverseLeader = function () {
     return `Leaderboard: <br>Player 2: ${playerTwoTotalScore} points <br>Player 1: ${playerOneTotalScore} points`;
   }
 };
-var determineReverseWinner = function (input) {
-  playerChoice = letPlayerChooseOrder(input);
-  playerTwoScore = Number(playerScore);
+
+// Auto generate lowest number
+var generateLowestNum = function () {
+  var reverseHighestNum = Math.max(diceInt1, diceInt2);
+  var reverseLowestNum = Math.min(diceInt1, diceInt2);
+  reversePlayerScore = `${reverseLowestNum}${reverseHighestNum}`;
+  return reversePlayerScore;
+};
+
+// Determine reverse mode player 1 auto results
+var playerHighScore = "";
+var determineReversePlayerOneResults = function () {
+  diceInt1 = Number(diceRoll());
+  diceInt2 = Number(diceRoll());
+  var reverseLowestNum = "";
+  reverseLowestNum = generateLowestNum();
+  playerOneScore = Number(reversePlayerScore);
+  playerOneTotalScore = playerOneTotalScore + playerOneScore;
+
+  var playerOneOutputMessage = `REVERSE BEAT THAT!: <br><br><br>Player 1: <br> The AI has chosen ${playerOneScore} as your score. <br> <br>It's Player 2's turn. <br> <br> Please click submit to play!`;
+
+  return playerOneOutputMessage;
+};
+
+// Determine reverse mode player 2 auto results
+// Output results
+var determineReverseWinner = function () {
+  diceInt1 = Number(diceRoll());
+  diceInt2 = Number(diceRoll());
+  var reverseLowestNum = "";
+  reverseLowestNum = generateLowestNum();
+  playerTwoScore = Number(reversePlayerScore);
   playerTwoTotalScore = playerTwoTotalScore + playerTwoScore;
   var message = "";
   var reverseLeader = determineReverseLeader();
@@ -136,35 +150,35 @@ var determineReverseWinner = function (input) {
   } else {
     message = `Player 2 wins with ${playerTwoScore} points! <br> <br>${reverseLeader} `;
   }
-  return `REVERSE BEAT THAT!: <br><br><br>Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${message}  <br><br><br> Click submit to play again!😊`;
+  return `REVERSE BEAT THAT!: <br><br><br>Player 2: <br> The AI has chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${message}  <br><br><br> Click submit to play again!😊`;
 };
 
 // Change game state between players
 var main = function (input) {
   var myOutputValue = "";
-  // gameMode 1 for player 1's dice result, gameMode 3 for player 2's dice result
+  // gameMode 1 for player 1's results and and gameMode 2 for final results
+  // gameType to switch between normal and reverse rules
   if (input == REVERSE) {
     gameType = REVERSE_MODE;
-    return `You have selected reverse Beat That! <br> Please select the lowest number to win!`;
+    return `You have selected reverse Beat That! <br> The AI will select the lowest number to help you win! 🤖`;
   }
   if (input == NORMAL) {
     gameType = NORMAL_MODE;
-    return `You have selected normal Beat That! <br> Please select the highest number to win!`;
+    return `You have selected normal Beat That! <br> The AI will select the highest number to help you win! 🤖`;
   }
-  if (gameMode == 1 || gameMode == 3) {
-    myOutputValue = generateTwoDigitNum();
+  if (gameMode == 1) {
+    if (gameType == NORMAL_MODE) {
+      myOutputValue = playerOneNormalResults();
+    } else if (gameType == REVERSE_MODE) {
+      myOutputValue = determineReversePlayerOneResults();
+    }
     gameMode += 1;
     return myOutputValue;
   } else if (gameMode == 2) {
-    myOutputValue = playerOneResults(input);
-    gameMode += 1;
-    return myOutputValue;
-  } else if (gameMode == 4) {
-    // Change game type to determine winning rules
     if (gameType == NORMAL_MODE) {
-      myOutputValue = playerTwoResults(input);
+      myOutputValue = playerTwoNormalResults();
     } else if (gameType == REVERSE_MODE) {
-      myOutputValue = determineReverseWinner(input);
+      myOutputValue = determineReverseWinner();
     }
     gameMode = 1;
     return myOutputValue;
