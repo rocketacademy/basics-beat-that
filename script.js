@@ -3,6 +3,7 @@ var GAME_MODE_PLAYER_ONE_ROLL = "PLAYER_ONE_ROLL";
 var GAME_MODE_PLAYER_ONE_CHOOSE = "PLAYER_ONE_CHOOSE";
 var GAME_MODE_PLAYER_TWO_ROLL = "PLAYER_TWO_ROLL";
 var GAME_MODE_PLAYER_TWO_CHOOSE = "PLAYER_TWO_CHOOSE";
+var GAME_MODE_CHOOSE_NORMAL_OR_LOWEST = "CHOOSE NORMAL_OR_LOWEST";
 
 // Capture user input
 var userInput = null;
@@ -75,7 +76,7 @@ var playerOneChoose = function () {
   });
 
   // Generate output text
-  outputText = `Player 1, you chose Dice ${userInput} first. <br> Your number is ${player1Number}. <br> Your number(s) generated so far: ${player1NumberList}. <br> Your score is ${player1Score}. <br> It is now Player 2's turn.`;
+  outputText = `Player 1, you chose Dice ${userInput} first. <br> Your number is ${player1Number}. <br> Your number(s) generated so far: ${player1NumberList}. <br> Your total score is ${player1Score}. <br> It is now Player 2's turn.`;
 
   // Move the game forward
   gameMode = GAME_MODE_PLAYER_TWO_ROLL;
@@ -126,23 +127,50 @@ var playerTwoChoose = function () {
   // Generate score
   player2Score = generateScore(player2NumberList);
 
-  // Decide who the winner
-  var winnerText = decideWinnerByScore();
-
   // Sort the player's numbers in decreasing order
   player2NumberList.sort(function (a, b) {
     return b - a;
   });
 
+  // Update dice index count
+  diceIndex += 2;
+
+  // Generate output text
+  var outputText = `Player 2, you chose Dice ${userInput} first. <br> Your number is ${player2Number}. <br> Your number(s) generated so far: ${player2NumberList}. <br> Your total score is ${player2Score}. <br><br> Player 1 & 2, Please input "normal" to play 'normal mode' or input "lowest" to play the 'lowest combined number mode'.`;
+
+  // Move the game forward
+  gameMode = GAME_MODE_CHOOSE_NORMAL_OR_LOWEST;
+
+  return outputText;
+};
+
+var chooseNormalModeOrLowestMode = function () {
+  // Decide who the winner is based on game mode
+  // User input validation
+  if (userInput != "normal" && userInput != "lowest") {
+    return `You have entered invalid input. Please enter either "normal" or "lowest" to choose the mode.`;
+  }
+  if (userInput == "normal") {
+    var winnerText = decideWinner();
+  } else if (userInput == "lowest") {
+    var winnerText = decideWinnerByLowestNumber();
+  }
+
   // Generate output text
   // Include leaderboard that lists the 2 players and their scores in decreasing order
-  outputText = `Player 2, you chose Dice ${userInput} first. <br> Your number is ${player2Number}. <br><br> LEADERBOARD <br><br> Player 1 - Scores: ${player1NumberList} <br> Player 1 - Total Score: ${player1Score} <br><br> Player 2 - Scores: ${player2NumberList} <br> Player 2 - Total Score: ${player2Score} <br><br> The Leader: ${winnerText} <br><br> Please click 'Submit' to play again.`;
+  if (player1Score > player2Score) {
+    var outputText = `LEADERBOARD <br><br> Player 1 - Score: ${player1Score} <br> Player 2 - Score: ${player2Score}`;
+  } else {
+    var outputText = `LEADERBOARD <br><br> Player 2 - Score: ${player2Score} <br> Player 1 - Score: ${player1Score}`;
+  }
+
+  outputText =
+    `You chose '${userInput} mode'. <br><br> The winner of this round: ${winnerText}.<br><br><br>` +
+    outputText +
+    `<br><br><br>OTHER STATISTICS <br><br> Player 1 - Current Number: ${player1Number} <br> Player 1 - All Numbers: ${player1NumberList} <br><br> Player 2 - Current Number: ${player2Number} <br> Player 2 - All Numbers: ${player2NumberList} <br><br><br> Please click 'Submit' to play again.`;
 
   // Restart the game or play again
   gameMode = GAME_MODE_PLAYER_ONE_ROLL;
-
-  // Update dice index count
-  diceIndex += 2;
 
   return outputText;
 };
@@ -159,6 +187,15 @@ var decideWinner = function () {
 // Decide who the temporary leader is by score
 var decideWinnerByScore = function () {
   if (player1Score > player2Score) {
+    return "Player 1";
+  } else {
+    return "Player 2";
+  }
+};
+
+// Decide who the winner is (i.e. whose number is lowest)
+var decideWinnerByLowestNumber = function () {
+  if (player1Number < player2Number) {
     return "Player 1";
   } else {
     return "Player 2";
@@ -187,6 +224,8 @@ var main = function (input) {
     var myOutputValue = playerTwoRoll();
   } else if (gameMode == GAME_MODE_PLAYER_TWO_CHOOSE) {
     var myOutputValue = playerTwoChoose();
+  } else if (gameMode == GAME_MODE_CHOOSE_NORMAL_OR_LOWEST) {
+    var myOutputValue = chooseNormalModeOrLowestMode();
   } else {
     var myOutputValue = `SOMETHING WENT WRONG!`;
   }
