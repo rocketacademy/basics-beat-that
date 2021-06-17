@@ -66,7 +66,8 @@ var playerTwoResults = function (input) {
     playerTwoScore = Number(playerScore);
     playerTwoTotalScore = playerTwoTotalScore + playerTwoScore;
     var leader = determineLeader();
-    var playerTwoOutputMessage = `Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player one's score was ${playerOneScore}.  <br><br> ${leader}! 🎉 <br><br><br> Click submit to play again!😊`;
+
+    var playerTwoOutputMessage = `Player 2: <br> You have chosen ${playerTwoScore} as your score. <br> Player 1's score was ${playerOneScore}.  <br><br> ${leader}   <br><br><br> Click submit to play again!😊`;
   }
   // Reroll dice so that player 1 has unique numbers for next turn
   randomNum1 = diceRoll();
@@ -81,14 +82,14 @@ var determineLeader = function () {
     findMaxValue == playerOneTotalScore &&
     findMaxValue != playerTwoTotalScore
   ) {
-    return `Player one is in the lead with ${playerOneTotalScore} points!`;
+    return `Player 1 is in the lead with ${playerOneTotalScore} points! 🎉 <br> <br>Leaderboard: <br>Player 1: ${playerOneTotalScore} points <br>Player 2: ${playerTwoTotalScore} points`;
   } else if (
     findMaxValue == playerOneTotalScore &&
     findMaxValue == playerTwoTotalScore
   ) {
-    return `Both players are level on points!`;
+    return `Both players are level on points! <br> <br>Leaderboard: <br>Players 1 & 2: ${playerTwoTotalScore} points`;
   } else {
-    return `Player two is in the lead with  ${playerTwoTotalScore} points!`;
+    return `Player 2 is in the lead with  ${playerTwoTotalScore} points!🎉 <br> <br>Leaderboard: <br>Player 2: ${playerTwoTotalScore} points <br>Player 1: ${playerOneTotalScore} points`;
   }
 };
 
