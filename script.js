@@ -69,6 +69,11 @@ var playerOneChoose = function () {
   // Generate score
   player1Score = generateScore(player1NumberList);
 
+  // Sort the player's numbers in decreasing order
+  player1NumberList.sort(function (a, b) {
+    return b - a;
+  });
+
   // Generate output text
   outputText = `Player 1, you chose Dice ${userInput} first. <br> Your number is ${player1Number}. <br> Your number(s) generated so far: ${player1NumberList}. <br> Your score is ${player1Score}. <br> It is now Player 2's turn.`;
 
@@ -124,8 +129,14 @@ var playerTwoChoose = function () {
   // Decide who the winner
   var winnerText = decideWinnerByScore();
 
+  // Sort the player's numbers in decreasing order
+  player2NumberList.sort(function (a, b) {
+    return b - a;
+  });
+
   // Generate output text
-  outputText = `Player 2, you chose Dice ${userInput} first. <br> Your number is ${player2Number}. <br> Your number(s) generated so far: ${player2NumberList}. <br> Your score is ${player2Score}. <br><br> Since Player 1's score is ${player1Score}, <br> the leader is ${winnerText}! <br><br> Please click 'Submit' to play again.`;
+  // Include leaderboard that lists the 2 players and their scores in decreasing order
+  outputText = `Player 2, you chose Dice ${userInput} first. <br> Your number is ${player2Number}. <br><br> LEADERBOARD <br><br> Player 1 - Scores: ${player1NumberList} <br> Player 1 - Total Score: ${player1Score} <br><br> Player 2 - Scores: ${player2NumberList} <br> Player 2 - Total Score: ${player2Score} <br><br> The Leader: ${winnerText} <br><br> Please click 'Submit' to play again.`;
 
   // Restart the game or play again
   gameMode = GAME_MODE_PLAYER_ONE_ROLL;
