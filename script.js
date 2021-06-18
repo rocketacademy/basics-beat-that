@@ -4,150 +4,219 @@
 // The game outputs Player 1's number
 // Player 2's turn
 // Player with the higher combined number wins
-
-//game mode for rolling dice
-//game mode for choosing dice order
 //switch between 2 players
 
+//lowest combined number wins game mode
+//player 1 chooses low or high game mode
+// if high game mode chosen, base game rules run
+// if low game mode chosen, gameModeRollDice runs, gameModeChooseDice runs, but rules for winning changes
+
 //game modes
-var gameMode_Roll_Dice = "Gamemode_roll_dice";
-var gameMode_Dice_Order = "Gamemode_choose_right_order";
+//game mode for rolling dice
+var gameModeRollDice = "Game Mode-Roll Dice";
+//game mode for choosing dice order
+var gameModeChooseDice = "Game Mode-Choose Dice";
+//game mode to choose game mode
+var gameModeChooseMode = "Choose game mode";
+//game mode where player with lowest combined number wins
+var gameModeLowestWins = "Game Mode-lowest combined number wins";
+//rolling dice mode under gameModeLowestWins
+var gameModeRollDiceLow = "Roll Dice mode under gameModeLowestWins";
+//choose dice mode under gameModeLowestWins
+var gameModeChooseDiceLow = "choose dice mode under gameModeLowestWins";
 
-//start with dice roll game mode
-var gameMode = gameMode_Roll_Dice;
+//start with Game Mode-Roll Dice
+var currentGameMode = gameModeChooseMode;
 
-// Keep track of current player's number - 1 or 2
-// Start with player
+//Dice Roll
+var rollDice = function () {
+  return Math.floor(Math.random() * 6 + 1);
+};
+
+//current player number - start with 1
 var currentPlayer = 1;
 
-// Keep track of each player's dice rolls.
-var player1Dice = [];
-var player2Dice = [];
+// two dice rolled
+var rolledNumbers = [rollDice(), rollDice()];
 
-//Each player's chosen numbers
-var player1Num;
-var player2Num;
+// Combined number of each player
+var player1CombinedNumber;
+var player2CombinedNumber;
 
-// function for diceroll
-var diceRoll = function () {
-  randomRolledNum = Math.floor(Math.random() * 6) + 1;
-  console.log(randomRolledNum);
-  return randomRolledNum;
-};
-
-// Get dice roll for current player
-// Populate current player's dice array
-// Return the new dice rolls
-
-var getDiceRolls = function () {
-  //create an array newDiceRolls with 2 independent dice roll values
-  var newDiceRolls = [diceRoll(), diceRoll()];
-
-  // assign newDiceRolls to the current player's dice array
-  if (currentPlayer == 1) {
-    player1Dice = newDiceRolls;
+var getPlayerCombinedNum = function (diceOrder) {
+  // Player's combined number based on selected dice order
+  var playerCombinedNumber;
+  if (diceOrder == 1) {
+    var playerCombinedNumber = Number(
+      String(rolledNumbers[0]) + String(rolledNumbers[1])
+    );
+  } else if (diceOrder == 2) {
+    playerCombinedNumber = Number(
+      String(rolledNumbers[1]) + String(rolledNumbers[0])
+    );
   }
 
-  // if current player is not player 1, assume it is player 2
-  else {
-    player2Dice = newDiceRolls;
-  }
-  // return new dice rolls to parent function
-  return newDiceRolls;
-};
-
-// return a number that is a cocatenation of num1 and num 2
-var cocatenate2Nums = function (num1, num2) {
-  return Number(String(num1) + String(num2));
-};
-
-//Generate and store the player's number based on his dice rolls and chosen first dice.
-var getPlayerNumber = function (chosenDiceNum) {
-  // if it is Player 1's turn -- save to player1Dice array
-  // if it is Player 2's turn -- save to player2Dice array
-  var diceArray;
   if (currentPlayer == 1) {
-    diceArray = player1Dice;
+    player1CombinedNumber = playerCombinedNumber;
+    console.log(player1CombinedNumber);
   } else {
-    diceArray = player2Dice;
+    player2CombinedNumber = playerCombinedNumber;
+    console.log(player2CombinedNumber);
   }
-
-  var playerNum;
-
-  // If the chosen first dice is dice 1, create player number starting with 1st dice.
-
-  if (chosenDiceNum == 1) {
-    playerNum = cocatenate2Nums(diceArray[0], diceArray[1]);
-  }
-  //otherwise, create player number starting with 2nd dice.
-  else {
-    playerNum = cocatenate2Nums(diceArray[1], diceArray[0]);
-  }
-
-  //Store player num in the relevant global player num variable
-
-  if (currentPlayer == 1) {
-    player1Num = playerNum;
-  } else {
-    player2Num = playerNum;
-  }
-
-  //return generated player num to parent fuction
-
-  return playerNum;
+  return playerCombinedNumber;
 };
 
-//Determine the winnder between Player 1 and Player 2
-//Return either 1 or 2 to represent the winnder player.
-//In the event of a tie, Player 2 wins.
-
-var determineWinner = function () {
-  if (player1Num > player2Num) {
+//picking the winner based on the Combined Number of each player
+var pickWinner = function () {
+  if (player1CombinedNumber > player2CombinedNumber) {
     return 1;
   }
   return 2;
 };
 
-//Play Beat That
+//picking the winner of the lowest combined score wins gamemode
+var pickWinnerOfLowestWinsMode = function () {
+  if (player1CombinedNumber > player2CombinedNumber) {
+    return 2;
+  }
+  return 1;
+};
+
+//Keep score of each player, score=sum of numbers the player has generated so far
+var playerScore = 0;
+var player1Score = 0;
+var player2Score = 0;
+//create arrays to track each player's combined numbers for score checking
+var trackPlayer1Scores = [];
+var trackPlayer2Scores = [];
+
+//picking the winner based on the Cumulative Score of each player
+var pickHigherScorer = function () {
+  if (player1Score > player2Score) {
+    return 1;
+  }
+  return 2;
+};
 
 var main = function (input) {
   var myOutputValue = "hello world";
 
-  //Roll 2 dice and show the player values
+  if (currentGameMode == gameModeChooseMode) {
+    if (input == "low") {
+      currentGameMode = gameModeLowestWins;
+      return `You have chosen to play lowest combined number game mode. Click Submit to roll dice.`;
+    } else if (input == "high") {
+      currentGameMode = gameModeRollDice;
+      return `You have chosen to play highest combined number game mode. Click Submit to roll dice.`;
+    }
+    //if player enters neither 'low' nor 'high'
+    else
+      return `We don't recognise your input. Enter 'high' to play highest combined number game mode, or 'low'to play lowest combined number mode.`;
+  }
+  //Roll Dice game mode
+  else if (currentGameMode == gameModeRollDice) {
+    rolledNumbers = [rollDice(), rollDice()];
+    console.log(rolledNumbers);
 
-  if (gameMode === gameMode_Roll_Dice) {
-    var newDiceRolls = getDiceRolls();
-    //switch mode to choose dice order
-    gameMode = gameMode_Dice_Order;
-    return `Welcome player ${currentPlayer}.<br>You rolled Dice 1:${newDiceRolls[0]} and Dice 2: ${newDiceRolls[1]}.<br>Choose the order of the dice by entering 1 or 2 as the first numeral index.`;
-  } else if (gameMode === gameMode_Dice_Order) {
-    //validate the input. If first numeral indix is neither 1 nor 2, tell the user.
-    var chosenDiceNum = Number(input);
-    if (chosenDiceNum !== 1 && chosenDiceNum !== 2) {
-      return `Please choose 1 or 2 as the first numeral index for your dice rolls.`;
+    currentGameMode = gameModeChooseDice;
+
+    return `Welcome Player ${currentPlayer}.<br> You rolled ${rolledNumbers[0]} for Dice 1 and ${rolledNumbers[1]} for Dice 2. <br> Choose the order of the dice (enter 1 if Dice 1 comes first, or 2 if Dice 2 comes first).`;
+  }
+  //Choose Dice game mode
+  else if (currentGameMode == gameModeChooseDice) {
+    //order of dice
+    var diceOrder = Number(input);
+
+    if (diceOrder !== 1 && diceOrder !== 2) {
+      return `We do not recognise this dice number. Please enter 1 or 2.`;
     }
 
-    // Get player number for curr player.
-    var playerNum = getPlayerNumber(chosenDiceNum);
-    var playerNumResponse = `Player ${currentPlayer}, you chose Dice${chosenDiceNum} first. <br>Your number is ${playerNum}`;
+    var playerCombinedNumber = getPlayerCombinedNum(diceOrder);
 
-    //If currentPlayer is Player 1, change currPlayer to Player 2, switch mode to dice roll.
+    // add combined number to score
+    if (currentPlayer == 1) {
+      player1Score = player1Score + player1CombinedNumber;
+      trackPlayer1Scores.push(player1CombinedNumber);
+      console.log(trackPlayer1Scores);
+    } else if (currentPlayer == 2) {
+      player2Score = player2Score + player2CombinedNumber;
+      trackPlayer2Scores.push(player2CombinedNumber);
+      console.log(trackPlayer2Scores);
+    }
+
+    var outputMessage = `Player ${currentPlayer}, you chose Dice ${diceOrder} first. <br>Your number is ${playerCombinedNumber}.<br>Player 1 score: ${player1Score} | Player 2 score: ${player2Score}.`;
+
+    // if player 1,  switch to player2 and mode
     if (currentPlayer == 1) {
       currentPlayer = 2;
-      gameMode = gameMode_Roll_Dice;
-      //Return player number to Player 1, let Player 2 know it is their turn.
-      return `${playerNumResponse}<br>It is now Player 2's turn. Please Submit to roll Player 2's dice.`;
+      currentGameMode = gameModeRollDice;
+      return `${outputMessage} <br> It is now Player 2's turn.`;
     }
-    //Else if currentPlayer is Player 2, determine the winner and let the players who won.
-    var winningPlayer = determineWinner();
 
-    //Reset the game
+    // if player 2, announce winner and start new game
+    var winningPlayer = pickHigherScorer();
+
+    // reset game
     currentPlayer = 1;
-    gameMode = gameMode_Roll_Dice;
+    currentGameMode = gameModeChooseMode;
 
-    // Return the game end response
-    return `${playerNumResponse}<br>Player${winningPlayer} has won.<br>Player 1's number ${player1Num} | Player 2's number ${player2Num}<br><br>Please submit to play agian.`;
+    return `${outputMessage} <br> The winner is player ${winningPlayer}. <br>Player 1's number is ${player1CombinedNumber}.<br>Player 2's number is ${player2CombinedNumber}.<br>Please submit and play again.`;
   }
-  // If we reach this point, there is an error because game mode is not what we expect
-  return (myOutputValue = "An error occurred. Please refresh to start again.");
+
+  // Lowest Combined Score game mode
+  else if (currentGameMode == gameModeLowestWins) {
+    currentGameMode = gameModeRollDiceLow;
+
+    //Roll Dice game mode
+
+    rolledNumbers = [rollDice(), rollDice()];
+    console.log("lowrow " + rolledNumbers);
+
+    currentGameMode = gameModeChooseDiceLow;
+
+    return `Welcome Player ${currentPlayer}.<br> You rolled ${rolledNumbers[0]} for Dice 1 and ${rolledNumbers[1]} for Dice 2. <br> Choose the order of the dice (enter 1 if Dice 1 comes first, or 2 if Dice 2 comes first).`;
+  }
+
+  //Choose Dice game mode
+  else if (currentGameMode == gameModeChooseDiceLow) {
+    //order of dice
+    var diceOrder = Number(input);
+
+    if (diceOrder !== 1 && diceOrder !== 2) {
+      myOutputValue = `We do not recognise this dice number. Please enter 1 or 2.`;
+    }
+
+    var playerCombinedNumberLow = getPlayerCombinedNum(diceOrder);
+
+    // add combined number to score
+    if (currentPlayer == 1) {
+      player1Score = player1Score + player1CombinedNumber;
+      trackPlayer1Scores.push(player1CombinedNumber);
+      console.log(trackPlayer1Scores);
+    } else if (currentPlayer == 2) {
+      player2Score = player2Score + player2CombinedNumber;
+      trackPlayer2Scores.push(player2CombinedNumber);
+      console.log(trackPlayer2Scores);
+    }
+
+    var outputMessage2 = `Player ${currentPlayer}, you chose Dice ${diceOrder} first. <br>Your number is ${playerCombinedNumberLow}.<br>Player 1 score: ${player1Score} | Player 2 score: ${player2Score}.`;
+
+    // if player 1,  switch to player2 and roll dice mode
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      currentGameMode = gameModeLowestWins;
+      return `${outputMessage2} <br> It is now Player 2's turn.`;
+    }
+
+    // if player 2, announce winner and start new game
+    var winningPlayer = pickWinnerOfLowestWinsMode();
+
+    // reset game
+    currentPlayer = 1;
+    currentGameMode = gameModeChooseMode;
+
+    return `${outputMessage2} <br> The winner is player ${winningPlayer}. <br>Player 1's number is ${player1CombinedNumber}.<br>Player 2's number is ${player2CombinedNumber}.<br>Please submit and play again.`;
+  }
+
+  return myOutputValue;
 };
