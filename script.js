@@ -1,5 +1,5 @@
 // Project 2: Beat That!
-// Have not implemented variable number of players and knockout mode yet.
+// Have not implemented variable number of players and knockout mode.
 
 // ---players----
 var PLAYER1 = 1;
@@ -34,13 +34,10 @@ var LOWEST_NUMBER_MODE = "Lowest Number";
 var gameMode = NORMAL_MODE;
 var stdGameInstructions = `<br> Input number of dice (2 or more) you would like to play with. <br><br> For 2 dice, you can choose the order of dice. For 2 or more dice, the most ideal number will be auto-generated for you.`;
 
-// The game always starts with Player 1 in normal mode
+// The game always starts with Player 1 in normal mode.
 
 var main = function (input) {
   return basicGame(input);
-  // else if (gameMode == LOWEST_NUMBER_MODE) {
-  //   return lowestCombinedGame(input);
-  // }
 };
 
 // Basic game logic
@@ -76,9 +73,10 @@ var basicGame = function (input) {
       numDiceMessage = numDiceMessage + ` and choose the order of the dice`;
     }
 
+    // Input validation
     if (!(numDice > 1) || Number.isNaN(Number(input)) == true) {
       gameStage = INPUT_NUM_DICE_STAGE;
-      return `Please input a number more than 1.`;
+      return `Please input a number of dice that is more than 1.`;
     }
 
     return `${numDiceMessage}.`;
@@ -104,58 +102,6 @@ var basicGame = function (input) {
   }
 
   return myOutputValue;
-};
-
-// Higher number wins
-var generateWinner = function (player1Number, player2Number) {
-  var myOutputValue = "";
-  var player1Wins = `Player ${PLAYER1} wins!`;
-  var player2Wins = `Player ${PLAYER2} wins!`;
-  if (player1Number > player2Number) {
-    if (gameMode == NORMAL_MODE) {
-      myOutputValue = player1Wins;
-      console.log(myOutputValue);
-    } else if (gameMode == LOWEST_NUMBER_MODE) {
-      myOutputValue = player2Wins;
-    }
-  } else {
-    if (gameMode == NORMAL_MODE) {
-      myOutputValue = player2Wins;
-    } else if (gameMode == LOWEST_NUMBER_MODE) {
-      myOutputValue = player1Wins;
-    }
-  }
-
-  if (player1Number == player2Number) {
-    myOutputValue = `You draw! Try again!`;
-  }
-
-  hasGameCompleted = true;
-  return myOutputValue;
-};
-
-// Lists the 2 players and their scores in decreasing order; assumes winner according to normal rules
-var generateLeaderboard = function (player1Score, player2Score) {
-  if (player1Score >= player2Score) {
-    return `LEADERBOARD <br> Player 1: ${player1Score} <br> 
-    Player 2: ${player2Score}`;
-  } else {
-    return `LEADERBOARD <br> Player 2: ${player2Score} <br> 
-    Player 1: ${player1Score}`;
-  }
-};
-
-// Output number for player dependent on choice
-var generatePlayerCombinedNumber = function (input) {
-  var chosenOrder = Number(input);
-  // Concatenate dice rolls based on user choice
-  console.log(chosenOrder);
-  if (chosenOrder == 1) {
-    bestNumber = Number(`${Dice1}${Dice2}`);
-  } else {
-    bestNumber = Number(`${Dice2}${Dice1}`);
-  }
-  console.log(bestNumber);
 };
 
 // For 2 dice
@@ -189,8 +135,21 @@ var generateDiceRolls = function (numDice) {
   return `Player ${currentPlayer}: You have rolled ${currentArray} <br><br>`;
 };
 
+// Output number for player dependent on choice
+var generatePlayerCombinedNumber = function (input) {
+  var chosenOrder = Number(input);
+  // Concatenate dice rolls based on user choice
+  console.log(chosenOrder);
+  if (chosenOrder == 1) {
+    bestNumber = Number(`${Dice1}${Dice2}`);
+  } else {
+    bestNumber = Number(`${Dice2}${Dice1}`);
+  }
+  console.log(bestNumber);
+};
+
 // Don't really know what is happening here googled a way to autogenerate the best number
-// The while loop sorts the elements by descending order and then the join function concatenates to give the largest number?
+// The while loop sorts the elements by descending/ascending order and then the join function concatenates to give the largest number?
 // Reference link: https://www.youtube.com/watch?v=aNwQmrQoj7o
 var autoGenerateNumber = function (gameMode, currentArray) {
   var temp;
@@ -234,10 +193,43 @@ var autoGenerateNumber = function (gameMode, currentArray) {
     return bestNumber;
   }
 };
+// Higher number wins
+var generateWinner = function (player1Number, player2Number) {
+  var myOutputValue = "";
+  var player1Wins = `Player ${PLAYER1} wins!`;
+  var player2Wins = `Player ${PLAYER2} wins!`;
+  if (player1Number > player2Number) {
+    if (gameMode == NORMAL_MODE) {
+      myOutputValue = player1Wins;
+      console.log(myOutputValue);
+    } else if (gameMode == LOWEST_NUMBER_MODE) {
+      myOutputValue = player2Wins;
+    }
+  } else {
+    if (gameMode == NORMAL_MODE) {
+      myOutputValue = player2Wins;
+    } else if (gameMode == LOWEST_NUMBER_MODE) {
+      myOutputValue = player1Wins;
+    }
+  }
 
-var generateNextPlayer = function (currentPlayer) {
-  var nextPlayer = (currentPlayer % 2) + 1;
-  return nextPlayer;
+  if (player1Number == player2Number) {
+    myOutputValue = `You draw! Try again!`;
+  }
+
+  hasGameCompleted = true;
+  return myOutputValue;
+};
+
+// Lists the 2 players and their scores in decreasing order; assumes winner according to normal rules
+var generateLeaderboard = function (player1Score, player2Score) {
+  if (player1Score >= player2Score) {
+    return `LEADERBOARD <br> Player 1: ${player1Score} <br> 
+    Player 2: ${player2Score}`;
+  } else {
+    return `LEADERBOARD <br> Player 2: ${player2Score} <br> 
+    Player 1: ${player1Score}`;
+  }
 };
 
 // Ouput results
@@ -269,6 +261,11 @@ var generateResults = function (currentPlayer) {
   }
 
   return myOutputValue;
+};
+
+var generateNextPlayer = function (currentPlayer) {
+  var nextPlayer = (currentPlayer % 2) + 1;
+  return nextPlayer;
 };
 
 var resetArray = function () {
