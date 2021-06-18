@@ -1,5 +1,6 @@
 // The different game modes or turns
 var GAME_MODE_CHOOSE_HIGHEST_OR_LOWEST = "CHOOSE HIGHEST_OR_LOWEST";
+var GAME_MODE_CHOOSE_NUMBER_OF_DICE = "CHOOSE_NUMBER_OF_DICE";
 var GAME_MODE_PLAYER_ONE_ROLL = "PLAYER_ONE_ROLL";
 var GAME_MODE_PLAYER_ONE_CHOOSE = "PLAYER_ONE_CHOOSE";
 var GAME_MODE_PLAYER_TWO_ROLL = "PLAYER_TWO_ROLL";
@@ -19,9 +20,12 @@ var player2DiceRolls = [];
 var player2Number = 0;
 var player2NumberList = [];
 var player2Score = 0;
+var numberOfDice = 0;
+var numberOfDices = [];
 var diceIndex = 0;
 var inputIndex = 0;
 var numberIndex = 0;
+var numberOfDiceIndex = 0;
 
 // Dice Roll function
 var rollDice = function () {
@@ -44,9 +48,25 @@ var chooseHighestModeOrLowestMode = function () {
   }
 
   outputText =
-    `Welcome Player 1 and Player 2. You have chosen the ` +
+    `Welcome Player 1 and Player 2. <br> You have chosen the ` +
     outputText +
-    ` combined number mode. <br> <br> Player 1, press 'Submit' to roll 2 dices.`;
+    ` combined number mode. <br> Please enter the number of dice you would like to play with.`;
+
+  // Move the game forward
+  gameMode = GAME_MODE_CHOOSE_NUMBER_OF_DICE;
+
+  return outputText;
+};
+
+var chooseNumberOfDice = function () {
+  // User input validation
+  if (!Number(userInput)) {
+    return `Please enter a valid number of dice to play with.`;
+  }
+
+  numberOfDices.push(userInput);
+
+  outputText = `Player 1 and Player 2, You have chosen to play with ${numberOfDices[numberOfDiceIndex]}. <br> <br> Player 1, Press 'Submit' to roll the dices.`;
 
   // Move the game forward
   gameMode = GAME_MODE_PLAYER_ONE_ROLL;
@@ -57,15 +77,16 @@ var chooseHighestModeOrLowestMode = function () {
 // Player 1's turn to roll dice
 var playerOneRoll = function () {
   // Roll the dice
-  var dice1 = rollDice();
-  var dice2 = rollDice();
-
-  // Add dice results to arrays
-  player1DiceRolls.push(dice1);
-  player1DiceRolls.push(dice2);
+  var counter = 0;
+  player1DiceRolls = [];
+  while (counter < numberOfDices[numberOfDiceIndex]) {
+    // Add dice result to an array
+    player1DiceRolls.push(rollDice());
+    counter += 1;
+  }
 
   // Generate output text
-  var outputText = `Welcome Player 1. You are playing the ${userInputs[inputIndex]} combined number mode. <br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br> The computer will now choose the order of the dice for you. <br> Press Submit.`;
+  var outputText = `Welcome Player 1. You are playing the ${userInputs[inputIndex]} combined number mode, and you chose to play with ${numberOfDices[numberOfDiceIndex]} dice. <br> You rolled ${player1DiceRolls}. <br> The computer will now choose the order of the dice for you. <br> Press Submit.`;
 
   // Move the game forward
   gameMode = GAME_MODE_PLAYER_ONE_CHOOSE;
@@ -77,47 +98,37 @@ var playerOneRoll = function () {
 var playerOneChoose = function () {
   // Computer auto-generates number for user depending on input
   if (userInputs[inputIndex] == "highest") {
-    if (player1DiceRolls[diceIndex] > player1DiceRolls[diceIndex + 1]) {
-      player1Number = Number(
-        String(player1DiceRolls[diceIndex]) +
-          String(player1DiceRolls[diceIndex + 1])
-      );
-    } else {
-      player1Number = Number(
-        String(player1DiceRolls[diceIndex + 1]) +
-          String(player1DiceRolls[diceIndex])
-      );
+    // Sort the dice rolls's values in decreasing order
+    player1DiceRolls.sort(function (a, b) {
+      return b - a;
+    });
+    var counter = 0;
+    while (counter < numberOfDices[numberOfDiceIndex]) {
+      player1Number = player1Number + String(player1DiceRolls[counter]);
+      counter += 1;
     }
   }
 
   if (userInputs[inputIndex] == "lowest") {
-    if (player1DiceRolls[diceIndex] < player1DiceRolls[diceIndex + 1]) {
-      player1Number = Number(
-        String(player1DiceRolls[diceIndex]) +
-          String(player1DiceRolls[diceIndex + 1])
-      );
-    } else {
-      player1Number = Number(
-        String(player1DiceRolls[diceIndex + 1]) +
-          String(player1DiceRolls[diceIndex])
-      );
+    // Sort the dice rolls's values in ascending order
+    player1DiceRolls.sort(function (a, b) {
+      return a - b;
+    });
+    var counter = 0;
+    while (counter < numberOfDices[numberOfDiceIndex]) {
+      player1Number = player1Number + String(player1DiceRolls[counter]);
+      counter += 1;
     }
   }
 
   // Add number result to array
-  player1NumberList.push(player1Number);
+  player1NumberList.push(Number(player1Number));
 
   // Generate score
   player1Score = generateScore(player1NumberList);
 
   // Generate output text
-  var outputText = `Player 1, the computer has auto-generated the ${
-    userInputs[inputIndex]
-  } combined number for you, which is ${
-    player1NumberList[numberIndex]
-  } based on the dice rolls ${player1DiceRolls[diceIndex]} and ${
-    player1DiceRolls[diceIndex + 1]
-  }. <br> Your number(s) generated so far: ${player1NumberList}. <br> Your total score is ${player1Score}. <br> It is now Player 2's turn.`;
+  var outputText = `Player 1, the computer has auto-generated the ${userInputs[inputIndex]} combined number for you, which is ${player1NumberList[numberIndex]} based on the dice rolls ${player1DiceRolls}. <br> Your number(s) generated so far: ${player1NumberList}. <br> Your total score is ${player1Score}. <br> It is now Player 2's turn.`;
 
   // Move the game forward
   gameMode = GAME_MODE_PLAYER_TWO_ROLL;
@@ -128,15 +139,16 @@ var playerOneChoose = function () {
 // Player 2's turn to roll dice
 var playerTwoRoll = function () {
   // Roll the dice
-  var dice1 = rollDice();
-  var dice2 = rollDice();
-
-  // Add dice results to arrays
-  player2DiceRolls.push(dice1);
-  player2DiceRolls.push(dice2);
+  var counter = 0;
+  player2DiceRolls = [];
+  while (counter < numberOfDices[numberOfDiceIndex]) {
+    // Add dice result to an array
+    player2DiceRolls.push(rollDice());
+    counter += 1;
+  }
 
   // Generate output text
-  var outputText = `Welcome Player 2. You are playing ${userInputs[inputIndex]} combined number mode. <br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br> The computer will now choose the order of the dice for you. <br> Press Submit.`;
+  var outputText = `Welcome Player 2. You are playing the ${userInputs[inputIndex]} combined number mode, and you chose to play with ${numberOfDices[numberOfDiceIndex]} dice. <br> You rolled ${player2DiceRolls}. <br> The computer will now choose the order of the dice for you. <br> Press Submit.`;
 
   // Move the game forward
   gameMode = GAME_MODE_PLAYER_TWO_CHOOSE;
@@ -146,48 +158,42 @@ var playerTwoRoll = function () {
 
 // Player 2's turn to choose dice order
 var playerTwoChoose = function () {
+  player2Number = 0;
+
   // Computer auto-generates number for user depending on input
   if (userInputs[inputIndex] == "highest") {
-    if (player2DiceRolls[diceIndex] > player2DiceRolls[diceIndex + 1]) {
-      player2Number = Number(
-        String(player2DiceRolls[diceIndex]) +
-          String(player2DiceRolls[diceIndex + 1])
-      );
-    } else {
-      player2Number = Number(
-        String(player2DiceRolls[diceIndex + 1]) +
-          String(player2DiceRolls[diceIndex])
-      );
+    // Sort the dice rolls's values in decreasing order
+    player2DiceRolls.sort(function (a, b) {
+      return b - a;
+    });
+    var counter = 0;
+    while (counter < numberOfDices[numberOfDiceIndex]) {
+      player2Number = player2Number + String(player2DiceRolls[counter]);
+      counter += 1;
     }
   }
 
   if (userInputs[inputIndex] == "lowest") {
-    if (player2DiceRolls[diceIndex] < player2DiceRolls[diceIndex + 1]) {
-      player2Number = Number(
-        String(player2DiceRolls[diceIndex]) +
-          String(player2DiceRolls[diceIndex + 1])
-      );
-    } else {
-      player2Number = Number(
-        String(player2DiceRolls[diceIndex + 1]) +
-          String(player2DiceRolls[diceIndex])
-      );
+    // Sort the dice rolls's values in ascending order
+    player2DiceRolls.sort(function (a, b) {
+      return a - b;
+    });
+    var counter = 0;
+    while (counter < numberOfDices[numberOfDiceIndex]) {
+      player2Number = player2Number + String(player2DiceRolls[counter]);
+      counter += 1;
     }
   }
 
   // Add number result to array
-  player2NumberList.push(player2Number);
+  player2NumberList.push(Number(player2Number));
 
   // Generate score
   player2Score = generateScore(player2NumberList);
 
   // Generate output text
   var outputWord = `Player 2, the computer has auto-generated the
-    ${userInputs[inputIndex]} combined number for you, which is ${
-    player2NumberList[numberIndex]
-  } based on the dice rolls ${player2DiceRolls[diceIndex]} and ${
-    player2DiceRolls[diceIndex + 1]
-  }. <br><br>`;
+    ${userInputs[inputIndex]} combined number for you, which is ${player2NumberList[numberIndex]} based on the dice rolls ${player2DiceRolls}. <br><br>`;
 
   if (userInputs[inputIndex] == "highest") {
     var winnerText = decideWinner();
@@ -215,6 +221,11 @@ var playerTwoChoose = function () {
   diceIndex += 2;
   inputIndex += 1;
   numberIndex += 1;
+  numberOfDiceIndex += 1;
+
+  // Redefine values of number to 0
+  player1Number = 0;
+  player2Number = 0;
 
   return outputText;
 };
@@ -264,6 +275,12 @@ var main = function (input) {
   // Early return for gameMode = "choose highest or lowest"
   if (gameMode == GAME_MODE_CHOOSE_HIGHEST_OR_LOWEST) {
     myOutputValue = chooseHighestModeOrLowestMode();
+    return myOutputValue;
+  }
+
+  // Early return for gameMode = "choose number of dice"
+  if (gameMode == GAME_MODE_CHOOSE_NUMBER_OF_DICE) {
+    myOutputValue = chooseNumberOfDice();
     return myOutputValue;
   }
 
