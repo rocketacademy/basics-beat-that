@@ -1,6 +1,15 @@
+/* Note: This implementation incldues the following features:
+1. Regular beat that game (i.e. largest num wins)
+2. Score
+3. Leaderboard
+4. Lowest Combined Number Mode
+5. Auto-Generate Combined Number
+*/
+/*====================================
+==============GLOBAL VARIABLES========
+======================================*/
 // Game modes
 var GAME_MODE_DICE_ROLL = 'GAME_MODE_DICE_ROLL';
-var GAME_MODE_CHOOSE_DICE_ORDER = 'GAME_MODE_CHOOSE_DICE_ORDER';
 var GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY =
   'GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY';
 var REGULAR = 'regular';
@@ -23,15 +32,15 @@ var player2Dice = [];
 var player1Num;
 var player2Num;
 
-// Keep track of scores
-var player1Score = 0;
-var player2Score = 0;
-
+// Use player profiles to keep track of each player's details
 var playerProfiles = [
   {id: 1, score: 0},
   {id: 2, score: 0},
 ];
 
+/*====================================
+==============HELPER FUNCTIONS========
+======================================*/
 /**
  * Return a random number from 1 to 6
  */
@@ -157,44 +166,21 @@ updateCurrentRoundRoll = function (playerNum) {
  * @param {number} firstNumeralIndex
  */
 
-var getPlayerNumber = function (firstNumeralIndex) {
-  // Get the current player's dice array.
-  // We use the ternary operator on the following line for more concise syntax.
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
-  // The example below is equivalent to:
-  // var diceArray;
-  // if (currPlayer === 1) { diceArray = player1Dice; } else { diceArray = player2Dice; }
-  var diceArray = currPlayer === 1 ? player1Dice : player2Dice;
-  var playerNum;
-  // If the chosen first numeral index is 1, create player number starting with 1st dice
-  if (firstNumeralIndex === 1) {
-    playerNum = concatenate2Numbers(diceArray[0], diceArray[1]);
-  }
-  // Otherwise, create player number starting with 2nd dice
-  else {
-    playerNum = concatenate2Numbers(diceArray[1], diceArray[0]);
-  }
-
-  // Store player num in the relevant global player num variable
-  if (currPlayer === 1) {
-    player1Num = playerNum;
-  } else {
-    player2Num = playerNum;
-  }
-
-  // Return generated player num to parent function
-  return playerNum;
-};
-
 /**
  * Compute the winner between Player 1 and Player 2.
  * Return either 1 or 2 to represent the winning player.
  * In the event of a tie, Player 2 wins.
  */
 var determineWinner = function () {
-  if (player1Num > player2Num) {
+  // if in regular mode and player 1's num is bigger, player 1 wins
+  if (mode == REGULAR && player1Num > player2Num) {
     return 1;
   }
+  // Else if in lowest combined number mode and player 1 has a smaller number, player 1 wins
+  else if (mode == LOWEST_COMBINED_NUMBER && player1Num < player2Num) {
+    return 1;
+  }
+  // in all other scenarios (even if draw), return that player 2 has won
   return 2;
 };
 /**
@@ -273,11 +259,17 @@ var createLeaderBoardOutput = function () {
   }
 };
 
+/**
+ * Reset the game by re-initialising relevant variables
+ */
 var resetGame = function () {
   currPlayer = 1;
   gameMode = GAME_MODE_DICE_ROLL;
 };
 
+/*====================================
+==============MAIN====================
+======================================*/
 /**
  * Play Beat That as per SWE101 game rules
  * https://swe101.rocketacademy.co/projects/project-2-dice
@@ -313,16 +305,23 @@ var main = function (input) {
     // Switch mode to choose dice order
     gameMode = GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY;
     // Return the dice roll values to that player
-    return `Welcome Player ${currPlayer}. <br>
-      You rolled Dice 1: ${newDiceRolls[0]} and Dice 2: ${newDiceRolls[1]} <br>
-      Click submit to see your number`;
+    return (
+      'Welcome Player ' +
+      currPlayer +
+      '. <br>You rolled Dice 1: ' +
+      newDiceRolls[0] +
+      ' and Dice 2: ' +
+      newDiceRolls[1] +
+      '<br>    Click submit to see your number'
+    );
   }
 
   //Automatically generate the largest possible number based on a player's dice roll
   if (gameMode == GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY) {
     // Get player number for curr player
     var playerNum = getPlayerNumberAutomatically();
-    var playerNumResponse = `Player ${currPlayer}, your number is ${playerNum}`;
+    var playerNumResponse =
+      'Player ' + currPlayer + ', your number is ' + playerNum;
 
     // Update player's current round number
     updateCurrentRoundRoll(playerNum);
@@ -335,11 +334,13 @@ var main = function (input) {
       currPlayer = 2;
       gameMode = GAME_MODE_DICE_ROLL;
       // Return player number to Player 1, let Player 2 know it is their turn
-      return `${playerNumResponse} <br>
-        It is now Player 2's turn. Press Submit to roll Player 2's dice.`;
+      return (
+        playerNumResponse +
+        " <br> It is now Player 2's turn. Press Submit to roll Player 2's dice."
+      );
     }
     // // Else if currPlayer is Player 2, determine the winner and let the players know who won.
-    // var winningPlayer = determineWinner();
+    var winningPlayer = determineWinner();
 
     // Reset the game
     resetGame();
@@ -348,55 +349,19 @@ var main = function (input) {
     var leaderBoardOutput = createLeaderBoardOutput();
 
     // Return the game end response
-    return `${playerNumResponse} <br><br>
-      Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br> <br>
-     ${leaderBoardOutput}
-      <br><br>
-      Press Submit to start the next round.`;
+    return (
+      playerNumResponse +
+      ' <br><br> Player ' +
+      winningPlayer +
+      " won this round.<br><br> Player 1's number: " +
+      player1Num +
+      " | Player 2's number: " +
+      player2Num +
+      ' <br> <br>' +
+      leaderBoardOutput +
+      '<br><br>  Press Submit to start the next round.'
+    );
   }
-  // ----------------------------------------------
-  // ------------------BASE-------------------------
-  // // Create a number based on the player's chosen dice order, and show it to the player
-  // if (gameMode === GAME_MODE_CHOOSE_DICE_ORDER) {
-  //   // Validate the input. If first numeral index is neither 1 nor 2, tell the user.
-  //   var firstNumeralIndex = Number(input);
-  //   if (firstNumeralIndex !== 1 && firstNumeralIndex !== 2) {
-  //     return 'Please choose 1 or 2 as the first numeral index for your dice rolls';
-  //   }
-
-  //   // Get player number for curr player
-  //   var playerNum = getPlayerNumber(firstNumeralIndex);
-  //   var playerNumResponse = `Player ${currPlayer}, You chose Dice ${firstNumeralIndex} first. <br>
-  //   Your number is ${playerNum}.`;
-
-  //   // add the playerNum to player's running score
-  //   addNumToRunningScore(playerNum);
-
-  //   // If currPlayer is Player 1, change currPlayer to Player 2, switch mode to dice roll
-  //   if (currPlayer === 1) {
-  //     currPlayer = 2;
-  //     gameMode = GAME_MODE_DICE_ROLL;
-  //     // Return player number to Player 1, let Player 2 know it is their turn
-  //     return `${playerNumResponse} <br>
-  //       It is now Player 2's turn. Press Submit to roll Player 2's dice.`;
-  //   }
-  //   // Else if currPlayer is Player 2, determine the winner and let the players know who won.
-  //   var winningPlayer = determineWinner();
-
-  //   // Reset the game
-  //   currPlayer = 1;
-  //   gameMode = GAME_MODE_DICE_ROLL;
-
-  //   var leaderBoardOutput = displayLeaderBoardInAscendingOrder();
-
-  //   // Return the game end response
-  //   return `${playerNumResponse} <br><br>
-  //     Player ${winningPlayer} won this round. <br>
-  //     Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br> <br>
-  //    ${leaderBoardOutput}
-  //     <br><br>
-  //     Press Submit to start the next round.`;
-  // }
 
   // If we reach this point, there is an error because game mode is not what we expect
   return 'An error occurred. Please refresh to start again.';
