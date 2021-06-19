@@ -32,19 +32,22 @@ var main = function (input) {
       dice1 +
       " for Dice 1 and " +
       dice2 +
-      " for Dice 2";
+      " for Dice 2" +
+      "now enter 1 or 2 to decide if you want to have the dice1/dice2 as your first digit";
   } else {
     //Dice order mode
     diceOrder = input;
+
     if (diceOrder == 1) {
       console.log("nothing changed");
+      return "Your number combination is:" + dice1 + dice2;
     } else {
       dice1 = player2Dice[0];
       dice2 = player2Dice[1];
-      player1Dice = player1Dice[(dice2, dice1)];
+      //player1Dice = player1Dice[(dice2, dice1)];
+      return "Your number combination is:" + dice2 + dice1;
     }
   }
-
   return myOutputValue;
 };
 
@@ -60,12 +63,3 @@ var rollDice = function () {
 //"Choose the order of the dice."
 
 //after both players have rolled and chosen dice order, the player with the higher combined number wins.
-
-var chooseOrder = function (userOrder, dice1, dice2) {
-  if (userOrder == 1) {
-    result = [dice1, dice2];
-  } else {
-    result = [dice2, dice1];
-  }
-  return result;
-};
