@@ -6,7 +6,7 @@ var playerOneScore = 0;
 var playerTwoScore = 0;
 var currentplayer = 0;
 var scoreBoard = 0;
-var gameMode = "normal";
+var gameMode = "";
 var gameModechosen = false;
 var NumberOfPlayersChosen = false;
 var numberOfPlayers = 0;
@@ -99,20 +99,31 @@ var main = function (input) {
       //compare if second player is higher than first player
       if (list[1].score > list[0].score) {
         playerNum++;
-        var output = `You are ${list[1].player}.<br><br>${list[1].player} is the winner. <br> ${playeraction}. <br><br> ${list[1].player} score is ${list[1].score}<br>${list[0].player} score is ${list[0].score}. <br> It is player ${playerNum}'s turn.`;
+        if (playerNum > numberOfPlayers) {
+          var insert = "<br>The game has ended.";
+        } else {
+          var insert = `<br> It is player ${playerNum}'s turn.`;
+        }
+
+        var output = `You are ${list[1].player}.<br><br>${list[1].player} is the winner. <br> ${playeraction}. <br><br> ${list[1].player} score is ${list[1].score}<br>${list[0].player} score is ${list[0].score}.`;
         list[0] = list[1];
         list.pop(scoreBoard);
         console.log(list);
 
-        return output;
+        return output + insert;
       }
       //compare if first player is higher than second player.
       if (list[0].score > list[1].score) {
         playerNum++;
-        var output = `You are ${list[1].player}.<br><br> ${list[0].player} is the winner. <br> ${playeraction}. <br><br> ${list[0].player} score is ${list[0].score}<br>${list[1].player} score is ${list[1].score}<br> It is player ${playerNum}'s turn.`;
+        if (playerNum > numberOfPlayers) {
+          var insert = "<br>The game has ended.";
+        } else {
+          var insert = `<br> It is player ${playerNum}'s turn.`;
+        }
+        var output = `You are ${list[1].player}.<br><br> ${list[0].player} is the winner. <br> ${playeraction}. <br><br> ${list[0].player} score is ${list[0].score}<br>${list[1].player} score is ${list[1].score}.`;
         list.pop(scoreBoard);
 
-        return output;
+        return output + insert;
       }
 
       if (playerNum - 1 == numberOfPlayers) {
