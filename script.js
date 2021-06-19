@@ -29,15 +29,9 @@ var main = function (input) {
     mode = "part1";
   } else if (mode == "part1") {
     myOutputValue = part1();
-    mode = "choose1";
-  } else if (mode == "choose1") {
-    myOutputValue = choose1(input);
     mode = "part2";
   } else if (mode == "part2") {
     myOutputValue = part2();
-    mode = "choose2";
-  } else if (mode == "choose2") {
-    myOutputValue = choose2(input);
     mode = "outcome";
   } else if (mode == "outcome") {
     if (gamemode == "Normal") {
@@ -72,51 +66,45 @@ var gamemodechosen = function (input) {
 var part1 = function () {
   user1dice1 = rollDice();
   user1dice2 = rollDice();
-
-  return `User 1, your numbers are ${user1dice1} and ${user1dice2}. <br>Please choose the order of the dice. <br>Type in either 1 for ${user1dice1}${user1dice2}, or 2 for ${user1dice2}${user1dice1}.`;
-};
-
-/// get user1 to choose which order should the numbers be in.
-var choose1 = function (input) {
-  if (input == "1") {
-    user1Number = user1dice1 * 10 + user1dice2;
-  }
-  if (input == "2") {
-    user1Number = user1dice2 * 10 + user1dice1;
-  }
-  var message1 = `Thank you, User 1. <br>Your number is ${user1Number}. <br>User 2, please click 'submit'.`;
-
-  if (!input == "2" || !input == "1") {
-    message1 = `Please type in either 1 or 2.`;
+  if (gamemode == "Normal") {
+    if (user1dice1 > user1dice2) {
+      user1Number = user1dice1 * 10 + user1dice2;
+    } else if (user1dice2 >= user1dice1) {
+      user1Number = user1dice2 * 10 + user1dice1;
+    }
+  } else {
+    if (user1dice1 > user1dice2) {
+      user1Number = user1dice2 * 10 + user1dice1;
+    } else if (user1dice2 >= user1dice1) {
+      user1Number = user1dice1 * 10 + user1dice2;
+    }
   }
   user1SCORE = user1SCORE + user1Number;
   console.log(user1SCORE);
-  return message1;
+
+  return `User 1, your numbers are ${user1dice1} and ${user1dice2}. <br>Please choose the order of the dice. <br>Your number is ${user1Number}`;
 };
 
 ///roll the dice for user2's two numbers
 var part2 = function () {
   user2dice1 = rollDice();
   user2dice2 = rollDice();
-
-  return `User 2, your numbers are ${user2dice1} and ${user2dice2}. <br> Please choose the order of the dice. <br>Type in either 1 for ${user2dice1}${user2dice2}, or 2 for ${user2dice2}${user2dice1}.`;
-};
-
-/// get user2 to choose which order should the numbers be in.
-var choose2 = function (input) {
-  if (input == "1") {
-    user2Number = user2dice1 * 10 + user2dice2;
-  }
-  if (input == "2") {
-    user2Number = user2dice2 * 10 + user2dice1;
-  }
-  var message2 = `Thank you, User 2. <br>Your number is ${user2Number}. <br>Please click 'submit'.`;
-  if (!input == "2" || !input == "1") {
-    message2 = `Please type in either 1 or 2.`;
+  if (gamemode == "Normal") {
+    if (user2dice1 > user2dice2) {
+      user2Number = user2dice1 * 10 + user2dice2;
+    } else if (user2dice2 >= user2dice1) {
+      user2Number = user2dice2 * 10 + user2dice1;
+    }
+  } else {
+    if (user2dice1 > user2dice2) {
+      user2Number = user2dice2 * 10 + user2dice1;
+    } else if (user2dice1 >= user2dice1) {
+      user2Number = user2dice1 * 10 + user2dice1;
+    }
   }
   user2SCORE = user2SCORE + user2Number;
   console.log(user2SCORE);
-  return message2;
+  return `User 2, your numbers are ${user2dice1} and ${user2dice2}. <br> Your number is ${user2Number}.`;
 };
 
 ///get the leaderboard for the normal mode.
