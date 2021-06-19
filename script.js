@@ -14,57 +14,55 @@ var main = function (input) {
   if (input == `instructions`) {
     return instruction();
   }
+  if (input == `computer` || input == `player`) {
+    whoPlays = input;
+    return `Your player has been set to ${input}.Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
+  }
   if (input == `highest value wins` || input == `lowest value wins`) {
     winCondition = input;
     return `Your winning criteria has been set to ${input}.Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
   }
   if (mode == `instructions`) {
-    mode = `play`;
+    mode = `roll dice`;
     return instruction();
   }
-
   if (input == `player number` || input == `dice number`) {
     mode = input;
     return `Your mode has been set to ${input}. Please input the ${input} you want`;
   }
   if (mode == `player number`) {
     numberOfPlayer = input;
-    mode = `play`;
     return `The number of players have been set to ${numberOfPlayer}. Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
   }
   if (mode == `dice number`) {
     diceNumber = input;
-    mode = `play`;
     return `The number of dice have been set to ${diceNumber}. Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
   }
   console.log(1);
-  if (mode == `play`) {
-    while (playerNumber <= numberOfPlayer) {
+  while (playerNumber <= numberOfPlayer) {
+    console.log(2);
+    if (mode == `roll dice`) {
+      console.log(3);
+      while (currentDice <= diceNumber) {
+        indivisualDiceRoll = diceRoll();
+        allDiceRoll.push(indivisualDiceRoll);
+        console.log(4);
+        currentDice = currentDice + 1;
+      }
+      console.log(5);
+      mode = `select order`;
+      myOutputValue = diceRollMessage(playerNumber);
+      allDiceRoll = [];
+      currentDice = 1;
+      return myOutputValue;
+    }
+    if (mode == `select order`) {
+      console.log(diceNumber, allDiceRoll);
+      allValues.push(Number(input));
+      console.log(allValues);
+      myOutputValue = selectOrderMessage(playerNumber, input);
       mode = `roll dice`;
-      console.log(2);
-      if (mode == `roll dice`) {
-        console.log(3);
-        while (currentDice <= diceNumber) {
-          indivisualDiceRoll = diceRoll();
-          allDiceRoll.push(indivisualDiceRoll);
-          console.log(4);
-          currentDice = currentDice + 1;
-        }
-        console.log(5);
-        mode = `select order`;
-        myOutputValue = diceRollMessage(playerNumber);
-        allDiceRoll = [];
-        currentDice = 1;
-        return myOutputValue;
-      }
-      if (mode == `select order`) {
-        console.log(diceNumber, allDiceRoll);
-        allValues.push(Number(input));
-        console.log(allValues);
-        myOutputValue = selectOrderMessage(playerNumber, input);
-        mode = `roll dice`;
-        playerNumber = playerNumber + 1;
-      }
+      playerNumber = playerNumber + 1;
     }
   }
   if (winCondition == `highest value wins`) {
@@ -77,10 +75,10 @@ var main = function (input) {
       locationOfLowestValue(allValues) + 1
     } with a value of ${findLowestValueInArray(allValues)}`;
   }
-  playerNumber = 1;
   allValues = [];
-  console.log(locationOfHighestValue(allValues));
+  playerNumber = 1;
   return myOutputValue;
+  console.log(locationOfHighestValue(allValues));
 };
 //dice roll function
 var diceRoll = function () {
@@ -101,11 +99,15 @@ selectOrderMessage = function (playerNumber, input) {
   return message;
 };
 //instructions function
+// instruction = function () {
+//   var message = ` By default, the number of players and number of dice that will be rolled has been set to 2.<br>The rules also follow the standard beat that. <br>If you would like to change any of these, please follow the instructions below.(if the changes made are successful, a message will appear)
+//     <br>To change the number of players: Type 'player number' and press sumbit. Next input the number of players you want before pressing submit again.
+//     <br>To change the number of dices rolled: Type 'dice number' and press sumbit. Next input the number of dice you want before pressing submit again.
+//     <br> To change the mode: Enter either 'highest value wins' or 'lowest value wins'
+//   <br>To select the player/computer to be the one selecting the combination of numbers: Type 'computer' or 'player'`;
 instruction = function () {
-  var message = ` By default, the number of players and number of dice that will be rolled has been set to 2.<br>The rules also follow the standard beat that. <br>If you would like to change any of these, please follow the instructions below.(if the changes made are successful, a message will appear)
-    <br>To change the number of players: Type 'player number' and press sumbit. Next input the number of players you want before pressing submit again. 
-    <br>To change the number of dices rolled: Type 'dice number' and press sumbit. Next input the number of dice you want before pressing submit again.
-    <br> To change the mode: Enter either 'highest value wins' or 'lowest value wins'`;
+  var message = ` .<br>The rules follow the standard beat that. 
+    <br> If you would like to change the mode: Enter either 'highest value wins' or 'lowest value wins'`;
 
   return message;
 };
