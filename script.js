@@ -1,3 +1,12 @@
+/* Note: This implementation incldues the following features:
+1. Regular beat that game (i.e. largest num wins) 
+2. Auto-Generate Combined Number
+3. Variable Number of Dice
+We've removed Lowest Combined Number to reduce bloat, making the code more legible. However, please feel free to try to implement all the features together on your own
+*/
+/*====================================
+==============GLOBAL VARIABLES========
+======================================*/
 // Game modes
 var GAME_MODE_CHOOSE_NUM_DICE = 'GAME_MODE_CHOOSE_NUM_DICE';
 var GAME_MODE_DICE_ROLL = 'GAME_MODE_DICE_ROLL';
@@ -18,15 +27,15 @@ var currPlayer = 1;
 var player1Dice = [];
 var player2Dice = [];
 
-// Keep track of each player's chosen numbers
-var player1Num;
-var player2Num;
-
+// Keep track of each player's details
 var playerProfiles = [
-  {id: 1, score: 0},
-  {id: 2, score: 0},
+  {id: 1, diceNum: 0, score: 0},
+  {id: 2, diceNum: 0, score: 0},
 ];
 
+/*====================================
+==============HELPER FUNCTIONS========
+======================================*/
 /**
  * Return a random number from 1 to 6
  */
@@ -121,27 +130,14 @@ var getPlayerNumberAutomatically = function () {
       playerNum = concatenate2Numbers(playerNum, largestNum);
     }
   }
-  // Update player1Num or player2Num to reflect the current round's score
-  if (currPlayer == 1) {
-    player1Num = playerNum;
+  // Update player score accordingly
+  if (currPlayer == playerProfiles[0].id) {
+    playerProfiles[0].diceNum = playerNum;
   } else {
-    player2Num = playerNum;
+    playerProfiles[1].diceNum = playerNum;
   }
   // Return generated player num to parent function
   return playerNum;
-};
-
-/**
- * Update the global variable that tracks  players' current round number
- * @param {number} firstNumeralIndex
- */
-updateCurrentRoundRoll = function (playerNum) {
-  // Store player num in the relevant global player num variable
-  if (currPlayer == 1) {
-    player1Num = playerNum;
-  } else {
-    player2Num = playerNum;
-  }
 };
 
 /**
@@ -150,10 +146,11 @@ updateCurrentRoundRoll = function (playerNum) {
  * In the event of a tie, Player 2 wins.
  */
 var determineWinner = function () {
-  if (player1Num > player2Num) {
-    return 1;
+  // if the first player's diceNum is larger than second player's, return his id
+  if (playerProfiles[0].diceNum > playerProfiles[1].diceNum) {
+    return playerProfiles[0].id;
   }
-  return 2;
+  return playerProfiles[1].id;
 };
 /**
  * Incr the winner's points by adding previus round's points
@@ -213,9 +210,8 @@ var resetGame = function () {
  * @param {Array} diceRollsArr An array of the current user's dice rolls
  */
 var createDiceRollInfoMsg = function (diceRollsArr) {
-  console.log(`diceRollsArr is:`);
-  console.log(diceRollsArr);
-  var outputMsg = `Welcome Player ${currPlayer}. <br> Your dice rolls are: `;
+  var outputMsg =
+    'Welcome Player ' + currPlayer + '. <br> Your dice rolls are: ';
 
   for (var i = 0; i < diceRollsArr.length; i += 1) {
     outputMsg += '<br> Dice ' + (i + 1) + ': ' + diceRollsArr[i];
@@ -223,12 +219,14 @@ var createDiceRollInfoMsg = function (diceRollsArr) {
   return outputMsg;
 };
 
+/*====================================
+==============MAIN====================
+======================================*/
 /**
  * Play Beat with variable number of players and auto-choosing the largest number from the die rolled.
  * https://swe101.rocketacademy.co/projects/project-2-dice
  * @param {string} input
  */
-
 var main = function (input) {
   if (gameMode == GAME_MODE_CHOOSE_NUM_DICE) {
     // validate that user has provided an an integer larger than 0
@@ -254,14 +252,10 @@ var main = function (input) {
     // Switch mode to choose dice order
     gameMode = GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY;
     // Return the dice roll values to that player
-    console.log(`newDiceRolls is;`);
-    console.log(newDiceRolls);
+
     var diceRollInfo = createDiceRollInfoMsg(newDiceRolls);
 
     return diceRollInfo;
-    // return `Welcome Player ${currPlayer}. <br>
-    //   You rolled Dice 1: ${newDiceRolls[0]} and Dice 2: ${newDiceRolls[1]} <br>
-    //   Choose the order of the dice by entering 1 or 2 as the first numeral index.`;
   }
 
   // Create a number based on the player's chosen dice order, and show it to the player
@@ -269,7 +263,8 @@ var main = function (input) {
     // Get player number for curr player
     var playerNum = getPlayerNumberAutomatically();
 
-    var playerNumResponse = `Player ${currPlayer}, your number is ${playerNum}.`;
+    var playerNumResponse =
+      'Player ' + currPlayer + ', your number is ' + playerNum + '.';
 
     // add the playerNum to player's running score
     addNumToRunningScore(playerNum);
@@ -279,8 +274,10 @@ var main = function (input) {
       currPlayer = 2;
       gameMode = GAME_MODE_DICE_ROLL;
       // Return player number to Player 1, let Player 2 know it is their turn
-      return `${playerNumResponse} <br>
-        It is now Player 2's turn. Press Submit to roll Player 2's dice.`;
+      return (
+        playerNumResponse +
+        "<br>It is now Player 2's turn. Press Submit to roll the dice"
+      );
     }
     // Else if currPlayer is Player 2, determine the winner and let the players know who won.
     var winningPlayer = determineWinner();
@@ -291,12 +288,18 @@ var main = function (input) {
     var leaderBoardOutput = createLeaderBoardOutput();
 
     // Return the game end response
-    return `${playerNumResponse} <br><br>
-      Player ${winningPlayer} won this round. <br>
-      Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br> <br>
-     ${leaderBoardOutput}
-      <br><br>
-      To continue playing enter the number of dice you would like to play with, and click submit.`;
+    return (
+      playerNumResponse +
+      '<br><br> Player ' +
+      winningPlayer +
+      " won this round. <br>Player 1's number: " +
+      playerProfiles[0].diceNum +
+      " | Player 2's number: " +
+      playerProfiles[1].diceNum +
+      '<br> <br>' +
+      leaderBoardOutput +
+      '<br><br> To continue playing enter the number of dice you would like to play with, and click submit.'
+    );
   }
 
   // If we reach this point, there is an error because game mode is not what we expect
