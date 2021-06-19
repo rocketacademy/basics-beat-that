@@ -145,6 +145,5 @@ var main = function (input) {
       p1Results +
       "<br> <br> Please enter (A) for dice 1-2 combination, or (B) for dice 2-1 combination";
   }
-
   return myOutputValue;
 };
