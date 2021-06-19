@@ -16,6 +16,8 @@ var playerOneRunningScoreCounter = 0;
 var playerTwoRunningScoreCounter = 0;
 var playerOneTotalScore = 0;
 var playerTwoTotalScore = 0;
+var playerOneDescendingScores = [];
+var playerTwoDescendingScores = [];
 
 // function for dice roll
 var diceRoll = function () {
@@ -30,6 +32,12 @@ var calcTotalSumInArray = function (array) {
     sum += array[i];
   }
   return sum;
+};
+
+// function for sorting scores in decreasing order
+var sortScoresInDecreasingOrder = function (array) {
+  array.sort((a, b) => a - b);
+  return array;
 };
 
 var determineWinner = function (p1Number, p2Number) {
@@ -50,7 +58,7 @@ var main = function (input) {
     console.log(`dice roll #2 is ${diceRollTwo}`);
     // changes gameMode variable to prepare for next game mode: player 1's choice
     gameMode = `player 1 choice`;
-    myOutputValue = `Welcome Player 1. <br>You rolled ${diceRollOne} for Dice 1 and ${diceRollTwo} for Dice 2. <br>Choose the order of the dice by entering "1" or "2". <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore}`;
+    myOutputValue = `Welcome Player 1. <br>You rolled ${diceRollOne} for Dice 1 and ${diceRollTwo} for Dice 2. <br>Choose the order of the dice by entering "1" or "2". <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore} <br> Player 1's scores in descending order is ${playerOneDescendingScores} <br> Player 2's scores in descending order is ${playerTwoDescendingScores}`;
   } else if (gameMode == `player 1 choice`) {
     gameMode = `player 2`;
     if (input == "1") {
@@ -66,12 +74,19 @@ var main = function (input) {
       twoDigitP1Number = Number(`${diceRollTwo}${diceRollOne}`);
       console.log(`Player One's number is ${twoDigitP1Number}`);
     }
-    playerOneRunningScore.push(twoDigitP1Number);
+    playerOneRunningScore = playerOneRunningScore.push(twoDigitP1Number);
     playerOneTotalScore = calcTotalSumInArray(playerOneRunningScore);
+    playerOneDescendingScores = sortScoresInDecreasingOrder(
+      playerOneRunningScore
+    );
+    console.log(`Player One's running score is: ${playerOneRunningScore}`);
     console.log(`Player One's total score is: ${playerOneTotalScore}`);
-    playerOneRunningScoreMessage = `Player One's running scores are: ${playerOneRunningScore}, `;
-    console.log(`Current P1 Score in the array is ${twoDigitP1Number}`);
-    myOutputValue = `Player 1, you chose ${diceChoice} first. <br>Your number is ${twoDigitP1Number}. <br>It is now Player 2's turn. <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore}`;
+    console.log(
+      `Player One's scores in decreasing order is: ${playerOneDescendingScores}`
+    );
+    playerOneRunningScoreMessage = `Player 1's running scores are: ${playerOneRunningScore} `;
+
+    myOutputValue = `Player 1, you chose ${diceChoice} first. <br>Your number is ${twoDigitP1Number}. <br>It is now Player 2's turn. <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore} <br> Player 1's scores in descending order is ${playerOneDescendingScores} <br> Player 2's scores in descending order is ${playerTwoDescendingScores}`;
   } else if (gameMode == `player 2`) {
     diceRollOne = diceRoll();
     console.log(`dice roll #1 is ${diceRollOne}`);
@@ -79,7 +94,7 @@ var main = function (input) {
     console.log(`dice roll #2 is ${diceRollTwo}`);
     // changes gameMode variable to prepare for next game mode: player 2's choice
     gameMode = `player 2 choice`;
-    myOutputValue = `Welcome Player 2. <br>You rolled ${diceRollOne} for Dice 1 and ${diceRollTwo} for Dice 2. <br>Choose the order of the dice by entering "1" or "2". <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore}`;
+    myOutputValue = `Welcome Player 2. <br>You rolled ${diceRollOne} for Dice 1 and ${diceRollTwo} for Dice 2. <br>Choose the order of the dice by entering "1" or "2". <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore} <br> Player 1's scores in descending order is ${playerOneDescendingScores} <br> Player 2's scores in descending order is ${playerTwoDescendingScores}`;
   } else if (gameMode == `player 2 choice`) {
     gameMode = `player 1`;
     if (input == "1") {
@@ -97,9 +112,12 @@ var main = function (input) {
     }
     playerTwoRunningScore.push(twoDigitP2Number);
     playerTwoTotalScore = calcTotalSumInArray(playerTwoRunningScore);
+    playerTwoDescendingScores = sortScoresInDecreasingOrder(
+      playerTwoRunningScore
+    );
     playerTwoRunningScoreMessage = `Player Two's running scores are: ${playerTwoRunningScore}, `;
     winningMessage = determineWinner(twoDigitP1Number, twoDigitP2Number);
-    myOutputValue = `Player 2, you chose ${diceChoice} first. <br>Your number is ${twoDigitP2Number}. <br>${winningMessage} <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore}`;
+    myOutputValue = `Player 2, you chose ${diceChoice} first. <br>Your number is ${twoDigitP2Number}. <br>${winningMessage} <br>${playerOneRunningScoreMessage} <br>${playerTwoRunningScoreMessage} <br> Player 1's current total score is ${playerOneTotalScore} <br> Player 2's current total score is ${playerTwoTotalScore} <br> Player 1's scores in descending order is ${playerOneDescendingScores} <br> Player 2's scores in descending order is ${playerTwoDescendingScores}`;
   }
   return myOutputValue;
 };
