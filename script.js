@@ -8,9 +8,9 @@ var currentPlayer = 1;
 // to keep track of the players' dice rolls
 var diceRollOfP1 = [];
 var diceRollOfP2 = [];
-// Players' Numbers
-var p1Num = "";
-var p2Num = "";
+// Players' Chosen Numbers
+var p1Num;
+var p2Num;
 
 // dice roll function
 var generateNewDiceRoll = function () {
@@ -18,12 +18,66 @@ var generateNewDiceRoll = function () {
   return newDiceRoll;
 };
 
-var main = function () {
-  // var myOutputValue = "";
-  // myOutputValue = "You rolled: " + getNewDiceRoll()[0];
+var getNewDiceRoll = function () {
+  var newDiceRoll = [generateNewDiceRoll(), generateNewDiceRoll()];
+  console.log(newDiceRoll);
+  if (currentPlayer == 1) {
+    diceRollOfP1 = newDiceRoll;
+  } else {
+    currentPlayer++;
+    diceRollOfP2 = newDiceRoll;
+  }
+  return newDiceRoll;
+};
 
+// To get the player's number
+var retrievePlayerNumber = function (numberChosen) {
+  var playerNum;
+
+  if (currentPlayer == 1) {
+    p1Num = playerNum;
+  } else {
+    p2Num = playerNum;
+  }
+
+  if (numberChosen == 1) {
+    console.log(numberChosen, ", option 1 chosen");
+    if (currentPlayer == 1) {
+      p1Num = Number(newDiceRoll[0] + newDiceRoll[1]);
+      console.log(p1Num, "p1num1");
+      return "Player " + currentPlayer + ", You have chosen" + p1Num;
+    } else if (currentPlayer == 2) {
+      p2Num = Number(newDiceRoll[0] + newDiceRoll[1]);
+      console.log(p2Num, "p2num2");
+      return "Player " + currentPlayer + ", You have chosen" + p2Num;
+    }
+  } else if (numberChosen == 2) {
+    console.log(numberChosen, ", option 2 chosen");
+    if (currentPlayer == 1) {
+      p1Num = Number(newDiceRoll[1] + newDiceRoll[0]);
+      console.log(p1Num, "p1num3");
+      return "Player " + currentPlayer + ", You have chosen" + p1Num;
+    } else if (currentPlayer == 2) {
+      p2Num = Number(newDiceRoll[1] + newDiceRoll[0]);
+      console.log(p2Num, "p2num4");
+      return "Player " + currentPlayer + ", You have chosen" + p2Num;
+    }
+  }
+  return playerNum;
+};
+
+// To figure out who is the winner
+var getWinner = function () {
+  if (p1Num > p2Num) {
+    return 1;
+  } else {
+    return 2;
+  }
+};
+
+var main = function (input) {
   if (gameMode == diceGame) {
-    newDiceRoll = getNewDiceRoll();
+    var newDiceRoll = getNewDiceRoll();
     gameMode = ChooseOrder;
     return (
       "Hello Player " +
@@ -32,69 +86,43 @@ var main = function () {
       newDiceRoll[0] +
       " on dice 1 and " +
       newDiceRoll[1] +
-      " on dice 2. <br> Please choose your order by inputting the number 1 or the number 2."
+      " on dice 2. <br><br> Please choose your order by inputting the number 1 or the number 2."
     );
   }
-  // if (gameMode == ChooseOrder) {
-  // diceRollOfP1.push();
-  // var diceRollOfP1;
-  // }
 
-  // return myOutputValue;
-};
+  if (gameMode == ChooseOrder) {
+    gameMode = ChooseOrder;
+    var numberChosen = Number(input);
+    if (numberChosen != 1 && numberChosen != 2) {
+      return "Please only input the number 1 or 2 as your chosen order.";
+    }
 
-// var numberChosen = "?";
-// console.log(numberChosen);
+    var playerNum = retrievePlayerNumber(numberChosen);
+    var playerNumResponse = `Player ${currentPlayer}, You chose Dice ${numberChosen} first. <br> Your number is ${playerNum}.`;
 
-// var retrievePlayerNumber = function () {
-//   if (numberChosen == 1) {
-//     console.log(numberChosen);
-//     if (currentPlayer == 1) {
-//       p1Num = newDiceRoll()[0] + newDiceRoll()[1];
-//       console.log(p1Num);
-//       return "Player " + currentPlayer + ", You have chosen" + p1Num;
-//     } else if (currentPlayer == 2) {
-//       p2Num = newDiceRoll()[0] + newDiceRoll()[1];
-//       console.log(p2Num);
-//       return "Player " + currentPlayer + ", You have chosen" + p2Num;
-//     }
-//   } else if (numberChosen == 2) {
-//     if (currentPlayer == 1) {
-//       p1Num = newDiceRoll()[1] + newDiceRoll()[0];
-//       console.log(p1Num);
-//       return "Player " + currentPlayer + ", You have chosen" + p1Num;
-//     } else if (currentPlayer == 2) {
-//       p2Num = newDiceRoll()[1] + newDiceRoll()[0];
-//       console.log(p2Num);
-//       return "Player " + currentPlayer + ", You have chosen" + p2Num;
-//     }
-//   }
-// };
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameMode = diceGame;
+      return (
+        playerNumResponse +
+        "<br> It is now player 2's turn. Press submit to roll player 2's dice."
+      );
+    }
+    var winingPlayer = getWinner();
 
-var getNewDiceRoll = function () {
-  var newDiceRoll = [generateNewDiceRoll(), generateNewDiceRoll()];
-  console.log(newDiceRoll);
-  if (currentPlayer == 1) {
-    diceRollOfP1 = newDiceRoll;
-    diceRollOfP1.push(newDiceRoll);
-    console.log(diceRollOfP1);
+    currentPlayer = 1;
+    gameMode = diceGame;
+
+    return (
+      playerNumResponse +
+      "<br> Player " +
+      winingPlayer +
+      "has won. <br> Player 1's number: " +
+      p1Num +
+      " | " +
+      " Player 2's number: " +
+      p2Num +
+      " <br><br> Press submit to play again."
+    );
   }
-  // if it is not P1's turn, then it is P2's turn
-  else {
-    diceRollOfP2 = newDiceRoll;
-    diceRollOfP2.push(newDiceRoll);
-    console.log(diceRollOfP2);
-  }
-  return newDiceRoll;
 };
-
-// store the diceroll then check results
-
-// Instructions:-
-// 2 players, 2 rolls each
-// P1 click submit, rolls 2 dice. Dice 1 = ? , Dice 2 = ?
-// P1 inputs number with the numbers shown on the dice.
-// P2 click submit, rolls 2 dice. Dice = ?, Dice 2 = ?
-// P2 inputs number with the numbers shown on the dice.
-// Player with the higher combined number wins.
-// win-loss record
