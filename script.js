@@ -1,11 +1,9 @@
 var die1;
 var die2;
 var player1Score = [];
-var player1SumOfScore = 0;
-var player2Number;
+var player1GlobalScore = 0;
 var player2Score = [];
-var player2SumOfScore = 0;
-var player2Number;
+var player2GlobalScore = 0;
 var player = 1;
 var mode = "dice roll";
 
@@ -16,13 +14,21 @@ var main = function (input) {
       var diceResult = roll2Dice();
       mode = "choose dice order";
       outputMessage = `Welcome Player 1. <br>
-     ${diceResult} <br>Choose the order of the dice`;
+     ${diceResult} <br>Choose the order of the dice.`;
     } else if (mode == "choose dice order") {
       var player1Number = concatDiceResult(input);
       player1Score.push("" + player1Number);
-      player1SumOfScore = player1Score.reduce(function (a, b) {
-        return a + b;
-      }, 0);
+
+      // sum of player 1's score thus far
+      var index = 0;
+      var player1CurrentScore = 0;
+      while (index < player1Score.length) {
+        var currentLoopScore = player1Score[index];
+        player1CurrentScore =
+          Number(player1CurrentScore) + Number(currentLoopScore);
+        index = index + 1;
+      }
+      player1GlobalScore = player1CurrentScore;
       player = 2;
       mode = "dice roll";
       var gameLeader = decideLeader();
@@ -37,11 +43,20 @@ var main = function (input) {
       outputMessage = `Welcome Player 2. <br>
      ${diceResult} <br>Choose the order of the dice.`;
     } else if (mode == "choose dice order") {
-      player2Number = concatDiceResult(input);
+      var player2Number = concatDiceResult(input);
       player2Score.push("" + player2Number);
-      player2SumOfScore = player2Score.reduce(function (a, b) {
-        return a + b;
-      }, 0);
+      console.log("player 2 score " + player2Score);
+
+      // sum of player 2's score thus far
+      var index = 0;
+      var player2CurrentScore = 0;
+      while (index < player2Score.length) {
+        var currentLoopScore = player2Score[index];
+        player2CurrentScore =
+          Number(player2CurrentScore) + Number(currentLoopScore);
+        index = index + 1;
+      }
+      player2GlobalScore = player2CurrentScore;
       mode = "dice roll";
       player = 1;
       var gameLeader = decideLeader();
@@ -50,6 +65,7 @@ var main = function (input) {
     return outputMessage;
   }
 };
+
 // concatenate dice result
 function concatDiceResult(input) {
   var concatanatedDiceResult;
@@ -63,16 +79,16 @@ function concatDiceResult(input) {
 
 // decide leading winner
 function decideLeader() {
-  if (player2SumOfScore == 0) {
+  if (player2GlobalScore == 0) {
     var winnerIs = "";
-  } else if (player2SumOfScore > player1SumOfScore) {
+  } else if (player2GlobalScore > player1GlobalScore) {
     winnerIs = "Player 2 is in the lead!";
-  } else if (player2SumOfScore < player1SumOfScore) {
+  } else if (player2GlobalScore < player1GlobalScore) {
     winnerIs = "Player 1 is in the lead!";
-  } else if (player2SumOfScore == player1SumOfScore) {
+  } else if (player2GlobalScore == player1GlobalScore) {
     winnerIs = "It's a draw!";
   }
-  return `<br>Player 1's score is ${player1SumOfScore}.Player 2's score is ${player2SumOfScore}. ${winnerIs}`;
+  return `<br>Player 1's score is ${player1GlobalScore}.Player 2's score is ${player2GlobalScore}. ${winnerIs}`;
 }
 
 // roll both dice
