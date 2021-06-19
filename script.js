@@ -10,14 +10,15 @@ var winCondition = `highest value wins`;
 var diceNumber = 2;
 var allDiceRoll = [];
 var currentDice = 1;
+var category;
 var main = function (input) {
   if (input == `instructions`) {
     return instruction();
   }
-  if (input == `computer` || input == `player`) {
-    whoPlays = input;
-    return `Your player has been set to ${input}.Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
-  }
+  // if (input == `computer` || input == `player`) {
+  //   whoPlays = input;
+  //   return `Your player has been set to ${input}.Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
+
   if (input == `highest value wins` || input == `lowest value wins`) {
     winCondition = input;
     return `Your winning criteria has been set to ${input}.Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
@@ -28,15 +29,18 @@ var main = function (input) {
   }
   if (input == `player number` || input == `dice number`) {
     mode = input;
+
     return `Your mode has been set to ${input}. Please input the ${input} you want`;
   }
   if (mode == `player number`) {
     numberOfPlayer = input;
-    return `The number of players have been set to ${numberOfPlayer}. Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
+    mode = `instructions`;
+    return `The number of players have been set to ${numberOfPlayer}. Please press submit to start the game. `;
   }
   if (mode == `dice number`) {
     diceNumber = input;
-    return `The number of dice have been set to ${diceNumber}. Press submit to start the game. For any queries, enter 'instructions' and press submit.`;
+    mode = `instructions`;
+    return `The number of dice have been set to ${diceNumber}. Please press submit.`;
   }
   console.log(1);
   while (playerNumber <= numberOfPlayer) {
@@ -95,22 +99,19 @@ diceRollMessage = function (playerNumber) {
 selectOrderMessage = function (playerNumber, input) {
   var message = `Player ${playerNumber}: Your value is ${input}. Player ${
     playerNumber + 1
-  }, please click submit to roll your dice.`;
+  }, please click submit.`;
   return message;
 };
-//instructions function
-// instruction = function () {
-//   var message = ` By default, the number of players and number of dice that will be rolled has been set to 2.<br>The rules also follow the standard beat that. <br>If you would like to change any of these, please follow the instructions below.(if the changes made are successful, a message will appear)
-//     <br>To change the number of players: Type 'player number' and press sumbit. Next input the number of players you want before pressing submit again.
-//     <br>To change the number of dices rolled: Type 'dice number' and press sumbit. Next input the number of dice you want before pressing submit again.
-//     <br> To change the mode: Enter either 'highest value wins' or 'lowest value wins'
-//   <br>To select the player/computer to be the one selecting the combination of numbers: Type 'computer' or 'player'`;
-instruction = function () {
-  var message = ` .<br>The rules follow the standard beat that. 
-    <br> If you would like to change the mode: Enter either 'highest value wins' or 'lowest value wins'`;
 
+instruction = function () {
+  var message = ` By default, the number of players and number of dice that will be rolled has been set to 2.<br>The rules also follow the standard beat that. <br>If you would like to change any of these, please follow the instructions below.(if the changes made are successful, a message will appear)
+    <br>To change the number of players: Type 'player number' and press sumbit. Next input the number of players you want before pressing submit again.
+    <br>To change the number of dices rolled: Type 'dice number' and press sumbit. Next input the number of dice you want before pressing submit again.
+    <br> To change the mode: Enter either 'highest value wins' or 'lowest value wins'
+  <br>To select the player/computer to be the one selecting the combination of numbers: Type 'computer' or 'player'`;
   return message;
 };
+
 findHighestValueInArray = function (arrayValue) {
   highestValue = Math.max(...arrayValue);
   return highestValue;
