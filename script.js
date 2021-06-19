@@ -1,13 +1,16 @@
+//use .sort to make a leaderboard in order
+
 var mode = "numberOfPlayers";
 var noOfPlayers = 0;
 var noOfDice = 0;
 var highestRollOutput = [];
 var scoreboardArray = [];
 var diceRollsArray = [];
-var playersHighestRolls = [];
+var currentRoundCombinedNums = [];
 var autoMode = false;
 var knockoutMode = false;
 var isNormalMode = false;
+var currentPlayer = 0;
 var main = function (input) {
   if (mode == "numberOfPlayers") {
     var noOfPlayersOutput = setPlayerNumber(input);
@@ -34,6 +37,7 @@ var main = function (input) {
   }
 };
 
+//helper Function to set the number of players
 var setPlayerNumber = function (input) {
   if (Number.isNaN(Number(input))) {
     return "Please input a number!";
@@ -51,6 +55,7 @@ var setPlayerNumber = function (input) {
   return `There are ${noOfPlayers} players for this game. Now, please enter the number of dice you wish to use.`;
 };
 
+// setting number of dice in play for this round
 var setDiceNumber = function (input) {
   if (Number.isNaN(Number(input))) {
     return "Please input a number!";
@@ -58,10 +63,13 @@ var setDiceNumber = function (input) {
     return "please input a number higher than 0!";
   }
   mode = "autoModeSelect";
-  noOfDice = input;
+  //reset currentPlayer count to allow for repeat games
+  currentPlayer = 0;
+  noOfDice = Number(input);
   return `There are ${noOfDice} dice in play for this game.`;
 };
 
+// setting lowest or normal game mode
 var setGameMode = function (input) {
   if (input == "normal") {
     isNormalMode = true;
@@ -76,6 +84,7 @@ var setGameMode = function (input) {
   }
 };
 
+// option for auto-combine mode
 var setAutoMode = function (input) {
   if (input == "yes") {
     autoMode = true;
@@ -91,7 +100,9 @@ var setAutoMode = function (input) {
   }
 };
 
+// option for a knockout mode
 var setKnockoutMode = function (input) {
+  // minimum of 3 players needed
   if (noOfPlayers <= 2) {
     return `You need at least 3 players to play knockout mode!`;
   } else if (input == "yes") {
@@ -124,15 +135,16 @@ var multipleDiceRoll = function (noOfPlayers, noOfDice, input) {
       return diceOutput;
     }
     mode = "faceoff";
-    faceoffOutput = faceOff(playersHighestRolls);
+    faceoffOutput = faceOff(currentRoundCombinedNums);
     mode = "numberOfDice";
-    //reset rolls array
-    playersHighestRolls.length = 0;
+    //reset rolls array(for the round) at the end of game
+    currentRoundCombinedNums.length = 0;
     return faceoffOutput;
   }
 };
 
 var diceSelection = function (currentPlayer, noOfDice, input) {
+  //auto combine mode off, manual
   if (autoMode == false) {
     if (mode == "gameMode") {
       console.log(currentPlayer);
@@ -148,7 +160,6 @@ var diceSelection = function (currentPlayer, noOfDice, input) {
       mode = "selectMode";
       return myOutputValue;
     } else if (mode == "selectMode") {
-      console.log("WTF");
       indexesArray = input.split("").map(Number);
       combinedNum = 0;
       for (var i = 0; i < indexesArray.length; i += 1) {
@@ -156,14 +167,12 @@ var diceSelection = function (currentPlayer, noOfDice, input) {
       }
       mode = "gameMode";
       diceRollsArray = [];
-      playersHighestRolls.push(combinedNum);
+      currentRoundCombinedNums.push(combinedNum);
       return `Your combined number is ${combinedNum}. Now, Player ${
         currentPlayer + 2
       }(if any) will go. If the last player has already went, then the results will be computed.`;
     }
-    //AUTOMODE FOR HIGHEST AND ONE FOR LOWEST!
   } else if (autoMode == true) {
-    console.log(currentPlayer);
     index = 0;
     while (index < noOfDice) {
       diceRollsArray.push(diceRoll());
@@ -200,33 +209,33 @@ var diceSelection = function (currentPlayer, noOfDice, input) {
     for (var i = 0; i < sortedArray.length; i += 1) {
       combinedNum = combinedNum * 10 + sortedArray[i];
     }
-    console.log(combinedNum);
+    // reset dice rolls for next player
     diceRollsArray = [];
-    playersHighestRolls.push(combinedNum);
+    currentRoundCombinedNums.push(combinedNum);
     return `Your combined number is ${combinedNum}. Now, Player ${
       currentPlayer + 2
     }(if any) will go. If the last player has already went, then the results will be computed.`;
   }
 };
 
-var faceOff = function (playersHighestRolls) {
+var faceOff = function (currentRoundCombinedNums) {
   if (knockoutMode == true) {
-    var currentWinnerScore = playersHighestRolls[0];
+    var currentWinnerScore = currentRoundCombinedNums[0];
     var currentOpposer = 1;
     var currentWinner = 1;
     var winnerText = "";
     var myOutputValue = `Player 1 will now face off against Player 2.<br><br>`;
-    while (currentOpposer < playersHighestRolls.length) {
+    while (currentOpposer < currentRoundCombinedNums.length) {
       if (isNormalMode == true) {
-        if (playersHighestRolls[currentOpposer] > currentWinnerScore) {
+        if (currentRoundCombinedNums[currentOpposer] > currentWinnerScore) {
           winnerText =
             myOutputValue +
             `Player ${
               currentOpposer + 1
             } has won over Player ${currentWinner} with a roll of ${
-              playersHighestRolls[currentOpposer]
+              currentRoundCombinedNums[currentOpposer]
             } over ${currentWinnerScore}!<br><br>`;
-          currentWinnerScore = playersHighestRolls[currentOpposer];
+          currentWinnerScore = currentRoundCombinedNums[currentOpposer];
           currentWinner = currentOpposer + 1;
         } else {
           winnerText =
@@ -234,20 +243,20 @@ var faceOff = function (playersHighestRolls) {
             `Player ${currentWinner} has maintained their title against ${
               currentOpposer + 1
             } with a roll of ${currentWinnerScore} over ${
-              playersHighestRolls[currentOpposer]
+              currentRoundCombinedNums[currentOpposer]
             }!<br><br>`;
         }
       }
       if (isNormalMode == false) {
-        if (playersHighestRolls[currentOpposer] < currentWinnerScore) {
+        if (currentRoundCombinedNums[currentOpposer] < currentWinnerScore) {
           winnerText =
             myOutputValue +
             `Player ${
               currentOpposer + 1
             } has won over Player ${currentWinner} with a lower roll of ${
-              playersHighestRolls[currentOpposer]
+              currentRoundCombinedNums[currentOpposer]
             } over ${currentWinnerScore}!<br><br>`;
-          currentWinnerScore = playersHighestRolls[currentOpposer];
+          currentWinnerScore = currentRoundCombinedNums[currentOpposer];
           currentWinner = currentOpposer + 1;
         } else {
           winnerText =
@@ -255,11 +264,11 @@ var faceOff = function (playersHighestRolls) {
             `Player ${currentWinner} has maintained their title against ${
               currentOpposer + 1
             } with a lower roll of ${currentWinnerScore} over ${
-              playersHighestRolls[currentOpposer]
+              currentRoundCombinedNums[currentOpposer]
             }!<br><br>`;
         }
       }
-      if (currentOpposer + 1 == playersHighestRolls.length) {
+      if (currentOpposer + 1 == currentRoundCombinedNums.length) {
         myOutputValue = winnerText + "The winner has been decided! <br><br>";
       } else {
         myOutputValue =
@@ -273,7 +282,7 @@ var faceOff = function (playersHighestRolls) {
     myOutputValue =
       myOutputValue +
       `Player ${currentWinner} emerges as the ultimate champion for this round!`;
-    var scoreboardText = scoreboard(playersHighestRolls, scoreboardArray);
+    var scoreboardText = scoreboard(currentRoundCombinedNums, scoreboardArray);
     myOutputValue =
       myOutputValue +
       "<br><br>" +
@@ -283,43 +292,43 @@ var faceOff = function (playersHighestRolls) {
     return myOutputValue;
   }
   if (knockoutMode == false) {
-    var leadingScore = playersHighestRolls[0];
+    var leadingScore = currentRoundCombinedNums[0];
     var index = 0;
     var winnerText = "";
-    while (index < playersHighestRolls.length) {
+    while (index < currentRoundCombinedNums.length) {
       if (isNormalMode == true) {
-        if (playersHighestRolls[index] > leadingScore) {
-          leadingScore = playersHighestRolls[index];
+        if (currentRoundCombinedNums[index] > leadingScore) {
+          leadingScore = currentRoundCombinedNums[index];
           winnerText = `The winner is Player ${
             index + 1
           } who rolled the highest value of ${leadingScore}`;
-        } else if (leadingScore == playersHighestRolls[0]) {
+        } else if (leadingScore == currentRoundCombinedNums[0]) {
           winnerText = `The winner is Player 1 who rolled the highest value of ${leadingScore}`;
         }
       } else if (isNormalMode == false) {
-        if (playersHighestRolls[index] < leadingScore) {
-          leadingScore = playersHighestRolls[index];
+        if (currentRoundCombinedNums[index] < leadingScore) {
+          leadingScore = currentRoundCombinedNums[index];
           winnerText = `The winner is Player ${
             index + 1
           } who rolled the lowest value of ${leadingScore}`;
-        } else if (leadingScore == playersHighestRolls[0]) {
+        } else if (leadingScore == currentRoundCombinedNums[0]) {
           winnerText = `The winner is Player 1 who rolled the lowest value of ${leadingScore}. <br><br> You can input the number of dice you wish to play with next round!`;
         }
       }
       index = index + 1;
     }
-    var scoreboardText = scoreboard(playersHighestRolls, scoreboardArray);
+    var scoreboardText = scoreboard(currentRoundCombinedNums, scoreboardArray);
     myOutputValue = winnerText + `<br><br>` + scoreboardText;
     return myOutputValue;
   }
 };
 
-var scoreboard = function (playersHighestRolls, scoreboardArray) {
+var scoreboard = function (currentRoundCombinedNums, scoreboardArray) {
   var index = 0;
   var myOutputValue = "";
-  while (index < playersHighestRolls.length) {
+  while (index < currentRoundCombinedNums.length) {
     scoreboardArray[index] =
-      scoreboardArray[index] + playersHighestRolls[index];
+      scoreboardArray[index] + currentRoundCombinedNums[index];
     myOutputValue =
       myOutputValue +
       `Player ${index + 1} has a total score of: ${
