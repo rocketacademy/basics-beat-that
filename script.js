@@ -1,10 +1,7 @@
-//use .sort to make a leaderboard in order
-
 var mode = "numberOfPlayers";
 var noOfPlayers = 0;
 var noOfDice = 0;
-var highestRollOutput = [];
-var scoreboardArray = [];
+var leaderboardArray = [];
 var diceRollsArray = [];
 var currentRoundCombinedNums = [];
 var autoMode = false;
@@ -49,7 +46,7 @@ var setPlayerNumber = function (input) {
   index = 0;
   currentPlayer = 0;
   while (index < noOfPlayers) {
-    scoreboardArray.push(0);
+    leaderboardArray.push(0);
     index = index + 1;
   }
   return `There are ${noOfPlayers} players for this game. Now, please enter the number of dice you wish to use.`;
@@ -127,7 +124,7 @@ var diceRoll = function () {
 var multipleDiceRoll = function (noOfPlayers, noOfDice, input) {
   if (mode == "gameMode" || mode == "selectMode" || mode == "faceoff") {
     while (currentPlayer < noOfPlayers) {
-      diceOutput = diceSelection(currentPlayer, noOfDice, input);
+      diceOutput = diceSelection(currentPlayer, noOfDice, input, noOfPlayers);
       //currentPlayer only increases after player inputs their array
       if (mode == "gameMode") {
         currentPlayer = currentPlayer + 1;
@@ -143,7 +140,7 @@ var multipleDiceRoll = function (noOfPlayers, noOfDice, input) {
   }
 };
 
-var diceSelection = function (currentPlayer, noOfDice, input) {
+var diceSelection = function (currentPlayer, noOfDice, input, noOfPlayers) {
   //auto combine mode off, manual
   if (autoMode == false) {
     if (mode == "gameMode") {
@@ -168,9 +165,13 @@ var diceSelection = function (currentPlayer, noOfDice, input) {
       mode = "gameMode";
       diceRollsArray = [];
       currentRoundCombinedNums.push(combinedNum);
-      return `Your combined number is ${combinedNum}. Now, Player ${
-        currentPlayer + 2
-      }(if any) will go. If the last player has already went, then the results will be computed.`;
+      if (currentPlayer + 1 == noOfPlayers) {
+        return `Your combined number is ${combinedNum}. The results will now be computed.`;
+      } else {
+        return `Your combined number is ${combinedNum}. Now, Player ${
+          currentPlayer + 2
+        }will go.`;
+      }
     }
   } else if (autoMode == true) {
     index = 0;
@@ -178,43 +179,24 @@ var diceSelection = function (currentPlayer, noOfDice, input) {
       diceRollsArray.push(diceRoll());
       index = index + 1;
     }
-    var temp = 0;
     if (isNormalMode == true) {
-      for (a = 0; a < diceRollsArray.length; a += 1) {
-        for (b = a + 1; b < diceRollsArray.length; b += 1) {
-          if (diceRollsArray[a] < diceRollsArray[b]) {
-            temp = diceRollsArray[a];
-            diceRollsArray[a] = diceRollsArray[b];
-            diceRollsArray[b] = temp;
-          }
-        }
-      }
+      diceRollsArray.sort((a, b) => b - a);
     }
     if (isNormalMode == false) {
-      for (a = 0; a < diceRollsArray.length; a += 1) {
-        for (b = a + 1; b < diceRollsArray.length; b += 1) {
-          if (diceRollsArray[b] < diceRollsArray[a]) {
-            temp = diceRollsArray[a];
-            diceRollsArray[a] = diceRollsArray[b];
-            diceRollsArray[b] = temp;
-          }
-        }
-      }
+      diceRollsArray.sort((a, b) => a - b);
     }
-    var sortedArray = [];
-    for (c = 0; c < diceRollsArray.length; c += 1) {
-      sortedArray[c] = diceRollsArray[c];
-    }
-    combinedNum = 0;
-    for (var i = 0; i < sortedArray.length; i += 1) {
-      combinedNum = combinedNum * 10 + sortedArray[i];
-    }
+    var sortedArray = diceRollsArray;
+    combinedNum = sortedArray.join("");
     // reset dice rolls for next player
     diceRollsArray = [];
     currentRoundCombinedNums.push(combinedNum);
-    return `Your combined number is ${combinedNum}. Now, Player ${
-      currentPlayer + 2
-    }(if any) will go. If the last player has already went, then the results will be computed.`;
+    if (currentPlayer + 1 == noOfPlayers) {
+      return `Your combined number is ${combinedNum}. The results will now be computed.`;
+    } else {
+      return `Your combined number is ${combinedNum}. Now, Player ${
+        currentPlayer + 2
+      } will go.`;
+    }
   }
 };
 
@@ -282,12 +264,9 @@ var faceOff = function (currentRoundCombinedNums) {
     myOutputValue =
       myOutputValue +
       `Player ${currentWinner} emerges as the ultimate champion for this round!`;
-    var scoreboardText = scoreboard(currentRoundCombinedNums, scoreboardArray);
-    myOutputValue =
-      myOutputValue +
-      "<br><br>" +
-      scoreboardText +
-      `<br><br> You can resubmit the number of dice that you want to play with!`;
+    var leaderboardText = leaderboard(leaderboardArray, currentWinner);
+    myOutputValue = myOutputValue + "<br><br>" + leaderboardText;
+    +`<br><br> You can resubmit the number of dice that you want to play with!<br><br>`;
     mode = "numberOfDice";
     return myOutputValue;
   }
@@ -317,23 +296,22 @@ var faceOff = function (currentRoundCombinedNums) {
       }
       index = index + 1;
     }
-    var scoreboardText = scoreboard(currentRoundCombinedNums, scoreboardArray);
-    myOutputValue = winnerText + `<br><br>` + scoreboardText;
+    var leaderboardText = leaderboard(leaderboardArray, currentWinner);
+    myOutputValue = winnerText + `<br><br>` + leaderboardText;
     return myOutputValue;
   }
 };
 
-var scoreboard = function (currentRoundCombinedNums, scoreboardArray) {
+var leaderboard = function (leaderboardArray, currentWinner) {
+  leaderboardArray[currentWinner - 1] = leaderboardArray[currentWinner - 1] + 1;
   var index = 0;
   var myOutputValue = "";
-  while (index < currentRoundCombinedNums.length) {
-    scoreboardArray[index] =
-      scoreboardArray[index] + currentRoundCombinedNums[index];
+  while (index < noOfPlayers) {
     myOutputValue =
       myOutputValue +
-      `Player ${index + 1} has a total score of: ${
-        scoreboardArray[index]
-      } <br><br>`;
+      `Player ${index + 1} has won a total of: ${
+        leaderboardArray[index]
+      } rounds. <br><br>`;
     index = index + 1;
   }
   return myOutputValue;
