@@ -119,18 +119,18 @@ var main = function (input) {
     if (input == "reverse") {
       currentGameState = game_state_select_num_of_players;
       currentGameMode = game_mode_reverse;
-      return `You have selected reverse mode ⬅️ <br> Player with lowest combined number win <br> Please enter number of players, Player 1`;
+      return `You have selected reverse mode ⬅️ <br> Player with LOWEST combined number win <br> Please enter number of players, Player 1`;
     } else {
       currentGameState = game_state_select_num_of_players;
       currentGameMode = game_mode_normal;
-      return `You have selected normal mode <br> Player with highest combined number win <br> Please enter number of players, Player 1`;
+      return `You have selected normal mode. <br> Player with HIGHEST combined number wins! <br> 👉 Please enter number of players, Player 1`;
     }
   }
   //select number of players
   if (currentGameState == game_state_select_num_of_players) {
     totalPlayers = Number(input);
     currentGameState = game_state_select_num_of_dice;
-    return ` ${totalPlayers} players have joined the game. Please select number of 🎲 you want to roll`;
+    return ` ${totalPlayers} players have joined the game. <br> 👉 Please select number of 🎲 you want to roll`;
   }
 
   // select number of dices to roll for all players
@@ -140,7 +140,7 @@ var main = function (input) {
       return `You have entered an invalid input. Please add a number`;
     } else {
       currentGameState = game_state_waiting_for_username;
-      return `You have selected ${diceSelected} number of 🎲 to play. <br> Please enter your username Player 1`;
+      return `You have selected ${diceSelected} 🎲 to play. <br> 👉 Please enter your username Player 1`;
     }
   }
   //allow all user name to enter name
@@ -149,10 +149,10 @@ var main = function (input) {
       userName = input;
       playerList.push(userName);
       currentPlayer = currentPlayer + 1;
-      //bug: have to click an additional time
+      //bug: an additional number of player to enter username. HELP NEEDED!
       return ` 👋🏻 Welcome Current Player ${
         currentPlayer + 1
-      }, Please enter your Username`;
+      }, 👉 Please enter your Username`;
     } else {
       currentGameState = game_state_roll_dice;
       // create everyone's empty dice lists first
@@ -162,7 +162,7 @@ var main = function (input) {
         index = index + 1;
       }
       currentPlayer = 0;
-      return `All players have entered their username 🥳 . ${playerList} 🕹 Let's proceed to roll the dices for Player 1`;
+      return `All players have entered their username 🥳 . Hello ${playerList}! <br> 🕹 Let's proceed to roll the 🎲 for Player 1`;
     }
   }
 
@@ -173,9 +173,9 @@ var main = function (input) {
     currentGameState = game_state_autogenerate_order;
     return `Player ${
       currentPlayer + 1
-    } these are the numbers you have rolled: ${
+    }, these are the numbers you have rolled: ${
       diceLists[currentPlayer]
-    }. <br> Click "roll the dice" for the 💻 to generate the order for you`;
+    }. <br> 🕹 Click "roll the dice" for the 💻 to generate the order for you`;
   }
 
   //computer auto generate player numbers
