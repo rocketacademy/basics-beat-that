@@ -15,8 +15,7 @@ var p2Num;
 var main = function (input) {
   if (gameMode == diceGame) {
     var newDiceRoll = getNewDiceRoll();
-    // console.log(newDiceRoll, "roll");
-    console.log(newDiceRoll, "runs first");
+    // console.log(newDiceRoll, "runs first");
     gameMode = ChooseOrder;
     return (
       "Hello Player " +
@@ -32,14 +31,14 @@ var main = function (input) {
   if (gameMode == ChooseOrder) {
     gameMode = ChooseOrder;
     var numberChosen = Number(input);
-    console.log(numberChosen, "number");
+    // console.log(numberChosen, "number");
     if (numberChosen != 1 && numberChosen != 2) {
       return "Please only input the number 1 or 2 as your chosen order.";
     }
 
     var playerNum = retrievePlayerNumber(numberChosen);
-    console.log(playerNum, "get number");
-    console.log("p1dice:", diceRollOfP1, "p2dice:", diceRollOfP2);
+    // console.log(playerNum, "get number");
+    // console.log("p1dice:", diceRollOfP1, "p2dice:", diceRollOfP2);
     var playerNumResponse =
       "Player " +
       currentPlayer +
@@ -84,13 +83,16 @@ var generateNewDiceRoll = function () {
   return newDiceRoll;
 };
 
+// roll dice into array
 var getNewDiceRoll = function () {
   var newDiceRoll = [generateNewDiceRoll(), generateNewDiceRoll()];
-  console.log(newDiceRoll, "getnewDiceRoll");
+  // console.log(newDiceRoll, "getnewDiceRoll");
   if (currentPlayer == 1) {
     diceRollOfP1 = newDiceRoll;
+    // console.log(diceRollOfP1, "p1roll");
   } else {
     diceRollOfP2 = newDiceRoll;
+    // console.log(diceRollOfP2, "p2roll");
   }
   return newDiceRoll;
 };
