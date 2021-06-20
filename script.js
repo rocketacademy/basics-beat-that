@@ -152,7 +152,7 @@ var main = function (input) {
       //bug: an additional number of player to enter username. HELP NEEDED!
       return ` 👋🏻 Welcome Current Player ${
         currentPlayer + 1
-      }, 👉 Please enter your Username`;
+      }, <br>👉 Please enter your Username`;
     } else {
       currentGameState = game_state_roll_dice;
       // create everyone's empty dice lists first
@@ -162,7 +162,7 @@ var main = function (input) {
         index = index + 1;
       }
       currentPlayer = 0;
-      return `All players have entered their username 🥳 . Hello ${playerList}! <br> 🕹 Let's proceed to roll the 🎲 for Player 1`;
+      return `All players have entered their username 🥳 . Hello ${playerList}! <br> 🕹 Let's proceed to roll the 🎲 for ${playerList[currentPlayer]}`;
     }
   }
 
@@ -171,11 +171,7 @@ var main = function (input) {
     var diceList = diceRollList(diceSelected);
     diceLists[currentPlayer] = diceList;
     currentGameState = game_state_autogenerate_order;
-    return `Player ${
-      currentPlayer + 1
-    }, these are the numbers you have rolled: ${
-      diceLists[currentPlayer]
-    }. <br> 🕹 Click "roll the dice" for the 💻 to generate the order for you`;
+    return `${playerList[currentPlayer]}, these are the numbers you have rolled: ${diceLists[currentPlayer]}. <br> 🕹 Click "roll the dice" for the 💻 to generate the order for you`;
   }
 
   //computer auto generate player numbers
@@ -192,9 +188,10 @@ var main = function (input) {
       currentGameState = game_state_roll_dice;
     }
     currentPlayer = currentPlayer + 1;
-    return `The 💻 selected this order for you ${computerGeneratedNum} <br><br> 🕹 Player ${
-      currentPlayer + 1
-    } it's your turn to roll`;
+    //bug above for additional player also affects the code here where there will be an undefined player!HELP NEEDED
+    return `The 💻 selected this order for you ${computerGeneratedNum} <br> 🕹  
+      ${playerList[currentPlayer]}
+     it's your turn to roll`;
   }
 
   if (currentGameState == game_state_find_winner) {
