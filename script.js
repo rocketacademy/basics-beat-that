@@ -24,7 +24,7 @@ var getNewDiceRoll = function () {
   if (currentPlayer == 1) {
     diceRollOfP1 = newDiceRoll;
   } else {
-    currentPlayer++;
+    // currentPlayer++;
     diceRollOfP2 = newDiceRoll;
   }
   return newDiceRoll;
@@ -33,34 +33,36 @@ var getNewDiceRoll = function () {
 // To get the player's number
 var retrievePlayerNumber = function (numberChosen) {
   var playerNum;
+  // link to the getNewRoll() function
+  var newDiceRoll = getNewDiceRoll();
 
-  if (currentPlayer == 1) {
-    p1Num = playerNum;
-  } else {
-    p2Num = playerNum;
-  }
+  // if (currentPlayer == 1) {
+  //   playerNum = p1Num;
+  // } else {
+  //   playerNum = p2Num;
+  // }
 
   if (numberChosen == 1) {
-    console.log(numberChosen, ", option 1 chosen");
+    // console.log(numberChosen, ", option 1 chosen");
     if (currentPlayer == 1) {
-      p1Num = Number(newDiceRoll[0] + newDiceRoll[1]);
-      console.log(p1Num, "p1num1");
-      return "Player " + currentPlayer + ", You have chosen" + p1Num;
+      p1Num = "" + newDiceRoll[0] + newDiceRoll[1];
+      // console.log(p1Num, "p1num1");
+      return p1Num;
     } else if (currentPlayer == 2) {
-      p2Num = Number(newDiceRoll[0] + newDiceRoll[1]);
-      console.log(p2Num, "p2num2");
-      return "Player " + currentPlayer + ", You have chosen" + p2Num;
+      p2Num = "" + newDiceRoll[0] + newDiceRoll[1];
+      // console.log(p2Num, "p2num2");
+      return p2Num;
     }
   } else if (numberChosen == 2) {
-    console.log(numberChosen, ", option 2 chosen");
+    // console.log(numberChosen, ", option 2 chosen");
     if (currentPlayer == 1) {
-      p1Num = Number(newDiceRoll[1] + newDiceRoll[0]);
-      console.log(p1Num, "p1num3");
-      return "Player " + currentPlayer + ", You have chosen" + p1Num;
+      p1Num = "" + newDiceRoll[1] + newDiceRoll[0];
+      // console.log(p1Num, "p1num3");
+      return p1Num;
     } else if (currentPlayer == 2) {
-      p2Num = Number(newDiceRoll[1] + newDiceRoll[0]);
-      console.log(p2Num, "p2num4");
-      return "Player " + currentPlayer + ", You have chosen" + p2Num;
+      p2Num = "" + newDiceRoll[1] + newDiceRoll[0];
+      // console.log(p2Num, "p2num4");
+      return p2Num;
     }
   }
   return playerNum;
@@ -98,7 +100,13 @@ var main = function (input) {
     }
 
     var playerNum = retrievePlayerNumber(numberChosen);
-    var playerNumResponse = `Player ${currentPlayer}, You chose Dice ${numberChosen} first. <br> Your number is ${playerNum}.`;
+    var playerNumResponse =
+      "Player " +
+      currentPlayer +
+      "You chose Dice " +
+      numberChosen +
+      " first. <br> Your number is " +
+      playerNum;
 
     if (currentPlayer == 1) {
       currentPlayer = 2;
