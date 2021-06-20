@@ -25,6 +25,8 @@ var main = function (input) {
   // select game mode
   if (input == "normal" || input == "reversed" || input == "knockout") {
     gameMode = input;
+    list = [];
+
     gameModechosen = true;
     return `You have chosen ${gameMode} mode. Choose the number of players.`;
   }
@@ -32,6 +34,7 @@ var main = function (input) {
   // select number of players
   if (gameModechosen == true && !NumberOfPlayersChosen) {
     numberOfPlayers = input;
+    playerNum = 1;
     NumberOfPlayersChosen = true;
     return `You have selected ${numberOfPlayers} players. For Player 1, enter the number of dice you want to roll.`;
   }
@@ -170,6 +173,32 @@ var main = function (input) {
     return output;
   } else return `Choose your gamemode: normal, reversed or knockout.`;
 };
+
+// arrangeOrder = true;
+
+// }
+
+// if (arrangeOrder == true) {
+//   switchPlayercalculateScore(playerNum, combinedScoring);
+//   return output;
+// }
+// //Arranging the order of dice
+// if (arrangeOrder == true) {
+//   var scoring = arrangeDice(input);
+//   var statementOne = scoring;
+//   if (!isNaN(scoring)) {
+//     switchPlayercalculateScore(playerNum, scoring);
+
+//     if (playerOneScore > playerTwoScore) {
+//       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 1 score: ${playerOneScore}<br>Player 2 score: ${playerTwoScore}<br><br>It is now Player ${playerNum}'s turn.`;
+//       return statementOne;
+//     }
+//     if (playerTwoScore > playerOneScore) {
+//       statementOne = `Player ${currentplayer}, You chose order ${input} first <br> Your number is ${scoring}. <br><br> Player 2 score: ${playerTwoScore}<br>Player 1 score: ${playerOneScore}<br><br>It is now Player ${playerNum}'s turn.`;
+//       return statementOne;
+//     }
+//   } else return statementOne;
+// }
 
 //Roll the dice
 var diceroll = function () {
@@ -336,3 +365,24 @@ var finalScoreboardStatement = function (finalList) {
 
   return statement;
 };
+// Arrange dice
+// var arrangeDice = function (input) {
+//   if (input == 1) {
+//     console.log("read");
+//     firstNum = diceOne;
+//     secondNum = diceTwo;
+//     arrangeOrder = false;
+//   }
+//   if (input == 2) {
+//     firstNum = diceTwo;
+//     secondNum = diceOne;
+//     arrangeOrder = false;
+//   }
+//   if (input != 1 && input != 2) {
+//     return `Please enter 1 or 2.`;
+//   }
+//   score = firstNum * 10 + secondNum;
+//   return score;
+// };
+
+//roll the dice
