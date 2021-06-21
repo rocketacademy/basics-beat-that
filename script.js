@@ -1,8 +1,9 @@
 /* Note: This implementation incldues the following features:
-1. Regular beat that game (i.e. largest num wins) 
+1. Regular beat that mode, with leaderboard 
 2. Auto-Generate Combined Number
 3. Variable Number of Dice
 4. Variable Number of Players 
+5. Knockout mode
 We've removed Lowest Combined Number to reduce bloat, making the code more legible. However, please feel free to try to implement all the features together on your own
 */
 /*====================================
@@ -14,12 +15,21 @@ var GAME_MODE_CHOOSE_NUM_DICE = 'GAME_MODE_CHOOSE_NUM_DICE';
 var GAME_MODE_DICE_ROLL = 'GAME_MODE_DICE_ROLL';
 var GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY =
   'GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY';
+var GAME_MODE_CHOOSE_SUB_MODE = 'GAME_MODE_CHOOSE_SUB_MODE';
+('GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY');
+var GAME_MODE_SELECT_OPPONENTS = 'GAME_MODE_SELECT_OPPONENTS';
 
-// Track num of dice user has chosen to play with
+var SUB_MODE_REGULAR = 'regular';
+var SUB_MODE_KNOCKOUT = 'knockout';
+
+// Track the number of dice user has chosen to play with
 var numDiceChosen = 0;
 
-// Track num of players
+// Track the number of players
 var numPlayers = 0;
+
+// Track the subMode which will be either regular or knockout
+var subMode = null;
 
 // Initialise the game to start with the dice roll game mode
 var gameMode = GAME_MODE_CHOOSE_NUM_PLAYERS;
@@ -34,14 +44,20 @@ var playerProfiles = [];
 // Track the current round's winner
 var roundWinner = null;
 
+// Track which players are participating in the current round
+var currRoundParticipants = [];
+
 /*====================================
 ==============HELPER FUNCTIONS========
 ======================================*/
+
 /**
- * Return a random number from 1 to 6
+ * Return a random number between the specified bounds
+ * @param {number} lowerBound The lowest number that should be included in the range of possible numbers
+ * @param {number} upperBound The highest number that should be included in the range of possible numbers
  */
-var getDiceRoll = function () {
-  return Math.ceil(Math.random() * 6);
+var getRandNum = function (lowerBound, upperBound) {
+  return Math.floor(Math.random() * upperBound) + lowerBound;
 };
 
 /**
@@ -52,11 +68,14 @@ var getDiceRolls = function () {
   // Create an array newDiceRolls with 2 independent dice roll values
   var newDiceRolls = [];
   for (var i = 0; i < numDiceChosen; i += 1) {
-    newDiceRolls.push(getDiceRoll());
+    // Since we're rolling a dice, get a random number between 1 and 6
+    var diceRoll = getRandNum(1, 6);
+    // Push the diceRoll into the newDiceRolls array
+    newDiceRolls.push(diceRoll);
   }
 
   // assign dice rolls to the respective player
-  playerProfiles[currPlayer].diceRolls = newDiceRolls;
+  currRoundParticipants[currPlayer].diceRolls = newDiceRolls;
 
   // Return new dice rolls to parent function
   return newDiceRolls;
@@ -101,13 +120,10 @@ var sortAnArray = function (anArray) {
  */
 var getPlayerNumberAutomatically = function () {
   // Get the current player's dice array.
-  // We use the ternary operator on the following line for more concise syntax.
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
-  // The example below is equivalent to:
-  // var diceArray;
-  // if (currPlayer === 1) { diceArray = player1Dice; } else { diceArray = player2Dice; }
-  // var diceArray = currPlayer === 1 ? player1Dice : player2Dice;
-  var diceArray = playerProfiles[currPlayer].diceRolls;
+  // if submode is regular, get the current player's dice aray from playerProfiles
+
+  var diceArray = currRoundParticipants[currPlayer].diceRolls;
+
   var playerNum;
   // Sort the array such that it can order any number of elements in ascending order
   sortAnArray(diceArray);
@@ -127,22 +143,9 @@ var getPlayerNumberAutomatically = function () {
     }
   }
   // Update respective player's playerNum
-  playerProfiles[currPlayer].diceNum = playerNum;
+  currRoundParticipants[currPlayer].diceNum = playerNum;
   // Return generated player num to parent function
   return playerNum;
-};
-
-/**
- * Update the global variable that tracks  players' current round number
- * @param {number} firstNumeralIndex
- */
-updateCurrentRoundRoll = function (playerNum) {
-  // Store player num in the relevant global player num variable
-  if (currPlayer == 1) {
-    player1Num = playerNum;
-  } else {
-    player2Num = playerNum;
-  }
 };
 
 var sortAnArrayByASpecifiedKey = function (anArray, key) {
@@ -173,12 +176,12 @@ var determineWinner = function () {
   // If we've not yet set a roundWinner before (as will always be the case for the first player's turn), arbitrarily assign current player as the round winner
 
   if (roundWinner == null) {
-    roundWinner = playerProfiles[currPlayer];
+    roundWinner = currRoundParticipants[currPlayer];
   }
 
   // If there is a previous roundWinner, assess if currPlayer's diceNum is larger than roundWinner's. If yes, this player becomes the new roundWinner
-  else if (playerProfiles[currPlayer].diceNum > roundWinner.diceNum) {
-    roundWinner = playerProfiles[currPlayer];
+  else if (currRoundParticipants[currPlayer].diceNum > roundWinner.diceNum) {
+    roundWinner = currRoundParticipants[currPlayer];
   }
   // If it's a draw, or the the currPlayer's diceNum is not larger than the existing roundWinner, do nothing
 };
@@ -189,7 +192,7 @@ var determineWinner = function () {
  */
 var addNumToRunningScore = function (roundScore) {
   // Get hold of the current players score, and add the roundScore to it
-  playerProfiles[currPlayer].score += roundScore;
+  currRoundParticipants[currPlayer].score += roundScore;
 };
 
 var createLeaderBoardOutput = function () {
@@ -212,13 +215,10 @@ var createLeaderBoardOutput = function () {
 
   // ----------Option 2---------------------------
   // Copy playerProfiles into another array so that the sorting function (implemented below) won't change the order of playerProfiles
-  var copyOfPlayerProfiles = [];
-  for (var i = 0; i < playerProfiles.length; i += 1) {
-    copyOfPlayerProfiles.push(playerProfiles[i]);
-  }
+  var copyOfCurrRoundParticipants = cloneAnArr(currRoundParticipants);
 
   var sortedByPlayerScore = sortAnArrayByASpecifiedKey(
-    copyOfPlayerProfiles,
+    copyOfCurrRoundParticipants,
     'score'
   );
 
@@ -238,13 +238,22 @@ var createLeaderBoardOutput = function () {
 /**
  * Reset the game so that the user has to choose how many dice he wants to play with
  */
-var resetGame = function () {
+var resetGame = function (ultimateWinner) {
   // Rest currPlayer to 0 so that we can use it to point at the first element of playerProfiles (Remember: arrays are 0 indexed)
   currPlayer = 0;
-  //Switch to choose number of dice mode so that players can restart without having to re-specify the number of players
-  gameMode = GAME_MODE_CHOOSE_NUM_DICE;
   // Reset round winner
   roundWinner = null;
+  if (subMode == SUB_MODE_REGULAR) {
+    //Switch to choose number of dice mode so that players can restart without having to re-specify the number of players
+    gameMode = GAME_MODE_CHOOSE_NUM_DICE;
+  } else if (subMode == SUB_MODE_KNOCKOUT && !ultimateWinner) {
+    gameMode = GAME_MODE_CHOOSE_NUM_DICE;
+  } else if (subMode == SUB_MODE_KNOCKOUT && ultimateWinner) {
+    // Else if it is the knockout mode and there is an ultimate winner, reset the game so the user has to select num of players
+    gameMode = GAME_MODE_CHOOSE_NUM_PLAYERS;
+    // Empty currRoundParticipants
+    currRoundParticipants = [];
+  }
 };
 
 /**
@@ -255,7 +264,7 @@ var createDiceRollInfoMsg = function (diceRollsArr) {
   // Craft a preamble and assign it to a variable that we will return at the end of this function
   var outputMsg =
     'Welcome Player ' +
-    playerProfiles[currPlayer].id +
+    currRoundParticipants[currPlayer].id +
     '.<br> Your dice rolls are:';
 
   // Loop thru the array; on each iteration, use the index as a pointer to help you access the relevant element in diceRolls array
@@ -275,6 +284,71 @@ var createPlayerProfiles = function () {
   for (var i = 0; i < numPlayers; i += 1) {
     playerProfiles.push({id: i + 1, diceRolls: [], diceNum: 0, score: 0});
   }
+};
+
+/**
+ * Return a random number between the specified bounds
+ */
+var getRandNum = function (lowerBound, upperBound) {
+  return Math.floor(Math.random() * upperBound) + lowerBound;
+};
+
+/**
+ * Get hold of a random player in the playerProfiles array, then remove that player
+ */
+var getPlayerRandomly = function () {
+  // generate a random number to select one of the players. Subtract 1 from this number to sync it with array index (becos arrays are 0 indexed)
+  var randomIndex = getRandNum(1, playerProfiles.length) - 1;
+
+  var selectedPlayer = playerProfiles[randomIndex];
+  //Remove player from the array:
+  // -------Method 1--------
+  // // initialise a temp array
+  // var tempArr = [];
+  // // Loop thru the playerProfiles
+  // for (var i = 0; i < playerProfiles.length; i += 1) {
+  //   // If the current index does not match randomIndex, push it into the temp Arr.
+  //   if (i != randomIndex) {
+  //     tempArr.push(playerProfiles[i]);
+  //   }
+  // }
+  // // reassign tempArr to playerProfiles
+  // playerProfiles = tempArr;
+  // -------Method 2--------
+  // Use splice, a JS native method, to remove the element directly from playerProfiles. Info on splice: https://www.w3schools.com/jsref/jsref_splice.asp
+  // In the context we're using splice, we need to specify 2 arguments: 1. The index of the elem you want to remove; 2. The number of elements to remove (starting from the specified index)
+  playerProfiles.splice(randomIndex, 1);
+  // return the selected player
+  return selectedPlayer;
+};
+
+var cloneAnArr = function (anArray) {
+  var copyOfAnArray = [];
+  for (var i = 0; i < anArray.length; i += 1) {
+    copyOfAnArray.push(anArray[i]);
+  }
+  return copyOfAnArray;
+};
+
+var eliminateLoser = function () {
+  // set a variable to hold index of the loser's element.
+  var loserIdx;
+  // loop thru the currRoundParticpants
+  for (var i = 0; i < currRoundParticipants.length; i += 1) {
+    // if an element's id is not the same as the roundWinner's id, that element is the loser's element
+    if (currRoundParticipants[i].id != roundWinner.id) {
+      // record the index of this element
+      loserIdx = i;
+    }
+  }
+
+  // assign the loser's details to a var
+  var loser = currRoundParticipants[loserIdx];
+
+  // remove loser from the currRoundParticipants
+  currRoundParticipants.splice(loserIdx, 1);
+  // return the loser's details
+  return loser;
 };
 
 /*====================================
@@ -313,12 +387,87 @@ var main = function (input) {
     // Convert user input from string to number, and assign it to the global var tracking the number of dice users have chosen to play with
     numDiceChosen = Number(input);
 
-    // Change to dice roll mode
+    // If this is the second (or more) round, skip submode selection and go straight into playing the game
+    if (subMode == SUB_MODE_REGULAR) {
+      gameMode = GAME_MODE_DICE_ROLL;
+    } else if (subMode == SUB_MODE_KNOCKOUT) {
+      gameMode = GAME_MODE_SELECT_OPPONENTS;
+      return (
+        'You have chosen to play the next game with ' +
+        numDiceChosen +
+        " dice. Click submit to see who you'll be going up against. "
+      );
+    } else {
+      // Else this must be the first round; prompt user to chose a submode
+      // Change to dice roll mode
+      gameMode = GAME_MODE_CHOOSE_SUB_MODE;
+      return (
+        'You have chosen to play with ' +
+        numDiceChosen +
+        ' dice. <br><br> Please enter one of the following game types: <br>1. regular <br>2. knockout '
+      );
+    }
+  }
+
+  if (gameMode == GAME_MODE_CHOOSE_SUB_MODE) {
+    // valdiate the user input
+    if (input != SUB_MODE_REGULAR && input != SUB_MODE_KNOCKOUT) {
+      return 'Please enter one of the following game types: <br>1. regular <br>2. knockout ';
+    }
+
+    // If user wants to play a regular game, change the mode and prompt player 1 to start
+    if (input == SUB_MODE_REGULAR) {
+      // set the submode
+      subMode = SUB_MODE_REGULAR;
+
+      // Since all players in playerProfiles are playing, push each player into currRoundParticpants
+      for (var i = 0; i < playerProfiles.length; i += 1) {
+        currRoundParticipants.push(playerProfiles[i]);
+      }
+      // Progress the game to the next mode
+      gameMode = GAME_MODE_DICE_ROLL;
+      // Prompt Player 1 to roll his dice
+      return (
+        'You have selected to play a ' +
+        subMode +
+        ' game. Player 1, please click submit to roll your dice'
+      );
+    }
+    // If user does not want to play a regular game, then he wants to play knockout. Change the game mode to programitically select opponenets
+    if (input == SUB_MODE_KNOCKOUT) {
+      // set the submode
+      subMode = SUB_MODE_KNOCKOUT;
+      // Progress the game to the next mode
+      gameMode = GAME_MODE_SELECT_OPPONENTS;
+    }
+  }
+
+  //Randomly get 2 players to play against each other
+  if (gameMode == GAME_MODE_SELECT_OPPONENTS) {
+    // If we're in the first round, currPlayers arr would be empty
+    if (currRoundParticipants.length < 1) {
+      // set currRoundParticpants to include any 2 random players from the playerProfiles array
+      currRoundParticipants = [getPlayerRandomly(), getPlayerRandomly()];
+    }
+    // Else, we are in this mode because a player has won a previous round. add one other player to currRoundParticipants
+    else {
+      currRoundParticipants.push(getPlayerRandomly());
+    }
+    // Progress the game by changing to the next mode
     gameMode = GAME_MODE_DICE_ROLL;
+
+    // Prompt users on who will be playing in this round
+
     return (
-      'You have chosen to play with ' +
-      numDiceChosen +
-      ' dice. Player 1, click submit to get your dice rolls'
+      'This is a ' +
+      subMode +
+      ' game. Each round, the loser will be eliminated and the winner will continue playing against other players. <br><br> Player ' +
+      currRoundParticipants[0].id +
+      ' will now play against Player ' +
+      currRoundParticipants[1].id +
+      '<br>Player ' +
+      currRoundParticipants[0].id +
+      ', please click submit to roll your dice'
     );
   }
 
@@ -342,20 +491,22 @@ var main = function (input) {
 
     var playerNumResponse =
       'Player ' +
-      playerProfiles[currPlayer].id +
+      currRoundParticipants[currPlayer].id +
       ', your number is ' +
-      playerProfiles[currPlayer].diceNum +
+      currRoundParticipants[currPlayer].diceNum +
       '.';
 
-    // add the playerNum to player's running score
+    // add the playerNum to player's running score if user is playing regular mode
     addNumToRunningScore(playerNum);
+    if (subMode == SUB_MODE_REGULAR) {
+    }
 
     //On each player's turn, determine if he has the largest dice so far
     determineWinner();
 
-    // if currPlayer is less than the number of players (i.e. the number that the user chose at the start), it means not everyone has had a go. Therefore change it back to the dice roll mode and increment currplayer
-    if (playerProfiles[currPlayer].id < numPlayers) {
-      // change the mode
+    // if currPlayer is less than the number of players in the current round, it means not everyone has had a go. Therefore change the mode back to the dice roll mode and increment currplayer
+    if (currPlayer < currRoundParticipants.length - 1) {
+      // change the mode to progress the game
       gameMode = GAME_MODE_DICE_ROLL;
       // increment currPlayer
       currPlayer += 1;
@@ -363,24 +514,52 @@ var main = function (input) {
       return (
         playerNumResponse +
         '<br> It is now Player ' +
-        playerProfiles[currPlayer].id +
+        currRoundParticipants[currPlayer].id +
         "'s turn. Press Submit to roll the dice"
       );
     }
 
-    var leaderBoardOutput = createLeaderBoardOutput();
+    // If users are playing in regular mode, display the leaderboard
+    if (subMode == SUB_MODE_REGULAR) {
+      var leaderBoardOutput = createLeaderBoardOutput();
 
-    // Craft the end game response
-    var myOutputValue =
-      playerNumResponse +
-      ' <br><br> Player' +
-      roundWinner.id +
-      ' won this round. <br> <br> <br>' +
-      leaderBoardOutput +
-      '<br><br> To continue playing enter the number of dice you would like to play with, and click submit.';
+      // Craft the end-of-game response
+      var myOutputValue =
+        playerNumResponse +
+        ' <br><br> Player ' +
+        roundWinner.id +
+        ' won this round. <br> <br> <br>' +
+        leaderBoardOutput +
+        '<br><br> To continue playing enter the number of dice you would like to play with, and click submit.';
+    } else if (subMode == SUB_MODE_KNOCKOUT) {
+      // Eliminate the loser from currRoundParticipants and return the details of this loser
+      var loser = eliminateLoser();
 
-    // Reset the game
-    resetGame();
+      // Craft the preamble output message to the user.
+      var myOutputValue =
+        playerNumResponse +
+        ' <br><br> Player ' +
+        roundWinner.id +
+        ' won this round.';
+
+      // if there are still other player's queued up to play against this player, concat myOutputvalue with an elimination message, then reset the game
+      if (playerProfiles.length > 0) {
+        myOutputValue +=
+          ' <br> <br> Player ' +
+          loser.id +
+          ' has been eliminated.' +
+          '<br><br> To continue playing enter the number of dice you would like to play with, and click submit.';
+      } else {
+        // Else there are no more competitors left in the playersProfile. The remaining player is the ultimate winner
+        var ultimateWinner = true;
+        myOutputValue +=
+          '<br><br>Player ' +
+          currRoundParticipants[0].id +
+          ', you are the ultimate winner! To start a new game, first enter the number of players';
+      }
+    }
+    // reset the game
+    resetGame(ultimateWinner);
 
     return myOutputValue;
   }
