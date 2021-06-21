@@ -17,6 +17,8 @@ var allDiceArrays = [];
 var playerNumbers = [];
 // Keep track of current player's number 
 var currPlayer = 1;
+// Array to track number of attempts (for a whole group of players)
+var attemptsCount = [];
 
 
 
@@ -45,9 +47,8 @@ var getPlayerNumber = function(firstNumeralIndex, player) {
   else {
     playerNum = concatenate2Numbers(diceArray[1], diceArray[0]);
   }
-  // Store the player's chosen number in the respective index in global array
-  playerNumbers[player-1] = playerNum;
-  return playerNum;
+  console.log(parseInt(playerNum));
+  return parseInt(playerNum);
 }
 
 //Function to determine winner
@@ -87,6 +88,15 @@ var main = function (input) {
     console.log("number of players");
     console.log(numberOfPlayers);
 
+    // Fill the attemptsCount, playerNumbers and allDiceArrays arrays with 0 from position 0 to numberOfPlayers - 1
+    var index = 0;
+    while (index < numberOfPlayers) {
+      attemptsCount.push(0);
+      playerNumbers.push(0);
+      allDiceArrays.push([]);
+      index += 1
+    }
+
     // Change game mode to GAME_MODE_DICE_ROLL
     gameMode = GAME_MODE_DICE_ROLL;
   }
@@ -102,7 +112,7 @@ var main = function (input) {
     console.log("Dice rolls");
     console.log(`${tempArray}`);
     // Push dice roll for this player to global array
-    allDiceArrays.push(tempArray);
+    allDiceArrays[currPlayer - 1] = tempArray;
     // Prompt player to pick order of dice
     myOutputValue = `Welcome player ${currPlayer}. <br> You rolled Dice 1: ${tempArray[0]} and Dice 2: ${tempArray[1]}. Next, choose the order of the dice by entering 1 or 2 as the first numeral index.`
     // Change game mode to pick order of dice
@@ -130,8 +140,16 @@ var main = function (input) {
     var playerNum = getPlayerNumber(firstNumeralIndex, currPlayer);
     console.log("Player number");
     console.log(playerNum);
-    // Store player number in global array
-    playerNumbers[currPlayer - 1] = playerNum;
+    console.log("player's previous score")
+    console.log(playerNumbers[currPlayer - 1]);
+    
+    // Store player number in global array (accumulate scores)
+    playerNumbers[currPlayer - 1] = playerNumbers[currPlayer - 1] + playerNum;
+    console.log("player's updated score")
+    console.log(playerNumbers[currPlayer - 1]);
+
+    // Update the no. of attempts for this player
+    attemptsCount[currPlayer-1] += 1
 
     var playerNumResponse = `Player ${currPlayer}, You chose Dice ${firstNumeralIndex} first. Your number is ${playerNum}.`;
     
@@ -152,19 +170,27 @@ var main = function (input) {
       console.log("winning player");
       console.log(winningPlayer);
 
-      //Reset the game
+      //Reset the game to the dice roll
       currPlayer = 1;
       gameMode = GAME_MODE_DICE_ROLL;
 
       var index = 0;
       var leaderboard = "";
+      var attempts = "";
       while (index < numberOfPlayers) {
-        leaderboard += `Player ${index+1}'s score: ${playerNumbers[index]} <br>`;
+        leaderboard += `Player ${index + 1}'s score: ${playerNumbers[index]} <br>`;
+        attempts += `Player ${index + 1}: ${attemptsCount[currPlayer - 1]} <br>`
         index += 1;
       }
 
       // Return the game end response
-      return `${playerNumResponse} <br> Player ${winningPlayer} has won. <br> ${leaderboard} <br> To restart the game for Player 1, click the submit button.`; 
+      return `${playerNumResponse} <br>
+      <br><b>SCOREBOARD</b><br> 
+      Player ${winningPlayer} has won. 
+      <br> ${leaderboard} <br>
+      <br><b>NUMBER OF ATTEMPTS</b><br>
+      ${attempts}
+      <br>To restart the game for Player 1, click the submit button.`; 
     }
 
   }
