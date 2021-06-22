@@ -48,35 +48,28 @@ var playerDiceRolls = function () {
   }
 };
 
+var generateCombinedNumber = function (firstDiceIndex, playerDiceNums) {
+  if (firstDiceIndex == 1) {
+    playerScore = Number(String(playerDiceNums[0]) + String(playerDiceNums[1]));
+  } else {
+    playerScore = Number(String(playerDiceNums[1]) + String(playerDiceNums[0]));
+  }
+  return playerScore;
+};
+
 // calculating players' score based on the dice order they selected
 var getPlayersScore = function (input) {
   if (gameStage == PLAYER1_CHOOSE_DICE_ORDER) {
-    if (input == 1) {
-      player1Score = Number(
-        String(player1DiceNums[0]) + String(player1DiceNums[1])
-      );
-      console.log(`p1 player score 1 ` + player1Score);
-    } else {
-      player1Score = Number(
-        String(player1DiceNums[1]) + String(player1DiceNums[0])
-      );
-      console.log(`P1 player score 2 ` + player1Score);
-    }
+    // helper function for P1
+    player1Score = generateCombinedNumber(input, player1DiceNums);
+
     totalScorePlayer1 = totalScorePlayer1 + player1Score;
     return `Player 1, your score is ${player1Score}. <br><br> ${totalScoreMessage} ${totalScorePlayer1} <br><br>Click Submit for Player 2 to roll the dices!`;
   }
   if (gameStage == PLAYER2_CHOOSE_DICE_ORDER) {
-    if (input == 1) {
-      player2Score = Number(
-        String(player2DiceNums[0]) + String(player2DiceNums[1])
-      );
-      console.log(`P2 player score 1 ` + player2Score);
-    } else {
-      player2Score = Number(
-        String(player2DiceNums[1]) + String(player2DiceNums[0])
-      );
-      console.log(`P2 player score 2 ` + player2Score);
-    }
+    // helper function for P2
+    player2Score = generateCombinedNumber(input, player2DiceNums);
+
     totalScorePlayer2 = totalScorePlayer2 + player2Score;
     return `Player 2, your score is ${player2Score}. <br><br>${totalScoreMessage} ${totalScorePlayer2} <br><br>Click Submit to see who won the game!`;
   }
