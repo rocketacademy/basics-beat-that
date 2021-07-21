@@ -1,11 +1,10 @@
 module.exports = {
   env: {
     browser: true,
-    es2020: true,
   },
-  parserOptions: {
-    ecmaVersion: 11,
-  },
+  extends: [
+    "airbnb-base",
+  ],
   rules: {
     // Don't enforce block scope on "var" variable declarations, let JS behave as intended.
     'block-scoped-var': 'off',
