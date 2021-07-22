@@ -24,7 +24,7 @@
         padding: 38px 31px;
       }
 
-      input {
+      input.text {
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
@@ -52,8 +52,37 @@
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
       <p>Input:</p>
-      <input id="input-field" />
+      <input class="text" id="players-field" placeholder="Please enter number of players."/>
       <br />
+      <input class="text" id="dice-field" placeholder="Please select number of dice."/>
+      <br />
+      <form name="game_mode">
+        <p>Please select a game to play.</p>
+        <label for="normal"
+          ><input
+            type="radio"
+            id="normal"
+            name="game_mode"
+            value="normal"
+            checked
+          />🕹️ Normal</label
+        ><br />
+        <label for="lowest"
+          ><input
+            type="radio"
+            id="lowest"
+            name="game_mode"
+            value="lowest"
+          />🔄 Lowest Combination</label
+        ><br />
+        <label for="knockout"
+          ><input
+            type="radio"
+            id="knockout"
+            name="game_mode"
+            value="knockout"
+          />🥊 Knockout</label
+        ><br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
@@ -65,15 +94,14 @@
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        var players = document.querySelector("#players-field").value;
+        var dice = document.getElementById("dice-field").value;
+        var mode = document.forms["game_mode"].elements["game_mode"].value;
+        var result = main(players, dice, mode);
 
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
       });
     </script>
   </body>
