@@ -16,7 +16,11 @@ var diceRolls = [];
 var main = function (players, dice, mode) {
   gameMode = mode;
 
-  if (isNaN(Number(players)) || Number(players) < 2) {
+  if (isNaN(Number(players))) {
+    return `Please enter a valid number.`;
+  } else if (Number(players) < 3 && gameMode == KNOCKOUT) {
+    return `For Knockout mode, please enter 3 or more for the number of players.`;
+  } else if (Number(players) < 2) {
     return `Please enter 2 or more for the number of players.`;
   } else {
     numOfPlayers = Number(players);
@@ -41,8 +45,11 @@ var main = function (players, dice, mode) {
       playBeatThat();
       break;
     case KNOCKOUT:
-      playKnockout();
-      break;
+      return playKnockout();
+  }
+
+  if (gameMode == KNOCKOUT) {
+    playKnockout();
   }
 
   return generateOutputMessage();
@@ -125,6 +132,54 @@ function playBeatThat() {
   }
 }
 
+// Play Knockout
+function playKnockout() {
+  var outputMessage = "";
+  var holdingBoard = [];
+  var knockoutBoard = [];
+
+  // Create holding board for all players
+  for (var counter = 1; counter <= Number(numOfPlayers); counter += 1) {
+    holdingBoard.push({ playerNumber: counter, score: 0 });
+  }
+
+  // Put in 1 player into knockout board
+  knockoutBoard.push(holdingBoard.pop());
+
+  // Number of rounds to be played is 1 fewer than number of players
+  for (
+    var holdingCounter = 1;
+    holdingCounter < numOfPlayers;
+    holdingCounter += 1
+  ) {
+    // Put in 1 more player into knockout board
+    knockoutBoard.push(holdingBoard.pop());
+
+    // Get the combinations for each player in the knockout board
+    for (player in knockoutBoard) {
+      getDiceRolls(numOfDice);
+      knockoutBoard[player].score += generateCombi();
+    }
+
+    // Sort the knockout board scores in descending order
+    knockoutBoard.sort((a, b) => b.score - a.score);
+
+    // Create results message
+    outputMessage += `Round ${holdingCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br>Player ${knockoutBoard[0].playerNumber} stays while Player ${knockoutBoard[1].playerNumber} is out of the competition!<br><br>`;
+
+    // Remove player that lost
+    knockoutBoard.pop();
+
+    // Reset defending player's score
+    knockoutBoard[0].score = 0;
+  }
+
+  outputMessage += `<br>After ${numOfPlayers - 1} exciting rounds, Player ${
+    knockoutBoard[0].playerNumber
+  } is the ultimate winner! 👑`;
+  return outputMessage;
+}
+
 // Output Message
 function generateOutputMessage() {
   var message =
@@ -137,7 +192,7 @@ function generateOutputMessage() {
     winner = getMinOfArray(roundBoard) + 1;
   }
   message += `The winner is Player ${winner}!<br>`;
-  message += `👑 Leader Board 👑<br>`;
+  message += `🏆 Leader Board 🏆<br>`;
   for (var counter = 0; counter < numOfPlayers; counter += 1) {
     message += `Player ${leaderBoard[counter].playerNumber}: ${leaderBoard[counter].score}<br>`;
   }
