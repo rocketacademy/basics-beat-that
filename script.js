@@ -4,6 +4,8 @@ var diceA = 0;
 var diceB = 0;
 var myOutputValue = "";
 var playerOneNum = 0;
+var scoreA = 0;
+var scoreB = 0;
 
 // ROLL DICE
 var rollDice = function () {
@@ -35,6 +37,23 @@ var compareNum = function (one, two) {
   return winner;
 };
 
+// COMPARE SCORES
+var compareScores = function (one, two) {
+  var firstPlace = "Player 1";
+  var firstPlaceScore = one;
+  var secondPlace = "Player 2";
+  var secondPlaceScore = two;
+  if (two > one) {
+    firstPlace = "Player 2";
+    secondPlace = "Player 1";
+    firstPlaceScore = two;
+    secondPlaceScore = one;
+  } else if (one == two) {
+    return `<br><br> LEADERBOARD: <br> =1. ${firstPlace} - ${firstPlaceScore} <br> =1. ${secondPlace} - ${secondPlaceScore}`;
+  }
+  return `<br><br> LEADERBOARD: <br> 1. ${firstPlace} - ${firstPlaceScore} <br> 2. ${secondPlace} - ${secondPlaceScore}`;
+};
+
 var main = function (input) {
   var currentPlayer = 1 + (turnCount % 2);
 
@@ -51,9 +70,13 @@ var main = function (input) {
       myOutputValue = `Player ${currentPlayer}, you chose Dice ${input} first. <br> Your number is ${diceNumber}.`;
       if (currentPlayer == 1) {
         playerOneNum = diceNumber;
+        scoreA += Number(diceNumber);
       } else if (currentPlayer == 2) {
+        scoreB += Number(diceNumber);
         var endResult = compareNum(playerOneNum, diceNumber);
         myOutputValue += endResult;
+        var leaderboard = compareScores(scoreA, scoreB);
+        myOutputValue += leaderboard;
       }
       gameMode = "roll";
       turnCount += 1;
