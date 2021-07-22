@@ -52,38 +52,44 @@
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
       <p>Input:</p>
-      <input class="text" id="players-field" placeholder="Please enter number of players."/>
+      <input
+        class="text"
+        id="players-field"
+        placeholder="Please enter number of players."
+      />
       <br />
-      <input class="text" id="dice-field" placeholder="Please select number of dice."/>
+      <input
+        class="text"
+        id="dice-field"
+        placeholder="Please select number of dice."
+      />
       <br />
-      <form name="game_mode">
+      <form name="game-mode">
         <p>Please select a game to play.</p>
         <label for="normal"
           ><input
             type="radio"
             id="normal"
-            name="game_mode"
+            name="game-mode"
             value="normal"
             checked
           />🕹️ Normal</label
         ><br />
         <label for="lowest"
-          ><input
-            type="radio"
-            id="lowest"
-            name="game_mode"
-            value="lowest"
-          />🔄 Lowest Combination</label
+          ><input type="radio" id="lowest" name="game-mode" value="lowest" />🔄
+          Lowest Combination</label
         ><br />
         <label for="knockout"
           ><input
             type="radio"
             id="knockout"
-            name="game_mode"
+            name="game-mode"
             value="knockout"
           />🥊 Knockout</label
         ><br />
-      <button id="submit-button">Submit</button>
+      </form>
+      <br />
+      <button id="submit-button">Play</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
@@ -94,9 +100,9 @@
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var players = document.querySelector("#players-field").value;
-        var dice = document.getElementById("dice-field").value;
-        var mode = document.forms["game_mode"].elements["game_mode"].value;
+        var players = Number(document.getElementById("players-field").value);
+        var dice = Number(document.getElementById("dice-field").value);
+        var mode = document.forms["game-mode"].elements["game-mode"].value;
         var result = main(players, dice, mode);
 
         // Display result in output element
