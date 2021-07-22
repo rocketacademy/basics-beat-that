@@ -1,5 +1,5 @@
 //to have a global variable that controls the game progress
-var gameState = "post dice roll";
+var gameState = "";
 //to have a global variable that controls the players
 var playerNumber = 1;
 //global variables to save the dice numbers rolled
@@ -11,9 +11,25 @@ var combineNum2 = 0;
 //global variables to generate the total sum
 var sum1 = 0;
 var sum2 = 0;
+//to keep track of the game mode
+var gameMode = 0;
 
 var main = function (input) {
   var myOutputValue = "";
+
+  if (gameState == "") {
+    myOutputValue = `Please choose the game mode: <br><br> 1. Highest Combined Number <br><br> 2. Lowest Combined Number <br><br> Enter the number choice.`;
+    gameState = "input game mode";
+
+    return myOutputValue;
+  }
+
+  if (gameState == "input game mode") {
+    gameState = "post dice roll";
+    gameMode = input;
+    myOutputValue = `You have chosen game mode ${gameMode}. Let's play!`;
+    return myOutputValue;
+  }
 
   if (gameState == "post dice roll") {
     var dice1 = diceRoll();
@@ -67,10 +83,16 @@ var formatLeaderBoard = function (currentLeader) {
 
 //to determine the bigger number out of the two numbers that players obtained
 var evaluateWinner = function (player1Num, player2Num) {
-  if (player1Num > player2Num) {
+  if (player1Num > player2Num && gameMode == 1) {
     return `Player 1 is currently leading!`;
   }
-  if (player2Num > player1Num) {
+  if (player2Num > player1Num && gameMode == 1) {
+    return `Player 2 is currently leading!`;
+  }
+  if (player2Num > player1Num && gameMode == 2) {
+    return `Player 1 is currently leading!`;
+  }
+  if (player1Num > player2Num && gameMode == 2) {
     return `Player 2 is currently leading!`;
   }
   if (player1Num == player2Num) {
