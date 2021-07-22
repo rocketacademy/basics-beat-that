@@ -60,7 +60,7 @@ function generateCombi(input) {
   } else {
     playerCombi.push(Number(String(diceRolls[1]) + String(diceRolls[0])));
   }
-  scoreBoard[playerTurn] += playerCombi[playerTurn];
+  updateScoreBoard(playerNumber, playerCombi[playerTurn]);
   var message = `Player ${playerNumber}, you chose Die ${input} first.<br>Your number is ${playerCombi[playerTurn]}.<br>`;
 
   // Check if everyone has played
@@ -79,13 +79,21 @@ function generateCombi(input) {
 
 // Generate scoreboard
 function generateScoreBoard() {
-  for (var counter = 0; counter < numOfPlayers; counter += 1) {
-    scoreBoard.push(0);
+  for (var counter = 1; counter <= numOfPlayers; counter += 1) {
+    scoreBoard.push({ playerNumber: counter, score: 0 });
   }
 }
 
 // Update scoreboard
-function updateScoreBoard() {}
+function updateScoreBoard(playerNum, playerScore) {
+  scoreBoard.find(({ playerNumber }) => playerNumber === playerNum).score +=
+    playerScore;
+}
+
+// Sort scoreboard in descending order of score
+function sortScoreBoard() {
+  scoreBoard.sort((a, b) => b.score - a.score);
+}
 
 // Get max in array
 function arrayMax(array) {
@@ -110,8 +118,9 @@ function endRound() {
   var winner = playerCombi.indexOf(highestCombi) + 1;
   message += `The winner is Player ${winner}!<br>`;
   message += `Here are the players' cumulative rolls.<br>`;
-  for (score in scoreBoard) {
-    message += `Player ${Number(score) + 1}: ${scoreBoard[score]}<br>`;
+  sortScoreBoard();
+  for (player in scoreBoard) {
+    message += `Player ${scoreBoard[player].playerNumber}: ${scoreBoard[player].score}<br>`;
   }
   resetRound();
   return message;
