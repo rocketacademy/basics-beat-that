@@ -41,14 +41,28 @@ var main = function (input) {
       combineNum2 = finalNumber;
       sum2 += finalNumber;
       var currentLeader = evaluateWinner(sum1, sum2);
+      var leaderBoard = formatLeaderBoard(currentLeader);
       playerNumber = 1;
       gameState = "post dice roll";
-      myOutputValue = `Player 2, you chose Dice ${input} first. <br><br> Your number is ${finalNumber}, and total sum of all your numbers is ${sum2}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> Player 1 total sum: ${sum1} and Player 2 total sum: ${sum2}. <br><br> ${currentLeader}`;
+      myOutputValue = `Player 2, you chose Dice ${input} first. <br><br> Your number is ${finalNumber}, and total sum of all your numbers is ${sum2}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
       return myOutputValue;
     }
   }
 
   return myOutputValue;
+};
+
+//to format the leaderboard
+var formatLeaderBoard = function (currentLeader) {
+  if (currentLeader == `Player 1 is currently leading!`) {
+    return `1st in place: Player 1 (total sum: ${sum1}) <br><br> 2nd in place: Player 2 (total sum: ${sum2}).`;
+  }
+  if (currentLeader == `Player 2 is currently leading!`) {
+    return `1st in place: Player 2 (total sum: ${sum2}) <br><br> 2nd in place: Player 1 (total sum: ${sum1}).`;
+  }
+  if (currentLeader == `Both players have the same total sum!`) {
+    return `Player 1 total sum: ${sum1} and Player 2 total sum: ${sum2}.`;
+  }
 };
 
 //to determine the bigger number out of the two numbers that players obtained
