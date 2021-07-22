@@ -1,32 +1,72 @@
 // String Constants
+var NORMAL = "normal";
+var LOWEST = "lowest";
+var KNOCKOUT = "knockout";
 
 // Global Variables
+var gameMode = NORMAL;
 var numOfPlayers = 2;
-var playerNumber = 1;
-var playerTurn = 0;
-var playerCombi = [];
+var roundBoard = [];
+var winner;
+var leaderBoard = [];
 var numOfDice = 2;
 var diceRolls = [];
-var scoreBoard = [];
 
 // Main
-var main = function (input) {
-  // Generate score board
-  if (scoreBoard.length != numOfPlayers) {
-    generateScoreBoard();
+var main = function (players, dice, mode) {
+  gameMode = mode;
+
+  if (isNaN(Number(players)) || Number(players) < 2) {
+    return `Please enter 2 or more for the number of players.`;
+  } else {
+    numOfPlayers = Number(players);
   }
 
-  // Roll dice if dice rolls are empty and ask player to choose combination
-  if (diceRolls.length == 0) {
-    getDiceRolls(numOfDice);
-    return chooseCombi(playerNumber);
+  if (isNaN(Number(dice)) || Number(dice) < 2) {
+    return `Please enter 2 or more for the number of dice.`;
   } else {
-    // Show a player's combination or ends the round
-    return generateCombi(input);
+    numOfDice = Number(dice);
   }
+
+  // Generate leader board
+  if (leaderBoard.length != numOfPlayers) {
+    for (var counter = 1; counter <= numOfPlayers; counter += 1) {
+      leaderBoard.push({ playerNumber: counter, score: 0 });
+    }
+  }
+
+  switch (gameMode) {
+    case NORMAL:
+    case LOWEST:
+      playBeatThat();
+      break;
+    case KNOCKOUT:
+      playKnockout();
+      break;
+  }
+
+  return generateOutputMessage();
 };
 
 // Modules
+
+// Update player boards
+function updatePlayerBoards(playerNum, playerScore) {
+  roundBoard.push(playerScore);
+  leaderBoard.find(
+    ({ playerNumber }) => playerNumber === Number(playerNum) + 1
+  ).score += playerScore;
+}
+
+// Sort leader board in descending order of score
+function sortLeaderBoardDescend() {
+  leaderBoard.sort((a, b) => b.score - a.score);
+}
+
+// Sort leader board in ascending order of score
+function sortLeaderBoardAscend() {
+  leaderBoard.sort((a, b) => a.score - b.score);
+}
 
 // Die Roll
 function rollDie() {
@@ -43,90 +83,64 @@ function getDiceRolls(numOfDice) {
   }
 }
 
-// Choose Combination
-function chooseCombi(playerNumber) {
-  var message = `Welcome Player ${playerNumber}. Here are your dice rolls:<br>`;
-  for (roll in diceRolls) {
-    message += `Die ${Number(roll) + 1}: ${diceRolls[roll]}<br>`;
-  }
-  message += `Please choose the order of the dice.`;
-  return message;
+// Get maximum in array
+function getMaxOfArray(array) {
+  var max = Math.max.apply(null, array);
+  return array.indexOf(max);
 }
 
-// Generate Combination
-function generateCombi(input) {
-  if (input == 1) {
-    playerCombi.push(Number(String(diceRolls[0]) + String(diceRolls[1])));
+// Get minimum in array
+function getMinOfArray(array) {
+  var min = Math.min.apply(null, array);
+  return array.indexOf(min);
+}
+
+// Generate Normal Combination
+function generateCombi() {
+  combination = "";
+  for (var counter = 0; counter < numOfDice; counter += 1) {
+    if (gameMode == NORMAL || gameMode == KNOCKOUT) {
+      var max = getMaxOfArray(diceRolls);
+      combination += String(diceRolls[max]);
+      diceRolls.splice(max, 1);
+    } else {
+      var min = getMinOfArray(diceRolls);
+      combination += String(diceRolls[min]);
+      diceRolls.splice(min, 1);
+    }
+  }
+  return Number(combination);
+}
+
+// Play Beat That
+function playBeatThat() {
+  for (var counter = 0; counter < numOfPlayers; counter += 1) {
+    getDiceRolls(numOfDice);
+    updatePlayerBoards(counter, generateCombi());
+  }
+  if (gameMode == NORMAL) {
+    sortLeaderBoardDescend();
   } else {
-    playerCombi.push(Number(String(diceRolls[1]) + String(diceRolls[0])));
-  }
-  updateScoreBoard(playerNumber, playerCombi[playerTurn]);
-  var message = `Player ${playerNumber}, you chose Die ${input} first.<br>Your number is ${playerCombi[playerTurn]}.<br>`;
-
-  // Check if everyone has played
-  if (playerNumber != numOfPlayers) {
-    // Increase player number, reset dice rolls and ask for next player to play
-    playerNumber += 1;
-    playerTurn += 1;
-    diceRolls = [];
-    message += `It is now Player ${playerNumber}'s turn.`;
-    return message;
-  } else {
-    message += endRound();
-    return message;
+    sortLeaderBoardAscend();
   }
 }
 
-// Generate scoreboard
-function generateScoreBoard() {
-  for (var counter = 1; counter <= numOfPlayers; counter += 1) {
-    scoreBoard.push({ playerNumber: counter, score: 0 });
+// Output Message
+function generateOutputMessage() {
+  var message =
+    "All players have played, here are the results for this round!<br>";
+  for (player in roundBoard) {
+    message += `Player ${Number(player) + 1} got ${roundBoard[player]}.<br>`;
   }
-}
-
-// Update scoreboard
-function updateScoreBoard(playerNum, playerScore) {
-  scoreBoard.find(({ playerNumber }) => playerNumber === playerNum).score +=
-    playerScore;
-}
-
-// Sort scoreboard in descending order of score
-function sortScoreBoard() {
-  scoreBoard.sort((a, b) => b.score - a.score);
-}
-
-// Get max in array
-function arrayMax(array) {
-  return Math.max.apply(null, array);
-}
-
-// Reset Round
-function resetRound() {
-  playerNumber = 1;
-  playerTurn = 0;
-  playerCombi = [];
-  diceRolls = [];
-}
-
-// Game Ending
-function endRound() {
-  var message = "All players have played, now for the results!<br>";
-  for (player in playerCombi) {
-    message += `Player ${Number(player) + 1} got ${playerCombi[player]}.<br>`;
+  var winner = getMaxOfArray(roundBoard) + 1;
+  if (gameMode == LOWEST) {
+    winner = getMinOfArray(roundBoard) + 1;
   }
-  var highestCombi = arrayMax(playerCombi);
-  var winner = playerCombi.indexOf(highestCombi) + 1;
   message += `The winner is Player ${winner}!<br>`;
-  message += `Here are the players' cumulative rolls.<br>`;
-  sortScoreBoard();
-  for (player in scoreBoard) {
-    message += `Player ${scoreBoard[player].playerNumber}: ${scoreBoard[player].score}<br>`;
+  message += `👑 Leader Board 👑<br>`;
+  for (var counter = 0; counter < numOfPlayers; counter += 1) {
+    message += `Player ${leaderBoard[counter].playerNumber}: ${leaderBoard[counter].score}<br>`;
   }
-  resetRound();
+  roundBoard = [];
   return message;
-}
-
-// Reset Game
-function resetGame() {
-  scoreBoard = [];
 }
