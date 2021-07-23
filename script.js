@@ -12,6 +12,7 @@ var playcount = playcount + 1;
 var main = function (input) {
   if (gametype == "nil") {
     gametype = `${input}`;
+    console.log(`gametype = ${input}`);
     outputvalue = "pls enter username for player 1";
   }
 
@@ -23,31 +24,37 @@ var main = function (input) {
   } else if (gamestage == "start2") {
     player2name = `${input}`;
     gamestage = "turn1";
-    outputvalue = `${player1name}, pls click submit to generate your numbers`;
+    outputvalue = `${player1name}, pls click submit to generate your number`;
 
     //player 1 will generate his numbers and arrange the order
   } else if (gamestage == "turn1") {
     playerArray = playerNumber();
-    gamestage = "choose order1";
-    outputvalue = playerArray + ", " + player1name + ', please input "dice 1" or "dice 2" to choose the first dice of the order';
-  } else if (gamestage == "choose order1") {
-    var numberGenerated = chooseOrderOfNumber(input);
+    console.log(playerArray);
+    if (gametype == "lowest") {
+      var numberGenerated = chooseOrderOfNumberAutoLow();
+    } else if (gametype == "highest") {
+      var numberGenerated = chooseOrderOfNumberAutoHigh();
+    }
+
     player1number = numberGenerated;
-    outputvalue = numberGenerated + ". it is now the next player's turn! click 'submit' to continue";
+    outputvalue = player1number + ". it is now the next player's turn! click 'submit' to continue";
     gamestage = "welcomeplayer2";
   } else if (gamestage == "welcomeplayer2") {
     gamestage = "turn2";
 
-    outputvalue = `${player2name}, pls click submit to generate your numbers`;
+    outputvalue = `${player2name}, pls click submit to generate your number`;
     // player 2 generate numbers and choose the order of  the numbers
   } else if (gamestage == "turn2") {
     playerArray = playerNumber();
-    gamestage = "choose order2";
-    outputvalue = playerArray + ", " + player2name + ', please input "dice 1" or "dice 2" to choose the first dice of the order';
-  } else if (gamestage == "choose order2") {
-    var numberGenerated = chooseOrderOfNumber(input);
-    outputvalue = numberGenerated + '. click "submit" to compare the 2 numbers';
+    console.log(playerArray);
+    if (gametype == "lowest") {
+      var numberGenerated = chooseOrderOfNumberAutoLow();
+    } else if (gametype == "highest") {
+      var numberGenerated = chooseOrderOfNumberAutoHigh();
+    }
     player2number = numberGenerated;
+    outputvalue = player2number + '. click "submit" to compare the 2 numbers';
+
     gamestage = "comparison";
     // compare the 2 numbers generated and find the winner
   } else if (gamestage == "comparison") {
@@ -77,10 +84,18 @@ var playerNumber = function () {
   var numArray = [number1, number2];
   return numArray;
 };
-var chooseOrderOfNumber = function (input) {
-  if (input == "dice 1") {
+var chooseOrderOfNumberAutoLow = function () {
+  if (playerArray[0] < playerArray[1]) {
     numberGenerated = playerArray[0] + playerArray[1];
-  } else if (input == "dice 2") {
+  } else if (playerArray[0] > playerArray[1]) {
+    numberGenerated = playerArray[1] + playerArray[0];
+  }
+  return numberGenerated;
+};
+var chooseOrderOfNumberAutoHigh = function () {
+  if (playerArray[0] > playerArray[1]) {
+    numberGenerated = playerArray[0] + playerArray[1];
+  } else if (playerArray[0] < playerArray[1]) {
     numberGenerated = playerArray[1] + playerArray[0];
   }
   return numberGenerated;
