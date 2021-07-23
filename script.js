@@ -47,9 +47,10 @@ var concatenatePlayer1 = function (input) {
   // assign remaining value in array as the subsequent digit
   var secondDigit1 = player1diceRoll;
   // assign and store the final number sequence for player 1
-  player1 = `${firstDigit1}${secondDigit1}`;
+  player1 = Number(`${firstDigit1}${secondDigit1}`);
+  player1score += player1;
   // set return message
-  return `Player 1, you chose Dice ${input} first.<br>Your number is ${player1}.<br>It is now Player 2's turn.<br>Click 'Submit' to start.`;
+  return `Player 1, you chose Dice ${input} first.<br>Your number is ${player1}.<br><br>Player 1 Score: ${player1score}<br>Player 2 Score: ${player2score}.<br><br>It is now Player 2's turn.<br>Click 'Submit' to start.`;
 };
 console.log(concatenatePlayer1);
 
@@ -64,7 +65,8 @@ var concatenatePlayer2 = function (input) {
   // assign remaining value in array as the subsequent digit
   var secondDigit2 = player2diceRoll;
   // assign and store the final number sequence for player 1
-  player2 = `${firstDigit2}${secondDigit2}`;
+  player2 = Number(`${firstDigit2}${secondDigit2}`);
+  player2score += player2;
   // set return message
   return `${getWinMessage()}`;
 };
@@ -76,11 +78,11 @@ var getWinMessage = function () {
   if (player1 > player2) {
     // winning message for player 1
     return `Player 1's number was ${player1}.<br>Player 2's number was ${player2}.<br>
-    Congratulations Player 1, you won!`;
+    Congratulations Player 1, you won!<br><br>Player 1 Score: ${player1score}<br>Player 2 Score: ${player2score}.`;
   }
   // winning message for player 2
   return `Player 1's number was ${player1}.<br>Player 2's number was ${player2}.<br>
-    Congratulations Player 2, you won!`;
+    Congratulations Player 2, you won!<br><br>Player 1 Score: ${player1score}<br>Player 2 Score: ${player2score}.`;
 };
 
 // main function -- VALID
