@@ -25,32 +25,25 @@ var main = function (input) {
   }
 
   if (gameState == "input game mode") {
-    gameState = "post dice roll";
+    gameState = "roll dice";
     gameMode = input;
     myOutputValue = `You have chosen game mode ${gameMode}. Let's play!`;
     return myOutputValue;
   }
 
-  if (gameState == "post dice roll") {
+  if (gameState == "roll dice") {
     var dice1 = diceRoll();
     console.log(dice1);
     var dice2 = diceRoll();
     console.log(dice2);
     num1 = dice1;
     num2 = dice2;
-    myOutputValue = `It is now Player ${playerNumber}'s turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Choose the order of the dice.`;
-    gameState = "player choose order";
-    return myOutputValue;
-  }
-
-  if (gameState == "player choose order") {
-    var finalNumber = combineDiceDigits(input, num1, num2);
+    var finalNumber = combineDiceDigits(num1, num2);
     if (playerNumber == 1) {
       combineNum1 = finalNumber;
       sum1 += finalNumber;
-      gameState = "post dice roll";
+      myOutputValue = `It is now Player ${playerNumber}'s turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}.`;
       playerNumber = 2;
-      myOutputValue = `Player 1, you chose Dice ${input} first. <br><br> Your number is ${finalNumber}, and total sum of all your numbers is ${sum1}. <br><br> It is now Player 2's turn.`;
       return myOutputValue;
     }
     if (playerNumber == 2) {
@@ -58,14 +51,11 @@ var main = function (input) {
       sum2 += finalNumber;
       var currentLeader = evaluateWinner(sum1, sum2);
       var leaderBoard = formatLeaderBoard(currentLeader);
+      myOutputValue = `It is now Player ${playerNumber}'s turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
       playerNumber = 1;
-      gameState = "post dice roll";
-      myOutputValue = `Player 2, you chose Dice ${input} first. <br><br> Your number is ${finalNumber}, and total sum of all your numbers is ${sum2}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
       return myOutputValue;
     }
   }
-
-  return myOutputValue;
 };
 
 //to format the leaderboard
@@ -101,14 +91,26 @@ var evaluateWinner = function (player1Num, player2Num) {
 };
 
 //to combine the numbers of dice rolled to a single 2 digit
-var combineDiceDigits = function (chosenDice, digit1, digit2) {
-  if (chosenDice == 1) {
-    var finalNumber = digit1 * 10 + digit2;
-    return finalNumber;
+var combineDiceDigits = function (digit1, digit2) {
+  if (gameMode == 1) {
+    if (digit1 >= digit2) {
+      var finalNumber = digit1 * 10 + digit2;
+      return finalNumber;
+    }
+    if (digit2 > digit1) {
+      var finalNumber = digit2 * 10 + digit1;
+      return finalNumber;
+    }
   }
-  if (chosenDice == 2) {
-    var finalNumber = digit2 * 10 + digit1;
-    return finalNumber;
+  if (gameMode == 2) {
+    if (digit2 >= digit1) {
+      var finalNumber = digit1 * 10 + digit2;
+      return finalNumber;
+    }
+    if (digit1 > digit2) {
+      var finalNumber = digit2 * 10 + digit1;
+      return finalNumber;
+    }
   }
 };
 
