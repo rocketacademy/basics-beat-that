@@ -9,8 +9,7 @@ var playerOneList = [];
 var playerTwoList = [];
 
 //Global Player Number sum
-var playerOneTotal = 0;
-var playerTwoTotal = 0;
+var playerScore = [Number(0), Number(0)];
 var playerOneSum = 0;
 var playerTwoSum = 0;
 
@@ -37,20 +36,22 @@ var main = function (input) {
       //Reset game to run for playerTwo
       gameMode = "playerSelection";
       playerOneSum = checkOrder(input, playerOneList);
-      playerOneTotal.push(playerOneSum);
-      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerOneSum}<br>`;
+      playerScore[0] += Number(playerOneSum);
+      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerOneSum}<br>Your current total is ${playerScore[0]}`;
     }
     if (playerNumber == 2) {
       //Set final gameMode to check winner
       gameMode = "checkWinner";
       playerTwoSum = checkOrder(input, playerTwoList);
-      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerTwoSum}<br>Press submit again for the results!`;
+      playerScore[1] += Number(playerTwoSum);
+      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerTwoSum}<br>Your current total is ${playerScore[1]}<br>Press submit again for the results!`;
     }
   }
 
   if (gameMode == "checkWinner") {
-    var winner = checkWinner(playerOneSum, playerTwoSum);
-    return `${winner}<br>Player 1 has ${playerOneSum} while Player 2 has ${playerTwoSum}`;
+    var winner = checkWinner(playerScore[0], playerScore[1]);
+    gameMode = "playerSelection";
+    return `${winner}<br>Player 1 has ${playerScore[0]} while Player 2 has ${playerScore[1]}`;
   }
   return output;
 };
