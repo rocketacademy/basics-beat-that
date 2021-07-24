@@ -1,57 +1,79 @@
 //Roll the dice and put them in order to make the highest number possible. If you roll a 4 and an 6, for example, your best answer would be 64. Using 3 dice, a roll of 3, 5 and 2 should give you 532, and so on. Write down your answer, pass the dice, and challenge the next player to Beat That!
 
-//Game state
-var gameState = 0;
+//Game state and player number
+var gameMode = "playerSelection";
 var playerNumber = 0;
 
-//NumberList
-var playerList = [];
+//Global List for recording player rolls
+var playerOneList = [];
+var playerTwoList = [];
 
-//Player Number sum
+//Global Player Number sum
+var playerOneTotal = 0;
+var playerTwoTotal = 0;
 var playerOneSum = 0;
 var playerTwoSum = 0;
 
 var main = function (input) {
-  if (gameState == 0) {
+  if (gameMode == "playerSelection") {
+    var output = checkInput(input);
     playerNumber = input;
-    playerList = [diceRoll(), diceRoll()];
-    gameState = 1;
-    return `Hi Player ${playerNumber}.<br>You rolled ${playerList[0]} for Dice 1 and ${playerList[1]} for Dice 2.<br>Please choose the order of the dice.`;
+
+    if (playerNumber == 1) {
+      playerOneList = [diceRoll(), diceRoll()];
+      return playerRoll(playerNumber, playerOneList);
+    }
+    if (playerNumber == 2) {
+      playerTwoList = [diceRoll(), diceRoll()];
+
+      return playerRoll(playerNumber, playerTwoList);
+    }
   }
 
   //If Dice rolled, add two numbers and return
-  if (gameState == 1) {
+  if (gameMode == "diceGuess") {
+    output = checkInput(input);
     if (playerNumber == 1) {
       //Reset game to run for playerTwo
-      gameState = 0;
-      playerOneSum = checkOrder(input);
-      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerOneSum}`;
+      gameMode = "playerSelection";
+      playerOneSum = checkOrder(input, playerOneList);
+      playerOneTotal.push(playerOneSum);
+      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerOneSum}<br>`;
     }
     if (playerNumber == 2) {
-      //Set final gameState to check winner
-      gameState = 2;
-      playerTwoSum = checkOrder(input);
-      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerTwoSum}`;
+      //Set final gameMode to check winner
+      gameMode = "checkWinner";
+      playerTwoSum = checkOrder(input, playerTwoList);
+      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerTwoSum}<br>Press submit again for the results!`;
     }
   }
 
-  if (gameState == 2) {
+  if (gameMode == "checkWinner") {
     var winner = checkWinner(playerOneSum, playerTwoSum);
-    return `Player ${winner} wins!<br>Player One has ${playerOneSum} while Player Two has ${playerTwoSum}`;
+    return `${winner}<br>Player 1 has ${playerOneSum} while Player 2 has ${playerTwoSum}`;
   }
+  return output;
 };
 
+//Check input
+function checkInput(input) {
+  if (input != 1 && input != 2) {
+    return `Please enter 1 or 2 `;
+  }
+}
 //Check Winner
 function checkWinner(input1, input2) {
-  if (input1 >= input2) {
-    return 1;
+  if (input1 > input2) {
+    return `Player 1 Wins!`;
+  } else if (input2 > input1) {
+    return `Player 2 Wins!`;
   } else {
-    return 2;
+    return `Draw!`;
   }
 }
 
 //Check Order input by user
-function checkOrder(input) {
+function checkOrder(input, playerList) {
   if (input == "1") {
     return addTwoNumbers(playerList[0], playerList[1]);
   }
@@ -63,6 +85,11 @@ function checkOrder(input) {
 //Adding Function
 function addTwoNumbers(numberOne, numberTwo) {
   return numberOne + "" + numberTwo;
+}
+
+function playerRoll(playerNumber, playerList) {
+  gameMode = "diceGuess";
+  return `Hi Player ${playerNumber}.<br>You rolled ${playerList[0]} for Dice 1 and ${playerList[1]} for Dice 2.<br>Please choose the order of the dice.`;
 }
 
 //Dice roll function
