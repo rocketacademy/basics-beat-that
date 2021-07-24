@@ -18,6 +18,10 @@ var dice2 = ``;
 var player1Numbers = [];
 var player2Numbers = [];
 
+//keep track of running score for each player
+var player1RunningScore = 0;
+var player2RunningScore = 0;
+
 //generates random dice number
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -26,6 +30,7 @@ var rollDice = function () {
   return diceNumber;
 }; 
 
+//DICE ROLL GAME MODE LOGIC
 //rolls two dice and changes mode to `choose dice`
 var generateTwoDiceRolls = function(){
   dice1 = rollDice().toString();
@@ -47,6 +52,7 @@ var currentPlayerNumbers = function(currentPlayer){
   };
 };
 
+//CHOOSE DICE GAME MODE LOGIC
 //generates player's chosen number based on player's choice of dice order
 //adds player's chosen number to player's number array
 //and changes mode to `roll dice`
@@ -68,6 +74,7 @@ var generateNumFromDiceOrder = function(diceOrder){
   Your number is ${chosenNumber}.`;
 };
 
+//GAME RESULTS
 //compares players' chosen numbers and returns result of game
 var generateGameResults = function(){
   var indexLastPlayer1Number = player1Numbers.length - 1;
@@ -83,17 +90,60 @@ var generateGameResults = function(){
   };
 };
 
-//generate running sum of player's numbers
-var generateRunningSum = function(){
-  var counter = 0;
-  var runningSum = 0;
-    while (counter < currentPlayerNumbers(currentPlayer).length){
-      runningSum += Number(currentPlayerNumbers(currentPlayer)[counter]);
-      counter += 1;
+//returns current player's running score based on current player
+var currentPlayerRunningScore = function(currentPlayer){
+  if (currentPlayer == PLAYER_1){
+    return player1RunningScore;
+  }else{
+    if(currentPlayer == PLAYER_2){
+      return player2RunningScore;
     };
-return `${currentPlayer} running sum: ${runningSum}`;
+  };
 };
 
+//RUNNING SCORES
+//generate running score of player's numbers
+var generateRunningScore = function(){
+  var counter = 0;
+  var runningScore = 0;
+    while (counter < currentPlayerNumbers(currentPlayer).length){
+      runningScore += Number(currentPlayerNumbers(currentPlayer)[counter]);
+      counter += 1;
+    };
+    if (currentPlayer == PLAYER_1){
+      player1RunningScore = runningScore;
+      return player1RunningScore;
+    }else{
+      if(currentPlayer == PLAYER_2){
+        player2RunningScore = runningScore;
+        return player2RunningScore;
+      };
+    };
+//     currentPlayerRunningScore(currentPlayer).push(runningScore);
+// return currentPlayerRunningScore(currentPlayer);
+// //`${currentPlayer} running score: ${runningScore}`;
+};
+
+//LEADERBOARD
+//compares players' running scores and returns leaderboard
+var generateLeaderboard = function(){
+  var runningScore = generateRunningScore();
+  if(player1RunningScore > player2RunningScore){
+    return `Player 1 is in the lead!<br>
+    Player 1 running score: ${player1RunningScore}<br>
+    Player 2 running score: ${player2RunningScore}`
+  }else{
+    if(player2RunningScore > player1RunningScore){
+      return `Player 2 is in the lead!<br>
+      Player 2 running score: ${player2RunningScore}<br>
+      Player 1 running score: ${player1RunningScore}`
+    }else {
+      return ``;
+    };
+  };
+};
+
+//MAIN FUNCTION
 var main = function (input) {
   var myOutputValue = '';
   if(
@@ -105,18 +155,18 @@ var main = function (input) {
         currentMode == GAME_MODE_CHOOSE_DICE_ORDER
       ){
         var chosenNumMessage = generateNumFromDiceOrder(input);
-        var runningSum = generateRunningSum();
+        var leaderboard = generateLeaderboard();
         if(currentPlayer == PLAYER_1){
           myOutputValue = `${chosenNumMessage}<br>
           It is now Player 2's turn.<br><br>
-          ${runningSum}`;
+          ${leaderboard}`;
           currentPlayer = PLAYER_2;
         }else{
           if(currentPlayer == PLAYER_2){
             var gameResults = generateGameResults();
             myOutputValue = `${chosenNumMessage}<br>
             ${gameResults}<br><br>
-            ${runningSum}`;
+            ${leaderboard}`;
             currentPlayer = PLAYER_1;
           };
         };
@@ -124,10 +174,3 @@ var main = function (input) {
     };
   return myOutputValue;
 };
-
-
-
-
-
-
-
