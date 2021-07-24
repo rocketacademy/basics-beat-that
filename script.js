@@ -70,10 +70,12 @@ var generateNumFromDiceOrder = function(diceOrder){
 
 //compares players' chosen numbers and returns result of game
 var generateGameResults = function(){
-  if(player1Numbers.pop() > player2Numbers.pop()){
+  var indexLastPlayer1Number = player1Numbers.length - 1;
+  var indexLastPlayer2Number = player2Numbers.length - 1;
+  if(player1Numbers[indexLastPlayer1Number] > player2Numbers[indexLastPlayer2Number]){
     return `Player 1 wins!`
   }else{
-    if(player2Numbers.pop() > player1Numbers.pop()){
+    if(player2Numbers[indexLastPlayer2Number] > player1Numbers[indexLastPlayer1Number]){
       return `Player 2 wins!`
     }else {
       return `Play again.`
@@ -84,12 +86,12 @@ var generateGameResults = function(){
 //generate running sum of player's numbers
 var generateRunningSum = function(){
   var counter = 0;
-  var runningSum = `Running sum:`
+  var runningSum = 0;
     while (counter < currentPlayerNumbers(currentPlayer).length){
-      runningSum += currentPlayerNumbers(currentPlayer)[counter];
+      runningSum += Number(currentPlayerNumbers(currentPlayer)[counter]);
       counter += 1;
     };
-return runningSum;
+return `${currentPlayer} running sum: ${runningSum}`;
 };
 
 var main = function (input) {
@@ -119,29 +121,6 @@ var main = function (input) {
           };
         };
       };
-        
-      //   player1CurrentNumber = generateNumFromDiceOrder(input);
-      //   console.log(`player 1 number`, player1CurrentNumber);
-      //   player1NumbersList.push(player1CurrentNumber);
-      //   myOutputValue = `${currentPlayer}, you chose Dice ${input} first.<br>
-      //   Your number is ${player1CurrentNumber}.<br>
-      //   It is now Player 2's turn.`;
-      //   currentPlayer = `Player 2`;
-      // }else{
-      //   if(
-      //     currentPlayer == `Player 2` &&
-      //     currentMode == `choose dice`
-      //   ){
-      //     player2CurrentNumber = generateNumFromDiceOrder(input) 
-      //     console.log(`player 2 number`, player2CurrentNumber);
-      //     player2NumbersList.push(player2CurrentNumber);
-      //     var gameResults = generateGameResults();
-      //     myOutputValue = `${currentPlayer}, you chose Dice ${input} first.<br>
-      //     Your number is ${player2CurrentNumber}.<br>
-      //     ${gameResults}`;
-      //     currentPlayer = `Player 1`;
-      //   };
-      
     };
   return myOutputValue;
 };
