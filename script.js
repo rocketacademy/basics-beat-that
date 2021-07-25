@@ -22,57 +22,76 @@ var roundsPlayer= [Number(0),Number(0)];
 var main = function (input) {
   if (gameState ==''){
     var output = ''
-    gameState = input.toLowerCase();
-    if(gameState !='highest'&&gameState!='lowest'){
+    
+    if(input !='highest'&&input!='lowest'){
       return `Please choose highest or lowest number mode`
     }
     else{
+    gameState = input.toLowerCase();
     return `You have selected ${input} number mode, Enter Player Number to start`
     }
   }
+
+  //User enter player number to start dice roll 
   if (gameMode == "playerSelection") {
-    playerNumber = input;
-    output = checkInput(input)
     
+    playerNumber = input;
+
+    //Option for user to change game mode halfway
+    if(input =='change'){
+      gameState = ''
+      return `Change Mode! Please choose highest or lowest`
+    }
+    //Check if input is within options
+    output = checkInput(input)
+
+    //Allow user to check results at any point of time 
     if (input =='check'){
       gameMode='checkWinner'
     }
 
+    //If user is player 1, roll dice and check order depending on game mode, add to sum and rounds played
     if (playerNumber == 1) {
       playerOneList = [diceRoll(), diceRoll()];
-      return playerRoll(playerNumber, playerOneList);
-    }
-    if (playerNumber == 2) {
-      playerTwoList = [diceRoll(), diceRoll()];
-
-      return playerRoll(playerNumber, playerTwoList);
-    }
-  }
-
-  //If Dice rolled, add two numbers and return
-  if (gameMode == "diceGuess") {
-    // output = checkInput(input);
-    // if(input == 'check'){
-    //   gameMode='checkWinner'
-    // }
-    if (playerNumber == 1) {
-      //Reset game to run for playerTwo
-      gameMode = "playerSelection";
       playerOneSum = checkOrder(playerOneList);
       playerScore[0] += Number(playerOneSum);
       roundsPlayer[0] +=1
-      gameMode = 'checkWinner'
-      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerOneSum}<br>Your current total is ${playerScore[0]}<br>Enter check to see current results`;
+      return `${playerRoll(playerNumber, playerOneList)} Auto Mode! Your number is ${playerOneSum} as the game mode is ${gameState} number wins<br>Enter check to see results`;
     }
+    //If user is player 2, roll dice and check order depending on game mode, add to sum and rounds played
     if (playerNumber == 2) {
-      gameMode = "playerSelection";
-      playerTwoSum = checkOrder(playerTwoList);
+      playerTwoList = [diceRoll(), diceRoll()];
+      playerTwoSum = checkOrder(playerTwoList)
       playerScore[1] += Number(playerTwoSum);
       roundsPlayer[1] +=1
-      return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerTwoSum}<br>Your current total is ${playerScore[1]}<br>Enter check to see current results`;
+      return `${playerRoll(playerNumber, playerTwoList)} Auto Mode! Your number is ${playerTwoSum} as the game mode is ${gameState} number wins<br>Enter check to see results`;
     }
   }
 
+  //If Dice rolled, add two numbers and return (manual mode)
+  // if (gameMode == "diceGuess") {
+  //   output = checkInput(input);
+  //   if(input == 'check'){
+  //     gameMode='checkWinner'
+  //   }
+  //   if (playerNumber == 1) {
+  //     //Reset game to run for playerTwo
+  //     gameMode = "playerSelection";
+  //     playerOneSum = checkOrder(playerOneList);
+  //     playerScore[0] += Number(playerOneSum);
+  //     roundsPlayer[0] +=1
+  //     return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerOneSum}<br>Your current total is ${playerScore[0]}<br>Enter check to see current results`;
+  //   }
+  //   if (playerNumber == 2) {
+  //     gameMode = "playerSelection";
+  //     playerTwoSum = checkOrder(playerTwoList);
+  //     playerScore[1] += Number(playerTwoSum);
+  //     roundsPlayer[1] +=1
+  //     return `Player ${playerNumber}, you chose Dice ${input} first.<br>Your number is ${playerTwoSum}<br>Your current total is ${playerScore[1]}<br>Enter check to see current results`;
+  //   }
+  // }
+
+  //Game mode to check for winner
   if (gameMode == "checkWinner") {
     var winner = checkWinner(playerScore[0], playerScore[1]);
     gameMode = "playerSelection";
@@ -111,28 +130,28 @@ function checkWinner(input1, input2) {
   
 }
 
-//Check Order automatically by game mode
+// Check Order automatically by game mode
 function checkOrder(playerList){
   if(gameState=='highest'){
     if(playerList[0]>=playerList[1]){
-      return addTwoNumbers(playerList[0],playList[1])
+      return addTwoNumbers(playerList[0],playerList[1])
     }
     else{
-      return addTwoNumbers(playerList[1],playList[0])
+      return addTwoNumbers(playerList[1],playerList[0])
     }
   }
   if(gameState=='lowest'){
     if(playerList[0]<=playerList[1]){
-      return addTwoNumbers(playerList[0],playList[1])
+      return addTwoNumbers(playerList[0],playerList[1])
     }
     else{
-      return addTwoNumbers(playerList[1],playList[0])
+      return addTwoNumbers(playerList[1],playerList[0])
     }
   }
 }
 
 
-//Check Order input by user
+// Check Order input by user
 // function checkOrder(input, playerList) {
 //   if (input == "1") {
 //     return addTwoNumbers(playerList[0], playerList[1]);
@@ -147,9 +166,10 @@ function addTwoNumbers(numberOne, numberTwo) {
   return numberOne + "" + numberTwo;
 }
 
+//Function to print player number and dice number rolled
 function playerRoll(playerNumber, playerList) {
-  gameMode = "diceGuess";
-  return `Hi Player ${playerNumber}.<br>You rolled ${playerList[0]} for Dice 1 and ${playerList[1]} for Dice 2.<br>Please choose the order of the dice.`;
+  // gameMode = "diceGuess";
+  return `Hi Player ${playerNumber}.<br>You rolled ${playerList[0]} for Dice 1 and ${playerList[1]} for Dice 2.`;
 }
 
 //Dice roll function
