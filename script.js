@@ -1,7 +1,7 @@
 //Roll the dice and put them in order to make the highest number possible. If you roll a 4 and an 6, for example, your best answer would be 64. Using 3 dice, a roll of 3, 5 and 2 should give you 532, and so on. Write down your answer, pass the dice, and challenge the next player to Beat That!
 
-//Game mode (playerSelection, diceGuess, checkWinner) and player number
-var gameMode = "playerSelection";
+//Game mode (diceSelection,playerSelection, diceGuess, checkWinner) and player number
+var gameMode = "diceSelection";
 var playerNumber = 0;
 
 //Game state for highest or lowest combined score
@@ -19,6 +19,9 @@ var playerTwoSum = 0;
 //Number of rounds players played
 var roundsPlayer= [Number(0),Number(0)];
 
+//Numnber of dice to roll for game
+var numberOfDice = 0;
+
 var main = function (input) {
   if (gameState ==''){
     var output = ''
@@ -28,8 +31,20 @@ var main = function (input) {
     }
     else{
     gameState = input.toLowerCase();
-    return `You have selected ${input} number mode, Enter Player Number to start`
+    gameMode = 'diceSelection'
+    return `You have selected ${input} number mode, Enter number of dices to roll`
     }
+  }
+
+  //User enter how many dices to play
+  if (gameMode=='diceSelection'){
+
+    numberOfDice = Number(input);
+    if(isNaN(numberOfDice)){
+      return `Not a number! Please select number of dices to roll`
+    }
+    gameMode ='playerSelection'
+    return `All players will now be playing with ${numberOfDice} dices`
   }
 
   //User enter player number to start dice roll 
@@ -52,19 +67,28 @@ var main = function (input) {
 
     //If user is player 1, roll dice and check order depending on game mode, add to sum and rounds played
     if (playerNumber == 1) {
-      playerOneList = [diceRoll(), diceRoll()];
+      diceCounter = 0;
+      while(diceCounter<numberOfDice){
+        playerOneList.push(diceRoll());
+        diceCounter+=1
+      }
+      
       playerOneSum = checkOrder(playerOneList);
       playerScore[0] += Number(playerOneSum);
       roundsPlayer[0] +=1
-      return `${playerRoll(playerNumber, playerOneList)} Auto Mode! Your number is ${playerOneSum} as the game mode is ${gameState} number wins<br>Enter check to see results`;
+      return `${playerRoll(playerNumber, playerOneList)} Auto Mode! Your number is ${playerOneSum} as the game mode is ${gameState}.<br>Enter check to see results`;
     }
     //If user is player 2, roll dice and check order depending on game mode, add to sum and rounds played
     if (playerNumber == 2) {
-      playerTwoList = [diceRoll(), diceRoll()];
-      playerTwoSum = checkOrder(playerTwoList)
+      diceCounter = 0;
+      while(diceCounter<numberOfDice){
+        playerTwoList.push(diceRoll());
+        diceCounter+=1
+      }
+      playerTwoSum = checkOrder(playerTwoList);
       playerScore[1] += Number(playerTwoSum);
       roundsPlayer[1] +=1
-      return `${playerRoll(playerNumber, playerTwoList)} Auto Mode! Your number is ${playerTwoSum} as the game mode is ${gameState} number wins<br>Enter check to see results`;
+      return `${playerRoll(playerNumber, playerTwoList)} Auto Mode! Your number is ${playerTwoSum} as the game mode is ${gameState}<br>Enter check to see results`;
     }
   }
 
@@ -112,9 +136,9 @@ function checkInput(input) {
 function checkWinner(input1, input2) {
   if(gameState=='highest'){
     if (input1 > input2) {
-      return `Player 1 Wins!<br>*Current LeaderBoard*<br>Player One: ${input1} (Rounds Played: ${roundsPlayer[0]})<br>Player Two: ${input2} (Rounds Played: ${roundsPlayer[1]})`;
+      return `Player 1 Wins!<br>*Current LeaderBoard (${gameState})*<br>Player One: ${input1} (Rounds Played: ${roundsPlayer[0]})<br>Player Two: ${input2} (Rounds Played: ${roundsPlayer[1]})`;
     } else if (input2 > input1) {
-      return `Player 2 Wins!<br>*Current LeaderBoard*<br>Player Two: ${input2} (Rounds Played: ${roundsPlayer[1]})<br>Player One: ${input1} (Rounds Played: ${roundsPlayer[0]})`;
+      return `Player 2 Wins!<br>*Current LeaderBoard (${gameState})*<br>Player Two: ${input2} (Rounds Played: ${roundsPlayer[1]})<br>Player One: ${input1} (Rounds Played: ${roundsPlayer[0]})`;
     } else {
       return `Draw!<br>LeaderBoard<br>Player One & Player Two: ${input1} Rounds Played: <br>Player One: ${roundsPlayer[0]}<br>Player Two: ${roundsPlayer[1]}`;
     }
@@ -132,21 +156,25 @@ function checkWinner(input1, input2) {
 
 // Check Order automatically by game mode
 function checkOrder(playerList){
+  var list=[];
+  var length = playerList.length
   if(gameState=='highest'){
-    if(playerList[0]>=playerList[1]){
-      return addTwoNumbers(playerList[0],playerList[1])
+    //Sort dice rolls in descending order
+    playerList.sort(function(a, b){return b-a})
+      
+    
+    for(var counter=0;counter<length;counter++) {
+      list+=playerList[counter]
     }
-    else{
-      return addTwoNumbers(playerList[1],playerList[0])
-    }
+    return list
   }
   if(gameState=='lowest'){
-    if(playerList[0]<=playerList[1]){
-      return addTwoNumbers(playerList[0],playerList[1])
+    //Sort dice rolls in ascending order
+    playerList = playerList.sort(function(a, b){return a-b})
+    for(var counter=0;counter<length;counter++){
+      list+=playerList[counter]
     }
-    else{
-      return addTwoNumbers(playerList[1],playerList[0])
-    }
+    return list
   }
 }
 
@@ -161,15 +189,15 @@ function checkOrder(playerList){
 //   }
 // }
 
-//Adding Function
-function addTwoNumbers(numberOne, numberTwo) {
-  return numberOne + "" + numberTwo;
-}
+// //Adding Function (two dices only)
+// function addTwoNumbers(numberOne,numberTwo) {
+//   return numberOne + "" + numberTwo;
+// }
 
 //Function to print player number and dice number rolled
 function playerRoll(playerNumber, playerList) {
   // gameMode = "diceGuess";
-  return `Hi Player ${playerNumber}.<br>You rolled ${playerList[0]} for Dice 1 and ${playerList[1]} for Dice 2.`;
+  return `Hi Player ${playerNumber}.<br>You rolled ${playerList} for your dices.`;
 }
 
 //Dice roll function
