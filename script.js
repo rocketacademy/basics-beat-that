@@ -14,6 +14,8 @@ var stringSecondDice = "";
 var diceSequence1 = "";
 var diceSequence2 = "";
 var counter = 0;
+var player1DiceSeq = "";
+var player2DiceSeq = "";
 
 var firstDiceRoll = function () {
   var randomDecimal = Math.random() * 6;
@@ -74,6 +76,8 @@ var getDiceSequenceMessage = function (input) {
   if (currPlayer == 1) {
     if (doesSequenceStartsWithDiceOne(input)) {
       console.log("value of " + doesSequenceStartsWithDiceOne() + "");
+
+      player1DiceSeq = diceSequence1;
       return (
         "Player 1, you chose " +
         firstDiceNumber +
@@ -84,6 +88,8 @@ var getDiceSequenceMessage = function (input) {
     if (!doesSequenceStartsWithDiceOne(input)) {
       console.log("value of " + doesSequenceStartsWithDiceOne() + "");
       console.log("if input is 2nd dice");
+
+      player1DiceSeq = diceSequence2;
       return (
         "Player 1, you chose " +
         secondDiceNumber +
@@ -94,6 +100,7 @@ var getDiceSequenceMessage = function (input) {
   }
   if (currPlayer == 2) {
     if (doesSequenceStartsWithDiceOne(input)) {
+      player2DiceSeq = diceSequence1;
       return (
         "Player 2, you chose " +
         firstDiceNumber +
@@ -103,6 +110,7 @@ var getDiceSequenceMessage = function (input) {
     }
     if (!doesSequenceStartsWithDiceOne(input)) {
       console.log("if input is 2nd dice");
+      player2DiceSeq = diceSequence2;
       return (
         "Player 2, you chose " +
         secondDiceNumber +
@@ -114,20 +122,20 @@ var getDiceSequenceMessage = function (input) {
 };
 
 var didPlayer1Win = function () {
-  if (diceSequence2 > diceSequence1) {
+  if (player2DiceSeq > player1DiceSeq) {
     return (
       "Congrats to Player 2! You beat Player 1 with the numbers " +
-      diceSequence2 +
+      player2DiceSeq +
       " to " +
-      diceSequence1 +
+      player1DiceSeq +
       ""
     );
   }
   return (
     "Congrats to Player 1! You beat Player 2 with the numbers " +
-    diceSequence1 +
+    player1DiceSeq +
     " to " +
-    diceSequence2 +
+    player2DiceSeq +
     ""
   );
 };
