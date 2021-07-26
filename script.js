@@ -13,6 +13,8 @@ var sum1 = 0;
 var sum2 = 0;
 //to keep track of the game mode
 var gameMode = 0;
+// global variable to store the quantity of dice each round
+var diceQty = 0;
 
 var main = function (input) {
   //welcome message
@@ -22,9 +24,22 @@ var main = function (input) {
   }
   //after user choose the game mode
   if (gameState == "input game mode") {
-    gameState = "roll dice";
+    gameState = "choose dice quantity";
     gameMode = input;
-    return `You have chosen game mode ${gameMode}. Let's play!`;
+    return `You have chosen game mode ${gameMode}. Let's play! <br><br> `;
+  }
+
+  //prompt user to enter the quantity of dice for that round
+  if (gameState == "choose dice quantity") {
+    gameState = "after choose dice quantity";
+    return `Please enter the quantity of dice each player will roll this round.`;
+  }
+
+  //after user choose the dice quantity for that round
+  if (gameState == "after choose dice quantity") {
+    gameState = "roll dice";
+    diceQty = input;
+    return `You have entered ${diceQty}, so ${diceQty} dice will be rolled this round.`;
   }
 
   //rolling the dice and output the result
@@ -33,32 +48,44 @@ var main = function (input) {
     return outputMessage;
   }
   //if reaches here, means user did not input correctly
-  gameMode = "start game";
+  gameState = "start game";
   return `You did not enter correctly. Restarting the game...`;
 };
 
-//to roll dice and output the result message
+//to output the result message
 var generateOutputMessage = function () {
-  var dice1 = diceRoll();
-  console.log(dice1);
-  var dice2 = diceRoll();
-  console.log(dice2);
-  num1 = dice1;
-  num2 = dice2;
-  var finalNumber = combineDiceDigits(num1, num2);
+  //to store each dice values for that round
+  var player1DiceValues = [];
+  var player2DiceValues = [];
+
   if (currentPlayer == 1) {
+    //to add the number rolled for each dice
+    for (var count = 0; count < diceQty; count += 1) {
+      var dice = diceRoll();
+      console.log(dice);
+      player1DiceValues.push(dice);
+    }
+    var finalNumber = combineDiceDigits(player1DiceValues);
     combineNum1 = finalNumber;
     sum1 += finalNumber;
     currentPlayer = 2;
-    return `It is now Player 1's turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}.`;
+    return `It is now Player 1's turn. <br><br> All your dice values are ${player1DiceValues}. <br><br> Your best combined number is ${finalNumber}.`;
   }
   if (currentPlayer == 2) {
+    //to add the number rolled for each dice
+    for (var count = 0; count < diceQty; count += 1) {
+      var dice = diceRoll();
+      console.log(dice);
+      player2DiceValues.push(dice);
+    }
+    var finalNumber = combineDiceDigits(player2DiceValues);
     combineNum2 = finalNumber;
     sum2 += finalNumber;
     var currentLeader = evaluateWinner(sum1, sum2);
     var leaderBoard = formatLeaderBoard(currentLeader);
     currentPlayer = 1;
-    return `It is now Player 2's turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
+    gameState = "choose dice quantity";
+    return `It is now Player 2's turn. <br><br> All your dice vlaues are ${player2DiceValues}. <br><br> Your best combined number is ${finalNumber}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
   }
 };
 
@@ -95,21 +122,27 @@ var evaluateWinner = function (player1Num, player2Num) {
 };
 
 //to combine the numbers of dice rolled to a single 2 digit
-var combineDiceDigits = function (digit1, digit2) {
-  if (
-    (gameMode == 1 && digit1 >= digit2) ||
-    (gameMode == 2 && digit2 >= digit1)
-  ) {
-    var finalNumber = digit1 * 10 + digit2;
-    return finalNumber;
+var combineDiceDigits = function (diceAllValues) {
+  var copiedArr = [...diceAllValues];
+  if (gameMode == 1) {
+    var combinedNum = 0;
+    for (var count = 0; count < diceAllValues.length; count += 1) {
+      combinedNum *= 10;
+      combinedNum += Math.max(...copiedArr);
+      var indexOfMaxNum = copiedArr.indexOf(Math.max(...copiedArr));
+      copiedArr.splice(indexOfMaxNum, 1);
+    }
+    return combinedNum;
   }
-
-  if (
-    (gameMode == 1 && digit2 > digit1) ||
-    (gameMode == 2 && digit1 >= digit2)
-  ) {
-    var finalNumber = digit2 * 10 + digit1;
-    return finalNumber;
+  if (gameMode == 2) {
+    var combinedNum = 0;
+    for (var count = 0; count < diceAllValues.length; count += 1) {
+      combinedNum *= 10;
+      combinedNum += Math.min(...copiedArr);
+      var indexOfMinNum = copiedArr.indexOf(Math.min(...copiedArr));
+      copiedArr.splice(indexOfMinNum, 1);
+    }
+    return combinedNum;
   }
 };
 
