@@ -26,8 +26,7 @@ function storeNum(rollArray, player) {
   rollArray.push(diceRoll());
   rollArray.push(diceRoll());
   console.log(rollArray);
-  myOutputValue = `Welcome Player ${player}. <br>You rolled <u>${rollArray[0]} for Dice 1</u> and <u>${rollArray[1]} for Dice 2</u>. <br>Choose which dice to go first (1 or 2).`;
-  mode = "sequencing";
+  return rollArray;
 }
 
 function beatThatSeq(seq, diceArr) {
@@ -49,22 +48,52 @@ function beatThatSeq(seq, diceArr) {
 var main = function (input) {
   var myOutputValue = "";
   var p1Rolls = [];
+  var p2Rolls = [];
 
-  if (mode == "rolling") {
-    myOutputValue = storeNum(p1Rolls, player);
-    console.log(mode);
-    console.log(p1Rolls);
-  }
-  if (mode == "sequencing") {
-    myOutputValue = "Please only enter 1 or 2";
-    if (input <= 2 && input > 0) {
-      var sequence = Number(input);
-      p1Num = beatThatSeq(sequence, p1Rolls);
-      console.log(p1Num);
-      myOutputValue = `Player ${player}, you chose Dice ${sequence} first. <br>Your number is ${p1Num}. <br><br>It is now Player 2's turn.`;
-      mode = "rolling";
+  if (player == 1) {
+    console.log("player " + player);
+    if (mode == "rolling") {
+      p1Numbers = storeNum(p1Rolls, player);
+      myOutputValue = `Welcome Player ${player}. <br>You rolled <u>${p1Rolls[0]} for Dice 1</u> and <u>${p1Rolls[1]} for Dice 2</u>. <br>Choose which dice to go first (1 or 2).`;
+      mode = "sequencing";
+      console.log(mode);
+      console.log(p1Rolls);
+      return myOutputValue;
+    }
+    if (mode == "sequencing") {
+      myOutputValue = "Please only enter 1 or 2";
+      if (input <= 2 && input > 0) {
+        var sequence = Number(input);
+        p1Num = beatThatSeq(sequence, p1Rolls);
+        console.log(p1Num);
+        myOutputValue = `Player ${player}, you chose Dice ${sequence} first. <br>Your number is ${p1Num}. <br><br>It is now Player 2's turn.`;
+        player = 2;
+        mode = "rolling";
+        return myOutputValue;
+      }
     }
   }
 
-  return myOutputValue;
+  if (player == 2) {
+    console.log("player " + player);
+    if (mode == "rolling") {
+      myOutputValue = storeNum(p2Rolls, player);
+      mode = "sequencing";
+      console.log(mode);
+      console.log(p2Rolls);
+      return myOutputValue;
+    }
+    if (mode == "sequencing") {
+      myOutputValue = "Please only enter 1 or 2";
+      if (input <= 2 && input > 0) {
+        var sequence = Number(input);
+        p1Num = beatThatSeq(sequence, p2Rolls);
+        console.log(p1Num);
+        myOutputValue = `Player ${player}, you chose Dice ${sequence} first. <br>Your number is ${p1Num}. <br><br>It is now Player 1's turn.`;
+        player = 1;
+        mode = "rolling";
+        return myOutputValue;
+      }
+    }
+  }
 };
