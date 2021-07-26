@@ -86,6 +86,14 @@ var getLeaderboard = function () {
       " win vs " +
       P1loseCount +
       " loss!<br>";
+  } else if (P1winCount == P2winCount) {
+    leaderboardOutput =
+      leaderboardOutput +
+      "Both players are currently tied at " +
+      P1winCount +
+      " win and " +
+      P1loseCount +
+      " loss each!";
   }
   return leaderboardOutput;
 };
