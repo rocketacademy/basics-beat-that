@@ -1,106 +1,123 @@
 var playerStage = `One`; // One -> orderOne -> Two -> orderTwo -> result
-var welcomeMessage = `Welcome Player One`;
-var welcomeMessage2 = `Welcome Player Two`;
 var chooseDiceORder = `Choose the order of the dice. Type 12 or 21`;
-var playerOneDiceOne = ``;
-var playerOneDiceTwo = ``;
-var playerOneCombine = ``;
-var playerTwoDiceOne = ``;
-var playerTwoDiceTwo = ``;
-var playerTwoCombine = ``;
-var result = ``;
+
+// variables for player one
+var playerOneDiceOne = 0;
+var playerOneDiceTwo = 0;
+var playerOneCombine = 0;
+var arrayOne = [];
+
+// variables for player two
+var playerTwoDiceOne = 0;
+var playerTwoDiceTwo = 0;
+var playerTwoCombine = 0;
+var arrayTwo = [];
 
 var generateRandomDiceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
 
+// generate function to roll dice and choose order
 var gameRound = function (input) {
   if (playerStage == "One") {
-    console.log(playerStage);
+    playerOneCombine = 0;
+    playerTwoCombine = 0; // need to add these two lines for new every round to refresh as zero
+
     playerOneDiceOne = generateRandomDiceRoll();
     playerOneDiceTwo = generateRandomDiceRoll();
-    console.log(playerOneDiceOne);
-    console.log(playerOneDiceTwo);
     playerStage = `orderOne`;
-    console.log(playerStage);
+
     var message =
-      welcomeMessage +
-      `<br>` +
-      `You rolled <br>` +
+      `Player One rolled <br>` +
       ` Dice 1: ` +
       playerOneDiceOne +
       `<br> Dice 2: ` +
       playerOneDiceTwo +
       `<br>` +
       chooseDiceORder;
-    console.log(playerStage);
-  } else if (playerStage == `orderOne` && input == 1 + `` + 2) {
-    playerOneCombine = playerOneDiceOne + `` + playerOneDiceTwo;
-    playerStage = `Two`;
-    message =
-      `Player One chose ` +
-      playerOneCombine +
-      `<br> Player Two, roll your dice!`;
-    console.log(playerStage);
-  } else if (playerStage == `orderOne` && input == 2 + `` + 1) {
-    playerOneCombine = playerOneDiceTwo + `` + playerOneDiceOne;
-    playerStage = `Two`;
-    message =
-      `Player One chose ` +
-      playerOneCombine +
-      `<br> Player Two, roll your dice!`;
-    console.log(playerStage);
+  } else if (playerStage == `orderOne`) {
+    if (input == 12) {
+      playerOneCombine = playerOneDiceOne + `` + playerOneDiceTwo;
+      arrayOne.push(parseInt(playerOneCombine));
+      playerStage = `Two`;
+      message =
+        `Player One chose ` +
+        playerOneCombine +
+        `<br> Player Two, roll your dice!`;
+    } else if (input == 21) {
+      playerOneCombine = playerOneDiceTwo + `` + playerOneDiceOne;
+      arrayOne.push(parseInt(playerOneCombine));
+      playerStage = `Two`;
+      message =
+        `Player One chose ` +
+        playerOneCombine +
+        `<br> Player Two, roll your dice!`;
+    } else if (input !== 12 && input !== 21) {
+      message =
+        chooseDiceORder +
+        `<br>` +
+        ` Dice 1: ` +
+        playerOneDiceOne +
+        `<br> Dice 2: ` +
+        playerOneDiceTwo;
+    }
   } else if (playerStage == `Two`) {
     playerTwoDiceOne = generateRandomDiceRoll();
     playerTwoDiceTwo = generateRandomDiceRoll();
     console.log(playerTwoDiceOne);
     console.log(playerTwoDiceTwo);
     playerStage = `orderTwo`;
-    console.log(playerStage);
     var message =
-      welcomeMessage2 +
-      `<br>` +
-      `You rolled <br>` +
+      `Player Two rolled <br>` +
       ` Dice 1: ` +
       playerTwoDiceOne +
       `<br> Dice 2: ` +
       playerTwoDiceTwo +
       `<br>` +
       chooseDiceORder;
-  } else if (playerStage == `orderTwo` && input == 1 + `` + 2) {
-    playerTwoCombine = playerTwoDiceOne + `` + playerTwoDiceTwo;
-    playerStage = `result`;
-    message = `Player Two chose ` + playerTwoCombine;
-    console.log(playerStage);
-  } else if (playerStage == `orderTwo` && input == 2 + `` + 1) {
-    playerTwoCombine = playerTwoDiceTwo + `` + playerTwoDiceOne;
-    playerStage = `result`;
-    message = `Player Two chose ` + playerTwoCombine;
-    console.log(playerStage);
-  } else if (
-    (playerStage == `orderTwo` || playerStage == `orderOne`) &&
-    input !== 1 + `` + 2 &&
-    input !== 2 + `` + 1
-  ) {
-    message = chooseDiceORder;
-    console.log(playerStage);
+  } else if (playerStage == `orderTwo`) {
+    if (input == 12) {
+      playerTwoCombine = playerTwoDiceOne + `` + playerTwoDiceTwo;
+      arrayTwo.push(parseInt(playerTwoCombine));
+      message = `Player Two chose ` + playerTwoCombine;
+      playerStage = `result`;
+    } else if (input == 21) {
+      playerTwoCombine = playerTwoDiceTwo + `` + playerTwoDiceOne;
+      arrayTwo.push(parseInt(playerTwoCombine));
+      message = `Player Two chose ` + playerTwoCombine;
+      playerStage = `result`;
+    } else if (input !== 12 && input !== 21) {
+      message =
+        chooseDiceORder +
+        `<br>` +
+        ` Dice 1: ` +
+        playerTwoDiceOne +
+        `<br> Dice 2: ` +
+        playerTwoDiceTwo;
+    }
   }
   return message;
 };
 
+// generate function to determine who has bigger combine number
 var whoWin = function () {
+  var result = ``;
   if (playerStage == `result`) {
     if (playerOneCombine > playerTwoCombine) {
-      result = `Player One wins!`;
+      result = `Player One wins this round! <br> Player One roll again!`;
     } else if (playerOneCombine < playerTwoCombine) {
-      result = `Player Two wins!`;
-    } else if ((playerOneCombine = playerTwoCombine)) {
+      result = `Player Two wins this round! <br> Player One roll again!`;
+    } else if (playerOneCombine == playerTwoCombine) {
       result = `Draw!`;
     } else {
       result = "bug";
     }
+    playerStage = `One`;
   }
+
   return (
+    `This round:` +
+    `<br>` +
     `Player One: ` +
     playerOneCombine +
     `<br>` +
@@ -111,9 +128,51 @@ var whoWin = function () {
   );
 };
 
+// generate function to sum up all combined numbers
+var whoHasBiggerSum = function () {
+  var outcome = ``;
+  var sumOne = arrayOne.reduce(function (a, b) {
+    return a + b;
+  }, 0);
+
+  var sumTwo = arrayTwo.reduce(function (a, b) {
+    return a + b;
+  }, 0);
+  if (sumOne > sumTwo) {
+    outcome = `Player One has a bigger total sum so far!`;
+  } else if (sumOne < sumTwo) {
+    outcome = `Player Two has a bigger total sum so far!`;
+  } else if (sumOne == sumTwo) {
+    outcome = `Both players have the same total sum so far!`;
+  } else {
+    outcome = `bug 2`;
+  }
+  return (
+    `Total sum:` +
+    `<br>` +
+    `Player One: ` +
+    sumOne +
+    `<br>` +
+    `Player Two: ` +
+    sumTwo +
+    `<br>` +
+    outcome
+  );
+};
+
 var main = function (userChoice) {
   var game = gameRound(userChoice);
+  console.log(playerStage);
+  console.log("here");
   var resultMessage = whoWin();
-  var myOutputValue = game + `<br>` + `<br>` + resultMessage;
+  console.log(playerStage);
+  console.log("here2");
+  var sumGame = whoHasBiggerSum();
+  console.log(playerStage);
+  console.log("here3");
+  var myOutputValue =
+    game + `<br>` + `<br>` + resultMessage + `<br>` + `<br>` + sumGame;
+  console.log(playerStage);
+  console.log("here4");
   return myOutputValue;
 };
