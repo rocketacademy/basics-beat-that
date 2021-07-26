@@ -1,7 +1,7 @@
 //to have a global variable that controls the game progress
-var gameState = "";
+var gameState = "start game";
 //to have a global variable that controls the players
-var playerNumber = 1;
+var currentPlayer = 1;
 //global variables to save the dice numbers rolled
 var num1 = 0;
 var num2 = 0;
@@ -15,46 +15,50 @@ var sum2 = 0;
 var gameMode = 0;
 
 var main = function (input) {
-  var myOutputValue = "";
-
-  if (gameState == "") {
-    myOutputValue = `Please choose the game mode: <br><br> 1. Highest Combined Number <br><br> 2. Lowest Combined Number <br><br> Enter the number choice.`;
+  //welcome message
+  if (gameState == "start game") {
     gameState = "input game mode";
-
-    return myOutputValue;
+    return `Welcome! Please choose the game mode: <br><br> 1. Highest Combined Number <br><br> 2. Lowest Combined Number <br><br> Enter the number choice.`;
   }
-
+  //after user choose the game mode
   if (gameState == "input game mode") {
     gameState = "roll dice";
     gameMode = input;
-    myOutputValue = `You have chosen game mode ${gameMode}. Let's play!`;
-    return myOutputValue;
+    return `You have chosen game mode ${gameMode}. Let's play!`;
   }
 
+  //rolling the dice and output the result
   if (gameState == "roll dice") {
-    var dice1 = diceRoll();
-    console.log(dice1);
-    var dice2 = diceRoll();
-    console.log(dice2);
-    num1 = dice1;
-    num2 = dice2;
-    var finalNumber = combineDiceDigits(num1, num2);
-    if (playerNumber == 1) {
-      combineNum1 = finalNumber;
-      sum1 += finalNumber;
-      myOutputValue = `It is now Player ${playerNumber}'s turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}.`;
-      playerNumber = 2;
-      return myOutputValue;
-    }
-    if (playerNumber == 2) {
-      combineNum2 = finalNumber;
-      sum2 += finalNumber;
-      var currentLeader = evaluateWinner(sum1, sum2);
-      var leaderBoard = formatLeaderBoard(currentLeader);
-      myOutputValue = `It is now Player ${playerNumber}'s turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
-      playerNumber = 1;
-      return myOutputValue;
-    }
+    var outputMessage = generateOutputMessage();
+    return outputMessage;
+  }
+  //if reaches here, means user did not input correctly
+  gameMode = "start game";
+  return `You did not enter correctly. Restarting the game...`;
+};
+
+//to roll dice and output the result message
+var generateOutputMessage = function () {
+  var dice1 = diceRoll();
+  console.log(dice1);
+  var dice2 = diceRoll();
+  console.log(dice2);
+  num1 = dice1;
+  num2 = dice2;
+  var finalNumber = combineDiceDigits(num1, num2);
+  if (currentPlayer == 1) {
+    combineNum1 = finalNumber;
+    sum1 += finalNumber;
+    currentPlayer = 2;
+    return `It is now Player 1's turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}.`;
+  }
+  if (currentPlayer == 2) {
+    combineNum2 = finalNumber;
+    sum2 += finalNumber;
+    var currentLeader = evaluateWinner(sum1, sum2);
+    var leaderBoard = formatLeaderBoard(currentLeader);
+    currentPlayer = 1;
+    return `It is now Player 2's turn. <br><br> You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br><br> Your best combined number is ${finalNumber}. <br><br> Player 1 current round number: ${combineNum1} and Player 2 current round number: ${combineNum2} <br><br> ${leaderBoard} <br><br> ${currentLeader}`;
   }
 };
 
@@ -73,16 +77,16 @@ var formatLeaderBoard = function (currentLeader) {
 
 //to determine the bigger number out of the two numbers that players obtained
 var evaluateWinner = function (player1Num, player2Num) {
-  if (player1Num > player2Num && gameMode == 1) {
+  if (
+    (player1Num > player2Num && gameMode == 1) ||
+    (player2Num > player1Num && gameMode == 2)
+  ) {
     return `Player 1 is currently leading!`;
   }
-  if (player2Num > player1Num && gameMode == 1) {
-    return `Player 2 is currently leading!`;
-  }
-  if (player2Num > player1Num && gameMode == 2) {
-    return `Player 1 is currently leading!`;
-  }
-  if (player1Num > player2Num && gameMode == 2) {
+  if (
+    (player2Num > player1Num && gameMode == 1) ||
+    (player1Num > player2Num && gameMode == 2)
+  ) {
     return `Player 2 is currently leading!`;
   }
   if (player1Num == player2Num) {
@@ -92,25 +96,20 @@ var evaluateWinner = function (player1Num, player2Num) {
 
 //to combine the numbers of dice rolled to a single 2 digit
 var combineDiceDigits = function (digit1, digit2) {
-  if (gameMode == 1) {
-    if (digit1 >= digit2) {
-      var finalNumber = digit1 * 10 + digit2;
-      return finalNumber;
-    }
-    if (digit2 > digit1) {
-      var finalNumber = digit2 * 10 + digit1;
-      return finalNumber;
-    }
+  if (
+    (gameMode == 1 && digit1 >= digit2) ||
+    (gameMode == 2 && digit2 >= digit1)
+  ) {
+    var finalNumber = digit1 * 10 + digit2;
+    return finalNumber;
   }
-  if (gameMode == 2) {
-    if (digit2 >= digit1) {
-      var finalNumber = digit1 * 10 + digit2;
-      return finalNumber;
-    }
-    if (digit1 > digit2) {
-      var finalNumber = digit2 * 10 + digit1;
-      return finalNumber;
-    }
+
+  if (
+    (gameMode == 1 && digit2 > digit1) ||
+    (gameMode == 2 && digit1 >= digit2)
+  ) {
+    var finalNumber = digit2 * 10 + digit1;
+    return finalNumber;
   }
 };
 
