@@ -1,5 +1,6 @@
-var playerStage = `One`; // One -> orderOne -> Two -> orderTwo -> result
+var playerStage = `normalreverse`; // normalreverse -> One -> orderOne -> Two -> orderTwo -> result
 var chooseDiceORder = `Choose the order of the dice. Type 12 or 21`;
+var normalOrReverse = `normal`; // normal or reverse
 
 // variables for player one
 var playerOneDiceOne = 0;
@@ -22,9 +23,20 @@ var generateRandomDiceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
 
-// generate function to roll dice and choose order
+// generate function to choose game type, roll dice and choose order
 var gameRound = function (input) {
-  if (playerStage == "One") {
+  if (playerStage == `normalreverse`) {
+    var message = `You chose ${input} game! Player One, click submit to roll your dice!`;
+    if (input == "normal") {
+      normalOrReverse = `normal`;
+      playerStage = `One`;
+    } else if (input == "reverse") {
+      normalOrReverse = `reverse`;
+      playerStage = `One`;
+    } else {
+      message = `Please choose "normal" or "reverse".`;
+    }
+  } else if (playerStage == "One") {
     playerOneCombine = 0;
     playerTwoCombine = 0; // need to add these two lines for new every round to refresh as zero
 
@@ -32,7 +44,7 @@ var gameRound = function (input) {
     playerOneDiceTwo = generateRandomDiceRoll();
     playerStage = `orderOne`;
 
-    var message =
+    message =
       `Player One rolled <br>` +
       ` Dice 1: ` +
       playerOneDiceOne +
@@ -106,20 +118,30 @@ var gameRound = function (input) {
 var whoWin = function () {
   var result = ``;
   if (playerStage == `result`) {
-    if (playerOneCombine > playerTwoCombine) {
-      result = `Player One wins this round! <br> Player One roll again!`;
-    } else if (playerOneCombine < playerTwoCombine) {
-      result = `Player Two wins this round! <br> Player One roll again!`;
-    } else if (playerOneCombine == playerTwoCombine) {
+    if (playerOneCombine == playerTwoCombine) {
       result = `Draw!`;
+    } else if (normalOrReverse == `normal`) {
+      if (playerOneCombine > playerTwoCombine) {
+        result = `Player One wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
+      } else if (playerOneCombine < playerTwoCombine) {
+        result = `Player Two wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
+      }
+    } else if (normalOrReverse == `reverse`) {
+      if (playerOneCombine > playerTwoCombine) {
+        result = `Player Two wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
+      } else if (playerOneCombine < playerTwoCombine) {
+        result = `Player One wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
+      }
     } else {
       result = "bug";
     }
-    playerStage = `One`;
+    playerStage = `normalreverse`;
   }
 
   return (
-    `This round:` +
+    `This is a ` +
+    normalOrReverse +
+    ` round:` +
     `<br>` +
     `Player One: ` +
     playerOneCombine +
