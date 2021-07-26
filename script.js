@@ -277,69 +277,84 @@
 //   }
 // };
 
-// ======================= MORE COMFORTABLE (AUTO-GENERATE COMBINED NUMBER) ===========================
-
-// // FOR HTML:
-// You are playing a 2-player game called Beat That. <br />
-//         <br />
-//         GAME RULES: <br />
-//         1. Players take turns to roll 2 dice to get the biggest possible 2-digit
-//         number. <br />
-//         2. The player with the bigger sum of all the 2-digit numbers rolled till
-//         then [i.e. numbers from past round(s) plus that of current round] is the
-//         winner! <br />
-//         <br />
-//         TIP: <br />
-//         You can enter "reversed" to play the reversed mode where the smaller
-//         total sum wins. To change back to the normal mode thereafter, simply
-//         enter "normal". <br />
-//         <br />
-//         To start, please get Player 1 to enter click the submit button.
+// ======================= MORE COMFORTABLE (AUTO-GENERATE COMBINED NUMBER + VARIABLE NUMBER OF DICE) ===========================
 
 // Create an array (needs to be global variable) to store the newly rolled dice numbers
 var diceRollArray = [];
 // Create game mode (needs to be global variable) with default being normal (i.e. highest score wins)
 var resultMode = "normal";
-// Create an array (needs to be global variable) to store competing players' final sequenced numbers
-var competingNumbers = [];
-// Create global variables (for use to extract latest number to insert into either player 1/player 2's number array)
+// Create global variable to track if it is player 1 or 2's turn, set default as player 1
+var player = 0;
+// Create global variables to store player 1 and 2's numbers
 var player1 = [];
-counterPlayer1 = 0;
 var player2 = [];
-counterPlayer2 = 1;
+// Create global variables to store the number of dice selected at each round
+var numberOfDice = ``;
 
 // Create a function for dice roll
 var diceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
-// Create a function to roll 2 dice
-var rollTwoDice = function () {
-  diceRollArray = [diceRoll(), diceRoll()];
+// Create a function to roll any quantity of dice depending on quantity stated
+var rollAnyQtyDice = function (quantity) {
+  // Reset diceRollArray (QUESTION: I thought this step is redundant since my next line is to replace the array with something else, but it doesn't work when I omit it, why?)
+  diceRollArray = [];
+  var counter = 0;
+  while (counter < quantity) {
+    diceRollArray.push(diceRoll());
+    counter += 1;
+  }
   return diceRollArray;
 };
 
+// Sort an array in ascending order
+var sortAsc = function (array) {
+  return array.sort(function (a, b) {
+    return a - b;
+  });
+};
+
+// Sort an array in descending order
+var sortDes = function (array) {
+  return array.sort(function (a, b) {
+    return b - a;
+  });
+};
+
+// Store the unsequenced dice numbers rolled in current round for current player
+var storeRandomArray = function (array) {
+  var diceCounter = 0;
+  var unsortedarray = ``;
+  while (diceCounter < array.length) {
+    unsortedarray = String(unsortedarray) + String(array[diceCounter]);
+    diceCounter += 1;
+  }
+  return unsortedarray;
+};
+
 // Auto-generate highest/lowest combined number based on result mode
-var option1 = ``;
-var option2 = ``;
-var autoCombine = function (option1, option2, resultMode, diceRollArray) {
-  console.log("resultMode", resultMode);
-  var option1 = String(diceRollArray[0]) + String(diceRollArray[1]);
-  var option2 = String(diceRollArray[1]) + String(diceRollArray[0]);
-  console.log("option1", option1);
-  console.log("option2", option2);
+var autoCombine = function (resultMode, array) {
   if (resultMode == `normal`) {
-    if (Number(option1) > Number(option2)) {
-      return option1;
-    } else {
-      return option2;
+    array = sortDes(array);
+    var bestNumber = ``;
+    itemCounter = 0;
+    while (itemCounter < array.length) {
+      bestNumber = String(bestNumber) + String(array[itemCounter]);
+      itemCounter += 1;
     }
+    console.log("bestNumber", bestNumber);
+    return bestNumber;
   }
   if (resultMode == `reversed`) {
-    if (Number(option1) < Number(option2)) {
-      return option1;
-    } else {
-      return option2;
+    var array = sortAsc(array);
+    var bestNumber = ``;
+    itemCounter = 0;
+    while (itemCounter < array.length) {
+      bestNumber = String(bestNumber) + String(array[itemCounter]);
+      itemCounter += 1;
     }
+    console.log("bestNumber", bestNumber);
+    return bestNumber;
   }
 };
 
@@ -354,68 +369,69 @@ var addTotal = function (array) {
   return sum;
 };
 
-// Sort player's array in descending order
-var sortDes = function (playerArray) {
-  return playerArray.sort(function (a, b) {
-    return b - a;
-  });
-};
-
 var main = function (input) {
+  console.log("player", player);
+  console.log(
+    "Input is a number?",
+    !isNaN(Number(input)) && Number(input) != 0
+  );
   // Change result mode according to input on reversed/normal game
   if (input.toLowerCase() == `reversed`) {
     resultMode = `reversed`;
     // Reset Arrays
-    competingNumbers = [];
     player1 = [];
     player2 = [];
-    counterPlayer1 = 0;
-    counterPlayer2 = 1;
-    return "You are now in reversed mode where the smaller number wins! <br> <br> Player 1 please click the submit button to start the game.";
+    return "You are now in reversed mode where the smaller number wins! <br> <br> Player 1, please enter the number of dice you wish to place in this round and click submit.";
   }
   if (input.toLowerCase() == `normal`) {
     resultMode = `normal`;
     // Reset Arrays
-    competingNumbers = [];
     player1 = [];
     player2 = [];
-    counterPlayer1 = 0;
-    counterPlayer2 = 1;
-    return "You are now in normal mode where the bigger number wins! <br> <br> Player 1 please click the submit button to start the game.";
+    return "You are now in normal mode where the bigger number wins! <br> <br> Player 1, please enter the number of dice you wish to place in this round and click submit.";
   }
 
   // *** Roll dice for the first time every new round, auto-generate combined number, but do not generate result yet ***
-  if (competingNumbers.length % 2 == 0) {
-    // Roll 2 random numbers
-    diceRollArray = rollTwoDice();
+  // Valid input
+  if (player == 0 && !isNaN(Number(input)) && Number(input) != 0) {
+    // Roll the amount of dice stated in input
+    numberOfDice = Number(input);
+    diceRollArray = rollAnyQtyDice(numberOfDice);
     console.log("diceRollArray", diceRollArray);
+    //Store unsequenced array
+    var unsortedDiceRollArray = storeRandomArray(diceRollArray);
     // Get best combined number
-    var bestNumber = autoCombine(option1, option2, resultMode, diceRollArray);
-    competingNumbers.push(bestNumber);
-    console.log(`competing numbers: ${competingNumbers}`);
-    player1.push(competingNumbers[counterPlayer1]);
-    counterPlayer1 = counterPlayer1 + 2;
-    return `You rolled these numbers: ${diceRollArray}. <br> <br> This is your best combined number from those two digits above: ${bestNumber}. <br><br> It's player 2's turn now, please click submit to roll your dice.`;
+    var bestNumber = autoCombine(resultMode, diceRollArray);
+    player1.push(bestNumber);
+    player = 1;
+    return `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br> It's player 2's turn now, please click submit to roll your dice.`;
+  }
+  // Error message for invalid input
+  else if (player == 0) {
+    return `Sorry, I do not understand. <br> <br> Please enter the number of dice you wish to play in this round.`;
   }
 
   // *** Roll dice for the second player every round, auto-generate combined number, and output result ***
-  if (!(competingNumbers.length % 2 == 0)) {
-    diceRollArray = rollTwoDice();
+  if (player == 1) {
+    // Roll the amount of dice stated in earlier input
+    diceRollArray = rollAnyQtyDice(numberOfDice);
     console.log("diceRollArray", diceRollArray);
+    //Store unsequenced array
+    var unsortedDiceRollArray = storeRandomArray(diceRollArray);
     // Get best combined number
-    var bestNumber = autoCombine(option1, option2, resultMode, diceRollArray);
-    competingNumbers.push(bestNumber);
-    console.log(`competing numbers: ${competingNumbers}`);
-    player2.push(competingNumbers[counterPlayer2]);
-    counterPlayer2 = counterPlayer2 + 2;
+    var bestNumber = autoCombine(resultMode, diceRollArray);
+    player2.push(bestNumber);
     console.log("player1", player1);
     console.log("player2", player2);
+    // Reset variables
+    player = 0;
+    numberOfDice = ``;
     if (
       (resultMode == `normal` && addTotal(player1) > addTotal(player2)) ||
       (resultMode == `reversed` && addTotal(player1) < addTotal(player2))
     ) {
       return (
-        `You rolled these numbers: ${diceRollArray}. <br> <br> This is your best combined number from those two digits above: ${bestNumber}. <br><br><br> 🏆 THE CURRENT WINNER IS: PLAYER 1! 🏆
+        `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br><br> 🏆 THE CURRENT WINNER IS: PLAYER 1! 🏆
        <br> <br> You are currently in the ${resultMode} game mode. <br> <br> Player 1's numbers in descending order: ` +
         sortDes(player1) +
         ` (Total: ${addTotal(
@@ -424,7 +440,7 @@ var main = function (input) {
         sortDes(player2) +
         ` (Total: ${addTotal(
           player2
-        )}) <br><br><br> ================= <br><br> Tip: <br><br> Enter "reversed" for reversed mode (lowest number wins). <br> Enter "normal" for normal mode (highest number wins).`
+        )}) <br><br><br> To continue, please get Player 1 to enter the number of dice you wish to roll for the next round. <br><br><br> ================= <br><br> Tip: <br><br> Enter "reversed" for reversed mode (lowest number wins). <br> Enter "normal" for normal mode (highest number wins).`
       );
     }
     if (
@@ -432,7 +448,7 @@ var main = function (input) {
       (resultMode == `reversed` && addTotal(player1) > addTotal(player2))
     ) {
       return (
-        `You rolled these numbers: ${diceRollArray}. <br> <br> This is your best combined number from those two digits above: ${bestNumber}. <br><br><br> 🏆 THE CURRENT WINNER IS: PLAYER 2! 🏆
+        `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br><br> 🏆 THE CURRENT WINNER IS: PLAYER 2! 🏆
        <br> <br> You are currently in the ${resultMode} game mode. <br> <br> Player 1's numbers in descending order: ` +
         sortDes(player1) +
         ` (Total: ${addTotal(
@@ -441,11 +457,11 @@ var main = function (input) {
         sortDes(player2) +
         ` (Total: ${addTotal(
           player2
-        )}) <br><br><br> ================= <br><br> Tip: <br><br> Enter "reversed" for reversed mode (lowest number wins). <br> Enter "normal" for normal mode (highest number wins).`
+        )}) <br><br><br> To continue, please get Player 1 to enter the number of dice you wish to roll for the next round. <br><br><br> ================= <br><br> Tip: <br><br> Enter "reversed" for reversed mode (lowest number wins). <br> Enter "normal" for normal mode (highest number wins).`
       );
     } else {
       return (
-        `You rolled these numbers: ${diceRollArray}. <br> <br> This is your best combined number from those two digits above: ${bestNumber}. <br><br><br> 🏆 THE CURRENT WINNER IS: BOTH OF YOU! It's a draw! 🏆 <br></br> You are currently in the ${resultMode} game mode. <br> <br> Player 1's numbers in descending order: ` +
+        `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br><br> 🏆 THE CURRENT WINNER IS: BOTH OF YOU! It's a draw! 🏆 <br></br> You are currently in the ${resultMode} game mode. <br> <br> Player 1's numbers in descending order: ` +
         sortDes(player1) +
         ` (Total: ${addTotal(
           player1
@@ -453,7 +469,7 @@ var main = function (input) {
         sortDes(player2) +
         ` (Total: ${addTotal(
           player2
-        )}) <br><br><br> ================= <br><br> Tip: <br><br> Enter "reversed" for reversed mode (lowest number wins). <br> Enter "normal" for normal mode (highest number wins).`
+        )}) <br><br><br> To continue, please get Player 1 to enter the number of dice you wish to roll for the next round. <br><br><br> ================= <br><br> Tip: <br><br> Enter "reversed" for reversed mode (lowest number wins). <br> Enter "normal" for normal mode (highest number wins).`
       );
     }
   }
