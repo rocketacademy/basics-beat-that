@@ -1,5 +1,4 @@
 var playerStage = `normalreverse`; // normalreverse -> One -> orderOne -> Two -> orderTwo -> result
-var chooseDiceORder = `Choose the order of the dice. Type 12 or 21`;
 var normalOrReverse = `normal`; // normal or reverse
 
 // variables for player one
@@ -8,6 +7,8 @@ var playerOneDiceTwo = 0;
 var playerOneCombine = 0;
 var arrayOne = []; // array to keep all the combined numbers chosen for summation
 var playerOneWinSum = ``; // statement for output which will be pushed into arrayWhoWinSum
+var maxCombinedOne = ``;
+var minCombinedOne = ``;
 
 // variables for player two
 var playerTwoDiceOne = 0;
@@ -15,6 +16,8 @@ var playerTwoDiceTwo = 0;
 var playerTwoCombine = 0;
 var arrayTwo = [];
 var playerTwoWinSum = ``;
+var maxCombinedTwo = ``;
+var minCombinedTwo = ``;
 
 // array to toggle between which result is shown on top first
 var arrayWhoWinSum = [];
@@ -25,8 +28,9 @@ var generateRandomDiceRoll = function () {
 
 // generate function to choose game type, roll dice and choose order
 var gameRound = function (input) {
+  var message = ``;
   if (playerStage == `normalreverse`) {
-    var message = `You chose ${input} game! Player One, click submit to roll your dice!`;
+    message = `You chose ${input} game! Player One, click submit to roll your dice!`;
     if (input == "normal") {
       normalOrReverse = `normal`;
       playerStage = `One`;
@@ -43,7 +47,15 @@ var gameRound = function (input) {
     playerOneDiceOne = generateRandomDiceRoll();
     playerOneDiceTwo = generateRandomDiceRoll();
     playerStage = `orderOne`;
-
+    maxCombinedOne = Math.max(
+      playerOneDiceOne + `` + playerOneDiceTwo,
+      playerOneDiceTwo + `` + playerOneDiceOne
+    );
+    minCombinedOne = Math.min(
+      playerOneDiceOne + `` + playerOneDiceTwo,
+      playerOneDiceTwo + `` + playerOneDiceOne
+    );
+    playerStage = `Two`;
     message =
       `Player One rolled <br>` +
       ` Dice 1: ` +
@@ -51,65 +63,38 @@ var gameRound = function (input) {
       `<br> Dice 2: ` +
       playerOneDiceTwo +
       `<br>` +
-      chooseDiceORder;
-  } else if (playerStage == `orderOne`) {
-    if (input == 12) {
-      playerOneCombine = playerOneDiceOne + `` + playerOneDiceTwo;
-      arrayOne.push(parseInt(playerOneCombine));
-      playerStage = `Two`;
-      message =
-        `Player One chose ` +
-        playerOneCombine +
-        `<br> Player Two, roll your dice!`;
-    } else if (input == 21) {
-      playerOneCombine = playerOneDiceTwo + `` + playerOneDiceOne;
-      arrayOne.push(parseInt(playerOneCombine));
-      playerStage = `Two`;
-      message =
-        `Player One chose ` +
-        playerOneCombine +
-        `<br> Player Two, roll your dice!`;
-    } else if (input !== 12 && input !== 21) {
-      message =
-        chooseDiceORder +
-        `<br>` +
-        ` Dice 1: ` +
-        playerOneDiceOne +
-        `<br> Dice 2: ` +
-        playerOneDiceTwo;
-    }
+      `Max: ` +
+      maxCombinedOne +
+      `<br>` +
+      `Min: ` +
+      minCombinedOne +
+      `<br>` +
+      `Player Two, roll your dice!`;
   } else if (playerStage == `Two`) {
     playerTwoDiceOne = generateRandomDiceRoll();
     playerTwoDiceTwo = generateRandomDiceRoll();
     playerStage = `orderTwo`;
-    var message =
+    maxCombinedTwo = Math.max(
+      playerTwoDiceOne + `` + playerTwoDiceTwo,
+      playerTwoDiceTwo + `` + playerTwoDiceOne
+    );
+    minCombinedTwo = Math.min(
+      playerTwoDiceOne + `` + playerTwoDiceTwo,
+      playerTwoDiceTwo + `` + playerTwoDiceOne
+    );
+    playerStage = `result`;
+    message =
       `Player Two rolled <br>` +
       ` Dice 1: ` +
       playerTwoDiceOne +
       `<br> Dice 2: ` +
       playerTwoDiceTwo +
       `<br>` +
-      chooseDiceORder;
-  } else if (playerStage == `orderTwo`) {
-    if (input == 12) {
-      playerTwoCombine = playerTwoDiceOne + `` + playerTwoDiceTwo;
-      arrayTwo.push(parseInt(playerTwoCombine));
-      message = `Player Two chose ` + playerTwoCombine;
-      playerStage = `result`;
-    } else if (input == 21) {
-      playerTwoCombine = playerTwoDiceTwo + `` + playerTwoDiceOne;
-      arrayTwo.push(parseInt(playerTwoCombine));
-      message = `Player Two chose ` + playerTwoCombine;
-      playerStage = `result`;
-    } else if (input !== 12 && input !== 21) {
-      message =
-        chooseDiceORder +
-        `<br>` +
-        ` Dice 1: ` +
-        playerTwoDiceOne +
-        `<br> Dice 2: ` +
-        playerTwoDiceTwo;
-    }
+      `Max: ` +
+      maxCombinedTwo +
+      `<br>` +
+      `Min: ` +
+      minCombinedTwo;
   }
   return message;
 };
@@ -118,19 +103,29 @@ var gameRound = function (input) {
 var whoWin = function () {
   var result = ``;
   if (playerStage == `result`) {
-    if (playerOneCombine == playerTwoCombine) {
-      result = `Draw!`;
-    } else if (normalOrReverse == `normal`) {
-      if (playerOneCombine > playerTwoCombine) {
+    if (normalOrReverse == `normal`) {
+      arrayOne.push(parseInt(maxCombinedOne));
+      arrayTwo.push(parseInt(maxCombinedTwo));
+      playerOneCombine = maxCombinedOne;
+      playerTwoCombine = maxCombinedTwo;
+      if (maxCombinedOne > maxCombinedTwo) {
         result = `Player One wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
-      } else if (playerOneCombine < playerTwoCombine) {
+      } else if (maxCombinedOne < maxCombinedTwo) {
         result = `Player Two wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
+      } else if (maxCombinedOne == maxCombinedTwo) {
+        result = `Draw!`;
       }
     } else if (normalOrReverse == `reverse`) {
-      if (playerOneCombine > playerTwoCombine) {
+      arrayOne.push(parseInt(minCombinedOne));
+      arrayTwo.push(parseInt(minCombinedTwo));
+      playerOneCombine = minCombinedOne;
+      playerTwoCombine = minCombinedTwo;
+      if (minCombinedOne > minCombinedTwo) {
         result = `Player Two wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
-      } else if (playerOneCombine < playerTwoCombine) {
+      } else if (minCombinedOne < minCombinedTwo) {
         result = `Player One wins this round! <br> Enter "normal" or "reverse" to choose your mode again!`;
+      } else if (minCombinedOne == minCombinedTwo) {
+        result = `Draw!`;
       }
     } else {
       result = "bug";
