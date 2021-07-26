@@ -5,13 +5,18 @@ var chooseDiceORder = `Choose the order of the dice. Type 12 or 21`;
 var playerOneDiceOne = 0;
 var playerOneDiceTwo = 0;
 var playerOneCombine = 0;
-var arrayOne = [];
+var arrayOne = []; // array to keep all the combined numbers chosen for summation
+var playerOneWinSum = ``; // statement for output which will be pushed into arrayWhoWinSum
 
 // variables for player two
 var playerTwoDiceOne = 0;
 var playerTwoDiceTwo = 0;
 var playerTwoCombine = 0;
 var arrayTwo = [];
+var playerTwoWinSum = ``;
+
+// array to toggle between which result is shown on top first
+var arrayWhoWinSum = [];
 
 var generateRandomDiceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
@@ -64,8 +69,6 @@ var gameRound = function (input) {
   } else if (playerStage == `Two`) {
     playerTwoDiceOne = generateRandomDiceRoll();
     playerTwoDiceTwo = generateRandomDiceRoll();
-    console.log(playerTwoDiceOne);
-    console.log(playerTwoDiceTwo);
     playerStage = `orderTwo`;
     var message =
       `Player Two rolled <br>` +
@@ -138,9 +141,18 @@ var whoHasBiggerSum = function () {
   var sumTwo = arrayTwo.reduce(function (a, b) {
     return a + b;
   }, 0);
+
+  playerOneWinSum = `Player One: ` + sumOne;
+  playerTwoWinSum = `Player Two: ` + sumTwo;
+
+  arrayWhoWinSum[0] = playerOneWinSum;
+  arrayWhoWinSum[1] = playerTwoWinSum;
+
   if (sumOne > sumTwo) {
     outcome = `Player One has a bigger total sum so far!`;
   } else if (sumOne < sumTwo) {
+    arrayWhoWinSum[0] = playerTwoWinSum;
+    arrayWhoWinSum[1] = playerOneWinSum;
     outcome = `Player Two has a bigger total sum so far!`;
   } else if (sumOne == sumTwo) {
     outcome = `Both players have the same total sum so far!`;
@@ -150,11 +162,9 @@ var whoHasBiggerSum = function () {
   return (
     `Total sum:` +
     `<br>` +
-    `Player One: ` +
-    sumOne +
+    arrayWhoWinSum[0] +
     `<br>` +
-    `Player Two: ` +
-    sumTwo +
+    arrayWhoWinSum[1] +
     `<br>` +
     outcome
   );
