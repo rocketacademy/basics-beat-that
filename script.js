@@ -4,6 +4,8 @@ var combinedNumber = 0;
 var savedFirstDice = 0;
 var savedSecondDice = 0;
 var allCombinedNumbers = [];
+var playerOneNumbers = 0;
+var playerTwoNumbers = 0;
 
 // More comfortable portion should require separate lists for each player?
 
@@ -41,12 +43,18 @@ var main = function (input) {
     allCombinedNumbers.push(combinedNumber);
     console.log(allCombinedNumbers);
     if (playerTurn == 2) {
+      playerTwoNumbers += parseInt(combinedNumber); // for More Comfortable -- Score
       playerTurn = 1;
       var myOutputValue = checkWin(allCombinedNumbers);
       allCombinedNumbers = [];
+      myOutputValue =
+        myOutputValue +
+        "<br><br>" +
+        createLeaderboard(playerOneNumbers, playerTwoNumbers); // More Comfortable -- Leaderboard function below
       return myOutputValue;
     }
     playerTurn += 1;
+    playerOneNumbers += parseInt(combinedNumber); // for More Comfortable -- Score
     return myOutputValue;
   }
 };
@@ -72,4 +80,15 @@ var checkWin = function (x) {
     outputMessage = "Draw!";
     return outputMessage;
   }
+};
+
+var createLeaderboard = function (x, y) {
+  if (x > y) {
+    var leaderboard =
+      "Leaderboard: <br><br>" + "Player 1: " + x + "<br><br> Player 2: " + y;
+  } else {
+    var leaderboard =
+      "Leaderboard: <br><br>" + "Player 2: " + y + "<br><br> Player 1: " + x;
+  }
+  return leaderboard;
 };
