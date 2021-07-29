@@ -2,7 +2,9 @@
 //keep track variables for player 1
 var playerOne ='';
 var diceValueOne = [];
-var outputPlayerOne = ''
+var diceValOrderOne = [];
+var outputPlayerOne = '';
+
 
 // Keep track variables for player 2
 var playerTwo = '';
@@ -34,28 +36,28 @@ var main = function (input) {
       console.log('dice ' + diceValueOne);
 
 
-      outputPlayerOne = 'Welcome Player 1! <br> You rolled:<br> Dice 1 = ' + diceValueOne[0] + '<br> Dice 2 = ' + diceValueOne[1] + '<br> Choose the order of the dice please. <br> Choose: <br> 1 - for Dice 1 <br> 2 - for Dice 2' ;
+      outputPlayerOne = 'Welcome Player 1! <br> You rolled:<br> Dice 1 = ' + diceValueOne[0] + '<br> Dice 2 = ' + diceValueOne[1] + '<br> Choose the order of the dice please!. <br> Choose: <br> 1 - for Dice 1 <br> 2 - for Dice 2' ;
 
       counter = counter + 1;
       gameMode = 'CHOOSE_DICE_ORDER_PLAYER_1';
-    }
-    return outputPlayerOne;
-  };
-   
-  
-  
-  
-  
-  
-  
-  // The following codes assumes CHOOSE_DICE_ORDER_PLAYER_1 game mode
-  // Player one choose dice number order
     
+    return outputPlayerOne;
+    }
+  
    
-if (gameMode = 'CHOOSE_DICE_ORDER_PLAYER_1'){
+    // // Player one choose dice number order
+    // // Assume the following code running here is when game mode is CHOOSE_DICE_ORDER_PLAYER_1
+   
+    // if (input = 2){
+    //     diceValueOne.move(1,0)        
+    //   }
+    //    outputPlayerOne = Number(diceValueOne.join(''));
+    
+    // return outputPlayerOne;
+  };
 
 
-// }
+
 
 
 
