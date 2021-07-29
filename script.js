@@ -87,6 +87,16 @@ var determineWinner = function() {
   return 2;
 }
 
+var leaderBoard =  function () {
+  if (player1TotalScore > player2TotalScore) {
+    return `Player 1 is in the Lead!<br><br>
+    Player 1 Total Score ${player1TotalScore}<br><br>
+    Player 2 Total Score ${player2TotalScore}`
+  } else
+   return `Player 2 is in the Lead!<br><br>
+   Player 2 Total Score ${player2TotalScore}<br><br>
+   Player 1 Total Score ${player1TotalScore}`
+}
 
 var main = function(input) {
   if (gameMode == DICEROLL) {
@@ -138,14 +148,11 @@ var main = function(input) {
     console.log(player2SumNum)
     console.log(player1TotalScore)
     console.log(player2TotalScore)
+     
+    return `Player ${whoWon} wins!<br><br>
+    ${leaderBoard()} <br><br>
+    Press Submit To Play Again`
+    
 
-
-    return `
-    Player ${whoWon} wins!<br><br>
-    Player 1 Number : ${player1Num} & Player 2 Number 2: ${player2Num}.
-    <br><br>Press submit to play again!
-    <br><br>
-    Player 1 Total Number : ${player1TotalScore} | Player 2 Total Number: ${player2TotalScore}`
-
-  }
-  }
+    };
+  };
