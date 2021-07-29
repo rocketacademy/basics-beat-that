@@ -73,6 +73,9 @@ var determineWinner = function() {
 }
 
 
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+
 var main = function(input) {
   if (gameMode == DICEROLL) {
     var newDiceRolls = getDiceRolls();
@@ -97,38 +100,28 @@ var main = function(input) {
     Your number is ${playerNum}.`
 
     if (currPlayer == 1) {
+
+      player1SumNum.push(player1Num);
+
+
       currPlayer = 2;
       gameMode = DICEROLL;
 
       return `${playerMess}<br><br>
       Player 2, Press Submit to roll dice`;
-    };
+     };
 
     var whoWon = determineWinner();
 
+    player2SumNum.push(player2Num);
+    
+
     currPlayer = 1;
     gameMode = DICEROLL;
-   
-    var counterPlayer1 = 0;
-    var counterPlayer2 = 0;
 
-    for (var i=0; i < player1Num.length, i++) 
-    {
-    
-    var player1SumNum = player1Num + player1Num[i];
-    counterPlayer1 += player1Num[i];
+    console.log(player1SumNum)
+    console.log(player2SumNum)
 
-    player1SumNum;
-    }
-
-    for (var i=0; i < player2Num.length, i++) 
-    {
-
-    var player2SumNum = player2Num + player2Num[i];
-    counterPlayer2+= player2Num[i];
-
-    player2SumNum;
-    }
 
     return `
     Player ${whoWon} wins!<br><br>
