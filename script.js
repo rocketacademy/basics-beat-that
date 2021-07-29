@@ -14,6 +14,9 @@ var player1Num = [];
 var player2Num = [];
 var player1SumNum = [];
 var player2SumNum = [];
+var player1TotalScore;
+var player2TotalScore;
+
 
 
 var rollDice = function () {
@@ -64,6 +67,18 @@ var concatenate2Numbers = function (num1, num2) {
   };
 
 
+var calcTotalNumber = function(array) {
+  
+  let sum = 0;
+  for (let i =0; i <array.length;i++) {
+    console.log(`array[i]`)
+    console.log(array[i])
+    sum += array[i];
+
+  }
+  console.log(sum);
+  return sum;
+}
 
 var determineWinner = function() {
   if (player1Num > player2Num) {
@@ -71,9 +86,6 @@ var determineWinner = function() {
   }
   return 2;
 }
-
-
-const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 
 var main = function(input) {
@@ -103,6 +115,7 @@ var main = function(input) {
 
       player1SumNum.push(player1Num);
 
+      player1TotalScore = calcTotalNumber(player1SumNum);
 
       currPlayer = 2;
       gameMode = DICEROLL;
@@ -114,13 +127,17 @@ var main = function(input) {
     var whoWon = determineWinner();
 
     player2SumNum.push(player2Num);
-    
+
+    player2TotalScore = calcTotalNumber(player2SumNum);
+
 
     currPlayer = 1;
     gameMode = DICEROLL;
 
     console.log(player1SumNum)
     console.log(player2SumNum)
+    console.log(player1TotalScore)
+    console.log(player2TotalScore)
 
 
     return `
@@ -128,7 +145,7 @@ var main = function(input) {
     Player 1 Number : ${player1Num} & Player 2 Number 2: ${player2Num}.
     <br><br>Press submit to play again!
     <br><br>
-    Player 1 Total Number : ${player1SumNum} | Player 2 Total Number: ${player2SumNum}`
+    Player 1 Total Number : ${player1TotalScore} | Player 2 Total Number: ${player2TotalScore}`
 
   }
   }
