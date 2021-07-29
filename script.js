@@ -9,13 +9,14 @@ var myOutputValue = "";
 var firstDiceNumber = 0;
 var secondDiceNumber = 0;
 var currPlayer = 1;
+var counter = 0;
 var stringFirstDice = "";
 var stringSecondDice = "";
 var diceSequence1 = "";
 var diceSequence2 = "";
-var counter = 0;
 var player1DiceSeq = "";
 var player2DiceSeq = "";
+var sequenceStartsWithDiceOne = "";
 
 var firstDiceRoll = function () {
   var randomDecimal = Math.random() * 6;
@@ -55,18 +56,18 @@ var getNumOfDiceMessage = function () {
   }
 };
 
-var doesSequenceStartsWithDiceOne = function (userDecisionOnDiceSequence) {
+var doesSequenceStartsWithDiceOne = function (playerDecisionOnDiceSequence) {
   // if input is second dice, then return false. otherwise it's true.
-  if (userDecisionOnDiceSequence == SECOND_DICE) {
-    console.log(userDecisionOnDiceSequence);
-    console.log("this will run only when the input is second dice");
+  if (playerDecisionOnDiceSequence == SECOND_DICE) {
+    console.log(playerDecisionOnDiceSequence);
     return false;
   }
-  console.log("current value of " + userDecisionOnDiceSequence);
   return true;
 };
 
-var getDiceSequenceMessage = function (input) {
+var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
+  sequenceStartsWithDiceOne = playerDecisionOnDiceSequence;
+
   stringFirstDice = firstDiceNumber.toString();
   stringSecondDice = secondDiceNumber.toString();
 
@@ -74,9 +75,7 @@ var getDiceSequenceMessage = function (input) {
   diceSequence2 = stringSecondDice + stringFirstDice;
 
   if (currPlayer == 1) {
-    if (doesSequenceStartsWithDiceOne(input)) {
-      console.log("value of " + doesSequenceStartsWithDiceOne() + "");
-
+    if (sequenceStartsWithDiceOne) {
       player1DiceSeq = diceSequence1;
       return (
         "Player 1, you chose " +
@@ -84,11 +83,7 @@ var getDiceSequenceMessage = function (input) {
         " first. Your dice sequence is: " +
         diceSequence1
       );
-    }
-    if (!doesSequenceStartsWithDiceOne(input)) {
-      console.log("value of " + doesSequenceStartsWithDiceOne() + "");
-      console.log("if input is 2nd dice");
-
+    } else if (!sequenceStartsWithDiceOne) {
       player1DiceSeq = diceSequence2;
       return (
         "Player 1, you chose " +
@@ -99,7 +94,7 @@ var getDiceSequenceMessage = function (input) {
     }
   }
   if (currPlayer == 2) {
-    if (doesSequenceStartsWithDiceOne(input)) {
+    if (sequenceStartsWithDiceOne) {
       player2DiceSeq = diceSequence1;
       return (
         "Player 2, you chose " +
@@ -108,8 +103,7 @@ var getDiceSequenceMessage = function (input) {
         diceSequence1
       );
     }
-    if (!doesSequenceStartsWithDiceOne(input)) {
-      console.log("if input is 2nd dice");
+    if (!sequenceStartsWithDiceOne) {
       player2DiceSeq = diceSequence2;
       return (
         "Player 2, you chose " +
@@ -124,19 +118,19 @@ var getDiceSequenceMessage = function (input) {
 var didPlayer1Win = function () {
   if (player2DiceSeq > player1DiceSeq) {
     return (
-      "Congrats to Player 2! You beat Player 1 with the numbers " +
+      "Congrats to Player 2! <br> You beat Player 1 with the numbers " +
       player2DiceSeq +
       " to " +
       player1DiceSeq +
-      ""
+      "."
     );
   }
   return (
-    "Congrats to Player 1! You beat Player 2 with the numbers " +
+    "Congrats to Player 1! <br> You beat Player 2 with the numbers " +
     player1DiceSeq +
     " to " +
     player2DiceSeq +
-    ""
+    "."
   );
 };
 
@@ -151,7 +145,6 @@ var main = function (input) {
       // check if the sequence starts with dice one or not.
       var sequenceStartsWithDiceOne = doesSequenceStartsWithDiceOne(input);
 
-      // define the variable of the output message.
       var outputMessage = getDiceSequenceMessage(sequenceStartsWithDiceOne);
 
       // if the sequence starts with dice one, get output message.
@@ -159,26 +152,18 @@ var main = function (input) {
         myOutputValue = outputMessage;
       }
 
-      // change the current player to player 2.
       currPlayer = 2;
 
-      // change game mode back to rollDice mode.
       gameMode = rollDice;
 
-      // get output message if the sequence starts with dice two.
       myOutputValue = outputMessage;
 
-      // increment counter number
       counter += 1;
-      console.log("this is current counter " + counter);
     }
     return myOutputValue;
   }
   if (counter == 2) {
-    // if counter = 2, decide which player wins.
     var closingMessage = didPlayer1Win();
-
-    // return the closing message.
     return closingMessage + "<br>" + "Thanks for playing.";
   }
 };
