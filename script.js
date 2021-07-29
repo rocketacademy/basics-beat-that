@@ -4,6 +4,8 @@ var GAME_MODE_CHOOSE_DICE_ORDER = 'GAME_MODE_CHOOSE_DICE_ORDER';
 
 var lowest = false; 
 
+var auto = false; 
+
 
 var gameMode = GAME_MODE_DICE_ROLL; 
 
@@ -66,6 +68,7 @@ var concat2Numbers = function(num1, num2) {
 
 var firstNumber = '';
 
+//manual score generation
 var getPlayerNumber = function(firstNumber){
   if (currentPlayer == 1){
     var diceArray = player1DiceRoll;
@@ -80,8 +83,6 @@ var getPlayerNumber = function(firstNumber){
   else {
     playerDice = concat2Numbers(diceArray[1], diceArray[0]);
   }
-
-
   if (currentPlayer === 1) {
     player1DiceRoll = playerDice;
     player1Score.push(player1DiceRoll);
@@ -91,6 +92,37 @@ var getPlayerNumber = function(firstNumber){
   }
   // Return generated player num to parent function
   return playerDice;
+};
+
+//auto score generation
+var getPlayerNumberAutomatically = function(){
+  if (currentPlayer == 1){
+    var diceArray = player1DiceRoll;
+  }
+  else diceArray = player2DiceRoll; 
+
+  var playerDice;
+
+if (auto == true && lowest == true){
+  if (diceArray[0] > diceArray [1]){
+    playerDice = concat2Numbers(diceArray[1],diceArray[0]);
+  }
+    playerDice = concat2Numbers(diceArray[0],diceArray[1]);
+}
+else if (auto == true && lowest == false){
+  if (diceArray[0] > diceArray [1]){
+    playerDice = concat2Numbers(diceArray[0],diceArray[1]);
+  }
+    playerDice = concat2Numbers(diceArray[1],diceArray[0]);
+}
+if (currentPlayer === 1) {
+  player1DiceRoll = playerDice;
+  player1Score.push(player1DiceRoll);
+} else {
+  player2DiceRoll = playerDice;
+  player2Score.push(player2DiceRoll);
+}
+return playerDice;
 };
 
 
@@ -121,6 +153,17 @@ var main = function (input) {
     return 'Lowest mode is off. <br>Type "lowest" to turn on. <br><br>Press Submit to continue.';
   };
 
+  if (input == 'auto'|| input == 'AUTO'){
+    auto = true;
+    console.log(auto);
+    return 'Auto mode is on. <br>Type "auto off" to turn on. <br><br>Press Submit to continue.';
+  };
+
+  if (input == 'auto off'|| input == 'AUTO OFF'){
+    auto = false;
+    console.log(auto);
+    return 'Auto mode is off. <br>Type "auto" to turn on. <br><br>Press Submit to continue.';
+  };
 
    if (gameMode == GAME_MODE_DICE_ROLL){
     var newDiceRolls = getDiceRolls();
@@ -130,17 +173,42 @@ var main = function (input) {
     console.log(gameMode);
     console.log("Current Player:" + currentPlayer);
     console.log(newDiceRolls);
-
+  if (auto == false){
     return 'Welcome Player ' + currentPlayer + ' . You rolled ' + '<b>' + newDiceRolls[0] + '</b>' + ' and ' + '<b>' + newDiceRolls[1] + '</b>' + ' .<br><br> Choose the order of the dice. <i>Type "1" to select dice1 first, "2" to select dice2 first</i>' + '<br><br><br><b>--LEADERBOARD--</b><br>Player 1 combined score = ' + player1Combined() + '<br> Player 2 combined score = ' + player2Combined();
    }
+   return 'Welcome Player ' + currentPlayer + ' . You rolled ' + '<b>' + newDiceRolls[0] + '</b>' + ' and ' + '<b>' + newDiceRolls[1] + '</b>' + ' .<br><br> Click Submit to generate your score automatically. </i>' + '<br><br><br><b>--LEADERBOARD--</b><br>Player 1 combined score = ' + player1Combined() + '<br> Player 2 combined score = ' + player2Combined();
+
+   };
 
 
-   if (gameMode == GAME_MODE_CHOOSE_DICE_ORDER) {2
-     var firstNumber = Number(input);
-     if (firstNumber !== 1 && firstNumber !== 2) {
-      return 'Please choose 1 or 2 as the first numeral index for your dice rolls';
-    }
-   }
+   if (gameMode == GAME_MODE_CHOOSE_DICE_ORDER) {
+//code for if auto is true
+
+      if (auto == true) {
+          var playerNum = getPlayerNumberAutomatically();
+          if (currentPlayer == 1){
+            var playerNumResponse = 'Player ' + currentPlayer + ' Your number is ' + playerNum + ' <br><br> Your current score is ' + '<b>' + player1Combined() + '</b>';
+            } 
+           else var playerNumResponse = 'Player ' + currentPlayer + ' Your number is ' + playerNum + ' <br><br> Your current score is ' + '<b>' + player2Combined() + '</b>';
+        
+        
+            if (currentPlayer == 1){
+              currentPlayer = 2; 
+              gameMode = GAME_MODE_DICE_ROLL; 
+              console.log(newDiceRolls);
+              return playerNumResponse + ' <br><br><br> It is now Player 2 turn. <br><br> Press Submit.';
+        
+            }
+      }
+
+//end code for if auto is true
+
+   else {
+   var firstNumber = Number(input);
+
+   if (firstNumber !== 1 && firstNumber !== 2) {
+    return 'Please choose 1 or 2 as the first numeral index for your dice rolls';
+   }; 
 
     var playerNum = getPlayerNumber(firstNumber);
     console.log(currentPlayer);
@@ -158,7 +226,8 @@ var main = function (input) {
       return playerNumResponse + ' <br><br><br> It is now Player 2 turn. <br><br> Press Submit.';
 
     }
-
+  }
+ };
     var winningPlayer = winner(); 
     
     currentPlayer = 1; 
