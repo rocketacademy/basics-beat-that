@@ -1,70 +1,96 @@
-// Use Math to generate system's generated input for the game
+let numOfDice = 0;
+let gameMode = "waiting for number of players";
+let playerTurn = 0;
+let arrayOfObjects = [];
+
+//get largest diceRolls
+const findWinner = () => {
+  let sortedScore = arrayOfObjects.sort((a, b) => b.diceRolls - a.diceRolls);
+  let winner = sortedScore[0].id;
+  return `Winner is player ${winner}.\<br\>\ Leaderboard\<br\>\ ${leaderBoard()}`;
+};
+
+//leaderboard (function map)
+const leaderBoard = () =>
+  arrayOfObjects.map(
+    (item) => `
+    Player ${item.id}. Dicerolls: ${item.diceRolls}.\<br\>\ 
+    `
+  );
+
+var storePlayerObjects = function (userInput) {
+  for (var i = 0; i < userInput; i += 1) {
+    arrayOfObjects.push({ id: i + 1, diceRolls: [] });
+  }
+};
+
+//resetGame
+const resetGame = () => {
+  numOfDice = 0;
+  gameMode = "waiting for number of players";
+  playerTurn = 0;
+  arrayOfObjects = [];
+};
+
+//rolling dice number with Math
 const getDiceRoll = () => {
   return 1 + Math.floor(Math.random() * 6);
 };
-let roundCounter = 0;
-let playerRound = 1;
-let allDiceArray = [(diceArray1 = []), (diceArray2 = [])];
-let playerMode = `Player ${playerRound}`;
-const isGameOver = (checkRound) => checkRound === 2;
-
-const resetGame = () => {
-  roundCounter = 0;
-  playerRound = 1;
-  allDiceArray = [(diceArray1 = []), (diceArray2 = [])];
-  playerMode = `Player ${playerRound}`;
+//pushing the sorted diceRoll to diceArray
+const diceRollArray = () => {
+  let diceArray = [];
+  for (let n = 0; n < Number(numOfDice); n++) {
+    let diceNumber = getDiceRoll();
+    diceArray.push(diceNumber);
+    sortDiceArray(diceArray);
+  }
+  arrayOfObjects[playerTurn].diceRolls = Number(diceArray.join(""));
+  return diceArray;
+};
+// sorting array
+const sortDiceArray = (anArray) => {
+  anArray.sort(function (a, b) {
+    return b - a;
+  });
 };
 
-const winnerOfGame = () =>
-  Number(allDiceArray[0].join("")) > Number(allDiceArray[1].join(""))
-    ? "Player 1"
-    : Number(allDiceArray[0].join("")) < Number(allDiceArray[1].join(""))
-    ? "Player 2"
-    : "Nobody";
+//normalMode
+const normalMode = () => {
+  diceRollArray();
+  playerTurn += 1;
+  if (playerTurn >= arrayOfObjects.length) {
+    return `Player ${playerTurn} rolled ${
+      arrayOfObjects[playerTurn - 1].diceRolls
+    }. Click Submit to see winner.`;
+  }
+  return `Player ${playerTurn} rolled ${
+    arrayOfObjects[playerTurn - 1].diceRolls
+  }. Next is Player ${playerTurn + 1}'s turn`;
+};
 
 const main = (input) => {
-  while (roundCounter < 2) {
-    if (playerMode === `Player ${playerRound}`) {
-      let diceCounter = 0;
-      while (diceCounter < 2) {
-        let rollDice = getDiceRoll();
-        console.log(rollDice);
-        allDiceArray[playerRound - 1].push(rollDice);
-        diceCounter += 1;
-        console.log(allDiceArray[0]);
-      }
-      playerMode = `Player ${playerRound} guess`;
-      return `Welcome Player ${playerRound}.\<br>\You rolled ${
-        allDiceArray[playerRound - 1][0]
-      } for Dice 1 and ${
-        allDiceArray[playerRound - 1][1]
-      } for Dice 2.\<br>\Choose the order of the dice.`;
-    }
-
-    if (playerMode === `Player ${playerRound} guess`) {
-      if (input == 2) {
-        [allDiceArray[playerRound - 1][0], allDiceArray[playerRound - 1][1]] = [
-          allDiceArray[playerRound - 1][1],
-          allDiceArray[playerRound - 1][0],
-        ];
-      }
-      playerRound += 1;
-      roundCounter += 1;
-      playerMode = `Player ${playerRound}`;
-      diceCounter = 0;
-      return isGameOver(roundCounter)
-        ? `Player ${
-            playerRound - 1
-          }, you chose Dice ${input} first.\<br>\Your number is ${Number(
-            allDiceArray[playerRound - 2].join("")
-          )}.\<br>\Winner is ${winnerOfGame()}.`
-        : `Player ${
-            playerRound - 1
-          }, you chose Dice ${input} first.\<br>\Your number is ${Number(
-            allDiceArray[playerRound - 2].join("")
-          )}.\<br>\It is now Player ${playerRound}'s turn.`;
-    }
+  if (gameMode == "waiting for number of players") {
+    storePlayerObjects(input);
+    gameMode = "waiting for dice number";
+    return `There are ${arrayOfObjects.length} players. You may choose how many dice to roll.`;
   }
+
+  if (gameMode == "waiting for dice number") {
+    numOfDice = Number(input);
+    gameMode = "normal";
+    return `Each player will roll ${numOfDice} dice. Player 1 please start by clicking submit to roll your dice.`;
+  }
+
+  if (gameMode == "normal") {
+    if (playerTurn < arrayOfObjects.length) {
+      return normalMode();
+    }
+    gameMode = "find winner";
+  }
+
+  if (gameMode == "find winner") {
+    return findWinner();
+  }
+  //to be fixed later.
   resetGame();
-  return `Gameover. Click submit to replay.`;
 };
