@@ -7,7 +7,9 @@ let arrayOfObjects = [];
 const findWinner = () => {
   let sortedScore = arrayOfObjects.sort((a, b) => b.diceRolls - a.diceRolls);
   let winner = sortedScore[0].id;
-  return `Winner is player ${winner}.\<br\>\ Leaderboard\<br\>\ ${leaderBoard()}`;
+  let finalMessage = `Winner is player ${winner}.\<br\>\ Leaderboard\<br\>\ ${leaderBoard()}`;
+  resetGame();
+  return finalMessage;
 };
 
 //leaderboard (function map)
@@ -18,8 +20,8 @@ const leaderBoard = () =>
     `
   );
 
-var storePlayerObjects = function (userInput) {
-  for (var i = 0; i < userInput; i += 1) {
+const storePlayerObjects = (userInput) => {
+  for (let i = 0; i < userInput; i += 1) {
     arrayOfObjects.push({ id: i + 1, diceRolls: [] });
   }
 };
@@ -91,6 +93,4 @@ const main = (input) => {
   if (gameMode == "find winner") {
     return findWinner();
   }
-  //to be fixed later.
-  resetGame();
 };
