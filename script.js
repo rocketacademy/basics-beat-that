@@ -1,63 +1,41 @@
-// String Constants
+/**
+ * ------------------------------------------------------------------------
+ * Constants
+ * ------------------------------------------------------------------------
+ */
+
 var NORMAL = "normal";
 var LOWEST = "lowest";
 var KNOCKOUT = "knockout";
 
-// Global Variables
+/**
+ * ------------------------------------------------------------------------
+ * Global Variables
+ * ------------------------------------------------------------------------
+ */
+
 var gameMode = NORMAL;
 var numOfPlayers = 2;
-var roundBoard = [];
+var roundBoard = []; // Holds the scores for each round
 var winner;
-var leaderBoard = [];
+var leaderBoard = []; // Holds the scores across rounds
 var numOfDice = 2;
 var diceRolls = [];
 
-// Main
-var main = function (players, dice, mode) {
-  gameMode = mode;
+/**
+ * ------------------------------------------------------------------------
+ * Helper Functions
+ * ------------------------------------------------------------------------
+ */
 
-  if (isNaN(Number(players))) {
-    return `Please enter a valid number.`;
-  } else if (Number(players) < 3 && gameMode == KNOCKOUT) {
-    return `For Knockout mode, please enter 3 or more for the number of players.`;
-  } else if (Number(players) < 2) {
-    return `Please enter 2 or more for the number of players.`;
-  } else {
-    numOfPlayers = Number(players);
-  }
+/**
+ * ------------------------------------------------------------------------
+ * Updates the round board and leader board
+ * @param   {Number}  playerNum   The number of the player.
+ * @param   {Number}  playerScore The score of the player.
+ * ------------------------------------------------------------------------
+ */
 
-  if (isNaN(Number(dice)) || Number(dice) < 2) {
-    return `Please enter 2 or more for the number of dice.`;
-  } else {
-    numOfDice = Number(dice);
-  }
-
-  // Generate leader board
-  if (leaderBoard.length != numOfPlayers) {
-    for (var counter = 1; counter <= numOfPlayers; counter += 1) {
-      leaderBoard.push({ playerNumber: counter, score: 0 });
-    }
-  }
-
-  switch (gameMode) {
-    case NORMAL:
-    case LOWEST:
-      playBeatThat();
-      break;
-    case KNOCKOUT:
-      return playKnockout();
-  }
-
-  if (gameMode == KNOCKOUT) {
-    playKnockout();
-  }
-
-  return generateOutputMessage();
-};
-
-// Modules
-
-// Update player boards
 function updatePlayerBoards(playerNum, playerScore) {
   roundBoard.push(playerScore);
   leaderBoard.find(
@@ -65,17 +43,27 @@ function updatePlayerBoards(playerNum, playerScore) {
   ).score += playerScore;
 }
 
-// Sort leader board in descending order of score
+/**
+ * ------------------------------------------------------------------------
+ * JavaScript does not have in-built functions for numeric sort in an array.
+ * These two functions sort the leader board in ascending or descending order.
+ * ------------------------------------------------------------------------
+ */
+
 function sortLeaderBoardDescend() {
   leaderBoard.sort((a, b) => b.score - a.score);
 }
 
-// Sort leader board in ascending order of score
 function sortLeaderBoardAscend() {
   leaderBoard.sort((a, b) => a.score - b.score);
 }
 
-// Die Roll
+/**
+ * ------------------------------------------------------------------------
+ * Get a random number for a die roll.
+ * @return  {Number}  dieNumber   A random integer from 1 to 6.
+ * ------------------------------------------------------------------------
+ */
 function rollDie() {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
@@ -83,26 +71,47 @@ function rollDie() {
   return dieNumber;
 }
 
-// Dice Rolls
+/**
+ * ------------------------------------------------------------------------
+ * Generate dice rolls based on the number of dice and saves the rolls in an array.
+ * @param   {Number}    numOfDice   The number of dice chosen by player.
+ * ------------------------------------------------------------------------
+ */
 function getDiceRolls(numOfDice) {
   for (var counter = 0; counter < numOfDice; counter += 1) {
     diceRolls.push(rollDie());
   }
 }
 
-// Get maximum in array
+/**
+ * ------------------------------------------------------------------------
+ * JavaScript does not have in-built functions for getting the max. or min. in an array.
+ * These two functions return the index of the max. or min. element in an array.
+ * @param   {Array}   array   The array to iterate through.
+ * @return  {Number}          The index of the element that is the max. or min.
+ * ------------------------------------------------------------------------
+ */
+
 function getMaxOfArray(array) {
   var max = Math.max.apply(null, array);
   return array.indexOf(max);
 }
 
-// Get minimum in array
 function getMinOfArray(array) {
   var min = Math.min.apply(null, array);
   return array.indexOf(min);
 }
 
-// Generate Normal Combination
+/**
+ * ------------------------------------------------------------------------
+ * Auto generates the optimal combination depending on the mode.
+ * Identify biggest or smallest number in dice rolls.
+ * Add number to combination and remove that number from dice rolls using splice().
+ * Repeat until there are no more numbers in dice rolls.
+ * @return {Number} The optimal combination of dice depending on the mode.
+ * ------------------------------------------------------------------------
+ */
+
 function generateCombi() {
   combination = "";
   for (var counter = 0; counter < numOfDice; counter += 1) {
@@ -119,7 +128,15 @@ function generateCombi() {
   return Number(combination);
 }
 
-// Play Beat That
+/**
+ * ------------------------------------------------------------------------
+ * Play Beat That.
+ * Generate dice rolls.
+ * Update the boards with the optimal combination.
+ * Sort the leader board according to mode.
+ * ------------------------------------------------------------------------
+ */
+
 function playBeatThat() {
   for (var counter = 0; counter < numOfPlayers; counter += 1) {
     getDiceRolls(numOfDice);
@@ -132,19 +149,43 @@ function playBeatThat() {
   }
 }
 
-// Play Knockout
+/**
+ * ------------------------------------------------------------------------
+ * Gets a random player from an array.
+ * @param   {Array}     array         The array to take players out from.
+ * @return  {Object}    playerObject  Object that contains player number and score.
+ * ------------------------------------------------------------------------
+ */
+
+function getRandomPlayer(array) {
+  var randomDecimal = Math.random() * array.length;
+  var randomInteger = Math.floor(randomDecimal);
+  return array.splice(randomInteger, 1)[0];
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Knockout Beat That
+ * Get random player from holding board into knockout board.
+ * Let the two players in the knockout board fight before eliminating the first runner-up.
+ * Reset the defending player's score.
+ * Repeat until all players have battled.
+ * @return  {String}  Outcome for all players and the ultimate winner.
+ * ------------------------------------------------------------------------
+ */
+
 function playKnockout() {
   var outputMessage = "";
   var holdingBoard = [];
-  var knockoutBoard = [];
+  var knockoutBoard = []; // Where players battle it out
 
-  // Create holding board for all players
+  // Create holding board containing all players
   for (var counter = 1; counter <= Number(numOfPlayers); counter += 1) {
     holdingBoard.push({ playerNumber: counter, score: 0 });
   }
 
   // Put in 1 player into knockout board
-  knockoutBoard.push(holdingBoard.pop());
+  knockoutBoard.push(getRandomPlayer(holdingBoard));
 
   // Number of rounds to be played is 1 fewer than number of players
   for (
@@ -153,7 +194,7 @@ function playKnockout() {
     holdingCounter += 1
   ) {
     // Put in 1 more player into knockout board
-    knockoutBoard.push(holdingBoard.pop());
+    knockoutBoard.push(getRandomPlayer(holdingBoard));
 
     // Get the combinations for each player in the knockout board
     for (player in knockoutBoard) {
@@ -164,7 +205,6 @@ function playKnockout() {
     // Sort the knockout board scores in descending order
     knockoutBoard.sort((a, b) => b.score - a.score);
 
-    // Create results message
     outputMessage += `Round ${holdingCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br>Player ${knockoutBoard[0].playerNumber} stays while Player ${knockoutBoard[1].playerNumber} is out of the competition!<br><br>`;
 
     // Remove player that lost
@@ -174,13 +214,19 @@ function playKnockout() {
     knockoutBoard[0].score = 0;
   }
 
-  outputMessage += `<br>After ${numOfPlayers - 1} exciting rounds, Player ${
+  outputMessage += `👑 After ${numOfPlayers - 1} exciting rounds, Player ${
     knockoutBoard[0].playerNumber
   } is the ultimate winner! 👑`;
   return outputMessage;
 }
 
-// Output Message
+/**
+ * ------------------------------------------------------------------------
+ * Identifies winner depending on mode.
+ * Generates output message and leaderboard.
+ * @return {String}           The output message and leader board.
+ * ------------------------------------------------------------------------
+ */
 function generateOutputMessage() {
   var message =
     "All players have played, here are the results for this round!<br>";
@@ -198,4 +244,56 @@ function generateOutputMessage() {
   }
   roundBoard = [];
   return message;
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Main
+ * @param   {Number}  players   The number of players.
+ * @param   {Number}  dice      The number of dice
+ * @param   {String}  mode      The game mode for Beat That.
+ * @return  {String}            The outcome and scoreboard.
+ * ------------------------------------------------------------------------
+ */
+
+function main(players, dice, mode) {
+  gameMode = mode;
+
+  // Input validation for number of players
+  if (isNaN(Number(players))) {
+    return `Please enter a valid number.`;
+  } else if (Number(players) < 3 && gameMode == KNOCKOUT) {
+    // Ensure that there is a minimum number of 3 players for knockout
+    return `For Knockout mode, 3 or more players are needed to play.`;
+  } else {
+    numOfPlayers = Number(players);
+  }
+
+  // Input validation for number of dice
+  if (isNaN(Number(dice)) || Number(dice) < 2) {
+    return `Please enter 2 or more for the number of dice.`;
+  } else {
+    numOfDice = Number(dice);
+  }
+
+  // Generate leader board with objects representing players
+  if (leaderBoard.length != numOfPlayers) {
+    // Resets leader board if there is a change in the number of players
+    leaderBoard = [];
+    for (var counter = 1; counter <= numOfPlayers; counter += 1) {
+      leaderBoard.push({ playerNumber: counter, score: 0 });
+    }
+  }
+
+  // Implement different modes depending on input
+  switch (gameMode) {
+    case NORMAL:
+    case LOWEST:
+      playBeatThat();
+      break;
+    case KNOCKOUT:
+      return playKnockout();
+  }
+
+  return generateOutputMessage();
 }
