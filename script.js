@@ -1,4 +1,4 @@
-// beat-that game base
+// beat-that game base + scoring + leaderboard
 // 2 players and players take turns
 
 // 4 game modes: "player 1 dice roll", "player 1 choose dice order", "player 2 dice roll", "player 2 choose dice order", and the game restart
@@ -8,6 +8,8 @@ var currentPlayer = 1;
 var pickDiceOrder;
 var player1TotalNumber = 0;
 var player2TotalNumber = 0;
+var player1TotalScores = 0;
+var player2TotalScores = 0;
 
 // arrays to track each player's dice rolls
 var player1DiceRolls = [];
@@ -54,7 +56,7 @@ var playerRollDice = function () {
     currentGameMode = "player 2 choose dice order";
   }
 
-  var myOutputValue = `Welcome Player ${currentPlayer}. <br> You rolled ${randomDice1} for Dice 1 and ${randomDice2} for Dice 2. <br> Please choose the order of the dice, by entering '1' or '2'.`;
+  var myOutputValue = `Welcome Player ${currentPlayer}. <br> You rolled ${randomDice1} for Dice 1 and ${randomDice2} for Dice 2. <br><br> Please choose the order of the dice, by entering '1' or '2'.`;
 
   return myOutputValue;
 };
@@ -68,14 +70,18 @@ var playerChooseDice = function () {
     currentPlayer = 1;
 
     if (pickDiceOrder == 1) {
-      player1TotalNumber = `${player1DiceRolls[0]}${player1DiceRolls[1]}`;
+      player1TotalNumber = Number(
+        `${player1DiceRolls[0]}${player1DiceRolls[1]}`
+      );
     } else if (pickDiceOrder == 2) {
-      player1TotalNumber = `${player1DiceRolls[1]}${player1DiceRolls[0]}`;
+      player1TotalNumber = Number(
+        `${player1DiceRolls[1]}${player1DiceRolls[0]}`
+      );
     }
-    myOutputValue += `Your number is ${player1TotalNumber}. <br> It is now Player 2's turn.`;
-
-    //storing result
+    //storing player 1 result
     player1Scores.push(player1TotalNumber);
+
+    myOutputValue += `Your number is ${player1TotalNumber}. <br><br> It is now Player 2's turn.`;
 
     //moving to the next game
     currentGameMode = "player 2 dice roll";
@@ -86,16 +92,21 @@ var playerChooseDice = function () {
     currentPlayer = 2;
 
     if (pickDiceOrder == 1) {
-      player2TotalNumber = `${player2DiceRolls[0]}${player2DiceRolls[1]}`;
+      player2TotalNumber = Number(
+        `${player2DiceRolls[0]}${player2DiceRolls[1]}`
+      );
     } else if (pickDiceOrder == 2) {
-      player2TotalNumber = `${player2DiceRolls[1]}${player2DiceRolls[0]}`;
+      player2TotalNumber = Number(
+        `${player2DiceRolls[1]}${player2DiceRolls[0]}`
+      );
     }
-    var winnerMessage = winner();
-
-    myOutputValue += `Your number is ${player2TotalNumber}. <br> Since Player 1's number is ${player1TotalNumber}, the ULTIMATE WINNER is ${winnerMessage}. <br> Click 'Submit' to play another round.`;
-
-    //storing result
+    //storing player 2 result
     player2Scores.push(player2TotalNumber);
+
+    var currentWinnerMessage = currentWinner();
+    var leaderBoardMessage = leaderBoard();
+
+    myOutputValue += `Your number is ${player2TotalNumber} and Player 1's number is ${player1TotalNumber}. <br><br> ${currentWinnerMessage} wins this round. <br><br> ${leaderBoardMessage} <br><br> Click 'Submit' to play another round.`;
 
     // restarting the game
     restartGame();
@@ -118,7 +129,7 @@ var restartGame = function () {
 };
 
 // to determine the winner
-var winner = function () {
+var currentWinner = function () {
   if (player1TotalNumber > player2TotalNumber) {
     myOutputValue = "Player 1";
     return myOutputValue;
@@ -127,6 +138,36 @@ var winner = function () {
     return myOutputValue;
   } else if (player1TotalNumber == player2TotalNumber) {
     myOutputValue = "both players";
+    return myOutputValue;
+  }
+};
+
+// Leaderboard, lists the 2 players and their scores in decreasing order
+var leaderBoard = function () {
+  // to find the sum of player 1 scores
+  player1TotalScores = 0;
+  var counter = 0;
+  while (counter < player1Scores.length) {
+    player1TotalScores = player1TotalScores + player1Scores[counter];
+    counter += 1;
+  }
+
+  // to find the sum of player 2 scores
+  player2TotalScores = 0;
+  var counter = 0;
+  while (counter < player2Scores.length) {
+    player2TotalScores = player2TotalScores + player2Scores[counter];
+    counter += 1;
+  }
+
+  console.log("player 1 total scores: " + player1TotalScores);
+  console.log("player 2 total scores: " + player2TotalScores);
+
+  if (player1TotalScores > player2TotalScores) {
+    myOutputValue = `Leaderboard: <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
+    return myOutputValue;
+  } else if (player2TotalScores > player1TotalScores) {
+    myOutputValue = `Leaderboard: <br> Player 2 total score: ${player2TotalScores} <br> Player 1 total score: ${player1TotalScores}`;
     return myOutputValue;
   }
 };
