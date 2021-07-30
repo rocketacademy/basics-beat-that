@@ -14,6 +14,12 @@ var maxCombined = ``; // to find max combined number among the dice rolls of a s
 var minCombined = ``; // to find min combined number among the dice rolls of a single player. Refreshes every player
 var arrayCombined = []; // to store all players combined number for that round. Refreshes every round
 
+var winningPlayer = 1; // player number. assign winning player each round
+var challenger = 2; // player number. assign challenger player each round (will +1)
+var arrayCombined = []; // to store both current winner [0] & challenger [1] combined number for that round. Refreshes every round
+
+var enterDiceAgainStatement = `Enter number of dice again!`;
+
 // function to roll X dices
 var generateXDiceRoll = function () {
   var diceCounter = 0;
@@ -63,8 +69,8 @@ var rollXDiceXPlayer = function () {
   var message = ``;
 
   // every playerCounter is one player's round
-  // loop till all players finsih their round = one game
-  while (playerCounter < numberOfPlayers) {
+  // loop TWICE only since knock out matches are only between two players
+  while (playerCounter < 2) {
     var xDiceRoll = generateXDiceRoll();
     if (normalOrReverse == `normal`) {
       var biggestCombined = generateBiggestCombined();
@@ -80,28 +86,90 @@ var rollXDiceXPlayer = function () {
       `<br>`;
     playerCounter += 1;
   }
-  return message;
+  return (
+    `Player ` +
+    winningPlayer +
+    `🎲: ` +
+    arrayCombined[0] +
+    `<br>` +
+    `Player ` +
+    challenger +
+    `🎲: ` +
+    arrayCombined[1]
+  );
 };
 
 // function to determine winner of combined number, either BIGGEST or SMALLEST
 var generateCombinedNumWinner = function () {
   arrayCombined = arrayCombined.map(Number); // convert all element to NUMBER
-  var winningPlayer = ``;
-  var drawRound = new Set(arrayCombined).size == 1; // determine is all elements are the same = draw (https://stackoverflow.com/questions/14832603/check-if-all-values-of-array-are-equal)
 
-  if (drawRound == true) {
-    return `It's a draw!!`;
-  } else {
-    if (normalOrReverse == `normal`) {
-      var biggestCombinedWinner = arrayCombined.reduce(function (a, b) {
-        return Math.max(a, b);
-      }, 0);
-      winningPlayer = arrayCombined.indexOf(biggestCombinedWinner) + 1;
-    } else if (normalOrReverse == `reverse`) {
-      var smallestCombinedWinner = Math.min.apply(Math, arrayCombined);
-      winningPlayer = arrayCombined.indexOf(smallestCombinedWinner) + 1;
+  if (arrayCombined[0] == arrayCombined[1]) {
+    playerStage = `choosedice`;
+    return `It's a draw!! Choose your dice and roll again!`;
+  } else if (arrayCombined[0] !== arrayCombined[1]) {
+    if (parseInt(challenger) < parseInt(numberOfPlayers)) {
+      if (normalOrReverse == `normal`) {
+        if (arrayCombined[0] > arrayCombined[1]) {
+          winningPlayer = winningPlayer;
+          challenger = challenger + 1;
+        } else if (arrayCombined[0] < arrayCombined[1]) {
+          winningPlayer = challenger;
+          challenger = challenger + 1;
+        }
+      } else if (normalOrReverse == `reverse`) {
+        if (arrayCombined[0] < arrayCombined[1]) {
+          winningPlayer = winningPlayer;
+          challenger = challenger + 1;
+        } else if (arrayCombined[0] > arrayCombined[1]) {
+          winningPlayer = challenger;
+          challenger = challenger + 1;
+        }
+      }
+      playerStage = `choosedice`;
+      return (
+        `Player ` +
+        winningPlayer +
+        ` wins this round` +
+        `<br>` +
+        `Player ` +
+        challenger +
+        `, you're up next!` +
+        `<br>` +
+        `<br>` +
+        enterDiceAgainStatement
+      );
+    } else if (parseInt(challenger) == parseInt(numberOfPlayers)) {
+      if (normalOrReverse == `normal`) {
+        if (arrayCombined[0] > arrayCombined[1]) {
+          winningPlayer = winningPlayer;
+          challenger = challenger + 1;
+        } else if (arrayCombined[0] < arrayCombined[1]) {
+          winningPlayer = challenger;
+          challenger = challenger + 1;
+        }
+      } else if (normalOrReverse == `reverse`) {
+        if (arrayCombined[0] < arrayCombined[1]) {
+          winningPlayer = winningPlayer;
+          challenger = challenger + 1;
+        } else if (arrayCombined[0] > arrayCombined[1]) {
+          winningPlayer = challenger;
+          challenger = challenger + 1;
+        }
+      }
+      playerStage = `numberOfPlayers`;
+      challenger = 2;
+      return (
+        `Player ` +
+        winningPlayer +
+        ` wins this round so he/she won the game!` +
+        `<br>` +
+        `<br>` +
+        `Congrats! 🎉🎊💯 ` +
+        `<br>` +
+        `<br>` +
+        `Enter the number of players for the next game!`
+      );
     }
-    return `Player ` + winningPlayer + ` wins this round`;
   }
 };
 
@@ -110,10 +178,11 @@ var generateCombinedNumWinner = function () {
 var gameRound = function (input) {
   var message = ``;
   if (playerStage == `numberOfPlayers`) {
+    winningPlayer = 1;
     if (input > 1) {
       numberOfPlayers = input;
       playerStage = `choosedice`;
-      message = `${numberOfPlayers} players! <br> Enter number of dice!`;
+      message = `${numberOfPlayers} players! <br> Enter number of dice! <br> <br> Playing next: Player ${winningPlayer} & ${challenger}`;
     } else {
       message = `Enter number of players (at least two) !`;
     }
@@ -121,17 +190,17 @@ var gameRound = function (input) {
     if (input > 0) {
       numberOfDice = input;
       playerStage = `normalreverse`;
-      message = `${numberOfPlayers} players! <br> ${numberOfDice} dice(s). <br> Now choose game mode "normal" or "reverse".`;
+      message = `${numberOfPlayers} players! <br> ${numberOfDice} dice(s). <br> Now choose game mode "normal" or "reverse".<br> <br> Playing next: Player ${winningPlayer} & ${challenger}`;
     } else {
-      message = `Please enter number of dice.`;
+      message = `Please enter number of dice (at least one) ! <br> <br> Playing next: Player ${winningPlayer} & ${challenger}`;
     }
   } else if (playerStage == `normalreverse`) {
-    message = `${numberOfPlayers} players! <br> ${numberOfDice} dice(s). <br> ${input.toUpperCase()} game! <br> <br> Click submit to roll your dice!`;
+    message = `${numberOfPlayers} players! <br> ${numberOfDice} dice(s). <br> ${input.toUpperCase()} game! <br> <br> Click submit to roll your dice!<br> <br> Playing next: Player ${winningPlayer} & ${challenger}`;
     if (input == "normal" || input == "reverse") {
       normalOrReverse = input;
-      playerStage = `playgame`; ////////////////// can i combine it here??
+      playerStage = `playgame`;
     } else {
-      message = `Please choose "normal" or "reverse".`;
+      message = `Please choose "normal" or "reverse".<br> <br> Playing next: Player ${winningPlayer} & ${challenger}`;
     }
   } else if (playerStage == "playgame") {
     var playgame = rollXDiceXPlayer();
@@ -143,12 +212,9 @@ var gameRound = function (input) {
       `<br>` +
       playgame +
       `<br>` +
-      winner +
       `<br>` +
-      `<br>` +
-      `Enter number of dice again!`;
+      winner;
     numberOfDice = ``;
-    playerStage = `choosedice`;
     arrayCombined = [];
   }
   return message;
