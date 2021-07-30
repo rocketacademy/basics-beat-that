@@ -62,24 +62,30 @@ var main = function (input) {
   if (playerNo == 2 && rolledDice) {
     var playerInputNumber = getPlayerNumber(input, player2Dice);
     player2CombinedNo = playerInputNumber;
-    // var outputwinningmessage =
+    var winningOutput = winningCondition();
 
     //reset
     rolledDice = false;
     playerNo = 1;
 
-    return (
-      "Player 1 combined number is " +
-      player1CombinedNo +
+    outputValue =  "Player 1 combined number is " +
+      player1CombinedNo + 
       ". Player 2 combined number is " +
-      player2CombinedNo
-    );
-  }
-  //wining conditionb
-  if (player1CombinedNo > player2CombinedNo) {
-    return;
-  }
-};
+      player2CombinedNo +'.'+ winningOutput 
+    return outputValue;
+     }
+      //wining conditioz
+      var winningCondition  = function(){
+       if (player1CombinedNo > player2CombinedNo) {
+        return ' player 1 Win, you can play again.'
+       }else{
+        if (player1CombinedNo < player2CombinedNo){
+        return ' player 2 Win, you can play again.'
+        }else{
+        if (player1CombinedNo = player2CombinedNo){
+        return ' the score is draw, you can play again.'
+         }
+}
 
 function getPlayerNumber(diceOrder, playerDice) {
   if (diceOrder == 1) {
@@ -87,7 +93,15 @@ function getPlayerNumber(diceOrder, playerDice) {
   } else {
     return parseInt(String(playerDice[1]) + String(playerDice[0]));
   }
-}
+
+  
+var diceRoll = function (){
+  var randomDecimal = Math.random() * 6;
+  var randomInteger = Math.floor(randomDecimal);
+  var diceNumber = randomInteger + 1;
+  return diceNumber
+};
+
 
 // function rollTheDice() {
 //   var diceRoll1 = diceRoll();
@@ -104,10 +118,3 @@ function getPlayerNumber(diceOrder, playerDice) {
 //     }
 //   }
 // }
-
-var diceRoll = function () {
-  var randomDecimal = Math.random() * 6;
-  var randomInteger = Math.floor(randomDecimal);
-  var diceNumber = randomInteger + 1;
-  return diceNumber;
-};
