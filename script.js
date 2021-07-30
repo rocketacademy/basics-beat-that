@@ -24,7 +24,7 @@ currentMode = 1;
 
 var main = function (input) {
   console.log(`>>>>Running game.`);
-  console.log(`Current mode: ${currentMode}.`);
+  console.log(`- Current mode: ${currentMode}.`);
   if (input == "") {
     var myOutputValue = `Hi! You get two dice each. After rolling, we will put both dice side-by-side to see who comes up with the biggest numerical combination!<br/>Each player can choose the order in which the dice are placed.<br/>To roll, please enter "Roll"!`;
   }
@@ -95,8 +95,14 @@ var playerOneShifting = function (input) {
   }
   //Player 1 switches order
   if (currentMode == 2 && input == "Swap") {
-    console.log(`P1 numbers changed to ${playerOneRolls}.`);
-    var myOutputValue = "Cool";
+    swapArray = [playerOneRolls[0], playerOneRolls[1]] = [
+      playerOneRolls[1],
+      playerOneRolls[0],
+    ];
+    playerOneNumber = swapArray.join("");
+
+    console.log(`P1 numbers changed to ${playerOneNumber}.`);
+    var myOutputValue = `Player one has swapped to make ${playerOneNumber}.<br/><br/>Player two, please enter "Swap" or leave the field blank and click submit to proceed.`;
   }
   currentMode = 3; //Mode change - 3
   console.log(`- Current mode: ${currentMode}.`);
@@ -116,8 +122,13 @@ var playerTwoShifting = function (input) {
   //Player 2 switches order
   if (currentMode == 3 && input == "Swap") {
     currentMode = 4;
-    console.log(`P2 numbers changed to ${playerTwoRolls}.`);
-    var myOutputValue = "cool";
+    swapArray = [playerTwoRolls[0], playerTwoRolls[1]] = [
+      playerTwoRolls[1],
+      playerTwoRolls[0],
+    ];
+    playerTwoNumber = swapArray.join("");
+    console.log(`P2 numbers changed to ${playerTwoNumber}.`);
+    var myOutputValue = `Player two has swapped to make ${playerTwoNumber}..<br/><br/>Now, click the submit button to determine the winner!`;
   }
   currentMode = 4; //Mode change - 4
   console.log(`- Current mode: ${currentMode}.`);
@@ -135,5 +146,6 @@ var comparingNumbers = function (input) {
     var myOutputValue = `The results are ${playerOneNumber} vs. ${playerTwoNumber}. Player Two wins! The score is:<br/>Player One wins: ${winCounterPone}<br/>Player Two wins: ${winCounterPtwo}<br/><br/>Type "Go again" to try again!`;
   }
   console.log(`P1 vs. P2: ${playerOneNumber} vs ${playerTwoNumber}.`);
+  console.log(`<<<<Round ended.`);
   return myOutputValue;
 };
