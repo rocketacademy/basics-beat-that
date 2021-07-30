@@ -130,23 +130,107 @@ function generateCombi() {
 
 /**
  * ------------------------------------------------------------------------
- * Play Beat That.
+ * Setup for Normal or Lowest Beat That.
  * Generate dice rolls.
  * Update the boards with the optimal combination.
- * Sort the leader board according to mode.
+ * Generates a combination for every player and stores them in the round board and leader board.
  * ------------------------------------------------------------------------
  */
 
-function playBeatThat() {
+function setupGame() {
   for (var counter = 0; counter < numOfPlayers; counter += 1) {
     getDiceRolls(numOfDice);
     updatePlayerBoards(counter, generateCombi());
   }
-  if (gameMode == NORMAL) {
-    sortLeaderBoardDescend();
-  } else {
-    sortLeaderBoardAscend();
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Check for duplicates in an array.
+ * @return  {Object}    An object with Key-Value pairs of score and counts
+ * ------------------------------------------------------------------------
+ */
+
+function findDuplicates(array) {
+  let counts = {};
+
+  for (let counter = 0; counter < array.length; counter += 1) {
+    if (counts[array[counter]]) {
+      counts[array[counter]] += 1;
+    } else {
+      counts[array[counter]] = 1;
+    }
   }
+  return counts;
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Play Beat That.
+ * Identifies winner if there is no draw.
+ * If the count of the highest score is greater than 1, there is a draw.
+ * Sorts the leader board in descending order.
+ * @return  {Number}    The player number that won, or 0 if there is a draw.
+ * ------------------------------------------------------------------------
+ */
+
+function playBeatThat() {
+  setupGame();
+  var max = getMaxOfArray(roundBoard);
+  sortLeaderBoardDescend();
+  // Check for draw
+  if (findDuplicates(roundBoard)[roundBoard[max]] > 1) {
+    return 0;
+  }
+  return max + 1;
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Play Lowest Beat That.
+ * Identifies winner if there is no draw.
+ * If the count of the lowest score is greater than 1, there is a draw.
+ * Sorts the leader board in ascending order.
+ * @return  {Number}    The player number that won, or 0 if there is a draw.
+ * ------------------------------------------------------------------------
+ */
+
+function playLowest() {
+  setupGame();
+  var min = getMinOfArray(roundBoard);
+  sortLeaderBoardAscend();
+  // Check for draw
+  if (findDuplicates(roundBoard)[roundBoard[min]] > 1) {
+    return 0;
+  }
+  return min + 1;
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Generates output message and leaderboard.
+ * @return {String}           The output message and leader board.
+ * ------------------------------------------------------------------------
+ */
+function generateOutputMessage(result) {
+  var message =
+    "All players have played, here are the results for this round!<br>";
+  for (player in roundBoard) {
+    message += `Player ${Number(player) + 1} got ${roundBoard[player]}.<br>`;
+  }
+
+  if (result == 0) {
+    message += `There is a draw!<br>`;
+  } else {
+    message += `The winner is Player ${result}!<br>`;
+  }
+
+  message += `🏆 Leader Board 🏆<br>`;
+  for (var counter = 0; counter < numOfPlayers; counter += 1) {
+    message += `Player ${leaderBoard[counter].playerNumber}: ${leaderBoard[counter].score}<br>`;
+  }
+  roundBoard = [];
+  return message;
 }
 
 /**
@@ -188,16 +272,12 @@ function playKnockout() {
   knockoutBoard.push(getRandomPlayer(holdingBoard));
 
   // Number of rounds to be played is 1 fewer than number of players
-  for (
-    var holdingCounter = 1;
-    holdingCounter < numOfPlayers;
-    holdingCounter += 1
-  ) {
+  for (var roundCounter = 1; roundCounter < numOfPlayers; roundCounter += 1) {
     // Put in 1 more player into knockout board
     knockoutBoard.push(getRandomPlayer(holdingBoard));
 
     // Get the combinations for each player in the knockout board
-    for (player in knockoutBoard) {
+    for (const player of knockoutBoard) {
       getDiceRolls(numOfDice);
       knockoutBoard[player].score += generateCombi();
     }
@@ -205,7 +285,8 @@ function playKnockout() {
     // Sort the knockout board scores in descending order
     knockoutBoard.sort((a, b) => b.score - a.score);
 
-    outputMessage += `Round ${holdingCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br>Player ${knockoutBoard[0].playerNumber} stays while Player ${knockoutBoard[1].playerNumber} is out of the competition!<br><br>`;
+    outputMessage += `Round ${roundCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br>`;
+    outputMessage += `Player ${knockoutBoard[0].playerNumber} stays while Player ${knockoutBoard[1].playerNumber} is out of the competition!<br><br>`;
 
     // Remove player that lost
     knockoutBoard.pop();
@@ -218,32 +299,6 @@ function playKnockout() {
     knockoutBoard[0].playerNumber
   } is the ultimate winner! 👑`;
   return outputMessage;
-}
-
-/**
- * ------------------------------------------------------------------------
- * Identifies winner depending on mode.
- * Generates output message and leaderboard.
- * @return {String}           The output message and leader board.
- * ------------------------------------------------------------------------
- */
-function generateOutputMessage() {
-  var message =
-    "All players have played, here are the results for this round!<br>";
-  for (player in roundBoard) {
-    message += `Player ${Number(player) + 1} got ${roundBoard[player]}.<br>`;
-  }
-  var winner = getMaxOfArray(roundBoard) + 1;
-  if (gameMode == LOWEST) {
-    winner = getMinOfArray(roundBoard) + 1;
-  }
-  message += `The winner is Player ${winner}!<br>`;
-  message += `🏆 Leader Board 🏆<br>`;
-  for (var counter = 0; counter < numOfPlayers; counter += 1) {
-    message += `Player ${leaderBoard[counter].playerNumber}: ${leaderBoard[counter].score}<br>`;
-  }
-  roundBoard = [];
-  return message;
 }
 
 /**
@@ -288,12 +343,14 @@ function main(players, dice, mode) {
   // Implement different modes depending on input
   switch (gameMode) {
     case NORMAL:
+      var result = playBeatThat();
+      break;
     case LOWEST:
-      playBeatThat();
+      var result = playLowest();
       break;
     case KNOCKOUT:
       return playKnockout();
   }
 
-  return generateOutputMessage();
+  return generateOutputMessage(result);
 }
