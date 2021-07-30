@@ -1,4 +1,4 @@
-// beat-that game base + scoring + leaderboard + 2mode (normal & lowest combined number)
+// beat-that game base + score + leaderboard + 2mode (normal & lowest combined number)
 // 2 players and players take turns
 
 // 4 game modes: "player 1 dice roll", "player 1 choose dice order", "player 2 dice roll", "player 2 choose dice order", and the game restart
@@ -200,25 +200,25 @@ var leaderBoard = function () {
 
   //normal mode: highest combined number win
   if (mode == "normal" && player1TotalScores > player2TotalScores) {
-    myOutputValue = `Leaderboard: <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
+    myOutputValue = `Leaderboard (NORMAL mode): <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
     return myOutputValue;
   } else if (mode == "normal" && player2TotalScores > player1TotalScores) {
-    myOutputValue = `Leaderboard: <br> Player 2 total score: ${player2TotalScores} <br> Player 1 total score: ${player1TotalScores}`;
+    myOutputValue = `Leaderboard (NORMAL mode): <br> Player 2 total score: ${player2TotalScores} <br> Player 1 total score: ${player1TotalScores}`;
     return myOutputValue;
   } else if (mode == "normal" && player1TotalScores == player2TotalScores) {
-    myOutputValue = `Leaderboard: <br> Player 2 total score: ${player2TotalScores} <br> Player 1 total score: ${player1TotalScores}`;
+    myOutputValue = `Leaderboard (NORMAL mode): <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
     return myOutputValue;
   }
 
   // reverse mode: lowest combined number win
   if (mode == "reverse" && player1TotalScores > player2TotalScores) {
-    myOutputValue = `Leaderboard: <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
+    myOutputValue = `Leaderboard (REVERSE mode): <br> Player 2 total score: ${player2TotalScores} <br> Player 1 total score: ${player1TotalScores}`;
     return myOutputValue;
   } else if (mode == "reverse" && player2TotalScores > player1TotalScores) {
-    myOutputValue = `Leaderboard: <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
+    myOutputValue = `Leaderboard (REVERSE mode): <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
     return myOutputValue;
   } else if (mode == "reverse" && player1TotalScores == player2TotalScores) {
-    myOutputValue = `Leaderboard: <br> Player 2 total score: ${player2TotalScores} <br> Player 1 total score: ${player1TotalScores}`;
+    myOutputValue = `Leaderboard (REVERSE mode): <br> Player 1 total score: ${player1TotalScores} <br> Player 2 total score: ${player2TotalScores}`;
     return myOutputValue;
   }
 };
