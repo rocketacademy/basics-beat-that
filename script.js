@@ -3,34 +3,45 @@
 // The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
 // After both players have rolled and chosen dice order, the player with the higher combined number wins.
 
+//Keep score for each player. The score is the running sum of all numbers that player has generated so far. This means there is no permanent winner, only a temporary leader.
+
 var playerNo = 1;
 var player1Dice = [];
 var player2Dice = [];
 var player1CombinedNo;
 var player2CombinedNo;
 var rolledDice = false;
+var player1Score = 0;
+var player2Score = 0;
+
+var playerRollDice = function (playerNum, playerDice) {
+  var diceRoll1 = diceRoll();
+  var diceRoll2 = diceRoll();
+  playerDice[0] = diceRoll1;
+  playerDice[1] = diceRoll2;
+
+  rolledDice = true;
+  return (
+    "player " +
+    playerNum +
+    " rolled " +
+    playerDice[0] +
+    " and " +
+    playerDice[1] +
+    ", please pick the dice order. "
+  );
+};
 
 var main = function (input) {
   if (playerNo == 1 && !rolledDice) {
-    var diceRoll1 = diceRoll();
-    var diceRoll2 = diceRoll();
-    player1Dice[0] = diceRoll1;
-    player1Dice[1] = diceRoll2;
-
-    rolledDice = true;
-    return (
-      "player " +
-      playerNo +
-      " rolled " +
-      player1Dice[0] +
-      " and " +
-      player1Dice[1]
-    );
+    return playerRollDice(playerNo, player1Dice);
   }
 
   if (playerNo == 1 && rolledDice) {
     var playerInputNumber = getPlayerNumber(input, player1Dice);
     player1CombinedNo = playerInputNumber;
+
+    player1Score = player1Score + playerInputNumber;
 
     playerNo = 2;
     rolledDice = false;
@@ -43,25 +54,14 @@ var main = function (input) {
   }
 
   if (playerNo == 2 && !rolledDice) {
-    var diceRoll1 = diceRoll();
-    var diceRoll2 = diceRoll();
-    player2Dice[0] = diceRoll1;
-    player2Dice[1] = diceRoll2;
-    rolledDice = true;
-
-    return (
-      "player " +
-      playerNo +
-      " rolled " +
-      player2Dice[0] +
-      " and " +
-      player2Dice[1]
-    );
+    return playerRollDice(playerNo, player2Dice);
   }
   if (playerNo == 2 && rolledDice) {
     var playerInputNumber = getPlayerNumber(input, player2Dice);
     player2CombinedNo = playerInputNumber;
     var winningOutput = winningCondition();
+
+    player2Score = player2Score + playerInputNumber;
 
     //reset
     rolledDice = false;
@@ -73,7 +73,11 @@ var main = function (input) {
       ". Player 2 combined number is " +
       player2CombinedNo +
       "." +
-      winningOutput;
+      winningOutput +
+      ". <br> Player 1 score is " +
+      player1Score +
+      ", Player 2 score is " +
+      player2Score;
     return outputValue;
   }
 };
