@@ -9,7 +9,6 @@ var player2Dice = [];
 var player1CombinedNo;
 var player2CombinedNo;
 var rolledDice = false;
-//var playerDice = [];
 
 var main = function (input) {
   if (playerNo == 1 && !rolledDice) {
@@ -68,23 +67,26 @@ var main = function (input) {
     rolledDice = false;
     playerNo = 1;
 
-    outputValue =  "Player 1 combined number is " +
-      player1CombinedNo + 
+    outputValue =
+      "Player 1 combined number is " +
+      player1CombinedNo +
       ". Player 2 combined number is " +
-      player2CombinedNo +'.'+ winningOutput 
+      player2CombinedNo +
+      "." +
+      winningOutput;
     return outputValue;
-     }
-      //wining conditioz
-      var winningCondition  = function(){
-       if (player1CombinedNo > player2CombinedNo) {
-        return ' player 1 Win, you can play again.'
-       }else{
-        if (player1CombinedNo < player2CombinedNo){
-        return ' player 2 Win, you can play again.'
-        }else{
-        if (player1CombinedNo = player2CombinedNo){
-        return ' the score is draw, you can play again.'
-         }
+  }
+};
+
+//wining condition
+function winningCondition() {
+  if (player1CombinedNo > player2CombinedNo) {
+    return " player 1 Win, you can play again.";
+  } else if (player1CombinedNo < player2CombinedNo) {
+    return " player 2 Win, you can play again.";
+  } else if ((player1CombinedNo = player2CombinedNo)) {
+    return " the score is draw, you can play again.";
+  }
 }
 
 function getPlayerNumber(diceOrder, playerDice) {
@@ -93,28 +95,11 @@ function getPlayerNumber(diceOrder, playerDice) {
   } else {
     return parseInt(String(playerDice[1]) + String(playerDice[0]));
   }
+}
 
-  
-var diceRoll = function (){
+var diceRoll = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
   var diceNumber = randomInteger + 1;
-  return diceNumber
+  return diceNumber;
 };
-
-
-// function rollTheDice() {
-//   var diceRoll1 = diceRoll();
-//   var diceRoll2 = diceRoll();
-//   if (playerNo == 1) {
-// player1Dice[0] = diceRoll1;
-// player1Dice[1] = diceRoll2;
-//     return " Player 1 rolled " + diceRoll1 + " and " + diceRoll2;
-//   } else {
-//     if (playerNo == 2) {
-//       player2Dice[0] = diceRoll();
-//       player2Dice[1] = diceRoll();
-//       return " Player 2 rolled " + diceRoll1 + " and " + diceRoll2;
-//     }
-//   }
-// }
