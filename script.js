@@ -14,17 +14,19 @@ const storePlayerObjects = (userInput) => {
 const findWinner = () => {
   let sortedScore = arrayOfPlayers.sort((a, b) => b.diceRolls - a.diceRolls);
   let winner = sortedScore[0].id;
-  let finalMessage = `Winner is player ${winner}.\<br\><br\>\ Leaderboard\<br\>\ ${leaderBoard()}\<br\><br\>\Type number of players to replay the game.`;
+  let finalMessage = `Winner is player ${winner}.\<br\><br\>\ Leaderboard\<br\>\ ${leaderBoard(
+    arrayOfPlayers
+  )}\<br\><br\>\Type number of players to replay the game.`;
   resetGame();
   return finalMessage;
 };
 
-//prep leaderboard (function map)
-const leaderBoard = () =>
-  arrayOfPlayers.map(
-    (item) => `
-    Player ${item.id}. Dicerolls: ${item.diceRolls}.\<br\>\ 
-    `
+//prep leaderboard
+const leaderBoard = (anArray) =>
+  anArray.reduce(
+    (acc, curVal) =>
+      `${acc} Player ${curVal.id}. Dicerolls: ${curVal.diceRolls}\<br\>\ `,
+    ""
   );
 
 //resetGame
