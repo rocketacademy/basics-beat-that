@@ -5,6 +5,8 @@
 
 //Keep score for each player. The score is the running sum of all numbers that player has generated so far. This means there is no permanent winner, only a temporary leader.
 
+//When outputting game results in the output box, also output a leaderboard that lists the 2 players and their scores in decreasing order.
+
 var playerNo = 1;
 var player1Dice = [];
 var player2Dice = [];
@@ -41,7 +43,7 @@ var main = function (input) {
     var playerInputNumber = getPlayerNumber(input, player1Dice);
     player1CombinedNo = playerInputNumber;
 
-    player1Score = player1Score + playerInputNumber;
+    player1Score += playerInputNumber;
 
     playerNo = 2;
     rolledDice = false;
@@ -61,7 +63,8 @@ var main = function (input) {
     player2CombinedNo = playerInputNumber;
     var winningOutput = winningCondition();
 
-    player2Score = player2Score + playerInputNumber;
+    player2Score += playerInputNumber;
+    var playerLeader = leaderboard();
 
     //reset
     rolledDice = false;
@@ -74,22 +77,37 @@ var main = function (input) {
       player2CombinedNo +
       "." +
       winningOutput +
-      ". <br> Player 1 score is " +
-      player1Score +
-      ", Player 2 score is " +
-      player2Score;
+      "<br>" +
+      playerLeader;
     return outputValue;
   }
 };
-
+//leaderboard condition
+function leaderboard() {
+  if (player1Score > player2Score) {
+    outputMessage =
+      "player 1 is leading the game with score of : " +
+      player1Score +
+      " & player 2 score of : " +
+      player2Score;
+    return outputMessage;
+  } else if (player2Score > player1Score) {
+    outputMessage =
+      "player 2 is leading the game with score of : " +
+      player2Score +
+      " & player 1 score of : " +
+      player1Score;
+    return outputMessage;
+  }
+}
 //wining condition
 function winningCondition() {
   if (player1CombinedNo > player2CombinedNo) {
-    return " player 1 Win, you can play again.";
+    return " Player 1 Win.";
   } else if (player1CombinedNo < player2CombinedNo) {
-    return " player 2 Win, you can play again.";
+    return " Player 2 Win.";
   } else if ((player1CombinedNo = player2CombinedNo)) {
-    return " the score is draw, you can play again.";
+    return " Its a draw.";
   }
 }
 
