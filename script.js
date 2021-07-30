@@ -9,7 +9,7 @@ var RESULTS_MODE_LOWEST = `lowest`
 //keep track of current player - player 1 starts
 var currentPlayer = PLAYER_1;
 
-//keep track of dice rolls
+//keep track of dice rolls in each round
 var player1DiceRolls = [];
 var player2DiceRolls = [];
 
@@ -27,7 +27,7 @@ var currentResultsMode = RESULTS_MODE_DEFAULT;
 //keep track of start of round
 var isStartOfRound = true;
 
-//keep track of number of dice to roll
+//keep track of number of dice to roll in each round
 var numDiceToRoll = 0;
 
 //generates random dice number
@@ -37,15 +37,6 @@ var rollDice = function () {
   var diceNumber = randomInteger + 1;
   return diceNumber;
 }; 
-
-//DICE ROLL GAME MODE LOGIC
-//rolls two dice and changes mode to `choose dice`
-// var generateTwoDiceRolls = function(){
-//   dice1 = rollDice().toString();
-//   dice2 = rollDice().toString();
-//   return `Welcome ${currentPlayer}.<br>
-//   You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2.<br>`
-// };
 
 //returns current player's dice rolls array based on current player
 var currentPlayerDiceRolls = function(currentPlayer){
@@ -82,21 +73,6 @@ var currentPlayerNumbers = function(currentPlayer){
   };
 };
 
-// //Auto-generate highest combined number from dice rolls
-// var autoGenerateHighestNum = function(){
-//   var highestNumber = 0;
-//   if(dice1 >= dice2){
-//     highestNumber = dice1 + dice2;
-//     currentPlayerNumbers(currentPlayer).push(highestNumber);
-//   }else{
-//     if(dice2 > dice1){
-//       highestNumber = dice2 + dice1;
-//       currentPlayerNumbers(currentPlayer).push(highestNumber);
-//     };
-//   }
-//   return `${currentPlayer} highest number is ${highestNumber}.`;
-// };
-
 //Auto-generate highest combined number from dice rolls
 var autoGenerateHighestNum = function(){
   var sortDiceRollsDescending = currentPlayerDiceRolls(currentPlayer).sort((a,b)=>b-a);
@@ -104,21 +80,6 @@ var autoGenerateHighestNum = function(){
   currentPlayerNumbers(currentPlayer).push(highestNumber);
   return `${currentPlayer} highest number is ${highestNumber}.`
 };
-
-// //Auto-generate lowest combined number from dice rolls
-// var autoGenerateLowestNum = function(){
-//   var lowestNumber = 0;
-//   if(dice1 >= dice2){
-//     lowestNumber = dice1 + dice2;
-//     currentPlayerNumbers(currentPlayer).push(lowestNumber);
-//   }else{
-//     if(dice2 > dice1){
-//       lowestNumber = dice2 + dice1;
-//       currentPlayerNumbers(currentPlayer).push(lowestNumber);
-//     };
-//   };
-//   return `${currentPlayer} lowest number is ${lowestNumber}.`;
-// };
 
 //Auto-generate lowest combined number from dice rolls
 var autoGenerateLowestNum = function(){
@@ -161,16 +122,16 @@ var generateLowestNumberGameResults = function(){
   };
 };
 
-//returns current player's running score based on current player
-var currentPlayerRunningScore = function(currentPlayer){
-  if (currentPlayer == PLAYER_1){
-    return player1RunningScore;
-  }else{
-    if(currentPlayer == PLAYER_2){
-      return player2RunningScore;
-    };
-  };
-};
+// //returns current player's running score based on current player
+// var currentPlayerRunningScore = function(currentPlayer){
+//   if (currentPlayer == PLAYER_1){
+//     return player1RunningScore;
+//   }else{
+//     if(currentPlayer == PLAYER_2){
+//       return player2RunningScore;
+//     };
+//   };
+// };
 
 //RUNNING SCORES
 //generate running score of player's numbers 
@@ -182,11 +143,11 @@ var generateRunningScore = function(){
       counter += 1;
     };
     if (currentPlayer == PLAYER_1){
-      player1RunningScore = runningScore;
+      player1RunningScore = runningScore; // how come function in line 125-134 doesn't work for = statements?
       return player1RunningScore;
     }else{
       if(currentPlayer == PLAYER_2){
-        player2RunningScore = runningScore;
+        player2RunningScore = runningScore; 
         return player2RunningScore;
       };
     };
