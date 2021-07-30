@@ -1,37 +1,38 @@
 let numOfDice = 0;
 let gameMode = "waiting for number of players";
 let playerTurn = 0;
-let arrayOfObjects = [];
+let arrayOfPlayers = [];
 
-//get largest diceRolls
+//store Player's object to be used for sorting diceRolls and leaderboard
+const storePlayerObjects = (userInput) => {
+  for (let i = 0; i < userInput; i += 1) {
+    arrayOfPlayers.push({ id: i + 1, diceRolls: [] });
+  }
+};
+
+//get winner at the end of game , display leaderboard, restart the game
 const findWinner = () => {
-  let sortedScore = arrayOfObjects.sort((a, b) => b.diceRolls - a.diceRolls);
+  let sortedScore = arrayOfPlayers.sort((a, b) => b.diceRolls - a.diceRolls);
   let winner = sortedScore[0].id;
-  let finalMessage = `Winner is player ${winner}.\<br\>\ Leaderboard\<br\>\ ${leaderBoard()}`;
+  let finalMessage = `Winner is player ${winner}.\<br\><br\>\ Leaderboard\<br\>\ ${leaderBoard()}\<br\><br\>\Type number of players to replay the game.`;
   resetGame();
   return finalMessage;
 };
 
-//leaderboard (function map)
+//prep leaderboard (function map)
 const leaderBoard = () =>
-  arrayOfObjects.map(
+  arrayOfPlayers.map(
     (item) => `
     Player ${item.id}. Dicerolls: ${item.diceRolls}.\<br\>\ 
     `
   );
-
-const storePlayerObjects = (userInput) => {
-  for (let i = 0; i < userInput; i += 1) {
-    arrayOfObjects.push({ id: i + 1, diceRolls: [] });
-  }
-};
 
 //resetGame
 const resetGame = () => {
   numOfDice = 0;
   gameMode = "waiting for number of players";
   playerTurn = 0;
-  arrayOfObjects = [];
+  arrayOfPlayers = [];
 };
 
 //rolling dice number with Math
@@ -46,7 +47,7 @@ const diceRollArray = () => {
     diceArray.push(diceNumber);
     sortDiceArray(diceArray);
   }
-  arrayOfObjects[playerTurn].diceRolls = Number(diceArray.join(""));
+  arrayOfPlayers[playerTurn].diceRolls = Number(diceArray.join(""));
   return diceArray;
 };
 // sorting array
@@ -60,21 +61,22 @@ const sortDiceArray = (anArray) => {
 const normalMode = () => {
   diceRollArray();
   playerTurn += 1;
-  if (playerTurn >= arrayOfObjects.length) {
+  if (playerTurn >= arrayOfPlayers.length) {
     return `Player ${playerTurn} rolled ${
-      arrayOfObjects[playerTurn - 1].diceRolls
+      arrayOfPlayers[playerTurn - 1].diceRolls
     }. Click Submit to see winner.`;
   }
   return `Player ${playerTurn} rolled ${
-    arrayOfObjects[playerTurn - 1].diceRolls
-  }. Next is Player ${playerTurn + 1}'s turn`;
+    arrayOfPlayers[playerTurn - 1].diceRolls
+  }. Next is Player ${playerTurn + 1}'s turn.`;
 };
 
+//Flow of game: enter no of players, enter no of dice, each player takes turn, display winner & leaderboard, repeat.
 const main = (input) => {
   if (gameMode == "waiting for number of players") {
     storePlayerObjects(input);
     gameMode = "waiting for dice number";
-    return `There are ${arrayOfObjects.length} players. You may choose how many dice to roll.`;
+    return `There are ${arrayOfPlayers.length} players. You may choose how many dice to roll.`;
   }
 
   if (gameMode == "waiting for dice number") {
@@ -84,7 +86,7 @@ const main = (input) => {
   }
 
   if (gameMode == "normal") {
-    if (playerTurn < arrayOfObjects.length) {
+    if (playerTurn < arrayOfPlayers.length) {
       return normalMode();
     }
     gameMode = "find winner";
