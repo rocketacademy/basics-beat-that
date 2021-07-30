@@ -3,8 +3,8 @@ var player1Dice = [];
 var player2Dice = [];
 var player1Numb = [];
 var player2Numb = [];
-var player1Score = [];
-// var player2Score = [];
+var player1Wins = 0;
+var player2Wins = 0;
 
 var main = function (input) {
   myOutputValue = " ";
@@ -54,7 +54,17 @@ var main = function (input) {
 
   if (gameMode == "deciding") {
     var winner = calWinner(player1Numb, player2Numb);
-    myOutputValue = "The winner is " + winner;
+    myOutputValue =
+      "The winner is " +
+      winner +
+      "<br>" +
+      " The scores are: " +
+      "<br>" +
+      "Player 1: " +
+      player1Wins +
+      "<br>" +
+      " Player 2: " +
+      player2Wins;
     gameMode = "player1";
   }
 
@@ -68,9 +78,11 @@ var calDiceRoll = function () {
 var calWinner = function (player1Numb, player2Numb) {
   myOutputValue = " ";
   if (player1Numb < player2Numb) {
-    myOutputValue = "Player 2 Won";
+    myOutputValue = "Player 2";
+    player2Wins += 1;
   } else if (player2Numb < player1Numb) {
     myOutputValue = "Player 1";
+    player1Wins += 1;
   }
   return myOutputValue;
 };
