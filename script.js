@@ -1,101 +1,114 @@
-var gameState = "P1";
-var p1DiceRoll1 = "";
-var p1DiceRoll2 = "";
-var p1Total = 0;
-var p2DiceRoll1 = "";
-var p2DiceRoll2 = "";
-var p2Total = 0;
+var gameState = "Init"; //Game States
+var pTotal = []; //Array storage for totals
+var noPlayers = 5; //Placeholder for constant
+var roll1 = 0; //Generic roll number 1st
+var roll2 = 0; //Generic roll number 2nd
+var pCount = 1; //Player counter for while loop
 
 var main = function (input) {
   var myOutputValue = diceGame(input);
   return myOutputValue;
 };
 
-var diceRoll = function(){
-  var randInt = Math.floor(Math.random()*6);
+//Function 0: Main Game Alogrithm
+var diceGame = function (userInput) {
+  var message = ""; //generic message
+  while (pCount <= noPlayers) {
+    console.log("i:", pCount);
+    if (gameState == "Init") {
+      //State 0: Request for number of players
+      userInput = Number(userInput);
+      if (Number.isInteger(userInput) && userInput > 1) {
+        noPlayers = userInput;
+        gameState = "Start";
+        return `You have selected ${noPlayers} number of players to join this game. 
+        <br><br> 
+        Let's start! 
+        <br><br> 
+        Press "Submit" to proceed.`;
+      } else {
+        return `Error! Please enter an integer of more than 1 to proceed. <br> We need real number of players, don't we?`;
+      }
+    }
+    if (gameState == "Start") {
+      //State 1: Initial
+      [message, roll1, roll2] = welcomeMsg(pCount);
+      gameState = "Order";
+      return message;
+    }
+    if (gameState == "Order") {
+      console.log(userInput);
+      if (["Dice 1", "Dice 2"].includes(userInput)) {
+        gameState = "Start"; //reset state to next player
+        var userOrder = Number(userInput[5]); //extract number
+        console.log(userOrder);
+        pTotal.push(orderSelect(roll1, roll2, userOrder));
+        console.log("Total Array:", pTotal);
+        if (pCount == noPlayers) {
+          var winNumber = Math.max(...pTotal); //Get max value amongst players
+          const isLargeNumber = (element) => element == winNumber;
+          var playerNoWin = pTotal.findIndex(isLargeNumber) + 1;
+          var pTotal2 = pTotal; //Assign temp. storage number before reset for prints.
+          pCount = 1; //reset
+          pTotal = []; //reset total
+          gameState = "Init";
+          return `End-game! Player ${playerNoWin} wins with number: ${winNumber}. <br> <br> Please select the number of players for the next game. <br> Goodbye!
+          <br>
+          <br>
+          ${recNumber(pTotal2)}`;
+        } else {
+          pCount++;
+          return `Player ${pCount - 1}, you chose Dice ${userOrder} first.<br>
+          Your number is ${pTotal[pCount - 2]}.<br>
+          It is now Player ${pCount}'s turn. Press "Submit"
+          <br>
+          <br>
+          ${recNumber(pTotal)}`;
+        }
+      } else {
+        return `Error! Please choose numeral order by typing in 'Dice 1' or 'Dice 2' as the first numeral.
+        <br>
+        <br>
+        ${recNumber(pTotal)}`;
+      }
+    }
+  }
+};
+
+//Function 1: Geneerating Random Number
+var diceRoll = function () {
+  var randInt = Math.floor(Math.random() * 6);
   randInt = randInt + 1;
-  return randInt
+  return randInt;
 };
 
-var diceGame = function(userInput){
-  if (gameState == "P1"){ //State 1: Initial
-    p1DiceRoll1 = diceRoll().toString();
-    p1DiceRoll2 = diceRoll().toString();
-    gameState = "P1-Order";
-    return `Welcome Player 1. <br> You rolled ${p1DiceRoll1} for Dice 1 and ${p1DiceRoll2} for Dice 2. <br> Choose the order of the dice.`
+//Function 2: Giving the total number based on order
+var orderSelect = function (diceOne, diceTwo, userSel) {
+  if (userSel == 1) {
+    return Number(diceOne + diceTwo);
   }
-  if (gameState == "P1-Order"){
-    console.log(userInput);
-    if (userInput=="Dice 1"){
-      var userOrder = 1;
-      console.log(userOrder);
-      p1Total = orderSelect(p1DiceRoll1,p1DiceRoll2,userOrder);
-      console.log(p1Total);
-      gameState = "P2";
-      return `Player 1, you chose Dice ${userOrder} first.<br>
-      Your number is ${p1Total}.<br>
-      It is now Player 2's turn.`
-    }
-    if (userInput=="Dice 2"){
-      var userOrder = 2;
-      p1Total = orderSelect(p1DiceRoll1,p1DiceRoll2,userOrder);
-      console.log(p1Total);
-      gameState = "P2";
-      return `Player 1, you chose Dice ${userOrder} first.<br>
-      Your number is ${p1Total}.<br>
-      It is now Player 2's turn.`
-    }
-    else {
-      return "Error! Please choose numeral order by typing in 'Dice 1' or 'Dice 2' as the first numeral."
-    } 
-  }
-//================================
-  if (gameState == "P2"){ //State 1: Initial
-    p2DiceRoll1 = diceRoll().toString();
-    p2DiceRoll2 = diceRoll().toString();
-    gameState = "P2-Order";
-    return `Welcome Player 2. <br> You rolled ${p2DiceRoll1} for Dice 1 and ${p2DiceRoll2} for Dice 2. <br> Choose the order of the dice.`
-  }
-  if (gameState == "P2-Order"){
-    console.log(userInput);
-    if (userInput=="Dice 1"){
-      var userOrder = 1;
-      console.log(userOrder);
-      p2Total = orderSelect(p2DiceRoll1,p2DiceRoll2,userOrder);
-      console.log(p2Total);
-      gameState = "P1";
-      return `Player 2, you chose Dice ${userOrder} first.<br>
-      Your number is ${p2Total} and Player 1's number is ${p1Total}.<br>` + result(p1Total,p2Total)
-    }
-    if (userInput=="Dice 2"){
-      var userOrder = 2;
-      p2Total = orderSelect(p1DiceRoll1,p1DiceRoll2,userOrder);
-      console.log(p1Total);
-      gameState = "P1";
-      return `Player 2, you chose Dice ${userOrder} first.<br>
-      Your number is ${p2Total} and Player 1's number is ${p1Total}.<br>` + result(p1Total,p2Total)
-    }
-    else {
-      return "Error! Please choose numeral order by typing in 'Dice 1' or 'Dice 2' as the first numeral."
-    } 
-  }
-
-};
-
-var orderSelect = function(diceOne,diceTwo,userSel){
-  if (userSel==1){
-    return Number(diceOne+diceTwo);
-  }
-  if (userSel==2){
-    return Number(diceTwo+diceOne);
+  if (userSel == 2) {
+    return Number(diceTwo + diceOne);
   }
 };
 
-var result = function(player1,player2){
-  if (player1>player2){
-    return "Player 1 won!"
+//Function 3: Welcoming Message with Rolling
+var welcomeMsg = function (pArray) {
+  p1DiceRoll1 = diceRoll().toString();
+  p1DiceRoll2 = diceRoll().toString();
+  return [
+    `Welcome Player ${pArray}. <br><br> You rolled ${p1DiceRoll1} for Dice 1 and ${p1DiceRoll2} for Dice 2. <br><br> Choose the order of the dice.`,
+    p1DiceRoll1,
+    p1DiceRoll2,
+  ];
+};
+
+var recNumber = function (arrayz) {
+  var textMessage = "";
+  var count = 0;
+  while (count < arrayz.length) {
+    textMessage = textMessage + ", " + arrayz[count];
+    count++;
   }
-  else {
-    return "Player 2 won!"
-  }
-}
+  return "Value Records: " + textMessage.substring(2);
+};
