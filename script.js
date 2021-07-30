@@ -65,9 +65,12 @@ var main = function (input) {
       "<br>" +
       " Player 2: " +
       player2Wins;
+    player1Dice = [];
+    player2Dice = [];
+    player1Numb = [];
+    player2Numb = [];
     gameMode = "player1";
   }
-
   return myOutputValue;
 };
 
@@ -80,28 +83,9 @@ var calWinner = function (player1Numb, player2Numb) {
   if (player1Numb < player2Numb) {
     myOutputValue = "Player 2";
     player2Wins += 1;
-  } else if (player2Numb < player1Numb) {
+  } else if (player1Numb > player2Numb) {
     myOutputValue = "Player 1";
     player1Wins += 1;
   }
   return myOutputValue;
 };
-
-// var score = function (player1Score, player2Score) {
-//   if (player1Score < player2Score) {
-//     myOutputValue =
-//       "Player 1 is leading with a score of " +
-//       player1Score +
-//       "<br>" +
-//       "Player 2 is trailing with a score of " +
-//       player2Score;
-//   } else if (player1Score > player2Score) {
-//     myOutputValue =
-//       "Player 2 is leading with a score of " +
-//       player2Score +
-//       "<br>" +
-//       "Player 1 is trailing with a score of " +
-//       player1Score;
-//   }
-//   return myOutputValue;
-// };
