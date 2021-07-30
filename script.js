@@ -13,10 +13,10 @@
 
 // ========== GLOBAL VAR ==========
 var player = 1;
-var p1Rolls = [];
-var p2Rolls = [];
-var p1Score = 0;
-var p2Score = 0;
+var playerRolls = [];
+var scoreKeeper = [];
+// var p1Score = 0;
+// var p2Score = 0;
 var mode = "rolling";
 
 // ========== DICE ROLL ==========
@@ -53,13 +53,24 @@ function sequencing(seq, diceArr) {
   }
   return Number(finalNum);
 }
-
+function scoring(input, player, playerRolls) {
+  var sequence = Number(input);
+  var number = sequencing(sequence, playerRolls);
+  scoreKeeper.push(number);
+  // add 2-digit number as score to player
+  scoreKeeper[player - 1] += Number(number);
+  // output final number and leaderboard
+  myOutputValue =
+    `Player ${player}, you chose Dice ${sequence} first. <br>Your number is ${number}. <br><br>It is now Player 2's turn.` +
+    leaderboard(scoreKeeper);
+  return myOutputValue;
+}
 // ---------- LEADERBOARD ----------
 // checks which player is leading and list them in descending order
-function leaderboard(p1Score, p2Score) {
-  var display = `<br><br>Current score:<br>Player 1: ${p1Score}<br>Player 2: ${p2Score}`;
-  if (p2Score > p1Score) {
-    display = `<br><br>Current score:<br>Player 2: ${p2Score}<br>Player 1: ${p1Score}`;
+function leaderboard(scoreKeeper) {
+  var display = `<br><br>Current score:<br>Player 1: ${scoreKeeper[0]}<br>Player 2: ${scoreKeeper[1]}`;
+  if (scoreKeeper[1] > scoreKeeper[0]) {
+    display = `<br><br>Current score:<br>Player 2: ${scoreKeeper[1]}<br>Player 1: ${scoreKeeper[0]}`;
   }
   return display;
 }
@@ -70,41 +81,32 @@ function play(rollArray, player) {
   myOutputValue = storeNum(rollArray, player);
   // change mode to sequencing
   mode = "sequencing";
-  console.log(mode);
-  console.log(rollArray);
   // return dice rolls and leaderboard
-  return myOutputValue + leaderboard(p1Score, p2Score);
+  return myOutputValue + leaderboard(scoreKeeper);
 }
 
 // ========== MAIN FUNCTION ==========
 var main = function (input) {
   var myOutputValue = "";
+  for (players = 0; players < 3; players++) {
+    scoreKeeper.push(0);
+  }
 
   // ---------- PLAYER 1 ----------
   if (player == 1) {
     console.log("player " + player);
     if (mode == "rolling") {
       //reset array
-      p1Rolls = [];
-      var rolling = play(p1Rolls, player);
-      console.log("rolling mode", p1Rolls);
+      playerRolls = [];
+      var rolling = play(playerRolls, player);
+      console.log(playerRolls);
       return rolling;
     }
     if (mode == "sequencing") {
       myOutputValue = "Please only enter 1 or 2";
       // user chooses which dice roll to be in front
       if (input <= 2 && input > 0) {
-        var sequence = Number(input);
-        console.log(p1Rolls, "in sequencing mode");
-        p1Num = sequencing(sequence, p1Rolls);
-        console.log(p1Num);
-        // add 2-digit number as score to player
-        p1Score += Number(p1Num);
-        console.log("p1 score:", p1Score);
-        // output final number and leaderboard
-        myOutputValue =
-          `Player ${player}, you chose Dice ${sequence} first. <br>Your number is ${p1Num}. <br><br>It is now Player 2's turn.` +
-          leaderboard(p1Score, p2Score);
+        myOutputValue = scoring(input, player, playerRolls);
         // change player number and mode
         player = 2;
         mode = "rolling";
@@ -118,25 +120,16 @@ var main = function (input) {
     console.log("player " + player);
     if (mode == "rolling") {
       //reset array
-      p2Rolls = [];
-      var rolling = play(p2Rolls, player);
-      console.log("rolling mode", p2Rolls);
+      playerRolls = [];
+      var rolling = play(playerRolls, player);
+      console.log(playerRolls);
       return rolling;
     }
     if (mode == "sequencing") {
       myOutputValue = "Please only enter 1 or 2";
       // user chooses which dice roll to be in front
       if (input <= 2 && input > 0) {
-        var sequence = Number(input);
-        p2Num = sequencing(sequence, p2Rolls);
-        console.log(p2Num);
-        // add 2-digit number as score to player
-        p2Score += Number(p2Num);
-        console.log("p2 score:", p2Score);
-        // output final number and leaderboard
-        myOutputValue =
-          `Player ${player}, you chose Dice ${sequence} first. <br>Your number is ${p1Num}. <br><br>It is now Player 1's turn.` +
-          leaderboard(p1Score, p2Score);
+        myOutputValue = scoring(input, player, playerRolls);
         // change player number and mode
         player = 1;
         mode = "rolling";
