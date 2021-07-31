@@ -1,11 +1,16 @@
 //define variables 
+var gameMode = prompt(
+  "Welcome to a game of Beat that! There are 2 modes to explore: Lowest, and/or Auto. Type 'lowest' to turn lowest on, and 'lowest off' to turn lowest off. Type 'auto' to turn auto on, and 'auto off' to turn auto off. You can do this anytime during the game. If you want to explore the normal mode, just leave the input blank and press Ok."
+);
+
+
+
 var GAME_MODE_DICE_ROLL = 'GAME_MODE_DICE_ROLL';
 var GAME_MODE_CHOOSE_DICE_ORDER = 'GAME_MODE_CHOOSE_DICE_ORDER'; 
 
 var lowest = false; 
 
 var auto = false; 
-
 
 var gameMode = GAME_MODE_DICE_ROLL; 
 
@@ -65,6 +70,7 @@ var getDiceRolls = function (){
 var concat2Numbers = function(num1, num2) {
   return Number(String(num1) + String(num2));
 };
+
 
 var firstNumber = '';
 
@@ -126,7 +132,8 @@ return playerDice;
 };
 
 
-  var winner = function(){
+//determine winner
+var winner = function(){
       if (lowest == false && player1Combined() > player2Combined()){
         return 1;
       }
