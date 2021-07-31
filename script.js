@@ -499,6 +499,8 @@ var addTotal = function (array) {
 var playerGreatest = 1;
 var playerSmallest = 1;
 var findWinner = function (array, normalOrReversed) {
+  console.log("FIND OUT", array[playerGreatest - 1] < array[playerNo]);
+  console.log("playerNo", playerNo);
   if (array[playerGreatest - 1] == array[playerNo]) {
     playerGreatest = playerGreatest + ` and ${playerNo + 1}`;
   } else if (array[playerGreatest - 1] < array[playerNo]) {
@@ -652,9 +654,6 @@ var main = function (input) {
       }
       // If this is the final player's turn, output the current player's dice roll outcome, along with win/lose results and stats
       if (playerNo == numberOfPlayers - 1) {
-        // Reset variables in preparation for fresh round after outcome is generated
-        playerNo = 0;
-        numberOfDice = UNASSIGNED;
         // Find winner based on running sum thus far
         var winningPlayer = findWinner(competingTotals, resultMode);
         console.log("competingTotals", competingTotals);
@@ -672,6 +671,9 @@ var main = function (input) {
             )}. (Total: ${competingTotals[playerCounter]}) <br>`;
           playerCounter += 1;
         }
+        // Reset variables in preparation for fresh round after outcome is generated
+        playerNo = 0;
+        numberOfDice = UNASSIGNED;
         // Output Result message
         return (
           `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br><br> 🏆 THE FINAL WINNER OF THE ROUND IS: PLAYER ${winningPlayer}! 🏆 <br> <br> You are currently in the ${resultMode} game mode. <br> <br>` +
