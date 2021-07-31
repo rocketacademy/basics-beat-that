@@ -13,14 +13,15 @@ var startGame = `displaying game modes`;
 var selectGameModes = `select game mode`;
 // 2 Player normal
 var twoPlayer_EnterDice = `enter dice roll`;
-var twoPlayer_EnterSeq = `enter sequence of dice`;
+var twoPlayer_EnterSeq = `enter sequence of dice`; //not needed anymore
 var twoPlayer_NORMALannounceWinner = `announce winner for normal game before returning to P1`;
 // 2 Player lowest combined num
 var twoPlayerLowest_EnterDice = `enter dice for lowest combined number game`;
-var twoPlayerLowest_EnterSeq = `enter sequence for lowest combined number game`;
+var twoPlayerLowest_EnterSeq = `enter sequence for lowest combined number game`; //not needed anymore
 var twoPlayer_LOWESTannounceWinner = `announce winner for Lowest Combined Number game before returning to P1`;
-
-
+var varNumofDice = `mode with variable num of dice`;
+var varNumofDice_rollDice = `roll dice for variable num of dice mode`
+var varNumofDice_announceWinner = `var num of dice - winner`
 // Define initial Game Mode!
 var gameMode = startGame;
 
@@ -50,11 +51,15 @@ var inputGameModes = function (input) {
   } else if (input.toUpperCase() == "AUTO") {
     gameMode = auto_twoPlayer_EnterDice;
     outputMessage = `Hit submit to start the Auto generated combined number - 2 player BEAT THAT game!`;
+  } else if (input.toUpperCase() == 'VAR DICE'){
+  gameMode = varNumofDice;
+  outputMessage = `Hit submit to start the variable number of dice (2 player) BEAT THAT game!`;
   } else {
     //Input validation
     outputMessage = `Input error. <br> Please select your game modes as follows: <br> 
     Input 'NORMAL' for normal 2 player mode<br>
-    Input 'LOWEST' for lowest combined number - 2 player mode<br>`;
+    Input 'LOWEST' for lowest combined number - 2 player mode<br>
+    Input 'VAR DICE' for variable number of dice mode`;
   }
   return outputMessage;
 };
@@ -69,7 +74,7 @@ var generateSumOfGuesses = function (ArrayOfPLayerGuesses) {
 };
 //========== Function for 2 Player Normal mode ==========
 var startTwoPlayerNormalMode = function (input) {
-  // 2 PLAYER NORMAL GAME - P1 START 
+  // 2 PLAYER NORMAL GAME - P1 START
   if (nextPlayer == 1 && gameMode == twoPlayer_EnterDice) {
     diceRolls = [];
     currPlayer = 1;
@@ -99,7 +104,7 @@ var startTwoPlayerNormalMode = function (input) {
     It is now Player ${nextPlayer}'s turn.`;
   }
 
-  // 2 PLAYER NORMAL GAME - P2 START 
+  // 2 PLAYER NORMAL GAME - P2 START
   if (nextPlayer == 2 && gameMode == twoPlayer_EnterDice) {
     diceRolls = [];
     currPlayer = 2;
@@ -140,7 +145,9 @@ var generateWinnerforTwoPlayerNormalMode = function (
     `Announcing winner. Current player: ${currPlayer}, Next player: ${nextPlayer}`
   );
   console.log(`P1 Array: ${P1Guesses}, P2 Array: ${P2Guesses}`);
-  console.log(`P1 total score: ${generateSumOfGuesses(P1Guesses
+  console.log(
+    `P1 total score: ${generateSumOfGuesses(
+      P1Guesses
     )}, P2 total score: ${generateSumOfGuesses(P2Guesses)}`
   );
   var outputMessage = ``;
@@ -187,7 +194,7 @@ var generateWinnerforTwoPlayerNormalMode = function (
 
 //===== Function for 2 player Lowest combined number game mode ======
 var startTwoPlayerLowestCombinedNumberMode = function (input) {
-  // 2 player - Lowest Combined Num - P1 Starts 
+  // 2 player - Lowest Combined Num - P1 Starts
   if (nextPlayer == 1 && gameMode == twoPlayerLowest_EnterDice) {
     diceRolls = [];
     currPlayer = 1;
@@ -203,7 +210,7 @@ var startTwoPlayerLowestCombinedNumberMode = function (input) {
     } else if (diceRolls[0] > diceRolls[1]) {
       playerGuess = diceRolls[1] + "" + diceRolls[0];
     }
-    
+
     console.log(`Player 1 Guess: ${playerGuess}`);
     P1Guesses.push(playerGuess);
 
@@ -225,7 +232,7 @@ var startTwoPlayerLowestCombinedNumberMode = function (input) {
       diceRolls.push(rollDice());
     }
     console.log(`P2 Dice rolls: ${diceRolls}`);
-    
+
     if (diceRolls[0] < diceRolls[1]) {
       playerGuess = diceRolls[0] + "" + diceRolls[1];
     } else if (diceRolls[0] == diceRolls[1]) {
@@ -245,7 +252,7 @@ var startTwoPlayerLowestCombinedNumberMode = function (input) {
   }
 };
 
-//===== Function to generate winner for Lowest Combined Number mode
+//=== Function to generate winner for Lowest Combined Number mode ====
 var generateWinnerforTwoPlayerLowestMode = function (
   P1Guesses,
   P2Guesses,
@@ -299,26 +306,95 @@ var generateWinnerforTwoPlayerLowestMode = function (
   gameMode = startGame;
   return outputMessage;
 };
+//===== Function for Var Num of Dice mode ======
+
+var startVarNumofDice = function (input, currPlayer, nextPlayer) {
+  var outputMessage=``;
+  if (gameMode == (varNumofDice)){
+    gameMode = varNumofDice_rollDice;
+    return `Welcome! Please input the number of dice you wish to roll`
+
+  } else if (gameMode == varNumofDice_rollDice){
+    if (isNaN(input)==true || (input<0)){ 
+      return `please enter a number greater than 0.`
+    } else if (input>0){
+    currPlayer = 1;
+    nextPlayer = (currPlayer % numPlayers) + 1; 
+    var P1diceRolls = [];
+    var P2diceRolls = [];
+    //number of dice rolls is decided by user
+    for (var counter = 0; counter < input; counter += 1) {
+      P1diceRolls.push(rollDice());
+    }
+    for (var counter = 0; counter < input; counter += 1) {
+      P2diceRolls.push(rollDice());
+    }
+    
+    P1diceRolls.sort();
+    P2diceRolls.sort();
+    console.log ('P1:'+P1diceRolls,'P2:'+P2diceRolls);
+
+  //to determine winner
+    var P1Answer = P1diceRolls[P1diceRolls.length-1] + "" + P1diceRolls[P1diceRolls.length-2];
+    console.log('P1:'+P1Answer)
+    var P2Answer = P2diceRolls[P2diceRolls.length-1] + "" + P2diceRolls[P2diceRolls.length -2];
+    console.log('P2:'+P2Answer)
+      // P1 WINS
+    if (Number(P1Answer) < Number(P2Answer)){
+      outputMessage = `Winner is Player 1! <br>
+      Player 1 rolled: ${P1diceRolls}<br>
+      Player 2 rolled: ${P2diceRolls}
+      
+      Player 1's auto guess is ${P1Answer} and Player 2's last guess is ${P2Answer}. <br>
+      It is now Player ${nextPlayer}'s turn.<br>
+      We will now reset the game modes`;
+    } else if (
+      //P2 WINS
+      Number(P2Answer) < Number(P1Answer)
+    ) {
+      outputMessage = `Winner is Player 2! <br>
+      Player 1 rolled: ${P1diceRolls}<br>
+      Player 2 rolled: ${P2diceRolls}
+        Player 1's auto guess is ${P1Answer} and Player 2's last guess is ${P2Answer}. <br>
+        It is now Player ${nextPlayer}'s turn.<br>
+        We will now reset the game modes`;
+    } else if (
+      //DRAW
+      Number(P1Answer) == Number(P2Answer)
+    ) {
+      outputMessage = `It's a Draw!! <br>
+      Player 1 rolled: ${P1diceRolls}<br>
+      Player 2 rolled: ${P2diceRolls}
+        Player 1's auto guess is ${P1Answer} and Player 2's last guess is ${P2Answer}. <br>
+        It is now Player ${nextPlayer}'s turn.<br>
+        We will now reset the game modes`;
+    }
+    gameMode = startGame;
+    return outputMessage;
+  }}
+};
 
 // =========================== MAIN FUNC ==========================
 var main = function (input) {
   console.log(gameMode);
+  console.log(gameMode == varNumofDice);
   if (gameMode == startGame) {
     gameMode = selectGameModes;
     return `Please select your game modes as follows: <br> 
   Input 'NORMAL' for normal 2 player mode<br>
-  Input 'LOWEST' for lowest combined number - 2 player mode<br>`;
+  Input 'LOWEST' for lowest combined number - 2 player mode<br>
+  Input 'VAR DICE' for variable number of dice mode`;
   } else if (gameMode == selectGameModes) {
     return inputGameModes(input);
 
-    // ========= 2 PLAYER NORMAL GAME - START ==========
+    // 2 PLAYER NORMAL GAME - START ==========
   } else if (
     gameMode == twoPlayer_EnterDice ||
     gameMode == twoPlayer_EnterSeq
   ) {
     return startTwoPlayerNormalMode(input);
 
-    // ======= 2 PLAYER NORMAL GAME - Announce winner & RESET =======
+    // 2 PLAYER NORMAL GAME - Announce winner & RESET =======
   } else if (gameMode == twoPlayer_NORMALannounceWinner) {
     gameMode = twoPlayer_EnterDice;
     return generateWinnerforTwoPlayerNormalMode(
@@ -327,20 +403,23 @@ var main = function (input) {
       currPlayer,
       nextPlayer
     );
-    // ======= 2 PLAYER LOWEST COMBINED NUM GAME - START =======
+    // 2 PLAYER LOWEST COMBINED NUM GAME - START =======
   } else if (
     gameMode == twoPlayerLowest_EnterDice ||
     gameMode == twoPlayerLowest_EnterSeq
   ) {
     return startTwoPlayerLowestCombinedNumberMode(input);
 
-    // ======= 2 PLAYER LOWEST COMBINED NUM GAME - Announce winner && RESET =======
-  } else if ((gameMode = twoPlayer_LOWESTannounceWinner)) {
+    // 2 PLAYER LOWEST COMBINED NUM GAME - Announce winner && RESET =======
+  } else if ((gameMode == twoPlayer_LOWESTannounceWinner)) {
     return generateWinnerforTwoPlayerLowestMode(
       P1Guesses,
       P2Guesses,
       currPlayer,
       nextPlayer
     );
+  } else if (gameMode == varNumofDice || gameMode == varNumofDice_rollDice || gameMode == varNumofDice_announceWinner){
+    console.log(gameMode +'test');
+    return startVarNumofDice (input, currPlayer, nextPlayer)
   }
 }; //======= this bracket CLOSES OFF the main function =======
