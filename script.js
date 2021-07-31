@@ -497,28 +497,40 @@ var addTotal = function (array) {
 
 // Find winning player based on result mode (normal/reversed)
 var playerGreatest = 1;
+var winnersGreatest = [`1`];
 var playerSmallest = 1;
+var winnersSmallest = [`1`];
 var findWinner = function (array, normalOrReversed) {
-  console.log("FIND OUT", array[playerGreatest - 1] < array[playerNo]);
-  console.log("playerNo", playerNo);
-  if (array[playerGreatest - 1] == array[playerNo]) {
-    playerGreatest = playerGreatest + ` and ${playerNo + 1}`;
+  // Generate updated list of winning players
+  if (
+    // Do not need to compare if the player is already in the winners list
+    !winnersGreatest.includes(playerNo + 1) &&
+    // Add to list if the player's number is same as that of current winner(s)
+    array[playerGreatest - 1] == array[playerNo]
+  ) {
+    winnersGreatest.push(playerNo + 1);
+    // Replace winner list if there is a new winner
   } else if (array[playerGreatest - 1] < array[playerNo]) {
-    playerGreatest = playerNo + 1;
+    winnersGreatest = [];
+    winnersGreatest.push(playerNo + 1);
   }
-  if (array[playerSmallest - 1] == array[playerNo]) {
-    playerSmallest = playerSmallest + ` and ${playerNo + 1}`;
+  if (
+    // Do not need to compare if the player is already in the winners list
+    !winnersSmallest.includes(playerNo + 1) &&
+    // Add to list if the player's number is same as that of current winner(s)
+    array[playerSmallest - 1] == array[playerNo]
+  ) {
+    playerSmallest = Number(playerSmallest) + ` and ${Number(playerNo + 1)}`;
+    // Replace winner list if there is a new winner
   } else if (array[playerSmallest - 1] > array[playerNo]) {
     playerSmallest = playerNo + 1;
   }
-  console.log("playerGreatest", playerGreatest);
-  console.log("playerSmallest", playerSmallest);
-
+  // Return winners with greatest/smallest total depending on game mode (normal/reversed)
   if (normalOrReversed == NORMAL) {
-    return playerGreatest;
+    return winnersGreatest;
   }
   if (normalOrReversed == REVERSED) {
-    return playerSmallest;
+    return winnersSmallest;
   }
 };
 
@@ -545,7 +557,7 @@ var main = function (input) {
 
   // Step 2: Assign the number of players for the game
   // If input is valid (i.e. a digit >0)
-  if (gameMode == NO_OF_PLAYERS && checkNumber(input) == true) {
+  if (gameMode == NO_OF_PLAYERS && checkNumber(input)) {
     numberOfPlayers = Number(input);
     gameMode = GAME;
     return `You have selected a ${numberOfPlayers}-player game. <br><br> Please enter the number of dice you wish to play for this round, then click the submit button.`;
@@ -559,7 +571,7 @@ var main = function (input) {
   if (gameMode == GAME) {
     // Assign number of dice first
     // If input is valid (i.e. a digit >0), assign number of dice
-    if (numberOfDice == UNASSIGNED && checkNumber(input) == true) {
+    if (numberOfDice == UNASSIGNED && checkNumber(input)) {
       numberOfDice = Number(input);
       console.log("numberOfDice", numberOfDice);
     }
@@ -632,7 +644,7 @@ var main = function (input) {
         console.log("competingTotals", competingTotals);
         console.log("winningPlayer", winningPlayer);
         // Create loop to print each players' numbers and total sum (for message output use)
-        playerCounter = 0;
+        var playerCounter = 0;
         var resultLog = ``;
         while (playerCounter < competingTotals.length) {
           resultLog =
@@ -674,6 +686,10 @@ var main = function (input) {
         // Reset variables in preparation for fresh round after outcome is generated
         playerNo = 0;
         numberOfDice = UNASSIGNED;
+        playerGreatest = 1;
+        winnersGreatest = [`1`];
+        playerSmallest = 1;
+        winnersSmallest = [`1`];
         // Output Result message
         return (
           `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br><br> 🏆 THE FINAL WINNER OF THE ROUND IS: PLAYER ${winningPlayer}! 🏆 <br> <br> You are currently in the ${resultMode} game mode. <br> <br>` +
