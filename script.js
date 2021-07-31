@@ -5,13 +5,6 @@ var diceRoll = function () {
   return setRandomNumRange;
 };
 
-// when gamefunction = waiting for input of num of dice
-
-// add new gamefunction before player 1 dice roll to ask user to input num of dice
-
-// store input in numDice global variable
-var numDice = 3;
-
 // return all objects in player dice roll array for output message
 var returnDiceRolls = function () {
   var diceRollOutput = "";
@@ -309,6 +302,7 @@ var numOfDice = 0;
 var currentGameFunction = "new round";
 var currentGameMode = "waiting for game mode";
 var playerName = "";
+var numDice = 0;
 
 // but i first need to change the logic of my game play
 
