@@ -1,6 +1,6 @@
-var gameMode = gameRoll;
 var gameRoll = 'Game mode dice roll';
 var gameChoose = 'Game mode choose dice roll';
+var gameMode = gameRoll;
 var curPlayer = 1;
 var player1Dice = [];
 var player2Dice = [];
@@ -11,7 +11,7 @@ var diceRoll = function () {
     return Math.ceil(Math.random() * 6);
   };
 
-var diceRoll = function() {
+var diceRolls = function() {
     var newDice = [diceRoll(), diceRoll()];
 
     if (curPlayer === 1) {
@@ -67,7 +67,7 @@ var Winner = function(){
 var main = function(input){
 
     if (gameMode === gameRoll){
-        var newDice = diceRoll();
+        var newDice = diceRolls();
         gameMode = gameChoose
         return `Welcome Player ${curPlayer}. <br>
       You rolled Dice 1: ${newDice[0]} and Dice 2: ${newDice[1]} <br>
@@ -85,8 +85,8 @@ var main = function(input){
     var playerNumResponse = `Player ${curPlayer}, You chose Dice ${firstNumeralIndex} first. <br>
     Your number is ${playerNum}.`;
 
-    if (currPlayer === 1) {
-        currPlayer = 2;
+    if (curPlayer === 1) {
+        curPlayer = 2;
         gameMode = gameRoll;
         return `${playerNumResponse} <br>
         It is now Player 2's turn. Press Submit to roll.`;
@@ -97,7 +97,7 @@ var main = function(input){
     gameMode = gameRoll;
     return `${playerNumResponse} <br>
     Player ${winningPlayer} has won. <br>
-    Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br> <br>
+    Player 1's number: ${player1} | Player 2's number: ${player2} <br> <br>
     Press Submit to play again.`;
 };
 }
