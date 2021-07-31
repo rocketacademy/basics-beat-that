@@ -309,3 +309,26 @@ var numOfDice = 0;
 var currentGameFunction = "new round";
 var currentGameMode = "waiting for game mode";
 var playerName = "";
+
+// but i first need to change the logic of my game play
+
+// roll and concantate n number of times for each player
+
+// after last loop, then compare and get win message
+
+// game function - new round, roll dice, result
+
+// new round no change
+
+// roll dice - loop (diceroll function + concantenate function when counter < numofplayers)
+
+// result - show outcome /getwinmessage
+
+// variable number of players
+
+// add new game mode/function = waiting for number of players
+
+// create global variable array  to store num of plauyers
+
+// run each function through a loop if counter < num of players -1
+// customise output by using player(index-1)
