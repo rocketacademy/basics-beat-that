@@ -1,6 +1,6 @@
 //input = Player1, roll 2 dice, order of guess (dice1 or dice2)
 //output = Player2, output 2 guesses ... username2, output 2 guesses + outcome (who wins/lose)
-
+var randomWord = "Keyboard match";
 var gameMode = "enter username";
 var username = "";
 var myOutputValue = "";
