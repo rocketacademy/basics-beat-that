@@ -1,80 +1,130 @@
-// variable assignments
-var scissors = "scissors";
-var paper = "paper";
-var stone = "stone";
-var reversedScissors = "reversed scissors";
-var reversedPaper = "reversed paper";
-var reversedStone = "reversed stone";
-var instructions =
-  'Type in "scissors" "paper" or "stone" to throw as your next hand. Good luck! <br>(Psst. You can add reversed before your hand to do inverted scissors papers stone!)';
-// RNG into computer response
-var randomHand = function () {
-  var randomNum = Math.floor(Math.random() * 3);
-  if (randomNum == 0) {
-    return scissors;
-  }
-  if (randomNum == 1) {
-    return paper;
-  }
-  if (randomNum == 2) {
-    return stone;
-  }
+// Game states
+//var gameState_diceCount = "gameState_diceCount";
+var gameState_diceRoll = "gameState_diceRoll";
+var gameState_diceOrder = "gameState_diceOrder";
+
+// Dice count tracker
+var numDiceCount = 0;
+
+// Initial game state
+var gameMode = gameState_diceCount;
+
+// Player 1 starts
+var currPlayer = 1;
+
+// Dice roll results tracker as an array
+var player1Rolls = [];
+var player2Rolls = [];
+
+// Dice simulation
+var getDiceRoll = function () {
+  return Math.ceil(Math.random() * 6);
 };
-// game rules. surely room for improvement in efficiency?
-function matchOutcome(computerHand, userHand) {
-  if (
-    userHand == computerHand ||
-    (userHand == reversedStone && computerHand == stone) ||
-    (userHand == reversedPaper && computerHand == paper) ||
-    (userHand == reversedScissors && computerHand == scissors)
-  ) {
-    return "Draw!";
+var getDiceRoll2 = function () {
+  var roundDiceRolls = [];
+  for (var i = 0; i < numDiceChosen; i += 1) {
+    roundDiceRolls.push(getDiceRoll(), getDiceRoll());
   }
-  if (
-    (userHand == scissors && computerHand == paper) ||
-    (userHand == paper && computerHand == stone) ||
-    (userHand == stone && computerHand == scissors) ||
-    (userHand == reversedPaper && computerHand == scissors) ||
-    (userHand == reversedScissors && computerHand == stone) ||
-    (userHand == reversedStone && computerHand == paper)
-  ) {
-    return "You Win!";
+
+  // Insert round results to player results tracker array
+  if (currPlayer === 1) {
+    player1Rolls = roundDiceRolls;
   }
-  if (
-    (userHand == scissors && computerHand == stone) ||
-    (userHand == paper && computerHand == scissors) ||
-    (userHand == stone && computerHand == paper) ||
-    (userHand == reversedPaper && computerHand == stone) ||
-    (userHand == reversedScissors && computerHand == paper) ||
-    (userHand == reversedStone && computerHand == scissors)
-  ) {
-    return "You Lost!";
+  if (currPlayer === 2) {
+    player2Rolls = roundDiceRolls;
   }
+  return roundDiceRolls;
+};
+
+var concatenate2Numbers = function (num1, num2) {
+  return Number(String(num1) + String(num2));
+};
+
+var playerNumber = function (firstNumeralIndex) {
+  var diceArray;
+  if (currPlayer === 1) {
+    diceArray = player1Rolls;
+  }
+  if (currPlayer === 2) {
+    diceArray = player2Rolls;
+  }
+  return diceArray;
+};
+
+var playerNum;
+if (firstNumeralIndex === 1) {
+  playerNum = concatenate2Numbers(diceArray[0], diceArray[1]);
+} else {
+  playerNum = concatenate2Numbers(diceArray[1], diceArray[0]);
 }
-// looked for missing brackets here for half the assignment time
-// result message output, included with every successful loop
-var resultMessage = function (computerHand, userHand) {
-  return (
-    "The computer chose " + computerHand + ". <br> You chose " + userHand + "."
-  );
-};
-// error message for unexpected inputs
+if (currPlayer === 1) {
+  player1Num = playerNum;
+} else {
+  player2Num = playerNum;
+  return playerNum;
+}
+var winner;
+if (player1Num > player2Num) {
+  winner = "Player 1";
+} else winner = "Player 2";
+
 var main = function (input) {
-  if (
-    input != scissors &&
-    input != paper &&
-    input != stone &&
-    input != reversedScissors &&
-    input != reversedPaper &&
-    input != reversedStone
-  ) {
-    return "Invalid input! Please select scissors, paper, or stone as your next hand.";
+  /*  if (gameMode == gameState_diceCount) {
+    numDiceChosen = Number(input);
+  if gameMode = gameState_diceRoll;
+    return (
+      "You're playing with " +
+      numDiceChosen +
+      " dice! Player 1, please proceed to roll your " +
+      numDiceChosen +
+      " dice!"
+    );
   }
-  // did a mistake where I put || instead of &&
-  // rounding up variables from functions. make sure the functions work independently first
-  var userHand = input;
-  var computerHand = randomHand();
-  var results = resultMessage(computerHand, userHand);
-  var winOrLose = matchOutcome(computerHand, userHand);
-  return results + "<br><br>" + winOrLose + "<br><br>" + instructions;
+*/
+  if (gameMode == gameState_diceRoll) {
+    var roundDiceRolls = getDiceRolls();
+    gameMode = gameState_diceOrder;
+    return (
+      "Hello Player " +
+      currPlayer +
+      "! <br> Your first roll yields " +
+      roundDiceRolls[0] +
+      " and your second roll yields " +
+      roundDiceRolls[1] +
+      "! <br> Choose the order of your dice by entering 1 or 2 as your first numeral index!"
+    );
+  }
+
+  if (gameMode === gameState_diceOrder) {
+    var firstNumeralIndex = Number(input);
+    var playerNum = playerNumber(firstNumeralIndex);
+    var playerNumResponse =
+      "Player " + currPlayer + ", your number is " + playerNum + ".";
+    if (currPlayer === 1) {
+      currPlayer = 2;
+      gameMode = gameState_diceRoll;
+      return (
+        playerNumResponse +
+        "<br> Player 2's turn! Roll your dice by pressing the button."
+      );
+    }
+    var winnerPlayer = winner;
+
+    currPlayer = 1;
+    gameMode = gameState_diceRoll;
+
+    // Return the game end response
+    return (
+      playerNumResponse +
+      "<br><br>Congratulations " +
+      winnerPlayer +
+      "! You won this round! <br>Player 1's number: " +
+      player1Num +
+      " | Player 2's number: " +
+      player2Num +
+      "<br><br> Play again by pressing the button!"
+    );
+  }
+  // validation
+  return "An error occurred. Please refresh to start again.";
 };
