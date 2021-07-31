@@ -8,19 +8,27 @@
 //You can choose how the player specifies dice order.
 //After both players have rolled and chosen dice order, the player with the higher combined number wins.
 
-var currentGameMode = GAME_MODE_DICE_ROLL; //initialise game mode to explain rules.
-var currentPlayer = 1;
-var player1DiceRolls = [];//keep track of dice rolls for each player
-var player2DiceRolls = [];
-
-var player1CombNum; //keep track of each player's combined numbers
-var player2CombNum;
-var gameCount = 0;//keep track of number of games played
-var winCountPlayerOne = 0;//keep track of number of wins per user
-var winCountPlayerTwo = 0
-
 var GAME_MODE_DICE_ROLL = 'dice roll';
 var GAME_MODE_DICE_ORDER = 'dice order';
+var currentGameMode = GAME_MODE_DICE_ROLL; //initialise game mode to explain rules.
+var currentPlayer = 1;
+var diceRollOne;
+var diceRollTwo;
+var player1Score;
+var player2Score;
+
+
+
+// var player1DiceRolls = [];//keep track of dice rolls for each player
+// var player2DiceRolls = [];
+
+// var player1CombNum; //keep track of each player's combined numbers
+// var player2CombNum;
+// var gameCount = 0;//keep track of number of games played
+// var winCountPlayerOne = 0;//keep track of number of wins per user
+// var winCountPlayerTwo = 0
+
+
 
 
 var diceRolls = function (){
@@ -35,20 +43,14 @@ var diceRolls = function (){
 return generateDiceRolls;
 }
 
-// var PlayerCombNum = function (diceRoll1, diceRoll2){
-// return Number (String(diceRoll1)+ String(diceRoll2));
-// };
+var playerCombNum = function (diceRoll1, diceRoll2){
+return Number (String(diceRoll1)+ String(diceRoll2));
+};
 
 // ================== Main function =====================
 var main = function (input) {
   var myOutputValue = '';
-  // var winner = function (){
-  //   if (player1CombNum > player2CombNum){
-  //   myOutputValue = `Player 1 wins!`;
-  //   }
-  //   myOutputValue = `Player 2 wins!`
-  //   winner ();
-  // }
+
 
 // ================== Roll dice logic =====================
 var diceRoll = function (){
@@ -59,67 +61,98 @@ var diceRoll = function (){
 }
 
 // ================== Initialise dice roll =====================
-if (currentGameMode = GAME_MODE_DICE_ROLL){
+if (currentGameMode == GAME_MODE_DICE_ROLL){
   console.log('game mode:' + currentGameMode);
-  var diceRollOne = diceRoll();
-  var diceRollTwo = diceRoll();
+  diceRollOne = diceRoll();
+  diceRollTwo = diceRoll();
   console.log('player:' + currentPlayer)
   console.log('dice 1:' + diceRollOne + ', dice 2:' + diceRollTwo);
-  
-  myOutputValue = `Hi Player ${currentPlayer}<br> You rolled: 
+  currentGameMode = GAME_MODE_DICE_ORDER;
+  console.log('game mode:' + currentGameMode);
+  return `Hi Player ${currentPlayer}<br> You rolled: 
         <br>Dice 1: ${diceRollOne}
         <br>Dice 2: ${diceRollTwo}
         <br> Type 1 or 2 to choose which dice should go first.` 
+}
+// ================== Determine dice order =====================
+if (currentGameMode == GAME_MODE_DICE_ORDER){
+  console.log('game:' + currentGameMode);
+// ================== Input validation =====================
+var userInput = Number(input);
+if (userInput != 1 && userInput !=2){
+return `Oops. Please type 1 or 2 to choose which die goes first.`
+}
+    if (input == 1
+      && currentPlayer == 1){
+      player1Score = playerCombNum(diceRollOne,diceRollTwo)
+    console.log(`current player: ${currentPlayer}, dice rolls: ${diceRollOne}, ${diceRollTwo}`);
+    myOutputValue = `Player ${currentPlayer} selected Dice 1 first. Your combined number is ${player1Score}. It's Player 2's turn.`
+    }else if (input == 2
+      && currentPlayer == 1){
+      player1Score = playerCombNum(diceRollTwo,diceRollOne)
+    console.log(`current player: ${currentPlayer}, dice rolls: ${diceRollTwo}, ${diceRollOne}`);
+    myOutputValue = `Player ${currentPlayer} selected Dice 2 first. Your combined number is ${player1Score}. It's Player 2's turn.`
+    }
+    if (input == 1
+      && currentPlayer == 2){
+        player2Score = playerCombNum(diceRollOne,diceRollTwo)
+        console.log(`current player: ${currentPlayer}, dice rolls: ${diceRollOne}, ${diceRollTwo}`);
+        myOutputValue = `Player ${currentPlayer} selected Dice 1 first. Your combined number is ${player2Score}. ${winner()}`
+      }else if (input == 2
+        && currentPlayer == 2){
+        player2Score = playerCombNum(diceRollTwo,diceRollOne)
+      console.log(`current player: ${currentPlayer}, dice rolls: ${diceRollTwo}, ${diceRollOne}`);
+      myOutputValue = `Player ${currentPlayer} selected Dice 2 first. Your combined number is ${player2Score}. ${winner()}`
+      }
   
+    currentGameMode = GAME_MODE_DICE_ROLL;
+    currentPlayer = 2;
+    console.log(`current player:' ${currentPlayer}`)
+    console.log(`game: ${currentGameMode}`)
+    return myOutputValue
+    };
+  }
+
+  var winner = function (){
+    if (player1Score > player2Score){
+    myOutputValue = `Player 1 wins!`;
+    }
+    myOutputValue = `Player 2 wins!`
+  return myOutputValue;
+  }
   // player1DiceRolls.push(diceRoll[0],diceRoll[1]);
   // console.log(player1DiceRolls[diceRoll])
   // player2DiceRolls.push(diceRoll[2],diceRoll[3])
   // console.log(player2DiceRolls[diceRoll])
-  
+
+
+
+
 
 //================== Setting game modes =====================
-if (currentGameMode == GAME_MODE_DICE_ROLL
-  && currentPlayer == 1){
-  console.log('switch game mode');
-  currentGameMode = GAME_MODE_DICE_ORDER;// switch game mode to choose dice order
-  console.log('game mode:' + currentGameMode)
-}
+// if (currentGameMode == GAME_MODE_DICE_ROLL
+//   && currentPlayer == 1){
+//   console.log('switch game mode');
+//   currentGameMode = GAME_MODE_DICE_ORDER;// switch game mode to choose dice order
+//   console.log('game mode:' + currentGameMode)
+// }
 
-if (currentGameMode == GAME_MODE_DICE_ROLL
-  && currentPlayer == 2){
-  console.log('switch game mode');
-  currentGameMode = GAME_MODE_DICE_ORDER;// switch game mode to choose dice order
-  console.log('game mode:' + currentGameMode)
-}
-  //================== Switching players =====================
-  if (currentGameMode == GAME_MODE_DICE_ORDER
-    && currentPlayer == 1){
-    currentPlayer == 2;
-    if (currentPlayer == 2){
-    currentGameMode == GAME_MODE_DICE_ROLL;
-    console.log('switch players to: ' + currentPlayer)
-    }
-    }
-// ================== Input validation =====================
-// var userInput = Number(input);
-//   if (userInput != 1 && userInput !=2){
-//   myOutputValue = `Oops. Please type 1 or 2 to choose which die goes first.`
+// if (currentGameMode == GAME_MODE_DICE_ROLL
+//   && currentPlayer == 2){
+//   console.log('switch game mode');
+//   currentGameMode = GAME_MODE_DICE_ORDER;// switch game mode to choose dice order
+//   console.log('game mode:' + currentGameMode)
+// }
+// //================== Switching players =====================
+// if (currentGameMode == GAME_MODE_DICE_ORDER
+//   && currentPlayer == 1){
+//   currentPlayer == 2;
+//   if (currentPlayer == 2){
+//   currentGameMode == GAME_MODE_DICE_ROLL;
+//   console.log('switch players to: ' + currentPlayer)
 //   }
-// ================== Determine dice order =====================
-if (currentGameMode == GAME_MODE_DICE_ORDER){
-  console.log('game:' + currentGameMode);
-    if (input == 1){
-    console.log(`current player: ${currentPlayer}, dice rolls: ${diceRollOne}, ${diceRollTwo}`);
-    myOutputValue = `Player ${currentPlayer} selected Dice 1 first. Your combined number is ${diceRollOne}${diceRollTwo}. It's Player 2's turn.`
-    }else if (input == 2){
-    console.log(`current player: ${currentPlayer}, dice rolls: ${diceRollTwo}, ${diceRollOne}`);
-    myOutputValue = `Player ${currentPlayer} selected Dice 2 first. Your combined number is ${diceRollTwo}${diceRollOne}. It's Player 2's turn.`
-    };
-    return myOutputValue
-    };
-  }
-  return myOutputValue
-}
+//   }
+  
   
 
     
