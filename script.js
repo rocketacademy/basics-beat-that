@@ -4,7 +4,7 @@ var gameState_diceRoll = "gameState_diceRoll";
 var gameState_diceOrder = "gameState_diceOrder";
 
 // Dice count tracker
-var numDiceCount = 0;
+// var numDiceCount = 0;
 
 // Initial game state
 var gameMode = gameState_diceRoll;
@@ -21,26 +21,22 @@ var getDiceRoll = function () {
   return Math.ceil(Math.random() * 6);
 };
 var getDiceRoll2 = function () {
-  var roundDiceRolls = [];
-  for (var i = 0; i < numDiceChosen; i += 1) {
-    roundDiceRolls.push(getDiceRoll(), getDiceRoll());
-  }
-
+  var twoDiceRolled = [getDiceRoll(), getDiceRoll()];
   // Insert round results to player results tracker array
   if (currPlayer === 1) {
-    player1Rolls = roundDiceRolls;
+    player1Rolls = twoDiceRolled;
   }
   if (currPlayer === 2) {
-    player2Rolls = roundDiceRolls;
+    player2Rolls = twoDiceRolled;
   }
-  return roundDiceRolls;
+  return twoDiceRolled;
 };
 
 var concatenate2Numbers = function (num1, num2) {
   return Number(String(num1) + String(num2));
 };
 
-var playerNumber = function (firstNumeralIndex) {
+var playerNumber = function () {
   var diceArray;
   if (currPlayer === 1) {
     diceArray = player1Rolls;
@@ -66,7 +62,9 @@ if (currPlayer === 1) {
 var winner;
 if (player1Num > player2Num) {
   winner = "Player 1";
-} else winner = "Player 2";
+} else {
+  winner = "Player 2";
+}
 
 var main = function (input) {
   /*  if (gameMode == gameState_diceCount) {
@@ -82,7 +80,7 @@ var main = function (input) {
   }
 */
   if (gameMode == gameState_diceRoll) {
-    var roundDiceRolls = getDiceRolls();
+    var roundDiceRolls = getDiceRoll2();
     gameMode = gameState_diceOrder;
     return (
       "Hello Player " +
