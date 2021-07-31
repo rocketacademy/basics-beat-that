@@ -45,27 +45,27 @@ var playerNumber = function () {
     diceArray = player2Rolls;
   }
   return diceArray;
+  var playerNum;
+  if (firstNumeralIndex === 1) {
+    playerNum = concatenate2Numbers(diceArray[0], diceArray[1]);
+  } else {
+    playerNum = concatenate2Numbers(diceArray[1], diceArray[0]);
+  }
+  if (currPlayer === 1) {
+    player1Num = playerNum;
+  } else {
+    player2Num = playerNum;
+    return playerNum;
+  }
 };
 
-var playerNum;
-if (firstNumeralIndex === 1) {
-  playerNum = concatenate2Numbers(diceArray[0], diceArray[1]);
-} else {
-  playerNum = concatenate2Numbers(diceArray[1], diceArray[0]);
+function winner() {
+  if (player1Num > player2Num) {
+    return (winner = "Player 1");
+  } else {
+    return (winner = "Player 2");
+  }
 }
-if (currPlayer === 1) {
-  player1Num = playerNum;
-} else {
-  player2Num = playerNum;
-  return playerNum;
-}
-var winner;
-if (player1Num > player2Num) {
-  winner = "Player 1";
-} else {
-  winner = "Player 2";
-}
-
 var main = function (input) {
   /*  if (gameMode == gameState_diceCount) {
     numDiceChosen = Number(input);
@@ -106,7 +106,7 @@ var main = function (input) {
         "<br> Player 2's turn! Roll your dice by pressing the button."
       );
     }
-    var winnerPlayer = winner;
+    var winnerPlayer = winner();
 
     currPlayer = 1;
     gameMode = gameState_diceRoll;
