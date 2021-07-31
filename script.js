@@ -40,6 +40,11 @@ var main = function (input) {
   }
 
   if (playerNo == 1 && rolledDice) {
+    //validation
+    if (!(input === "1" || input === "2")) {
+      return "please input 1 or 2 to decide the order of the dice.";
+    }
+
     var playerInputNumber = getPlayerNumber(input, player1Dice);
     player1CombinedNo = playerInputNumber;
 
@@ -59,6 +64,9 @@ var main = function (input) {
     return playerRollDice(playerNo, player2Dice);
   }
   if (playerNo == 2 && rolledDice) {
+    if (!(input === "1" || input === "2")) {
+      return "please input 1 or 2 to decide the order of the dice.";
+    }
     var playerInputNumber = getPlayerNumber(input, player2Dice);
     player2CombinedNo = playerInputNumber;
     var winningOutput = winningCondition();
