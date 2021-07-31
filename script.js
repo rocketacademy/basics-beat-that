@@ -13,6 +13,17 @@ var koPlayerNamesArray = [];
 var koWinnersArray = [];
 var koCurrentPlayer = 0;
 
+// DUPLICATE ARRAY
+var duplicateArray = function (array) {
+  var dupArray = [];
+  var i = 0;
+  while (i < array.length) {
+    dupArray[i] = array[i];
+    i += 1;
+  }
+  return dupArray;
+};
+
 // SET KNOCKOUT ARRAYS
 var setKnockoutArrays = function () {
   koWinnersArray = [];
@@ -26,7 +37,6 @@ var setKnockoutArrays = function () {
 var setPlayers = function (userInput) {
   myOutputValue = `⚠️ ${userInput} is not a valid input for number of players! Please input a number larger or equal to 2 OR at least 2 names ⚠️`;
   if (userInput == "") {
-    // if blank input
     myOutputValue = `⚠️ Please input a number larger or equal to 2 OR at least 2 names ⚠️`;
   } else if (isNaN(userInput)) {
     // if input by player name - put length into gameMode[1]
@@ -59,10 +69,8 @@ var setPlayers = function (userInput) {
 var setDice = function (userInput) {
   myOutputValue = `⚠️ ${userInput} is not a valid input for number of dice! Please input a number larger or equal to 2 ⚠️`;
   if (userInput == "") {
-    // if blank input
     myOutputValue = `⚠️ Please input a number larger or equal to 2 for number of dice ⚠️`;
   } else if (userInput >= 2) {
-    // if input number
     gameMode[2] = userInput;
     myOutputValue = `There will be ${gameMode[2]} dice. <br> Please select mode (high/low). ⬆️⬇️ <br><br> ※ High - Highest combined number wins; Low - Lowest combined number wins`;
   }
@@ -71,10 +79,8 @@ var setDice = function (userInput) {
 var setMode = function (userInput) {
   myOutputValue = `⚠️ ${userInput} is not a valid input for mode! Please input 'high' or 'low' for mode ⚠️`;
   if (userInput == "") {
-    // if blank input
     myOutputValue = `⚠️ Please input 'high' or 'low' for mode ⚠️`;
   } else if (userInput == "high" || userInput == "low") {
-    // if input high/low
     gameMode[3] = userInput;
     myOutputValue = `You have selected '${gameMode[3]}'. The ${gameMode[3]}est combined number will win. <br> Please choose your game mode (normal/knockout). 🥊`;
   }
@@ -83,10 +89,8 @@ var setMode = function (userInput) {
 var setKnockout = function (userInput) {
   myOutputValue = `⚠️ ${userInput} is not a valid input! Please input 'normal' or 'knockout' ⚠️`;
   if (userInput == "") {
-    // if blank input
     myOutputValue = `⚠️ Please input 'normal' or 'knockout' for mode ⚠️`;
   } else if (userInput == "normal" || userInput == "knockout") {
-    // if input normal/knockout
     if (userInput == "knockout") {
       setKnockoutArrays();
     }
@@ -137,26 +141,23 @@ var combineDice = function (array) {
   return number;
 };
 
-// DUPLICATE ARRAY
-var duplicateArray = function (array) {
-  var dupArray = [];
-  var i = 0;
-  while (i < array.length) {
-    dupArray[i] = array[i];
-    i += 1;
+// COMPARE TWO NUMBERS (KNOCKOUT)
+var compareNums = function () {
+  var koRanks = findRank(numArray);
+  if (koRanks[0] == 1) {
+    comparemsg = `${koWinnersArray[0]}'s ${numArray[0]} is ${gameMode[3]}er than ${koWinnersArray[1]}'s ${numArray[1]}. <br>`;
+    koWinnersArray.pop();
+  } else if (koRanks[0] == 2) {
+    comparemsg = `${koWinnersArray[1]}'s ${numArray[1]} is ${gameMode[3]}er than ${koWinnersArray[0]}'s ${numArray[0]}. <br>`;
+    koWinnersArray.shift();
   }
-  return dupArray;
+  return comparemsg;
 };
 
 // FIND RANKING
 var findRank = function (array) {
   // duplicate array and sort according to high/low
-  var dupArray = [];
-  var i = 0;
-  while (i < array.length) {
-    dupArray[i] = array[i];
-    i += 1;
-  }
+  var dupArray = duplicateArray(array);
   sortArray(dupArray);
   // find rank of each element (start from 0)
   var rankArrayZero = [];
@@ -230,11 +231,13 @@ var main = function (input) {
 
   if (gameMode[4] == "knockout") {
     if (gameMode[0] == "roll") {
+      // ## KNOCKOUT ROLL MODE ###
       header = `🎲🎲🎲🎲🎲 ${koWinnersArray[0]} vs. ${koWinnersArray[1]} 🎲🎲🎲🎲🎲 <br>`;
       rollNDice();
       myOutputValue = `${koWinnersArray[koCurrentPlayer]}, your dice rolls are: ${diceArray}. <br><br> Click 'Submit' for your ${gameMode[3]}est combined number.`;
       gameMode[0] = "combine";
     } else if (gameMode[0] == "combine") {
+      // ## KNOCKOUT COMBINE MODE ###
       header = `➕➕➕➕➕ ${koWinnersArray[0]} vs. ${koWinnersArray[1]} ➕➕➕➕➕ <br>`;
       sortArray(diceArray);
       var combinedNum = combineDice(diceArray);
@@ -243,38 +246,31 @@ var main = function (input) {
         myOutputValue = `${koWinnersArray[0]}, your ${gameMode[3]}est combined number is ${combinedNum}. <br><br> Click 'Submit' for ${koWinnersArray[1]}'s dice rolls.`;
         resetDice();
       } else if (koCurrentPlayer == 1) {
+        // END OF ONE ROUND - COMPARE 2 NUMBERS
         myOutputValue = `${koWinnersArray[1]}, your ${gameMode[3]}est combined number is ${combinedNum}. <br><br>`;
-        var koRanks = findRank(numArray);
-        if (koRanks[0] == 1) {
-          myOutputValue += `${koWinnersArray[0]}'s ${numArray[0]} is ${gameMode[3]}er than ${koWinnersArray[1]}'s ${numArray[1]}. <br>`;
-          koWinnersArray.pop();
-        } else if (koRanks[0] == 2) {
-          myOutputValue += `${koWinnersArray[1]}'s ${numArray[1]} is ${gameMode[3]}er than ${koWinnersArray[0]}'s ${numArray[0]}. <br>`;
-          koWinnersArray.shift();
-        }
+        myOutputValue += compareNums();
+        resetDice();
+        numArray = [];
+        // IF END OF GAME, SHOW FINAL WINNER. ELSE PREPARE FOR NEXT PLAYER
         if (koPlayerNamesArray.length == 0) {
-          myOutputValue += `🏆 ${koWinnersArray[0]} is the final winner! <br><br> Click 'Submit for a new game.`;
-          resetDice();
-          numArray = [];
+          myOutputValue += `🏆 ${koWinnersArray[0]} is the final winner! 🏆<br><br> Click 'Submit for a new game.`;
           setKnockoutArrays();
         } else {
-          myOutputValue += `${koWinnersArray[0]} proceeds to the next round! <br><br> Click 'Submit' to start next round.`;
-          resetDice();
-          numArray = [];
+          myOutputValue += `✅ ${koWinnersArray[0]} proceeds to the next round! <br><br> Click 'Submit' to start next round.`;
           koWinnersArray.push(koPlayerNamesArray.shift());
         }
       }
     }
   } else if (gameMode[4] == "normal") {
     if (gameMode[0] == "roll") {
+      // ### NORMAL ROLL MODE ###
       header = `🎲🎲🎲🎲🎲 PLAYER ${currentPlayer}/${gameMode[1]} 🎲🎲🎲🎲🎲 <br>`;
-      // ### ROLL MODE ###
       rollNDice();
       myOutputValue = `${playerNamesArray[currentPlayer]}, your dice rolls are: ${diceArray}. <br><br> Click 'Submit' for your ${gameMode[3]}est combined number.`;
       gameMode[0] = "combine";
     } else if (gameMode[0] == "combine") {
+      // ## NORMAL COMBINE MODE ###
       header = `➕➕➕➕➕ PLAYER ${currentPlayer}/${gameMode[1]} ➕➕➕➕➕ <br>`;
-      // ## COMBINE MODE ###
       sortArray(diceArray);
       var combinedNum = combineDice(diceArray);
       numArray.push(combinedNum);
