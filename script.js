@@ -43,7 +43,7 @@ var diceRoll = function () {
 
 var roll = function () {
   arrayRolls = [diceRoll(), diceRoll()];
-  var myOutputValue = `Player ${currentPlayer}, your two dice rolls are: A: ${arrayRolls[0]} and B: ${arrayRolls[1]}. <br><br> Please pick the order of the number AB or BA `;
+  var myOutputValue = `Player ${currentPlayer}, your two dice rolls are: A: ${arrayRolls[0]} and B: ${arrayRolls[1]}. <br><br> Please pick the order of the number: AB or BA `;
   console.log("arrayRolls", arrayRolls);
   gameMode = CHOOSE_ORDER_MODE;
   return myOutputValue;
@@ -55,7 +55,7 @@ var pickOrder = function (input) {
   var counter = 0;
   if ((input == "AB") && (currentPlayer == 1)) {
     playerOneNum = selectAB();
-    myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerOneNum}.<br><br>It is now Player 2's turn.<br><br> Press submit to roll`;
+    myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerOneNum}.<br><br>It's now Player 2's turn.<br><br> Press submit to roll`;
     gameMode = ROLL_DICE_MODE;
     arrayForNums.push(playerOneNum);
     currentPlayer = 2;
@@ -66,7 +66,7 @@ var pickOrder = function (input) {
     gameMode = DECIDE_WINNER_MODE;
   } else if ((input == "BA") && (currentPlayer == 1)) {
     playerOneNum = selectBA();
-    myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerOneNum}<br><br>It is now Player 2's turn.<br><br>Press submit to roll`;
+    myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerOneNum}<br><br>It's' now Player 2's turn.<br><br>Press submit to roll`;
     gameMode = ROLL_DICE_MODE;
     arrayForNums.push(playerOneNum);
     currentPlayer = 2;
