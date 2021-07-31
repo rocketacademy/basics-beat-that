@@ -20,6 +20,9 @@ let playerTwoArrangedArray = [];
 let playerOneFinalNumber = ``;
 let playerTwoFinalNumber = ``;
 
+let playerOneScore = 0;
+let playerTwoScore = 0;
+
 let numberOfRollsPerGame;
 
 const BeatThat = function (input) {
@@ -116,11 +119,13 @@ const BeatThat = function (input) {
 
   if (gameMode == `ResultComparison`) {
     if (playerOneFinalNumber > playerTwoFinalNumber) {
-      return `${playerOneName} wins!<br><br>${playerOneName}'s number: ${playerOneFinalNumber}<br>${playerTwoName}'s number ${playerTwoFinalNumber}`;
+      playerOneScore += 1;
+      return `${playerOneName} wins!<br><br>${playerOneName}'s score: ${playerOneScore}<br>${playerTwoName}'s number ${playerTwoScore}<br><br>${playerOneName}'s number: ${playerOneFinalNumber}<br>${playerTwoName}'s number ${playerTwoFinalNumber}`;
     } else if (playerOneFinalNumber < playerTwoFinalNumber) {
-      return `${playerTwoName} wins!<br><br>${playerOneName}'s number: ${playerOneFinalNumber}<br>${playerTwoName}'s number ${playerTwoFinalNumber}`;
+      playerTwoScore += 1;
+      return `${playerTwoName} wins!<br><br>${playerOneName}'s score: ${playerOneScore}<br>${playerTwoName}'s number ${playerTwoScore}<br><br>${playerOneName}'s number: ${playerOneFinalNumber}<br>${playerTwoName}'s number ${playerTwoFinalNumber}`;
     } else {
-      return `Draw!`;
+      return `Draw!<br><br>${playerOneName}'s score: ${playerOneScore}<br>${playerTwoName}'s number ${playerTwoScore}<br><br>${playerOneName}'s number: ${playerOneFinalNumber}<br>${playerTwoName}'s number ${playerTwoFinalNumber}`;
     }
   }
 };
