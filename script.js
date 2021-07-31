@@ -10,6 +10,7 @@ var firstDiceNumber = 0;
 var secondDiceNumber = 0;
 var currPlayer = 1;
 var counter = 0;
+var gameRounds = 0;
 var stringFirstDice = "";
 var stringSecondDice = "";
 var diceSequence1 = "";
@@ -117,53 +118,60 @@ var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
 
 var didPlayer1Win = function () {
   if (player2DiceSeq > player1DiceSeq) {
-    return (
-      "Congrats to Player 2! <br> You beat Player 1 with the numbers " +
-      player2DiceSeq +
-      " to " +
-      player1DiceSeq +
-      "."
-    );
+    return false;
   }
-  return (
-    "Congrats to Player 1! <br> You beat Player 2 with the numbers " +
-    player1DiceSeq +
-    " to " +
-    player2DiceSeq +
-    "."
-  );
+  return true;
+};
+
+var resetGame = function () {
+  currPlayer = 1;
+  gameMode = rollDice;
 };
 
 var main = function (input) {
   // while the counter is LESS than 2, function runs.
-  while (counter < 2) {
-    if (gameMode == rollDice) {
-      gameMode = decideSequence;
-      return getNumOfDiceMessage();
-    }
-    if (gameMode == decideSequence) {
-      // check if the sequence starts with dice one or not.
-      var sequenceStartsWithDiceOne = doesSequenceStartsWithDiceOne(input);
-
-      var outputMessage = getDiceSequenceMessage(sequenceStartsWithDiceOne);
-
-      // if the sequence starts with dice one, get output message.
-      if (sequenceStartsWithDiceOne) {
-        myOutputValue = outputMessage;
-      }
-
-      currPlayer = 2;
-
-      gameMode = rollDice;
-
-      myOutputValue = outputMessage;
-
-      counter += 1;
-    }
-    return myOutputValue;
+  currPlayer == 1;
+  if (gameMode == rollDice) {
+    var numOfDiceMessage = getNumOfDiceMessage();
+    gameMode = decideSequence;
+    return numOfDiceMessage;
   }
-  if (counter == 2) {
-    var closingMessage = didPlayer1Win();
-    return closingMessage + "<br>" + "Thanks for playing.";
+  if (gameMode == decideSequence) {
+    // check if the sequence starts with dice one or not.
+    var sequenceStartsWithDiceOne = doesSequenceStartsWithDiceOne(input);
+
+    var outputMessage = getDiceSequenceMessage(sequenceStartsWithDiceOne);
+
+    // if the sequence starts with dice one, get output message.
+    if (sequenceStartsWithDiceOne) {
+      myOutputValue = outputMessage;
+    }
+    if (currPlayer == 1) {
+      currPlayer = 2;
+      gameMode = rollDice;
+      myOutputValue = outputMessage;
+      return myOutputValue;
+    }
+  }
+  if ((currPlayer = 2)) {
+    resetGame();
+    if (!didPlayer1Win()) {
+      return (
+        "Congrats to Player 2! <br> You beat Player 1 with the numbers " +
+        player2DiceSeq +
+        " to " +
+        player1DiceSeq +
+        "."
+      );
+    }
+    if (didPlayer1Win()) {
+      return (
+        "Congrats to Player 1! <br> You beat Player 2 with the numbers " +
+        player1DiceSeq +
+        " to " +
+        player2DiceSeq +
+        "."
+      );
+    }
   }
 };
