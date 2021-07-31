@@ -4,16 +4,16 @@
 var L1_PICK_GAME_MODE = "Choose your game";
 var L1_NORMAL_MODE = "Normal Mode";
 var L1_LOWEST_MODE = "Lowest Win";
-var L1_AUTO_MODE = "Computer chooses order";
+var L1_AUTO_MODE = "Auto";
 var L1_VARIABLE_DICE_MODE = "Variable Dice";
 var L1_VARIABLE_PLAYERS_MODE = "Variable Players";
 
 // modes to faciliate running of games
-var ROLL_DICE = "Roll Dice Mode";
-var ROLL_DICE_AUTO = "Roll and Auto Pick";
-var CHOOSE_ORDER = "Choose Order Mode";
-var DECIDE_WINNER = "Decide Winner";
-var CHOOSE_NUM_OF_DICE = "Choose number of dice";
+var L2_ROLL_DICE = "Roll Dice Mode";
+var L2_ROLL_DICE_AUTO = "Roll and Auto Pick";
+var L2_CHOOSE_ORDER = "Choose Order Mode";
+var L2_DECIDE_WINNER = "Decide Winner";
+var L2_CHOOSE_NUM_DICE = "Choose number of dice";
 
 // setting initial set up
 var arrayRolls = [];
@@ -23,7 +23,7 @@ var arrayForNums = [];
 var currentPlayer = 1;
 var numOfPlayers = 2;
 var numofDice = 2;
-var currentGameMode = ROLL_DICE;
+var L2GameMode = L2_ROLL_DICE;
 var L1GameMode = L1_PICK_GAME_MODE;
 var playerOneScore = 0;
 var playerTwoScore = 0;
@@ -32,11 +32,11 @@ var playerTwoScore = 0;
 
 // 2 functions for player to select their order
 var selectAB = function () {
-  number = Number(arrayRolls[0] * 10 + arrayRolls[1]);
+  number = Number(`${arrayRolls[0]}` + `${arrayRolls[1]}`);
   return number;
 };
 var selectBA = function () {
-  number = Number(arrayRolls[1] * 10 + arrayRolls[0]);
+  number = Number(`${arrayRolls[0]}` + `${arrayRolls[1]}`);
   return number;
 };
 
@@ -47,11 +47,15 @@ var diceRoll = function () {
 };
 
 // function to get the "scores" which is the sum of all the rolls
+// prepared code to be able to calculate for multiple players because the oder in which values are pushed into array is the same as order of player picking their numbers.
+
 var getScores = function (player) {
   var myOutputValue = 0;
+  // input will help determine whose scores to calculate
   var counter = player - 1;
   while (counter < arrayForNums.length) {
     myOutputValue = myOutputValue + arrayForNums[counter];
+    // this counter will help to only pull the numbers of the specific player from the array
     counter += numOfPlayers;
   }
   return myOutputValue;
@@ -60,18 +64,19 @@ var getScores = function (player) {
 // function to generate the Leaderboard limited to 2 players for now
 var getLeaderboard = function () {
   var myOutputValue = [
-    `Player2 : ${playerTwoScore} `,
-    `Player1 : ${playerOneScore}`,
+    `Player2 : ${playerTwoScore}`,
+    ` Player1 : ${playerOneScore}`,
   ];
   if (playerOneScore >= playerTwoScore) {
     myOutputValue = [
-      `Player1 : ${playerOneScore} `,
-      `Player2 : ${playerTwoScore}`,
+      `Player1 : ${playerOneScore}`,
+      ` Player2 : ${playerTwoScore}`,
     ];
   }
   return myOutputValue;
 };
 
+// function to refresh in order to go back to the main Choose Game mode
 var refresh = function () {
   var myOutputValue = `Hello! Please choose the game mode you'll like to play. <br><br>Type in "Normal", "Lowest Win", "Auto", "Variable Dice", "Variable Player", "Knockout"`;
   arrayRolls = [];
@@ -84,6 +89,8 @@ var refresh = function () {
 };
 
 // _______________________ MAIN GAME _________________________________
+
+// this is the main function, where the L1 mode will determine which game to run
 
 var main = function (input) {
   var myOutputValue = "";
@@ -100,10 +107,10 @@ var main = function (input) {
     myOutputValue = auto(input);
   } else if (L1GameMode == L1_VARIABLE_DICE_MODE) {
     myOutputValue = variableDice(input);
-  } else if (L1GameMode == L1_VARIABLE_PLAYERS_MODEE) {
+  } else if (L1GameMode == L1_VARIABLE_PLAYERS_MODE) {
     myOutputValue = variablePlayers(input);
   }
-  // console log to track which game mode we are current in
+  // console log to track which L1 mode we are current in
   console.log("L1GameMode after", L1GameMode);
   console.log("arrayForNums", arrayForNums);
   return myOutputValue;
@@ -111,52 +118,57 @@ var main = function (input) {
 
 //____________________________ Mode to select which game to play________________
 
+// Start game function where after user choose their game mode (Normal, Lowest Win, Variable Dice), we will set the L1 mode. L2 mode will prime the code to know which step to take.
+
 var startGame = function (input) {
   var myOutputValue = `Please type in "Normal", "Lowest Win", "Auto", "Variable Dice", "Variable Player", "Knockout" `;
   if (input == "Normal") {
     L1GameMode = L1_NORMAL_MODE;
     myOutputValue = `You have selected ${input} as your game of choice! <br><br>2 Players will take turns to roll the dice 🎲.<br><br>After the roll, each player may choose the order to form their number.<br><br>Player with the highest number wins.<br><br>Click Submit to start rolling!`;
-    currentGameMode = ROLL_DICE;
+    L2GameMode = L2_ROLL_DICE;
   }
   if (input == "Lowest Win") {
     L1GameMode = L1_LOWEST_MODE;
     myOutputValue = `You have selected ${input} as your game of choice! <br><br>2 Players will take turns to roll the dice 🎲.<br><br>After the roll, each player may choose the order to form their number.<br><br>Player with the lowest number wins.<br><br>Click Submit to start rolling!`;
-    currentGameMode = ROLL_DICE;
+    L2GameMode = L2_ROLL_DICE;
   }
   if (input == "Auto") {
     L1GameMode = L1_AUTO_MODE;
     myOutputValue = `You have selected ${input} as your game of choice! <br><br>2 Players will take turns to roll the dice 🎲.<br><br>After the roll, Computer will choose the best order for player.<br><br>Player with the highest number wins.<br><br>Click Submit to start rolling!`;
-    currentGameMode = ROLL_DICE_AUTO;
+    L2GameMode = L2_ROLL_DICE_AUTO;
   }
   if (input == "Variable Dice") {
     L1GameMode = L1_VARIABLE_DICE_MODE;
     myOutputValue = `You have selected ${input} as your game of choice! <br><br> Start by choosing the number of 🎲.`;
-    currentGameMode = CHOOSE_NUM_OF_DICE;
+    L2GameMode = L2_CHOOSE_NUM_DICE;
   }
   if (input == "Variable Players") {
     L1GameMode = L1_VARIABLE_PLAYERS_MODE;
     myOutputValue = `You have selected ${input} as your game of choice! <br><br> Start by choosing the number of players ⛹🏻‍♀️⛹🏻‍♂️.`;
-    currentGameMode = CHOOSE_NUM_OF_DICE;
+    L2GameMode = L2_CHOOSE_NUM_DICE;
   }
   return myOutputValue;
 };
 
 //_______________________________ Normal Beat That Mode _____________________
 
+// this is the basic Beat That Game
+
+// main function to determine which step to take
+
 var normal = function (input) {
   var myOutputValue = "";
-  console.log("Game Mode Before", currentGameMode);
-  if (currentGameMode == ROLL_DICE) {
+  if (L2GameMode == L2_ROLL_DICE) {
     myOutputValue = roll(input);
-  } else if (currentGameMode == CHOOSE_ORDER) {
+  } else if (L2GameMode == L2_CHOOSE_ORDER) {
     myOutputValue = pickOrder(input);
-  } else if (currentGameMode == DECIDE_WINNER) {
+  } else if (L2GameMode == L2_DECIDE_WINNER) {
     myOutputValue = decideWinner(input);
   }
-  // console log to track which game mode we are current in
-  console.log("Game Mode After", currentGameMode);
   return myOutputValue;
 };
+
+// this is to roll the number of dice to and give the output to user to pick. while loop was done to prepare for multiple dice game.
 
 var roll = function () {
   var myOutputValue = "";
@@ -165,45 +177,45 @@ var roll = function () {
     arrayRolls.push(diceRoll());
     counter += 1;
   }
-  myOutputValue = `Player ${currentPlayer}, your two dice rolls are: A: ${arrayRolls[0]} and B: ${arrayRolls[1]}. <br><br> Please pick the order of the number AB or BA `;
-  console.log("arrayRolls", arrayRolls);
-  currentGameMode = CHOOSE_ORDER;
+  myOutputValue = `Player ${currentPlayer}, your two dice rolls are A: ${arrayRolls[0]} and B: ${arrayRolls[1]}. <br><br> Please pick the order of the number AB or BA `;
+  L2GameMode = L2_CHOOSE_ORDER;
   return myOutputValue;
 };
 
+// function in order to take the input, and display the final number for player. If it is player 1, then go into roll dice for player 2. If it is already player 2, go into decide winner.
+
 var pickOrder = function (input) {
   var myOutputValue = "";
-  console.log("arrayRolls", arrayRolls);
   if ((input == "AB") & (currentPlayer == 1)) {
+    // after play selects their order, will form the order and push this Number into an array to track
     playerOneNum = selectAB();
     myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerOneNum}.<br><br>It is now Player 2's turn.<br><br> Press submit to roll`;
-    currentGameMode = ROLL_DICE;
+    L2GameMode = L2_ROLL_DICE;
     arrayForNums.push(playerOneNum);
     currentPlayer = 2;
   } else if ((input == "AB") & (currentPlayer == 2)) {
     playerTwoNum = selectAB();
     myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerTwoNum}.<br><br>Press submit to see who won!`;
     arrayForNums.push(playerTwoNum);
-    currentGameMode = DECIDE_WINNER;
+    L2GameMode = L2_DECIDE_WINNER;
   } else if ((input == "BA") & (currentPlayer == 1)) {
     playerOneNum = selectBA();
     myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerOneNum}<br><br>It is now Player 2's turn.<br><br>Press submit to roll`;
-    currentGameMode = ROLL_DICE;
+    L2GameMode = L2_ROLL_DICE;
     arrayForNums.push(playerOneNum);
     currentPlayer = 2;
   } else if ((input == "BA") & (currentPlayer == 2)) {
     playerTwoNum = selectBA();
     myOutputValue = `Player ${currentPlayer} choose ${input}, your number is ${playerTwoNum}.<br><br>Press submit to see who won!`;
     arrayForNums.push(playerTwoNum);
-    currentGameMode = DECIDE_WINNER;
+    L2GameMode = L2_DECIDE_WINNER;
   }
-  console.log("playerOneNum", playerOneNum);
-  console.log("playerTwoNum", playerTwoNum);
-  console.log("currentGameMode", currentGameMode);
-  console.log("arrayForNums", arrayForNums);
   arrayRolls = [];
   return myOutputValue;
 };
+
+// after both players have rolled dice, then we go into deciding the winner.
+// code also has the score and leaderboard functionality
 
 var decideWinner = function () {
   var myOutputValue = "None";
@@ -219,27 +231,29 @@ var decideWinner = function () {
   if (playerOneNum == playerTwoNum) {
     myOutputValue = `Player 1's number is ${playerOneNum}.<br><br>Player 2's number is ${playerTwoNum}.<br><br>It is a draw, let's play again<br><br>Player 1's score is ${playerOneScore}<br><br>Player 2' score is ${playerTwoScore}<br><br>The current leaderboard is ${leaderBoard}`;
   }
-  currentGameMode = ROLL_DICE;
+  L2GameMode = L2_ROLL_DICE;
   currentPlayer = 1;
   return myOutputValue;
 };
 
 //_____________________________ Lowest score wins Mode __________________________
 
+// will only call out the differences between this mode and Base Normal mode.
+
 var lowestWin = function (input) {
   var myOutputValue = "";
-  console.log("Game Mode Before", currentGameMode);
-  if (currentGameMode == ROLL_DICE) {
+  if (L2GameMode == L2_ROLL_DICE) {
     myOutputValue = roll(input);
-  } else if (currentGameMode == CHOOSE_ORDER) {
+  } else if (L2GameMode == L2_CHOOSE_ORDER) {
     myOutputValue = pickOrder(input);
-  } else if (currentGameMode == DECIDE_WINNER) {
+  } else if (L2GameMode == L2_DECIDE_WINNER) {
     myOutputValue = decideWinnerLowest(input);
   }
   // console log to track which game mode we are current in
-  console.log("Game Mode After", currentGameMode);
   return myOutputValue;
 };
+
+// created new function to determine the winner by lowest number.
 
 var decideWinnerLowest = function () {
   var myOutputValue = "None";
@@ -255,26 +269,28 @@ var decideWinnerLowest = function () {
   if (playerOneNum == playerTwoNum) {
     myOutputValue = `Player 1's number is ${playerOneNum}.<br><br>Player 2's number is ${playerTwoNum}.<br><br>It is a draw, let's play again<br><br>Player 1's score is ${playerOneScore}<br><br>Player 2' score is ${playerTwoScore}<br><br>The current leaderboard is ${leaderBoard}`;
   }
-  currentGameMode = ROLL_DICE;
+  L2GameMode = L2_ROLL_DICE;
   currentPlayer = 1;
   return myOutputValue;
 };
 
 //_________________________  Auto generate combined number Mode __________________
 
+// will only call out the differences between this mode and Base Normal mode.
+
 var auto = function (input) {
   var myOutputValue = "";
-  console.log("Game Mode Before", currentGameMode);
-  if (currentGameMode == ROLL_DICE_AUTO) {
+  if (L2GameMode == L2_ROLL_DICE_AUTO) {
     myOutputValue = rollAndDecide(input);
-  } else if (currentGameMode == DECIDE_WINNER) {
+  } else if (L2GameMode == L2_DECIDE_WINNER) {
     myOutputValue = decideWinner(input);
-    currentGameMode = ROLL_DICE_AUTO;
+    L2GameMode = L2_ROLL_DICE_AUTO;
   }
-  // console log to track which game mode we are current in
-  console.log("Game Mode After", currentGameMode);
   return myOutputValue;
 };
+
+// combined both the normal roll and pickorder function into one function for this mode.
+// function will first roll dice, then decide for player the best combination.
 
 var rollAndDecide = function () {
   var myOutputValue;
@@ -286,24 +302,24 @@ var rollAndDecide = function () {
   if ((currentPlayer == 1) & (arrayRolls[0] >= arrayRolls[1])) {
     playerOneNum = selectAB();
     myOutputValue = `Player ${currentPlayer}, your two dice rolls are: ${arrayRolls[0]} and ${arrayRolls[1]}. <br><br>Computer picked ${playerOneNum} for you.`;
-    currentGameMode = ROLL_DICE_AUTO;
+    L2GameMode = L2_ROLL_DICE_AUTO;
     arrayForNums.push(playerOneNum);
     currentPlayer = 2;
   } else if ((currentPlayer == 1) & (arrayRolls[0] < arrayRolls[1])) {
     playerOneNum = selectBA();
     myOutputValue = `Player ${currentPlayer}, your two dice rolls are: ${arrayRolls[0]} and ${arrayRolls[1]}. <br><br>Computer picked ${playerOneNum} for you.`;
-    currentGameMode = ROLL_DICE_AUTO;
+    L2GameMode = L2_ROLL_DICE_AUTO;
     arrayForNums.push(playerOneNum);
     currentPlayer = 2;
   } else if ((currentPlayer == 2) & (arrayRolls[0] >= arrayRolls[1])) {
     playerTwoNum = selectAB();
     myOutputValue = `Player ${currentPlayer}, your two dice rolls are: ${arrayRolls[0]} and ${arrayRolls[1]}. <br><br>Computer picked ${playerTwoNum} for you.`;
-    currentGameMode = DECIDE_WINNER;
+    L2GameMode = L2_DECIDE_WINNER;
     arrayForNums.push(playerTwoNum);
   } else if ((currentPlayer == 2) & (arrayRolls[0] < arrayRolls[1])) {
     playerTwoNum = selectBA();
     myOutputValue = `Player ${currentPlayer}, your two dice rolls are: ${arrayRolls[0]} and ${arrayRolls[1]}. <br><br>Computer picked ${playerTwoNum} for you.`;
-    currentGameMode = DECIDE_WINNER;
+    L2GameMode = L2_DECIDE_WINNER;
     arrayForNums.push(playerTwoNum);
   }
   arrayRolls = [];
@@ -312,27 +328,32 @@ var rollAndDecide = function () {
 
 //_____________________________ Variable number of Dice Mode_________________
 
+// will only call out the differences between this mode and Base Normal mode.
+
 var variableDice = function (input) {
   var myOutputValue = "";
-  console.log("Game Mode Before", currentGameMode);
-  if (currentGameMode == CHOOSE_NUM_OF_DICE) {
+  if (L2GameMode == L2_CHOOSE_NUM_DICE) {
     myOutputValue = diceNum(input);
-  } else if (currentGameMode == ROLL_DICE) {
+  } else if (L2GameMode == L2_ROLL_DICE) {
     myOutputValue = rollMultipleDice(input);
-  } else if (currentGameMode == DECIDE_WINNER) {
+  } else if (L2GameMode == L2_DECIDE_WINNER) {
     myOutputValue = decideWinner(input);
   }
-  // console log to track which game mode we are current in
-  console.log("Game Mode After", currentGameMode);
   return myOutputValue;
 };
+
+// create new function for user to select number of dice.
+
 var diceNum = function (input) {
   numofDice = input;
   var myOutputValue = `You have choosen to play with ${input} dice 🎲. Hit Submit to start rolling!`;
   console.log("numofDice", numofDice);
-  currentGameMode = ROLL_DICE;
+  L2GameMode = L2_ROLL_DICE;
   return myOutputValue;
 };
+
+// adapted from rollAndDecide function, but not it catered for multiple dice scenarios.
+// used sort array to get the best order.
 
 var rollMultipleDice = function () {
   var myOutputValue = "";
@@ -354,13 +375,13 @@ var rollMultipleDice = function () {
   if (currentPlayer == 1) {
     playerOneNum = Number(bestNumber);
     line2 = `Computer picked ${playerOneNum} for you.`;
-    currentGameMode = ROLL_DICE;
+    L2GameMode = L2_ROLL_DICE;
     currentPlayer = 2;
     arrayForNums.push(playerOneNum);
   } else if (currentPlayer == 2) {
     playerTwoNum = Number(bestNumber);
     line2 = `Computer picked ${playerTwoNum} for you.`;
-    currentGameMode = DECIDE_WINNER;
+    L2GameMode = L2_DECIDE_WINNER;
     arrayForNums.push(playerTwoNum);
   }
   myOutputValue = line1 + line2;
@@ -370,25 +391,24 @@ var rollMultipleDice = function () {
 
 // _________________ Variable number of players ____________________
 
+// this part is not fully completed yet
+
 var variablePlayers = function (input) {
   var myOutputValue = "";
-  console.log("Game Mode Before", currentGameMode);
-  if (currentGameMode == CHOOSE_NUM_OF_DICE) {
+  if (L2GameMode == L2_CHOOSE_NUM_DICE) {
     myOutputValue = diceNum(input);
-  } else if (currentGameMode == ROLL_DICE) {
+  } else if (L2GameMode == L2_ROLL_DICE) {
     myOutputValue = rollMultipleDice(input);
-  } else if (currentGameMode == DECIDE_WINNER) {
+  } else if (L2GameMode == L2_DECIDE_WINNER) {
     myOutputValue = decideWinner(input);
   }
-  // console log to track which game mode we are current in
-  console.log("Game Mode After", currentGameMode);
   return myOutputValue;
 };
 var chooseNumOfPlayers = function (input) {
   numOfPlayers = input;
   var myOutputValue = `You have choosen to play with ${input} dice 🎲. Hit Submit to start rolling!`;
   console.log("numofDice", numofDice);
-  currentGameMode = ROLL_DICE;
+  L2GameMode = ROLL_DICE;
   return myOutputValue;
 };
 
@@ -412,13 +432,13 @@ var rollMultipleDice = function () {
   if (currentPlayer == 1) {
     playerOneNum = Number(bestNumber);
     line2 = `Computer picked ${playerOneNum} for you.`;
-    currentGameMode = ROLL_DICE;
+    L2GameMode = ROLL_DICE;
     currentPlayer = 2;
     arrayForNums.push(playerOneNum);
   } else if (currentPlayer == 2) {
     playerTwoNum = Number(bestNumber);
     line2 = `Computer picked ${playerTwoNum} for you.`;
-    currentGameMode = DECIDE_WINNER;
+    L2GameMode = L2_DECIDE_WINNER;
     arrayForNums.push(playerTwoNum);
   }
   myOutputValue = line1 + line2;
