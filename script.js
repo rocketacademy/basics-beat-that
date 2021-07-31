@@ -496,34 +496,39 @@ var addTotal = function (array) {
 };
 
 // Find winning player based on result mode (normal/reversed)
-var playerGreatest = 1;
-var winnersGreatest = [`1`];
-var playerSmallest = 1;
-var winnersSmallest = [`1`];
+// Set 'Player 1' as default winner
+var winnersGreatest = [1];
+var winnersSmallest = [1];
 var findWinner = function (array, normalOrReversed) {
   // Generate updated list of winning players
   if (
-    // Do not need to compare if the player is already in the winners list
+    // Do not need to compare if the player is already in the winners list since the previous round
     !winnersGreatest.includes(playerNo + 1) &&
     // Add to list if the player's number is same as that of current winner(s)
-    array[playerGreatest - 1] == array[playerNo]
+    array[[winnersGreatest[0]] - 1] == array[playerNo]
   ) {
+    console.log("A", array[[winnersGreatest[0]] - 1]);
+    console.log("B", array[playerNo]);
+    console.log("C", winnersGreatest);
     winnersGreatest.push(playerNo + 1);
+    console.log("D", winnersGreatest);
     // Replace winner list if there is a new winner
-  } else if (array[playerGreatest - 1] < array[playerNo]) {
+  } else if (array[[winnersGreatest[0]] - 1] < array[playerNo]) {
     winnersGreatest = [];
     winnersGreatest.push(playerNo + 1);
+    console.log("D", winnersGreatest);
   }
   if (
-    // Do not need to compare if the player is already in the winners list
+    // Do not need to compare if the player is already in the winners list since the previous round
     !winnersSmallest.includes(playerNo + 1) &&
     // Add to list if the player's number is same as that of current winner(s)
-    array[playerSmallest - 1] == array[playerNo]
+    array[[winnersSmallest[0]] - 1] == array[playerNo]
   ) {
-    playerSmallest = Number(playerSmallest) + ` and ${Number(playerNo + 1)}`;
+    winnersSmallest.push(playerNo + 1);
     // Replace winner list if there is a new winner
-  } else if (array[playerSmallest - 1] > array[playerNo]) {
-    playerSmallest = playerNo + 1;
+  } else if (array[[winnersSmallest[0]] - 1] > array[playerNo]) {
+    winnersSmallest = [];
+    winnersSmallest.push(playerNo + 1);
   }
   // Return winners with greatest/smallest total depending on game mode (normal/reversed)
   if (normalOrReversed == NORMAL) {
@@ -667,12 +672,12 @@ var main = function (input) {
       // If this is the final player's turn, output the current player's dice roll outcome, along with win/lose results and stats
       if (playerNo == numberOfPlayers - 1) {
         // Find winner based on running sum thus far
-        var winningPlayer = findWinner(competingTotals, resultMode);
+        winningPlayer = findWinner(competingTotals, resultMode);
         console.log("competingTotals", competingTotals);
         console.log("winningPlayer", winningPlayer);
         // Print the competing players' numbers and total sum (for message output use)
         playerCounter = 0;
-        var resultLog = ``;
+        resultLog = ``;
         while (playerCounter < numberOfPlayers) {
           resultLog =
             resultLog +
@@ -686,10 +691,7 @@ var main = function (input) {
         // Reset variables in preparation for fresh round after outcome is generated
         playerNo = 0;
         numberOfDice = UNASSIGNED;
-        playerGreatest = 1;
-        winnersGreatest = [`1`];
-        playerSmallest = 1;
-        winnersSmallest = [`1`];
+
         // Output Result message
         return (
           `You rolled these numbers: ${unsortedDiceRollArray}. <br> <br> This is your best combined number from those digits above: ${bestNumber}. <br><br><br> 🏆 THE FINAL WINNER OF THE ROUND IS: PLAYER ${winningPlayer}! 🏆 <br> <br> You are currently in the ${resultMode} game mode. <br> <br>` +
