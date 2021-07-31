@@ -7,7 +7,7 @@ var gameState_diceOrder = "gameState_diceOrder";
 var numDiceCount = 0;
 
 // Initial game state
-var gameMode = gameState_diceCount;
+var gameMode = gameState_diceRoll;
 
 // Player 1 starts
 var currPlayer = 1;
