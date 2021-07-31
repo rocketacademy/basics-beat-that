@@ -182,7 +182,7 @@ var normalGame = function () {
 
     let winlist = printLeaderBoard();
     resetGame();
-    return `Player ${winner} is winning, with a score of ${winningScore}<br> ${winlist} <br><br>Play again? Submit the number of players to continue`;
+    return `Player ${winner} is winning, with a score of ${winningScore}<br> ${winlist} <br><br>Play again? Submit the number of dice to continue`;
   }
 
   playerTurnCounter += 1;
