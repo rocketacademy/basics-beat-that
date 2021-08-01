@@ -1,3 +1,4 @@
+//ORIGINAL GAME INSTRUCTIONS -
 //There are 2 players and they take turns to play
 //When 1 player clicks submit, 2 dices roll at once.
 //The player can combine these dice numbers to the order they like.
@@ -5,48 +6,45 @@
 //The higher combo wins
 
 //EG. GREYBOX OUTPUT1: Welcome Player 1 / You rolled 3 for Dice 1 and  6 for Dice 2. / Choose the order of your dice
-
-//NEXT MODE
-
 //EG. GREYBOX OUTPUT2:
 //player 1, you chose Dice 2 first. / Your combo number is 63. / It is now Player 2 's turn to roll the dice.
 
-//NEXT MODE
-
+//GAME MODIFICATION TO PERSONALISE AND MAKE GAME MORE FUN!!
+//ADDED USERNAMES INPUT FOR PLAYER1 AND PLAYER2 (Lines42  - 74)
+//HIDE THE DICE VALUES UNTIL ORDER OF DICE IS CHOSEN.
+//PLAYERS ARE GIVEN A RUNNING LIST OF THEIR RANDOM DICEROLLS
+///////////////////////////////////////////////////////////////////
 var currentGameMode = "player1 name input";
 var playerName1 = "";
 var playerName2 = "";
-var playerName1Counter = 0;
-var playerName2Counter = 0;
-var playerName1DiceCombo = "";
-var playerName2DiceCombo = "";
-var playerName1Result = "";
-var playerName2Result = "";
+var playerName1Dices = [];
+var playerName2Dices = [];
+var playerName1DicesLog = [];
+var playerName2DicesLog = [];
+var playerName1Order = "";
+var playerName2Order = "";
 
-// var rollDice = function () {
-//   var randomDice1 = Math.floor(Math.random() * (6 - 1 + 1) + 1);
-//   var randomDice2 = Math.floor(Math.random() * (6 - 1 + 1) + 1);
-//   var randomDiceNumbers = randomDice1 + " and " + randomDice2;
-//   return randomDiceNumbers;
-// };
+//var playerName1Counter = 0;
+//var playerName2Counter = 0;
 
-var rollDice1 = function () {
+///////////////////////////////////////////////////////////////////
+var rollDice = function () {
   var randomDice1 = Math.floor(Math.random() * (6 - 1 + 1) + 1);
   return randomDice1;
 };
 
-var rollDice2 = function () {
-  var randomDice2 = Math.floor(Math.random() * (6 - 1 + 1) + 1);
-  return randomDice2;
-};
+///////////////////////////////////////////////////////////////////
 
 var main = function (input) {
   var myOutputValue = "";
 
+  //Player1 enters name
   if (currentGameMode == "player1 name input") {
     myOutputValue = "Hello Player1, please enter your name";
     currentGameMode = "player2 name input";
-  } else if (currentGameMode == "player2 name input") {
+    return myOutputValue;
+  }
+  if (currentGameMode == "player2 name input") {
     playerName1 = input;
     myOutputValue =
       "Hello " +
@@ -55,10 +53,12 @@ var main = function (input) {
       "<br>" +
       " It's now Player2's turn to enter his/her name!";
     currentGameMode = "The Game Starts";
-  } else if (currentGameMode == "The Game Starts") {
-    //player1 has inputted his/her name so now its player2 turn
-    playerName2 = input;
+    return myOutputValue;
+  }
 
+  //Player2 enters name
+  if (currentGameMode == "The Game Starts") {
+    playerName2 = input;
     myOutputValue =
       "Hello " +
       input +
@@ -66,109 +66,173 @@ var main = function (input) {
       "<br>" +
       " It's now " +
       playerName1 +
-      "'s turn to start the dice rolling! " +
+      "'s turn to start the dice rolling! 2 secret dices will roll with each play! " +
+      "<br>" +
       playerName1 +
-      "  ,please click `submit` once to roll two dices at once - your diceroll will now yield 2 hidden random numbers (1-6). Please enter 1,2 for original order or 2,1 for reverse order and click `submit` once more";
-
+      "  , Please enter 1,2 for original order or 2,1 for reverse order for the secret dice rolls and click `submit` once";
     currentGameMode = "Dice Roll Player1";
-  } else if (currentGameMode == "Dice Roll Player1") {
-    var playerName1RandomDice1 = rollDice1();
-    var playerName1RandomDice2 = rollDice2();
-    var playerName1DiceCombo = input;
+    return myOutputValue;
+  }
 
-    if (playerName1DiceCombo != "1,2" && playerName1DiceCombo != "2,1") {
-      myOutputValue = "Please input ordering of 1,2 or 2,1 and click `submit`.";
-    } else if (playerName1DiceCombo == "1,2") {
-      playerName1Result = Number(
+  //The Game starts after both players identify themselves.
+
+  if (currentGameMode == "Dice Roll Player1") {
+    var playerName1RandomDice1 = rollDice();
+    var playerName1RandomDice2 = rollDice();
+    playerName1Dices = [playerName1RandomDice1, playerName1RandomDice2];
+    //.push to array for Player1 to contain all his dices' numbers.
+    playerName1DicesLog.push(playerName1Dices);
+
+    var playerName1DiceChoose = input;
+    //player1 did not enter 1,2 or 2,1 order (orignal vs reverse)
+    if (playerName1DiceChoose != "1,2" && playerName1DiceChoose != "2,1") {
+      myOutputValue =
+        playerName1 +
+        ", please input ordering of 1,2 or 2,1 and click `submit` once.";
+    }
+
+    //player1 chose original order
+    if (playerName1DiceChoose == "1,2") {
+      // Concatenate the numbers and number function
+      playerName1Order = Number(
         "" + playerName1RandomDice1 + playerName1RandomDice2
       );
       myOutputValue =
         "Your diceroll yielded " +
-        playerName1RandomDice1 +
+        playerName1Dices[0] +
         " and " +
-        playerName1RandomDice2 +
+        playerName1Dices[1] +
         ". You have ordered it to become " +
-        playerName1Result +
+        playerName1Order +
         ". Now, it's " +
         playerName2 +
-        "'s turn to play. " +
+        "'s turn to play. Please enter 1,2 for original order or 2,1 for reverse order for the secret dice rolls and click `submit` once" +
         "<br>" +
         " And...See who wins with the highest concatenated dice numbers!";
-    } else if (playerName1DiceCombo == "2,1") {
-      playerName1Result = Number(
+
+      currentGameMode = "Dice Roll Player2";
+    }
+    //Player1 chose reverse order
+    else if (playerName1DiceChoose == "2,1") {
+      // Concatenate the numbers and number function
+      playerName1Order = Number(
         "" + playerName1RandomDice2 + playerName1RandomDice1
       );
       myOutputValue =
         "Your diceroll yielded " +
-        playerName1RandomDice1 +
+        playerName1Dices[0] +
         " and " +
-        playerName1RandomDice2 +
+        playerName1Dices[1] +
         ". You have ordered it to become " +
-        playerName1Result +
+        playerName1Order +
         ". Now, it's " +
         playerName2 +
-        "'s turn to play. " +
+        "'s turn to play. Please enter 1,2 for original order or 2,1 for reverse order for the secret dice rolls and click `submit` once " +
         "<br>" +
         " And...See who wins with the highest concatenated dice numbers!";
 
-      //change to player2 mode to play
       currentGameMode = "Dice Roll Player2";
-      console.log("running?");
-    } else if (currentGameMode == "Dice Roll Player2") {
-      console.log("run Diceroll player2");
-      var playerName2RandomDice1 = rollDice1();
-      var playerName2RandomDice2 = rollDice2();
-      console.log(rollDice2());
-      var playerName2DiceCombo = input;
-
-      if (playerName2DiceCombo != "1,2" && playerName2DiceCombo != "2,1") {
-        myOutputValue =
-          "Please input ordering of 1,2 or 2,1 and click `submit`.";
-      }
-      if (playerName2DiceCombo == "1,2") {
-        playerName2Result = Number(
-          "" + playerName2RandomDice1 + playerName2RandomDice2
-        );
-        myOutputValue =
-          "Your diceroll yielded " +
-          playerName2RandomDice1 +
-          " and " +
-          playerName2RandomDice2 +
-          ". You have ordered it to become " +
-          playerName2Result +
-          "<br>" +
-          " And..." +
-          playerName1 +
-          " has the combo " +
-          playerName1Result +
-          playerName2 +
-          " has the combo " +
-          playerName2Result +
-          " .";
-      }
-      if (playerName2DiceCombo == "2,1") {
-        playerName2Result = Number(
-          "" + playerName1RandomDice2 + playerName1RandomDice1
-        );
-        myOutputValue =
-          "Your diceroll yielded " +
-          playerName2RandomDice1 +
-          " and " +
-          playerName2RandomDice2 +
-          ". You have ordered it to become " +
-          playerName2Result +
-          "<br>" +
-          " And..." +
-          playerName1 +
-          " has the combo " +
-          playerName1Result +
-          playerName2 +
-          " has the combo " +
-          playerName2Result +
-          " .";
-      }
     }
+    return myOutputValue;
   }
 
+  //change to player2 mode to play
+  if (currentGameMode == "Dice Roll Player2") {
+    var playerName2RandomDice1 = rollDice();
+    var playerName2RandomDice2 = rollDice();
+    playerName2Dices = [playerName2RandomDice1, playerName2RandomDice2];
+    //.push to array for Player1 to contain all his dices' numbers.
+    playerName2DicesLog.push(playerName2Dices);
+
+    var playerName2DiceChoose = input;
+    //player1 did not enter 1,2 or 2,1 order (orignal vs reverse)
+    if (playerName2DiceChoose != "1,2" && playerName2DiceChoose != "2,1") {
+      myOutputValue =
+        playerName2 +
+        ", your dices have rolled. Now, please input ordering of 1,2 or 2,1 and click `submit`.";
+    }
+    //player2 chose original order
+    if (playerName2DiceChoose == "1,2") {
+      // Concatenate the numbers and number function
+      playerName2Order = Number(
+        "" + playerName2RandomDice1 + playerName2RandomDice2
+      );
+      myOutputValue =
+        "Your diceroll yielded " +
+        playerName2Dices[0] +
+        " and " +
+        playerName2Dices[1] +
+        ". You have ordered it to become " +
+        playerName2Order +
+        "<br>" +
+        " And... " +
+        playerName1 +
+        " has the combo-number " +
+        playerName1Order +
+        " . " +
+        playerName2 +
+        " has the combo-number " +
+        playerName2Order +
+        " .";
+
+      currentGameMode = "who wins";
+    }
+    //player2 chose reverse order
+    if (playerName2DiceChoose == "2,1") {
+      // Concatenate the numbers and number function
+      playerName2Order = Number(
+        "" + playerName2RandomDice2 + playerName2RandomDice1
+      );
+      myOutputValue =
+        "Your diceroll yielded " +
+        playerName2Dices[0] +
+        " and " +
+        playerName2Dices[1] +
+        ". You have ordered it to become " +
+        playerName2Order +
+        "<br>" +
+        " And... " +
+        playerName1 +
+        " has the combo-number " +
+        playerName1Order +
+        " . " +
+        playerName2 +
+        " has the combo-number " +
+        playerName2Order +
+        " .";
+      currentGameMode = "who wins";
+    }
+    //currentGameMode = "who wins";
+    return myOutputValue;
+  }
+  //change mode to declare winner
+  //player1 wins
+  if (currentGameMode == "who wins") {
+    if (playerName1Order > playerName2Order) {
+      myOutputValue =
+        playerName1 +
+        " has won this round! Here's a list of your dicerolls so far :  " +
+        playerName1DicesLog +
+        " .";
+      //the game restarts
+      currentGameMode = "Dice Roll Player1";
+    }
+    //player2 wins
+    else if (playerName1Order < playerName2Order) {
+      myOutputValue =
+        playerName2 +
+        " has won this round! Here's a list of your dicerolls so far :  " +
+        playerName2DicesLog +
+        " .";
+
+      //the game restarts
+      currentGameMode = "Dice Roll Player1";
+    } else {
+      myOutputValue =
+        "It's a tie! Such a rare occurrence, Let's go for a beer!";
+      //the game restarts
+      currentGameMode = "Dice Roll Player1";
+    }
+  }
   return myOutputValue;
 };
