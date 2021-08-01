@@ -16,6 +16,9 @@ var rolledDice = false;
 var player1Score = 0;
 var player2Score = 0;
 
+var isGameModeSet = false;
+var gameMode = "normal";
+
 var playerRollDice = function (playerNum, playerDice) {
   var diceRoll1 = diceRoll();
   var diceRoll2 = diceRoll();
@@ -35,6 +38,14 @@ var playerRollDice = function (playerNum, playerDice) {
 };
 
 var main = function (input) {
+  if (!isGameModeSet) {
+    if (input === "reverse") {
+      gameMode = "reverse";
+      return "The game is in Reverse Mode";
+    }
+    isGameModeSet = true;
+  }
+
   if (playerNo == 1 && !rolledDice) {
     return playerRollDice(playerNo, player1Dice);
   }
@@ -63,6 +74,7 @@ var main = function (input) {
   if (playerNo == 2 && !rolledDice) {
     return playerRollDice(playerNo, player2Dice);
   }
+  //validation
   if (playerNo == 2 && rolledDice) {
     if (!(input === "1" || input === "2")) {
       return "please input 1 or 2 to decide the order of the dice.";
@@ -70,6 +82,7 @@ var main = function (input) {
     var playerInputNumber = getPlayerNumber(input, player2Dice);
     player2CombinedNo = playerInputNumber;
     var winningOutput = winningCondition();
+    var reverseWinningOutput = reverseWinningCondition();
 
     player2Score += playerInputNumber;
     var playerLeader = leaderboard();
@@ -78,42 +91,69 @@ var main = function (input) {
     rolledDice = false;
     playerNo = 1;
 
-    outputValue =
-      "Player 1 combined number is " +
-      player1CombinedNo +
-      ". Player 2 combined number is " +
-      player2CombinedNo +
-      "." +
-      winningOutput +
-      "<br>" +
-      playerLeader;
-    return outputValue;
+    if (gameMode == "reverse") {
+      isGameModeSet = true;
+      outputValue =
+        "Player 1 combined number is " +
+        player1CombinedNo +
+        ". Player 2 combined number is " +
+        player2CombinedNo +
+        "." +
+        reverseWinningOutput;
+      return outputValue;
+    } else {
+      if (gameMode == "normal") {
+        isGameModeSet = false;
+
+        outputValue =
+          "Player 1 combined number is " +
+          player1CombinedNo +
+          ". Player 2 combined number is " +
+          player2CombinedNo +
+          "." +
+          winningOutput +
+          "<br>" +
+          playerLeader;
+        return outputValue;
+      }
+    }
+  }
+  //leaderboard condition
+  function leaderboard() {
+    if (player1Score > player2Score) {
+      outputMessage =
+        "player 1 is leading the game with score of : " +
+        player1Score +
+        " & player 2 score of : " +
+        player2Score;
+      return outputMessage;
+    } else if (player2Score > player1Score) {
+      outputMessage =
+        "player 2 is leading the game with score of : " +
+        player2Score +
+        " & player 1 score of : " +
+        player1Score;
+      return outputMessage;
+    }
   }
 };
-//leaderboard condition
-function leaderboard() {
-  if (player1Score > player2Score) {
-    outputMessage =
-      "player 1 is leading the game with score of : " +
-      player1Score +
-      " & player 2 score of : " +
-      player2Score;
-    return outputMessage;
-  } else if (player2Score > player1Score) {
-    outputMessage =
-      "player 2 is leading the game with score of : " +
-      player2Score +
-      " & player 1 score of : " +
-      player1Score;
-    return outputMessage;
-  }
-}
+
 //wining condition
 function winningCondition() {
   if (player1CombinedNo > player2CombinedNo) {
     return " Player 1 Win.";
   } else if (player1CombinedNo < player2CombinedNo) {
     return " Player 2 Win.";
+  } else if ((player1CombinedNo = player2CombinedNo)) {
+    return " Its a draw.";
+  }
+}
+//reverse winning cond
+function reverseWinningCondition() {
+  if (player1CombinedNo > player2CombinedNo) {
+    return " Player 2 Win.";
+  } else if (player1CombinedNo < player2CombinedNo) {
+    return " Player 1 Win.";
   } else if ((player1CombinedNo = player2CombinedNo)) {
     return " Its a draw.";
   }
