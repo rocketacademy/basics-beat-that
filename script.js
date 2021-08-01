@@ -5,7 +5,7 @@
 
 // // Global Variables
 var p1_turn = true; // Sets the default to Player 1's turn
-var gameMode = "";
+var gameMode = "Initial_Gameplay";
 
 // Dice Roll Function //
 var rollDice = function () {
@@ -21,82 +21,69 @@ var getDicerolls = function () {
 };
 
 var main = function (input) {
-  var myOutputValue = "Hello Player 1, please press submit to start the game";
-  // Player 1's Turn
+  var myOutputValue = "";
 
-  if (p1_turn == true);
-  {
+  // Player 1's Turn
+  if (p1_turn == true) {
     var player1Array = getDicerolls();
     console.log(player1Array);
 
     // Getting Player 1's Dice Rolls
     var p1_gameMode = "P1 Rolls";
+
+    p1_gameMode == "P1 Rolls";
     myOutputValue =
-      " Dice 1 is " +
+      "Hello Player 1, <br> Dice 1 is " +
       player1Array[0] +
       "<br> Dice 2 is " +
       player1Array[1] +
       "<br> <br> Please choose which dice you want to go first? 1 or 2";
 
+    // Letting P1 choose which dice to go first
     p1_gameMode = "P1 Roll Sequence";
     var p1_finalScore = 0;
-
-    if (input == "1") {
-      myOutputValue = `Your score is ${player1Array[0]}${player1Array[1]}`; // Converts to a string
-      p1_finalScore = player1Array[0] * 10 + player1Array[1];
-    } else if (input == "2") {
-      myOutputValue = `Your score is ${player1Array[1]}${player1Array[0]}`;
-      (p1_finalScore = player1Array[1] * 10), player1Array[0];
+    if (gameMode == "P1 Roll Sequence") {
+      if (input == "1") {
+        myOutputValue = `Your score is ${player1Array[0]}${player1Array[1]}`; // Converts to a string
+        p1_finalScore = player1Array[0] * 10 + player1Array[1];
+      } else if (input == "2") {
+        myOutputValue = `Your score is ${player1Array[1]}${player1Array[0]}`;
+        p1_finalScore = player1Array[1] * 10 + player1Array[0];
+      }
+      console.log("P1 " + p1_finalScore);
+      p1_gameMode = "P1 turn ends";
     }
-    var p1_finalScore = myOutputValue;
-    console.log(p1_finalScore);
+    p1_turn = false; //Ends player 1 turn
+  }
 
-    if (p1_finalScore != 0);
-    {
-      p1_turn = false;
-    }
+  // Player 2's Turn starts here
+  else if (p1_turn != true) {
+    var player2Array = getDicerolls();
+    console.log("Player 2 " + player2Array);
 
-    // Player 2's Turn starts here
+    // Getting Player 2's Dice Rolls
+    var p2_gameMode = "P2 Rolls";
+    myOutputValue =
+      "Hello Player 2, <br><br> Dice 1 is " +
+      player2Array[0] +
+      "<br> Dice 2 is " +
+      player2Array[1] +
+      "<br> <br> Please choose which dice you want to go first? 1 or 2";
+    p2_gameMode = "P2 Roll Sequence";
+    var p2_finalScore = 0;
 
-    if (p1_turn != true);
-    {
-      var player2Array = getDicerolls();
-      console.log("Player 2 " + player2Array);
-      myOutputValue =
-        "Hello Player 2, it's your turn. Please press submit to start the game";
-
-      // Getting Player 2's Dice Rolls
-      var p2_gameMode = "P2 Rolls";
-      myOutputValue =
-        " Dice 1 is " +
-        player2Array[0] +
-        "<br> Dice 2 is " +
-        player2Array[1] +
-        "<br> <br> Please choose which dice you want to go first? 1 or 2";
-      p2_gameMode = "P2 Roll Sequence";
-
+    while (p2_gameMode == "P2 Roll Sequence") {
       if (input == "1") {
         myOutputValue = `Your score is ${player2Array[0]}${player2Array[1]}`; // Converts to a string
+        p2_finalScore = player2Array[0] * 10 + player2Array[1];
       } else if (input == "2") {
         myOutputValue = `Your score is ${player2Array[1]}${player2Array[0]}`;
       }
-
-      var p2_finalScore = Number(myOutputValue);
-      console.log(p2_finalScore);
-
-      if (p2_finalScore != 0);
-      {
-        p1_turn = true;
-      }
+      console.log("P2 " + p2_finalScore);
+      p2_gameMode = "P2 turn ends";
     }
-
-    return myOutputValue;
+    p1_turn = true; // Ends Player 2 turn
   }
-};
 
-// // Checking who wins
-// if (p1_finalScore > p2_finalScore) {
-//   myOutputValue = "Player 1 wins";
-// } else {
-//   myOutputValue = "Player 2 Wins";
-// }
+  return myOutputValue;
+};
