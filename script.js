@@ -17,7 +17,19 @@ var player2SumNum = [];
 var player1TotalScore;
 var player2TotalScore;
 
+// Possible Modes
+var NORMALMODE = `Normal Mode`;
+var LOWESTCOMBINEDNUMER = `Lowest Combined Number Mode`;
 
+// Mode Selection 
+var MODE_SELECTION_INSTRUCTIONS = 
+'Please enter one of the following to choose a game mode:<br>1. ' +
+NORMALMODE +
+'<br>2. ' +
+LOWESTCOMBINEDNUMER +`.`
+
+// keep track of game mode
+var primaryGameMode = ``
 
 var rollDice = function () {
   return Math.ceil(Math.random() * 6)
@@ -81,11 +93,15 @@ var calcTotalNumber = function(array) {
 }
 
 var determineWinner = function() {
-  if (player1Num > player2Num) {
-    return 1;
-  }
-  return 2;
-}
+
+  if (primaryGameMode == NORMALMODE && player1Num > player2Num ||
+    primaryGameMode == LOWESTCOMBINEDNUMER && player1Num < player2Num) {
+    return 1;}
+    
+    return 2;
+  
+  };
+
 
 var leaderBoard =  function () {
   if (player1TotalScore > player2TotalScore) {
@@ -98,8 +114,31 @@ var leaderBoard =  function () {
    Player 1 Total Score ${player1TotalScore}`
 }
 
+var lowestCombinedNumberBoard = function () {
+  if (player1TotalScore < player2TotalScore) {
+    return `Player 1 is in the Lead!<br><br>
+    Player 1 Total Score ${player1TotalScore}<br><br>
+    Player 2 Total Score ${player2TotalScore}`
+  } else
+   return `Player 2 is in the Lead!<br><br>
+   Player 2 Total Score ${player2TotalScore}<br><br>
+   Player 1 Total Score ${player1TotalScore}`
+}
+
 var main = function(input) {
-  if (gameMode == DICEROLL) {
+  
+  if (!primaryGameMode && !input) {
+    //user did not key in anything
+    return MODE_SELECTION_INSTRUCTIONS;
+  }
+
+  if (input == 1) {
+  primaryGameMode = NORMALMODE;}
+  else if (input == 2) {
+  primaryGameMode = LOWESTCOMBINEDNUMER;
+  };
+
+  if ((primarygameMode = NORMALMODE || LOWESTCOMBINEDNUMER) && gameMode == DICEROLL) {
     var newDiceRolls = getDiceRolls();
     gameMode = DICEORDER;
     return `Welcome Player ${currPlayer}.<br><br>
@@ -107,13 +146,15 @@ var main = function(input) {
     Please choose which dice you want to be first.` 
 }
 
-  if (gameMode == DICEORDER) {
+  if ((primarygameMode = NORMALMODE || LOWESTCOMBINEDNUMER) && gameMode == DICEORDER) {
     var diceOrder = Number(input)
     if (diceOrder !== 1 && diceOrder !== 2) {
       return `Please choose 1 or 2.`
     } else 
 
     var playerNum = getPlayerNumber(diceOrder);
+
+  }
 
     console.log (player1Dice)
     console.log (player1Num)
@@ -149,10 +190,19 @@ var main = function(input) {
     console.log(player1TotalScore)
     console.log(player2TotalScore)
      
+    if (primaryGameMode == NORMALMODE) {
+  
     return `Player ${whoWon} wins!<br><br>
     ${leaderBoard()} <br><br>
-    Press Submit To Play Again`
-    
+    Press Submit To Play Again.`
 
+  }
+    
+    else  {
+      return `Player ${whoWon} wins!<br><br>
+      ${lowestCombinedNumberBoard()} <br><br>
+      Press Submit To Play Again.`
     };
+
+
   };
