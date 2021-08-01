@@ -1,3 +1,6 @@
+var player1Wins = 0;
+var player2Wins = 0;
+
 // DICE 1
 // Math.floor(Math.random() * 6 +1);
 var randomDiceRoll = function () {
@@ -30,7 +33,7 @@ var main = function (input) {
     console.log("dice 2", Dice2);
 
     var myOutputValue = `Welcome Player 1. <br><br>
-You rolled ${Dice1} for Dice 1 and ${Dice2} for Dice 2.
+You rolled ${Dice1} for Dice 1 and ${Dice2} for Dice 2. <br><br>
 Choose the order of the dice.`;
 
     currentGameMode = "Player 1";
@@ -45,9 +48,9 @@ Choose the order of the dice.`;
     var Dice4 = randomDiceRoll();
     console.log("dice 4", Dice4);
 
-    var myOutputValue = `Welcome Player 2.
-  You rolled ${Dice3} for Dice 1 and ${Dice4} for Dice 2.
-  Choose the order of the dice.`;
+    var myOutputValue = `Welcome Player 2. <br><br>
+    You rolled ${Dice3} for Dice 1 and ${Dice4} for Dice 2. <br><br>
+    Choose the order of the dice.`;
   } else if (currentGameMode == "Player 2") {
     diceOption2 = Number(input);
     console.log("dice option 2", diceOption2);
@@ -57,9 +60,20 @@ Choose the order of the dice.`;
     currentGameMode = "Comparing Dice Values";
   } else if (currentGameMode == "Comparing Dice Values")
     if (diceOption1 > diceOption2) {
-      myOutputValue = `Congratulations! Player 1 wins. Player 1 chose ${diceOption1}. Player 2 chose ${diceOption2}. Play again`;
+      player1Wins = player1Wins + 1;
+      myOutputValue = `Congratulations! Player 1 wins. Player 1 chose ${diceOption1}. Player 2 chose ${diceOption2}. <br><br>
+      Score Board: <br><br>
+      Player 1: ${player1Wins} <br><br>
+      Player 2: ${player2Wins} <br><br>
+      Play again`;
     } else if (diceOption1 < diceOption2) {
-      myOutputValue = `Congratulations! Player 2 wins. Player 1 chose ${diceOption1}. Player 2 chose ${diceOption2}`;
+      player2Wins = player2Wins + 1;
+      myOutputValue = `Congratulations! Player 2 wins. Player 1 chose ${diceOption1}. Player 2 chose ${diceOption2} <br><br>
+      Score Board: <br><br>
+      Player 2: ${player2Wins} <br><br>
+      Player 1: ${player1Wins} <br><br>
+      Play Again!`;
+      currentGameMode = "Player 1 choose order";
     }
 
   return myOutputValue;
