@@ -4,11 +4,6 @@ var player1DICEROLL = [];
 //for the programme to store player 2 dice roll
 var player2DICEROLL = [];
 
-//programme to produce random dice numbers
-var randomDiceNumber = function () {
-  return Math.ceil(Math.random() * 6);
-};
-
 //game modes
 var mode_DICE_ROLL = "mode_DICE_ROLL";
 var mode_DICE_ORDER = "mode_CHOOSE_DICE_ORDER";
@@ -21,6 +16,11 @@ var currentPlayer;
 
 //initialising game to start with dice roll mode
 var gameMode = mode_DICE_ROLL;
+
+//programme to produce random dice numbers
+var randomDiceNumber = function () {
+  return Math.ceil(Math.random() * 6);
+};
 
 //to set current player with Dice Roll
 var playerDiceRolls = function () {
@@ -119,6 +119,7 @@ var main = function (input) {
       );
     }
   }
+
   if (
     gameMode == mode_DICE_ROLL &&
     player1DICEROLL.length > 0 &&
