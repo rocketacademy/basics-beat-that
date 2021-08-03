@@ -11,12 +11,18 @@ winCounterPone = 0;
 winCounterPtwo = 0;
 
 currentMode = 1;
+gameType = "a"; //Inspired by Nicholas
 
 /*Modes:
 1 - Number rolling
 2 - Display results. Player one Swaps if needed
 3 - Player two Swaps if needed
 4 - Converting array into actual numbers, then choosing winner
+*/
+
+/*Game types:
+"a" - Highest number wins. Default mode.
+"b" - Lowerst number wins
 */
 
 //Generate a pair of numbers for player one. Push into playerOneRolls[] array
@@ -28,14 +34,23 @@ var main = function (input) {
   if (input == "") {
     var myOutputValue = `Hi! You get two dice each. After rolling, we will put both dice side-by-side to see who comes up with the biggest numerical combination!<br/>Each player can choose the order in which the dice are placed.<br/>To roll, please enter "Roll"!`;
   }
-  if (currentMode == 4 && input == "") {
-    var myOutputValue = comparingNumbers();
+  if (currentMode == 4 && gameType == "b" && input == "") {
+    var myOutputValue = comparingSmallestNumbers();
+  }
+
+  if (currentMode == 4 && gameType == "a" && input == "") {
+    var myOutputValue = comparingBiggestNumbers();
   }
   if (currentMode == 3) {
     var myOutputValue = playerTwoShifting(input); //Mode changed to 4 in this function
   }
   if (currentMode == 2) {
     var myOutputValue = playerOneShifting(input); //Mode changed to 3 in this function
+  }
+  if (input == "LCN" && currentMode == 1) {
+    gameType = "b";
+    console.log(`Game type: ${gameType}`);
+    return `LCN mode set! Now, enter "Roll" to begin!.`;
   }
   if (input == "Go again" || (input == "Roll" && currentMode == 1)) {
     currentMode == 1;
@@ -45,7 +60,7 @@ var main = function (input) {
     rollingPlayerTwo();
     currentMode = 2;
     var myOutputValue = `Player one's numbers: ${playerOneRolls}<br/>Player two's numbers: ${playerTwoRolls}<br/><br/>Now, decide whether you wish to Swap the numbers, or wish to keep them as is!<br/><br/>Player one, please decide first.<br/>Type in "Swap" and click submit to swap the numbers, or click the submit button to keep the number order.`;
-    console.log(`- Current mode: ${currentMode}.`);
+    console.log(`- Current mode: ${currentMode}. Game type: ${gameType}.`);
   }
   return myOutputValue;
 };
@@ -86,7 +101,7 @@ var randomNumberGenerator = function () {
 //P1 Changing dice order function
 var playerOneShifting = function (input) {
   console.log(
-    `P1 original order: ${playerOneRolls}. Current mode: ${currentMode}.`
+    `P1 original order: ${playerOneRolls}. Current mode: ${currentMode}. Game type: ${gameType}.`
   );
   //Player 1 keeps order
   if (currentMode == 2 && input == "") {
@@ -98,21 +113,21 @@ var playerOneShifting = function (input) {
     swapArray = [playerOneRolls[0], playerOneRolls[1]] = [
       playerOneRolls[1],
       playerOneRolls[0],
-    ];
+    ]; //Swaps specific elements in array by making a new array (swapArray[]) and putting the elements in the new order
     playerOneNumber = swapArray.join("");
 
     console.log(`P1 numbers changed to ${playerOneNumber}.`);
     var myOutputValue = `Player one has swapped to make ${playerOneNumber}.<br/><br/>Player two, please enter "Swap" or leave the field blank and click submit to proceed.`;
   }
   currentMode = 3; //Mode change - 3
-  console.log(`- Current mode: ${currentMode}.`);
+  console.log(`- Current mode: ${currentMode}. Game type: ${gameType}.`);
   return myOutputValue;
 };
 
 //P2 Changing dice order function
 var playerTwoShifting = function (input) {
   console.log(
-    `P2 original order: ${playerTwoRolls}. Current mode: ${currentMode}.`
+    `P2 original order: ${playerTwoRolls}. Current mode: ${currentMode}. Game type: ${gameType}.`
   );
   //Player 2 keeps order
   if (currentMode == 3 && input == "") {
@@ -128,20 +143,37 @@ var playerTwoShifting = function (input) {
     ];
     playerTwoNumber = swapArray.join("");
     console.log(`P2 numbers changed to ${playerTwoNumber}.`);
-    var myOutputValue = `Player two has swapped to make ${playerTwoNumber}..<br/><br/>Now, click the submit button to determine the winner!`;
+    var myOutputValue = `Player two has swapped to make ${playerTwoNumber}.<br/><br/>Now, click the submit button to determine the winner!`;
   }
   currentMode = 4; //Mode change - 4
-  console.log(`- Current mode: ${currentMode}.`);
+  console.log(`- Current mode: ${currentMode}. Game type: ${gameType}.`);
   return myOutputValue;
 };
 
-var comparingNumbers = function (input) {
+//Calculating winner (Biggest number)
+var comparingBiggestNumbers = function (input) {
   console.log(`Comparing numbers...`);
   if (playerOneNumber > playerTwoNumber) {
     winCounterPone += 1;
     var myOutputValue = `The results are ${playerOneNumber} vs. ${playerTwoNumber}. Player One wins! The score is:<br/>Player One wins: ${winCounterPone}<br/>Player Two wins: ${winCounterPtwo}<br/><br/>Type "Roll" to try again!`;
   }
   if (playerOneNumber < playerTwoNumber) {
+    winCounterPtwo += 1;
+    var myOutputValue = `The results are ${playerOneNumber} vs. ${playerTwoNumber}. Player Two wins! The score is:<br/>Player One wins: ${winCounterPone}<br/>Player Two wins: ${winCounterPtwo}<br/><br/>Type "Go again" to try again!`;
+  }
+  console.log(`P1 vs. P2: ${playerOneNumber} vs ${playerTwoNumber}.`);
+  console.log(`<<<<Round ended.`);
+  return myOutputValue;
+};
+
+//Calculating winner (Smallest number)
+var comparingSmallestNumbers = function (input) {
+  console.log(`Comparing numbers...`);
+  if (playerOneNumber < playerTwoNumber) {
+    winCounterPone += 1;
+    var myOutputValue = `The results are ${playerOneNumber} vs. ${playerTwoNumber}. Player One wins! The score is:<br/>Player One wins: ${winCounterPone}<br/>Player Two wins: ${winCounterPtwo}<br/><br/>Type "Roll" to try again!`;
+  }
+  if (playerOneNumber > playerTwoNumber) {
     winCounterPtwo += 1;
     var myOutputValue = `The results are ${playerOneNumber} vs. ${playerTwoNumber}. Player Two wins! The score is:<br/>Player One wins: ${winCounterPone}<br/>Player Two wins: ${winCounterPtwo}<br/><br/>Type "Go again" to try again!`;
   }
