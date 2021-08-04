@@ -17,7 +17,6 @@ var KNOCKOUT = "knockout";
 var gameMode = NORMAL;
 var numOfPlayers = 2;
 var roundBoard = []; // Holds the scores for each round
-var winner;
 var leaderBoard = []; // Holds the scores across rounds
 var numOfDice = 2;
 var diceRolls = [];
@@ -64,6 +63,7 @@ function sortLeaderBoardAscend() {
  * @return  {Number}  dieNumber   A random integer from 1 to 6.
  * ------------------------------------------------------------------------
  */
+
 function rollDie() {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
@@ -77,6 +77,7 @@ function rollDie() {
  * @param   {Number}    numOfDice   The number of dice chosen by player.
  * ------------------------------------------------------------------------
  */
+
 function getDiceRolls(numOfDice) {
   for (var counter = 0; counter < numOfDice; counter += 1) {
     diceRolls.push(rollDie());
@@ -216,13 +217,31 @@ function generateOutputMessage(result) {
   var message =
     "All players have played, here are the results for this round!<br>";
   for (player in roundBoard) {
-    message += `Player ${Number(player) + 1} got ${roundBoard[player]}.<br>`;
+    if (
+      roundBoard[player] == roundBoard[getMaxOfArray(roundBoard)] &&
+      gameMode == NORMAL
+    ) {
+      message += `<span style="border:1px; border-style:solid; border-color:#FFFFFF; padding: 0.25em 2em;">Player ${
+        Number(player) + 1
+      } got ${roundBoard[player]}.</span><br>`;
+    } else if (
+      roundBoard[player] == roundBoard[getMinOfArray(roundBoard)] &&
+      gameMode == LOWEST
+    ) {
+      message += `<span style="border:1px; border-style:solid; border-color:#FFFFFF; padding: 0.25em 2em;">Player ${
+        Number(player) + 1
+      } got ${roundBoard[player]}.</span><br>`;
+    } else {
+      message += `Player ${Number(player) + 1} got ${roundBoard[player]}.<br>`;
+    }
   }
 
   if (result == 0) {
-    message += `There is a draw!<br>`;
+    message += `<br>There is a draw!<br><br>`;
+  } else if (gameMode == NORMAL) {
+    message += `<br>Player ${result} has the highest score and wins!<br><br>`;
   } else {
-    message += `The winner is Player ${result}!<br>`;
+    message += `<br>Player ${result} has the lowest score and wins!<br><br>`;
   }
 
   message += `🏆 Leader Board 🏆<br>`;
@@ -277,9 +296,9 @@ function playKnockout() {
     knockoutBoard.push(getRandomPlayer(holdingBoard));
 
     // Get the combinations for each player in the knockout board
-    for (const player of knockoutBoard) {
+    for (var counter = 0; counter < knockoutBoard.length; counter += 1) {
       getDiceRolls(numOfDice);
-      knockoutBoard[player].score += generateCombi();
+      knockoutBoard[counter].score += generateCombi();
     }
 
     // Sort the knockout board scores in descending order
