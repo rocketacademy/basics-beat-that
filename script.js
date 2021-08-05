@@ -278,7 +278,7 @@ function getRandomPlayer(array) {
  */
 
 function playKnockout() {
-  var outputMessage = "";
+  var outputArray = [];
   var holdingBoard = [];
   var knockoutBoard = []; // Where players battle it out
 
@@ -306,8 +306,9 @@ function playKnockout() {
 
     knockoutBoard.sort((a, b) => b.score - a.score);
 
-    outputMessage += `Round ${roundCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br>`;
-    outputMessage += `Player ${knockoutBoard[0].playerNumber} stays while Player ${knockoutBoard[1].playerNumber} is out of the competition!<br><br>`;
+    outputArray.unshift(
+      `Round ${roundCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br><b><u>Player ${knockoutBoard[0].playerNumber} stays</u></b> while Player ${knockoutBoard[1].playerNumber} is out of the competition!<br><br>`
+    );
 
     // Remove player that lost
     knockoutBoard.pop();
@@ -316,10 +317,21 @@ function playKnockout() {
     knockoutBoard[0].score = 0;
   }
 
-  outputMessage += `👑 After ${numOfPlayers - 1} exciting rounds, Player ${
-    knockoutBoard[0].playerNumber
-  } is the ultimate winner! 👑`;
-  return outputMessage;
+  outputArray.unshift(
+    `👑 After ${numOfPlayers - 1} exciting rounds, Player ${
+      knockoutBoard[0].playerNumber
+    } is the ultimate winner! 👑`
+  );
+
+  var output = document.getElementById("output");
+
+  var displayInterval = setInterval(function () {
+    var message = outputArray.pop();
+    output.innerHTML = message;
+    if (outputArray.length == 0) {
+      clearInterval(displayInterval);
+    }
+  }, 4000);
 }
 
 /**
@@ -365,13 +377,12 @@ function main(players, dice, mode) {
   switch (gameMode) {
     case NORMAL:
       var result = playBeatThat();
-      break;
+      return generateOutputMessage(result);
     case LOWEST:
       var result = playLowest();
-      break;
+      return generateOutputMessage(result);
     case KNOCKOUT:
-      return playKnockout();
+      playKnockout();
+      return "Let the games begin!<br><br>Watch this space for the results!";
   }
-
-  return generateOutputMessage(result);
 }
