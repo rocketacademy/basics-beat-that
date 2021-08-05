@@ -237,11 +237,11 @@ function generateOutputMessage(result) {
   }
 
   if (result == 0) {
-    message += `<br>There is a draw!<br><br>`;
+    message += `<br>There is a <u>DRAW</u>!<br><br>`;
   } else if (gameMode == NORMAL) {
-    message += `<br>Player ${result} has the highest score and wins!<br><br>`;
+    message += `<br>Player ${result} has the <u>HIGHEST</u> score and wins!<br><br>`;
   } else {
-    message += `<br>Player ${result} has the lowest score and wins!<br><br>`;
+    message += `<br>Player ${result} has the <u>LOWEST</u> score and wins!<br><br>`;
   }
 
   message += `🏆 Leader Board 🏆<br>`;
@@ -295,13 +295,15 @@ function playKnockout() {
     // Put in 1 more player into knockout board
     knockoutBoard.push(getRandomPlayer(holdingBoard));
 
-    // Get the combinations for each player in the knockout board
-    for (var counter = 0; counter < knockoutBoard.length; counter += 1) {
-      getDiceRolls(numOfDice);
-      knockoutBoard[counter].score += generateCombi();
+    // If there is a draw, players in the knockout board keep playing until there isn't
+    while (knockoutBoard[0].score == knockoutBoard[1].score) {
+      // Get the combinations for each player in the knockout board
+      for (var counter = 0; counter < knockoutBoard.length; counter += 1) {
+        getDiceRolls(numOfDice);
+        knockoutBoard[counter].score = generateCombi();
+      }
     }
 
-    // Sort the knockout board scores in descending order
     knockoutBoard.sort((a, b) => b.score - a.score);
 
     outputMessage += `Round ${roundCounter}: Player ${knockoutBoard[0].playerNumber} (${knockoutBoard[0].score}) VS. Player ${knockoutBoard[1].playerNumber} (${knockoutBoard[1].score})<br>`;
