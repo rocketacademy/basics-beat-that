@@ -1,11 +1,12 @@
 // create variable to store string values.
 var FIRST_DICE = "first dice";
 var SECOND_DICE = "second dice";
+var WELCOME_MSG = "welcome the players";
 var ROLL_DICE = "roll the dice";
 var DECIDE_SEQUENCE = "deciding the dice sequence";
 
 // set default game mode to roll dice mode.
-var gameMode = ROLL_DICE;
+var gameMode = WELCOME_MSG;
 
 // create global variable to store dice numbers
 var firstDiceNumber = 0;
@@ -92,7 +93,8 @@ var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
         "Player 1, you chose " +
         firstDiceNumber +
         " first. Your dice sequence is: " +
-        diceSequence1
+        diceSequence1 +
+        ". <br> Now it's Player 2's turn."
       );
     } else {
       player1DiceSeq = diceSequence2;
@@ -101,7 +103,8 @@ var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
         "Player 1, you chose " +
         secondDiceNumber +
         " first. Your dice sequence is: " +
-        diceSequence2
+        diceSequence2 +
+        ". <br> Now it's Pslayer 2's turn."
       );
     }
   }
@@ -114,7 +117,8 @@ var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
         "Player 2, you chose " +
         firstDiceNumber +
         " first. Your dice sequence is: " +
-        diceSequence1
+        diceSequence1 +
+        "."
       );
     }
     if (!sequenceStartsWithDiceOne) {
@@ -124,7 +128,8 @@ var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
         "Player 2, you chose " +
         secondDiceNumber +
         " first. Your dice sequence is: " +
-        diceSequence2
+        diceSequence2 +
+        "."
       );
     }
   }
@@ -152,7 +157,11 @@ var resetGame = function () {
 };
 
 var main = function (input) {
-  // game starts with player 1 and roll dice mode
+  if (gameMode == WELCOME_MSG) {
+    gameMode = ROLL_DICE;
+    return "Welcome players! <br> Prepare yourself and click 'Submit' to start!";
+  }
+  // game starts with player 1 and get username mode
   currPlayer == 1;
   if (gameMode == ROLL_DICE) {
     // create variable to store the message that tells player their rolled dice numbers.
@@ -200,7 +209,8 @@ var main = function (input) {
         "It's a tie! <br> Player 1's running score is " +
         player1Score +
         " and player 2's running score is " +
-        player2Score
+        player2Score +
+        "."
       );
     } else if (!didPlayer1Win()) {
       return (
@@ -211,7 +221,8 @@ var main = function (input) {
         ". <br> Congrats to Player 2! You beat Player 1 with the running score of " +
         player2Score +
         " to " +
-        player1Score
+        player1Score +
+        "."
       );
     } else {
       return (
@@ -222,7 +233,8 @@ var main = function (input) {
         ". <br> Congrats to Player 1! You beat Player 2 with the running score of " +
         player1Score +
         " to " +
-        player2Score
+        player2Score +
+        "."
       );
     }
   }
