@@ -27,6 +27,9 @@ var player2DiceSeq = 0;
 var player1Score = 0;
 var player2Score = 0;
 
+// var player1CurrScore = 0;
+// var player2CurrScore = 0;
+
 // generate dice numbers
 var diceRoll = function () {
   var randomNumber = Math.ceil(Math.random() * 6);
@@ -104,7 +107,7 @@ var getDiceSequenceMessage = function (playerDecisionOnDiceSequence) {
         secondDiceNumber +
         " first. Your dice sequence is: " +
         diceSequence2 +
-        ". <br> Now it's Pslayer 2's turn."
+        ". <br> Now it's Player 2's turn."
       );
     }
   }
@@ -146,6 +149,8 @@ var didPlayer1Win = function () {
 
 // update players' score.
 var updateRunningScore = function (player1CurrScore, player2CurrScore) {
+  console.log(player1CurrScore);
+  console.log(player2CurrScore);
   player1Score = Number(player1Score) + Number(player1CurrScore);
   player2Score = Number(player2Score) + Number(player2CurrScore);
 };
@@ -156,10 +161,10 @@ var resetGame = function () {
   gameMode = ROLL_DICE;
 };
 
-var main = function (input) {
+var normalMode = function (input) {
   if (gameMode == WELCOME_MSG) {
     gameMode = ROLL_DICE;
-    return "Welcome players! <br> Prepare yourself and click 'Submit' to start!";
+    return "Hi player! You're currently playing normal mode. <br> Keep in mind you're looking for the highest point here to win! <br> Good luck!";
   }
   // game starts with player 1 and get username mode
   currPlayer == 1;
@@ -213,6 +218,92 @@ var main = function (input) {
         "."
       );
     } else if (!didPlayer1Win()) {
+      return (
+        "Player 2 chose " +
+        player2DiceSeq +
+        " and player 1 chose " +
+        player1DiceSeq +
+        ". <br> Congrats to Player 2! You beat Player 1 with the running score of " +
+        player2Score +
+        " to " +
+        player1Score +
+        "."
+      );
+    } else {
+      return (
+        "Player 1 chose " +
+        player1DiceSeq +
+        " and player 2 chose " +
+        player2DiceSeq +
+        ". <br> Congrats to Player 1! You beat Player 2 with the running score of " +
+        player1Score +
+        " to " +
+        player2Score +
+        "."
+      );
+    }
+  }
+};
+
+// gameMode = WELCOME_MSG;
+var lowestCombinedMode = function (input) {
+  // player1CurrScore = 0;
+  // player2CurrScore = 0;
+  if (gameMode == WELCOME_MSG) {
+    gameMode = ROLL_DICE;
+    return "Hi player! You're currently playing the lowest combined mode. <br> Keep in mind you're looking for the lowest point here to win! <br> Good luck!";
+  }
+  currPlayer == 1;
+  if (gameMode == ROLL_DICE) {
+    // create variable to store the message that tells player their rolled dice numbers.
+    var numOfDiceMessage = getNumOfDiceMessage();
+
+    // after player decides their dice sequence, game mode changes to decide sequence.
+    gameMode = DECIDE_SEQUENCE;
+
+    return numOfDiceMessage;
+  }
+  if (gameMode == DECIDE_SEQUENCE) {
+    // check if the sequence starts with dice one or not.
+    var sequenceStartsWithDiceOne = doesSequenceStartsWithDiceOne(input);
+
+    // create variable to store the message that tells player their chosen dice sequence.
+    var outputMessage = getDiceSequenceMessage(sequenceStartsWithDiceOne);
+
+    // get message that tells the player their chosen dice sequence.
+    if (sequenceStartsWithDiceOne) {
+      myOutputValue = outputMessage;
+    }
+    if (currPlayer == 1) {
+      // change curr player to 2
+      currPlayer = 2;
+
+      // change game mode back to roll dice mode.
+      gameMode = ROLL_DICE;
+
+      return outputMessage;
+    }
+  }
+
+  // update each players' running score
+  updateRunningScore(player1CurrScore, player2CurrScore);
+
+  if ((currPlayer = 2)) {
+    // reset game to run the same function for player 2
+    resetGame();
+
+    // if player 1 curr score == player 2 curr score, it's a tie.
+    // else, evaluate the boolean value of whether player 1 win or not.
+    // if value == false, player 2 wins. Else, player 1 wins.
+    if (player1CurrScore == player2CurrScore) {
+      return (
+        "It's a tie! <br> Player 1's running score is " +
+        player1Score +
+        " and player 2's running score is " +
+        player2Score +
+        "."
+      );
+    } else if (didPlayer1Win()) {
       return (
         "Player 2 chose " +
         player2DiceSeq +
