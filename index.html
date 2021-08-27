@@ -63,8 +63,10 @@
       <p>Input:</p>
       <input id="input-field" />
       <br />
-      <button id="submit-button">Submit</button>
       <button id="get-tip-button">Tip!</button>
+      <button id="welcome-button">Welcome!</button>
+      <button id="normal-mode-button">normal mode</button>
+      <button id="low-combined-button">low combined</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
@@ -72,11 +74,11 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
+      var button = document.querySelector("#normal-mode-button");
       button.addEventListener("click", function () {
         // Set result to input value
         var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        var result = normalMode(input.value);
 
         // Display result in output element
         var output = document.querySelector("#output-div");
@@ -85,12 +87,29 @@
         // Reset input value
         input.value = "";
       });
+      var button = document.querySelector("#low-combined-button");
+      button.addEventListener("click", function () {
+        var input = document.querySelector("#input-field");
+        var result = lowestCombinedMode(input.value);
+
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+
+        input.value = "";
+      });
       var button = document.querySelector("#get-tip-button");
       button.addEventListener("click", function () {
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML =
           "You can enter either enter 'first dice' or 'second dice' to decide your dice sequence!";
+      });
+      var button = document.querySelector("#welcome-button");
+      button.addEventListener("click", function () {
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML =
+          "Welcome player! Are you ready to play? <br> Please click the 'normal mode' button to player the normal mode and the 'low combined' button to let the lowest combined number win.";
       });
     </script>
   </body>
