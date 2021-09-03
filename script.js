@@ -1,12 +1,14 @@
 // constants for game modes, number of players, and output strings
 const SELECT_MODE = "select";
-const NUM_DICE_MODE = "num";
+const NUM_PLAYER_MODE = "player";
+const NUM_DICE_MODE = "dice";
 const ROLL_MODE = "roll";
-const NUM_PLAYERS = 2;
 
 const INVALID_SELECTION_MSG = `Invalid selection.<br><br>Type 1 for Highest Combined Number mode.<br>Type 2 for Lowest Combined Number mode.`;
-const VALID_SELECTION_MSG = `Good choice!<br><br>How many dice do you want to play with?`;
-const DICE_INPUT_MSG = "Please input an integer starting from 2.";
+const VALID_SELECTION_MSG = `Good choice!<br><br>How many players would like to play?`;
+const INPUT_DICE_MSG = "How many dice would you like to play with?";
+const NUM_PLAYER_INPUT_MSG = "Please input an integer starting from 2.";
+const NUM_DICE_INPUT_MSG = "Please input an integer starting from 2.";
 const STARTING_GAME_MSG = `Starting game. It is Player 1's turn. Press Submit to roll.`;
 
 // state variables
@@ -15,19 +17,29 @@ var highestNumberMode = true;
 var numDice = 0;
 var diceRolls = [];
 var curPlayer = 1;
-var playerScores = new Array(NUM_PLAYERS).fill(0);
+var numPlayers = 0;
+var playerScores = [];
 
 var setNumberMode = function (input) {
   if (input != 1 && input != 2) return INVALID_SELECTION_MSG;
   if (input == 2) {
     highestNumberMode = false;
   }
-  curGameMode = NUM_DICE_MODE;
+  curGameMode = NUM_PLAYER_MODE;
   return VALID_SELECTION_MSG;
 };
 
+var setNumberOfPlayers = function (num) {
+  if (!Number.isInteger(Number(num)) || num < 2) return NUM_PLAYER_INPUT_MSG;
+  numPlayers = Number(num);
+  playerScores = new Array(numPlayers).fill(0);
+  console.log(playerScores);
+  curGameMode = NUM_DICE_MODE;
+  return INPUT_DICE_MSG;
+};
+
 var setNumberOfDice = function (num) {
-  if (!Number.isInteger(Number(num)) || num < 2) return DICE_INPUT_MSG;
+  if (!Number.isInteger(Number(num)) || num < 2) return NUM_DICE_INPUT_MSG;
   numDice = num;
   curGameMode = ROLL_MODE;
   return STARTING_GAME_MSG;
@@ -66,7 +78,7 @@ var rollDice = function () {
 
   output += `<br>Your number is ${score}.`;
   curPlayer += 1;
-  if (curPlayer > NUM_PLAYERS) curPlayer = 1;
+  if (curPlayer > numPlayers) curPlayer = 1;
   output += `<br>It is now Player ${curPlayer}'s turn.`;
   output += generateEndTurnOutput();
   return output;
@@ -95,6 +107,8 @@ var generateEndTurnOutput = function () {
 
 var main = function (input) {
   if (curGameMode == SELECT_MODE) return setNumberMode(input);
+
+  if (curGameMode == NUM_PLAYER_MODE) return setNumberOfPlayers(input);
 
   if (curGameMode == NUM_DICE_MODE) return setNumberOfDice(input);
 
