@@ -10,7 +10,7 @@ var curGameMode = ROLL_MODE;
 var diceRoll1 = 0;
 var diceRoll2 = 0;
 var curPlayer = 1;
-var playerScores = [];
+var playerScores = new Array(NUM_PLAYERS).fill(0);
 
 var getDiceNumber = function () {
   // generate random integer from 1 to 6
@@ -44,15 +44,14 @@ var resetGameState = function () {
   playerScores = [];
 };
 
-var generateEndGameOutput = function () {
+var generateEndTurnOutput = function () {
   // upon each player having rolled dice and chose their order, output each player's number and the winner
   var output = "<br><br>";
   for (var j = 0; j < playerScores.length; j++) {
-    output += `Player ${j + 1}'s number is ${playerScores[j]}.<br>`;
+    output += `Player ${j + 1}'s score is ${playerScores[j]}.<br>`;
   }
   var winner = playerScores.indexOf(Math.max(...playerScores)) + 1;
-  output += `The winner is Player ${winner}!`;
-  resetGameState();
+  output += `The current leader is Player ${winner}!`;
   return output;
 };
 
@@ -69,17 +68,13 @@ var chooseDiceOrder = function (firstDie) {
   // calculate score for cur player and add to playerScores array
   curGameMode = ROLL_MODE;
   var score = getScore(firstDie);
-  playerScores.push(score);
+  playerScores[curPlayer - 1] += score;
 
   var output = `Player ${curPlayer}, you chose Dice ${firstDie} first.<br>Your number is ${score}.`;
-  if (curPlayer < NUM_PLAYERS) {
-    // if there are still more players
-    curPlayer += 1;
-    output += `<br>It is now Player ${curPlayer}'s turn.`;
-  } else {
-    // no more players, generate end of game output
-    output += generateEndGameOutput();
-  }
+  curPlayer += 1;
+  if (curPlayer > NUM_PLAYERS) curPlayer = 1;
+  output += `<br>It is now Player ${curPlayer}'s turn.`;
+  output += generateEndTurnOutput();
   return output;
 };
 
