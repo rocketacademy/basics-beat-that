@@ -1,12 +1,16 @@
 // constants for game modes, number of players, and output strings
+const SELECT_MODE = "select";
 const ROLL_MODE = "roll";
 const CHOOSE_MODE = "choose";
 const NUM_PLAYERS = 2;
 
+const INVALID_SELECTION_MSG = `Invalid selection.<br><br>Type 1 for Highest Combined Number mode.<br>Type 2 for Lowest Combined Number mode.`;
+const VALID_SELECTION_MSG = `Good choice!<br><br>It is Player 1's turn. Press Submit to roll.`;
 const CHOOSE_DICE_ORDER_MSG = `Choose the order of the dice.<br>Type 1 to put Dice 1 first, or type 2 to put Dice 2 first.`;
 
 // state variables
-var curGameMode = ROLL_MODE;
+var curGameMode = SELECT_MODE;
+var highestNumberMode = true;
 var diceRoll1 = 0;
 var diceRoll2 = 0;
 var curPlayer = 1;
@@ -50,7 +54,10 @@ var generateEndTurnOutput = function () {
   for (var j = 0; j < playerScores.length; j++) {
     output += `Player ${j + 1}'s score is ${playerScores[j]}.<br>`;
   }
-  var winner = playerScores.indexOf(Math.max(...playerScores)) + 1;
+  var winningScore = highestNumberMode
+    ? Math.max(...playerScores)
+    : Math.min(...playerScores);
+  var winner = playerScores.indexOf(winningScore) + 1;
   output += `The current leader is Player ${winner}!`;
   return output;
 };
@@ -79,6 +86,15 @@ var chooseDiceOrder = function (firstDie) {
 };
 
 var main = function (input) {
+  if (curGameMode == SELECT_MODE) {
+    if (input != 1 && input != 2) return INVALID_SELECTION_MSG;
+    if (input == 2) {
+      highestNumberMode = false;
+    }
+    curGameMode = ROLL_MODE;
+    return VALID_SELECTION_MSG;
+  }
+
   if (curGameMode == ROLL_MODE) return rollDice();
 
   if (curGameMode == CHOOSE_MODE) return chooseDiceOrder(input);
