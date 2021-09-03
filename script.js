@@ -1,12 +1,10 @@
 // constants for game modes, number of players, and output strings
 const SELECT_MODE = "select";
 const ROLL_MODE = "roll";
-const CHOOSE_MODE = "choose";
 const NUM_PLAYERS = 2;
 
 const INVALID_SELECTION_MSG = `Invalid selection.<br><br>Type 1 for Highest Combined Number mode.<br>Type 2 for Lowest Combined Number mode.`;
 const VALID_SELECTION_MSG = `Good choice!<br><br>It is Player 1's turn. Press Submit to roll.`;
-const CHOOSE_DICE_ORDER_MSG = `Choose the order of the dice.<br>Type 1 to put Dice 1 first, or type 2 to put Dice 2 first.`;
 
 // state variables
 var curGameMode = SELECT_MODE;
@@ -21,24 +19,27 @@ var getDiceNumber = function () {
   return Math.ceil(Math.random() * 6);
 };
 
-var rollDice = function () {
-  // roll two dice and set game mode to choose mode
-  diceRoll1 = getDiceNumber();
-  diceRoll2 = getDiceNumber();
-  curGameMode = CHOOSE_MODE;
-
-  // output msg to user informing them of roll outcomes and how to choose order
-  return (
-    `Welcome Player ${curPlayer}.<br>You rolled ${diceRoll1} for Dice 1 and ${diceRoll2} for Dice 2.<br><br>` +
-    CHOOSE_DICE_ORDER_MSG
-  );
+var getScore = function (firstDie) {
+  // auto calculate score
+  var max = Math.max(diceRoll1, diceRoll2);
+  var min = Math.min(diceRoll1, diceRoll2);
+  return highestNumberMode ? max * 10 + min : min * 10 + max;
 };
 
-var getScore = function (firstDie) {
-  // calculate score based on user's preference of which dice to use first
-  return firstDie == 1
-    ? diceRoll1 * 10 + diceRoll2
-    : diceRoll2 * 10 + diceRoll1;
+var rollDice = function () {
+  diceRoll1 = getDiceNumber();
+  diceRoll2 = getDiceNumber();
+
+  // calculate score for cur player and add to playerScores array
+  var score = getScore(diceRoll1, diceRoll2);
+  playerScores[curPlayer - 1] += score;
+
+  var output = `Welcome Player ${curPlayer}.<br>You rolled ${diceRoll1} for Dice 1 and ${diceRoll2} for Dice 2.<br><br>Your number is ${score}.`;
+  curPlayer += 1;
+  if (curPlayer > NUM_PLAYERS) curPlayer = 1;
+  output += `<br>It is now Player ${curPlayer}'s turn.`;
+  output += generateEndTurnOutput();
+  return output;
 };
 
 var resetGameState = function () {
@@ -62,29 +63,6 @@ var generateEndTurnOutput = function () {
   return output;
 };
 
-var chooseDiceOrder = function (firstDie) {
-  if (firstDie != 1 && firstDie != 2) {
-    // invalid input, remind user of dice rolls and to only input 1 or 2
-    return (
-      `Invalid input. You rolled ${diceRoll1} for Dice 1 and ${diceRoll2} for Dice 2.<br><br>` +
-      CHOOSE_DICE_ORDER_MSG
-    );
-  }
-
-  // set game mode back to roll mode in preparation for next player
-  // calculate score for cur player and add to playerScores array
-  curGameMode = ROLL_MODE;
-  var score = getScore(firstDie);
-  playerScores[curPlayer - 1] += score;
-
-  var output = `Player ${curPlayer}, you chose Dice ${firstDie} first.<br>Your number is ${score}.`;
-  curPlayer += 1;
-  if (curPlayer > NUM_PLAYERS) curPlayer = 1;
-  output += `<br>It is now Player ${curPlayer}'s turn.`;
-  output += generateEndTurnOutput();
-  return output;
-};
-
 var main = function (input) {
   if (curGameMode == SELECT_MODE) {
     if (input != 1 && input != 2) return INVALID_SELECTION_MSG;
@@ -96,6 +74,4 @@ var main = function (input) {
   }
 
   if (curGameMode == ROLL_MODE) return rollDice();
-
-  if (curGameMode == CHOOSE_MODE) return chooseDiceOrder(input);
 };
