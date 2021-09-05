@@ -19,13 +19,16 @@ var main = function (input) {
     var setPlayersNames = settingPlayerNames(input);
     return setPlayersNames;
   }
+  // this step is to choose the number of dices which applies to everyone
   if (gameStep == "inputNumberDices") {
     var setNumberDices = settingNumberDices(input);
     return setNumberDices;
   }
+  // throwing the dices for each player and setting their optimal numbers
   if (gameStep == "diceThrowing") {
     return diceThrows(numberOfDices);
   }
+  // to show the final winner and everyone's number
   if (gameStep == "compareResults") {
     return resultsTime(listPlayersOptimal, listPlayerNames);
   }
@@ -34,12 +37,14 @@ var main = function (input) {
 
 var settingNumberPlayers = function (input) {
   numberOfPlayers = Number(input);
+  // if input is not a number, throw error
   if (
     (input =
       "" || isNaN(numberOfPlayers) == true || Number(numberOfPlayers) == 0)
   ) {
     return `Walao! Read the instructions leh. Please key in a number can.`;
   }
+  // setting number of players
   gameStep = "inputPlayersName";
   console.log("gameStep1");
   console.log(gameStep);
@@ -49,6 +54,7 @@ var settingNumberPlayers = function (input) {
 };
 
 var settingPlayerNames = function (input) {
+  // each player gets to key in their name and their names will be stored into an array
   while (counter < numberOfPlayers - 1) {
     listPlayerNames.push(input.bold());
     counter += 1;
@@ -71,37 +77,42 @@ var settingPlayerNames = function (input) {
     console.log("gameStep2");
     console.log(gameStep);
     gameStep = "inputNumberDices";
-    return `Final player ${counter} name is ${input.bold()}. <br><br> List of names so far: ${listPlayerNames}.<br><br> Steady lah, everyone set their names liao. Now choose how many dices you all want to throw.`;
+    return `Final player ${counter} name is ${input.bold()}. <br><br> List of names so far: ${listPlayerNames}.<br><br> Steady lah, everyone set their names liao. Now choose the number of dices everyone wants to throw.`;
   }
 };
 
 var settingNumberDices = function (input) {
   numberOfDices = Number(input);
+  // if input is not a number, throw error
   if (
     (input = "" || isNaN(numberOfDices) == true || Number(numberOfDices) == 0)
   ) {
     return `Walao! Read the instructions leh. Please key in a number can. No zero horh.`;
   }
+  // setting number of dices
   console.log("gameStep3");
   console.log(gameStep);
   gameStep = "diceThrowing";
   console.log("numberOfDices");
   console.log(numberOfDices);
-  return `You have chosen ${numberOfDices} dices. Now ${listPlayerNames[0]}, please throw your dice(s).`;
+  return `You have chosen ${numberOfDices} dices. Now ${listPlayerNames[0]}, please throw your dice(s) by clicking 'Submit'.`;
 };
 
 var diceThrows = function (numberOfDices) {
   diceNumbersThrown = [];
   console.log("gameStep4");
   console.log(gameStep);
+  // only works for the number of players there are.
   if (playerTurn < numberOfPlayers) {
     playerTurn += 1;
+    // to generate the random numbers from each dice throw
     for (i = 0; i < numberOfDices; i++) {
       var rollingDice = diceRoll();
       diceNumbersThrown.push(rollingDice);
       console.log("diceNumbersThrown");
       console.log(diceNumbersThrown);
     }
+    // creating a new array with the sorted values of another array
     for (var i of diceNumbersThrown) {
       sortedDiceNumbers.push(i);
     }
@@ -110,6 +121,7 @@ var diceThrows = function (numberOfDices) {
     console.log("sortedDiceNumbers");
     console.log(sortedDiceNumbers);
     var createOptimalValue = "";
+    // removes the largest number from the array, then the 2nd largest and so on... then, create the optimal value and store in another array
     while (counter < numberOfDices) {
       createOptimalValue = createOptimalValue + String(sortedDiceNumbers.pop());
       counter += 1;
@@ -123,18 +135,19 @@ var diceThrows = function (numberOfDices) {
     console.log(listPlayersOptimal);
     return `${
       listPlayerNames[playerTurn - 1]
-    } dice numbers thrown were ${diceNumbersThrown} and your optimal value is ${createOptimalValue}!`;
+    } dice numbers thrown were ${diceNumbersThrown} and your optimal value is ${createOptimalValue}! Next player's turn, please click 'Submit'. `;
   }
   gameStep = "compareResults";
   return `Now, let's see who is the winner!!`;
 };
 
 var resultsTime = function (listPlayersOptimal, listPlayerNames) {
+  // get the highest optimal number from the array, then get the index of it and match against the list of players name
   var highestOptimal = Math.max(...listPlayersOptimal);
   console.log("highestOptimal");
   console.log(highestOptimal);
   var highestOptimalIndex = listPlayersOptimal.indexOf(highestOptimal);
-  return `The winner is ${listPlayerNames[highestOptimalIndex]} with a score of ${highestOptimal}. Here =0-re the optimal numbers for every player...<br><br> ${listPlayerNames}<b0-r>${listPlayersOptimal} <br><br> To replay the game, please refresh the page!`;
+  return `The winner is ${listPlayerNames[highestOptimalIndex]} with a score of ${highestOptimal}. Here are the optimal numbers for every player...<br><br> ${listPlayerNames}<br>${listPlayersOptimal} <br><br> To replay the game, please refresh the page!`;
 };
 
 // dice throw of values 1-6
