@@ -1,9 +1,10 @@
-var gameMode = "game intro";
+var gameMode = "mode selection";
 var concatenateNum = "";
 var rollDiceResult = [];
 var numOfDice = 2;
 var winResults = "";
 var leaderBoardResults = "";
+var gameVersion = "";
 
 var player1RollDiceResult = [];
 var player1ConcatenateNum = "";
@@ -13,42 +14,35 @@ var player2RollDiceResult = [];
 var player2ConcatenateNum = "";
 var player2ScoreSum = 0;
 
+console.log(`Current game mode is ${gameMode}.`);
+console.log(`Current game version is ${gameVersion}.`);
+
 var main = function (input) {
   var myOutputValue = "";
 
   console.clear();
 
-  if (gameMode == "game intro") {
-    gameMode = "player 1 selection";
-    player1RollDiceResult = generateDiceResult();
-    myOutputValue = `Welcome Player 1.<br><br>You rolled ${player1RollDiceResult[0]} for Dice 1 and ${player1RollDiceResult[1]} for Dice 2.<br><br>Choose the order of the dice.`;
+  if (gameMode == "mode selection") {
+    gameMode = "game intro";
+
+    if (input == "Normal") {
+      gameVersion = "normal";
+    } else {
+      gameVersion = "lowestCombined";
+    }
+    console.log(`Current game mode is ${gameMode}.`);
+    console.log(`Current game version is ${gameVersion}.`);
+    myOutputValue = `You have selected the ${input} version. Please click submit to start rolling!`;
     return myOutputValue;
-  } else if (gameMode == "player 1 selection") {
-    player1ConcatenateNum = concatenateDiceNum(input);
-    player1ScoreSum += player1ConcatenateNum;
-    leaderBoard(player1ScoreSum, player2ScoreSum);
-    myOutputValue = `Player 1, you chose ${input} first.<br><br>Your number is ${player1ConcatenateNum}.<br><br>It is now Player 2's turn. Click Submit to roll dice.<br><br>${leaderBoardResults}`;
-    gameMode = "player 2 roll dice";
-    return myOutputValue;
-  } else if (gameMode == "player 2 roll dice") {
-    gameMode = "player 2 selection";
-    player2RollDiceResult = generateDiceResult();
-    myOutputValue = `Welcome Player 2.<br><br>You rolled ${player2RollDiceResult[0]} for Dice 1 and ${player2RollDiceResult[1]} for Dice 2.<br><br>Choose the order of the dice.`;
-    return myOutputValue;
-  } else if (gameMode == "player 2 selection") {
-    player2ConcatenateNum = concatenateDiceNum(input);
-    player2ScoreSum += player2ConcatenateNum;
-    leaderBoard(player1ScoreSum, player2ScoreSum);
-    winResults = checkWhoWins(player1ConcatenateNum, player2ConcatenateNum);
-    myOutputValue = `Player 2, you chose ${input} first.<br><br>Your number is ${player2ConcatenateNum}.<br><br>${winResults}<br><br>It is now Player 1's turn. Click Submit to roll dice.<br><br>${leaderBoardResults}`;
-    return myOutputValue;
+  } else {
+    console.log(`Yeah!! you reached this point!`);
+    return playGame(gameMode, input);
   }
-  return myOutputValue;
 };
 
 // Function to generate random dice number
 var rollDice = function () {
-  var randomDiceNum = 3; //Math.floor(Math.random() * 6) + 1;
+  var randomDiceNum = Math.floor(Math.random() * 6) + 1;
   return randomDiceNum;
 };
 
@@ -89,6 +83,7 @@ var concatenateDiceNum = function (input) {
   }
 };
 
+// Function to check who wins for the round
 var checkWhoWins = function (player1CurrentScore, player2CurrentScore) {
   var resultStatement = "";
   gameMode = "game intro";
@@ -105,6 +100,7 @@ var checkWhoWins = function (player1CurrentScore, player2CurrentScore) {
   }
 };
 
+// Function to generate leaderboard results
 var leaderBoard = function (player1SumScore, player2SumScore) {
   var leaderBoardTitle = "<u>Leaderboard</u>";
   if (player1SumScore > player2SumScore || player1SumScore == player2SumScore) {
@@ -115,3 +111,37 @@ var leaderBoard = function (player1SumScore, player2SumScore) {
     return leaderBoardResults;
   }
 };
+
+// Function to play the game
+
+var playGame = function (currentGameMode, input) {
+  console.log(`Current game mode is ${currentGameMode}`);
+  var myOutputValue = "";
+  if (currentGameMode == "game intro") {
+    player1RollDiceResult = generateDiceResult();
+    gameMode = "player 1 selection";
+    myOutputValue = `Welcome Player 1.<br><br>You rolled ${player1RollDiceResult[0]} for Dice 1 and ${player1RollDiceResult[1]} for Dice 2.<br><br>Choose the order of the dice.`;
+    return myOutputValue;
+  } else if (currentGameMode == "player 1 selection") {
+    player1ConcatenateNum = concatenateDiceNum(input);
+    player1ScoreSum += player1ConcatenateNum;
+    leaderBoard(player1ScoreSum, player2ScoreSum);
+    myOutputValue = `Player 1, you chose ${input} first.<br><br>Your number is ${player1ConcatenateNum}.<br><br>It is now Player 2's turn. Click Submit to roll dice.<br><br>${leaderBoardResults}`;
+    gameMode = "player 2 roll dice";
+    return myOutputValue;
+  } else if (currentGameMode == "player 2 roll dice") {
+    gameMode = "player 2 selection";
+    player2RollDiceResult = generateDiceResult();
+    myOutputValue = `Welcome Player 2.<br><br>You rolled ${player2RollDiceResult[0]} for Dice 1 and ${player2RollDiceResult[1]} for Dice 2.<br><br>Choose the order of the dice.`;
+    return myOutputValue;
+  } else if (currentGameMode == "player 2 selection") {
+    player2ConcatenateNum = concatenateDiceNum(input);
+    player2ScoreSum += player2ConcatenateNum;
+    leaderBoard(player1ScoreSum, player2ScoreSum);
+    winResults = checkWhoWins(player1ConcatenateNum, player2ConcatenateNum);
+    myOutputValue = `Player 2, you chose ${input} first.<br><br>Your number is ${player2ConcatenateNum}.<br><br>${winResults}<br><br>It is now Player 1's turn. Click Submit to roll dice.<br><br>${leaderBoardResults}`;
+    return myOutputValue;
+  }
+};
+
+var whosTurn = function () {};
