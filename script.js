@@ -2,8 +2,8 @@ var activePlayer = 1;
 var currentMode = "waiting to start";
 var currentPlayerArray = [0, 0];
 var currentScore = 0;
-var scoreArray = [[], []]; // this is meant to be a nested array - index 0 corresponds to player 1's scores, etc.
-var roundNumber = 0;
+var scoreArray = [[], []];
+// ^this is meant to be a nested array - index 0 corresponds to player 1's scores, etc.
 
 var rollDice = function () {
   return Math.floor(Math.random() * 6) + 1;
@@ -12,7 +12,7 @@ var rollDice = function () {
 var playerTurnRoll = function (playerNumber) {
   currentPlayerArray[0] = rollDice();
   currentPlayerArray[1] = rollDice();
-  console.log(`Rolled ${currentPlayerArray[0]} and ${currentPlayerArray[1]}`);
+  // console.log(`Rolled ${currentPlayerArray[0]} and ${currentPlayerArray[1]}`);
   var returnstring =
     `It is now Player ${playerNumber}'s turn.` +
     "<br><br>" +
@@ -40,32 +40,33 @@ var playerTurnSelection = function (input) {
     `${activePlayer}, you chose ${input} to be the first numeral.` +
     "<br><br>" +
     `The number you generated is: ${score}`;
-  console.log(`Score Generated: ${score}`);
+  // console.log(`Score Generated: ${score}`);
   return returnstring;
 };
 
 var writePlayerScore = function () {
   scoreArray[activePlayer - 1].push(currentScore); // i hope this works
-  console.log("Score recorded.");
-  return;
+  // console.log("Score recorded.");
 };
 
 var switchPlayer = function () {
-  activePlayer++;
+  activePlayer = activePlayer + 1;
   activePlayer = (activePlayer % 2) + 1;
   // ^toggles between 1 and 2, conveniently assumes 2 players
-  console.log(`New Player Turn: ${activePlayer}`);
+  // console.log(`New Player Turn: ${activePlayer}`);
   return `${activePlayer}'s turn has ended. Moving to next player, type 'Roll' to continue.`;
 };
 
 var main = function (input) {
   if (currentMode == "waiting to start" || input == "start") {
     currentMode = "playing";
-    console.log("Started Playing");
+    // console.log("Started Playing");
     return "Hello Player 1. Enter 'Roll' to continue.";
-  } else if (input == "Roll") {
+  }
+  if (input == "Roll") {
     return playerTurnRoll(activePlayer);
-  } else if (input == "dice 1" || input == "dice 2") {
+  }
+  if (input == "dice 1" || input == "dice 2") {
     playerTurnSelection(input);
     writePlayerScore();
     return switchPlayer();
