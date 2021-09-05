@@ -1,201 +1,142 @@
-var player1Choice = 0;
-var player2Choice = 0;
-var player1Dice1 = 0;
-var player1Dice2 = 0;
-var player2Dice1 = 0;
-var player2Dice2 = 0;
-var userName1 = "";
-var userName2 = "";
+var gameStep = "inputNumberPlayers";
+var listPlayerNames = [];
+var listPlayersOptimal = [];
+var diceNumbersThrown = [];
+var sortedDiceNumbers = [];
+var numberOfPlayers = 0;
+var numberOfDices = 0;
+var playerTurn = 0;
+var counter = 0;
 
 var main = function (input) {
-  var myOutputValue = "Come on... read the instructions!! Refresh to restart.";
-  if (userName1 == "") {
-    var typeUserName1 = setUserName1(input);
-    return typeUserName1;
+  // this step is to choose number of players
+  if (gameStep == "inputNumberPlayers") {
+    var setNumberPlayers = settingNumberPlayers(input);
+    return setNumberPlayers;
   }
-  if (userName2 == "") {
-    var typeUserName2 = setUserName2(input);
-    return typeUserName2;
+  // this step is to set the names for all the players
+  if (gameStep == "inputPlayersName" && input != "") {
+    var setPlayersNames = settingPlayerNames(input);
+    return setPlayersNames;
   }
-  if (player1Choice == 0) {
-    var player1GameTurn = player1Game(input);
-    return player1GameTurn;
+  if (gameStep == "inputNumberDices") {
+    var setNumberDices = settingNumberDices(input);
+    return setNumberDices;
   }
-  if (player2Choice == 0) {
-    var player2GameTurn = player2Game(input);
-    return player2GameTurn;
+  if (gameStep == "diceThrowing") {
+    return diceThrows(numberOfDices);
   }
-  if (player1Choice > player2Choice) {
-    myOutputValue = `${userName1} won with a score of ${player1Choice} while ${userName2} lose with a score of ${player2Choice}! Congrats lucky winner ${userName1}!!`;
-    return myOutputValue;
+  if (gameStep == "compareResults") {
+    return resultsTime(listPlayersOptimal, listPlayerNames);
   }
-  if (player2Choice > player1Choice) {
-    myOutputValue = `${userName2} won with a score of ${player2Choice} while ${userName1} lose with a score of ${player1Choice}! Congrats lucky winner ${userName2}!!`;
-    player1Choice = 0;
-    player2Choice = 0;
-    player1Dice1 = 0;
-    player1Dice2 = 0;
-    player2Dice1 = 0;
-    player2Dice2 = 0;
-    userName1 = "";
-    userName2 = "";
-    return myOutputValue;
-  }
-  return myOutputValue;
+  return `Why like that?! Spoil the game sia...`;
 };
 
-var player1Game = function (input) {
-  if (player1Dice1 == 0 && player1Dice2 == 0) {
-    var player1Throw = player1Turn();
-    return player1Throw;
-  }
+var settingNumberPlayers = function (input) {
+  numberOfPlayers = Number(input);
   if (
-    input == "Dice 1" ||
-    input == "dice 1" ||
-    input == "Dice1" ||
-    input == "dice1" ||
-    input == 1
+    (input =
+      "" || isNaN(numberOfPlayers) == true || Number(numberOfPlayers) == 0)
   ) {
-    console.log("player1Dice1");
-    console.log(player1Dice1);
-    console.log("player1Dice2");
-    console.log(player1Dice2);
-    player1Choice = `${player1Dice1}${player1Dice2}`;
-    player1Choice = Number(player1Choice);
-    console.log("player1Choice");
-    console.log(player1Choice);
-    myOutputValue = `${userName1} chose Dice 1 to be the first number! Your score is now ${player1Choice}. <br><br> Now click 'Submit' while looking away because it's ${userName2}'s turn.`;
-    return myOutputValue;
+    return `Walao! Read the instructions leh. Please key in a number can.`;
   }
+  gameStep = "inputPlayersName";
+  console.log("gameStep1");
+  console.log(gameStep);
+  console.log("numberOfPlayers");
+  console.log(numberOfPlayers);
+  return `You have chosen ${numberOfPlayers} players. Now Player 1, please type in your name.`;
+};
+
+var settingPlayerNames = function (input) {
+  while (counter < numberOfPlayers - 1) {
+    listPlayerNames.push(input.bold());
+    counter += 1;
+    console.log("counter");
+    console.log(counter);
+    console.log("gameStep2");
+    console.log(gameStep);
+    console.log("listPlayerNames");
+    console.log(listPlayerNames);
+    return `Player ${counter} name is ${input.bold()}. <br><br> List of names so far: ${listPlayerNames}.`;
+  }
+  // to let the players know all players have set their names, now its time to start the game. Anymore keying of names will throw an error
+  if (counter == numberOfPlayers - 1) {
+    counter += 1;
+    listPlayerNames.push(input.bold());
+    console.log("counter");
+    console.log(counter);
+    console.log("gameStep2");
+    console.log(gameStep);
+    gameStep = "inputNumberDices";
+    return `Final player ${counter} name is ${input.bold()}. <br><br> List of names so far: ${listPlayerNames}.<br><br> Steady lah, everyone set their names liao. Now choose how many dices you all want to throw.`;
+  }
+};
+
+var settingNumberDices = function (input) {
+  numberOfDices = Number(input);
   if (
-    input == "Dice 2" ||
-    input == "dice 2" ||
-    input == "Dice2" ||
-    input == "dice2" ||
-    input == 2
+    (input = "" || isNaN(numberOfDices) == true || Number(numberOfDices) == 0)
   ) {
-    console.log("player1Dice1");
-    console.log(player1Dice1);
-    console.log("player1Dice2");
-    console.log(player1Dice2);
-    player1Choice = `${player1Dice2}${player1Dice1}`;
-    player1Choice = Number(player1Choice);
-    console.log("player1Choice");
-    console.log(player1Choice);
-    myOutputValue = `${userName1} chose Dice 2 to be the first number! Your score is now ${player1Choice}. <br><br> Now click 'Submit' while looking away because it's ${userName2}'s turn.`;
-    return myOutputValue;
+    return `Walao! Read the instructions leh. Please key in a number can. No zero horh.`;
   }
-  return `Come on! Pay attention man, please key in either '1' or '2'!`;
+  console.log("gameStep3");
+  console.log(gameStep);
+  gameStep = "diceThrowing";
+  console.log("numberOfDices");
+  console.log(numberOfDices);
+  return `You have chosen ${numberOfDices} dices. Now ${listPlayerNames[0]}, please throw your dice(s).`;
 };
 
-var player2Game = function (input) {
-  if (player2Dice1 == 0 && player2Dice2 == 0) {
-    var player2Throw = player2Turn();
-    return player2Throw;
+var diceThrows = function (numberOfDices) {
+  diceNumbersThrown = [];
+  console.log("gameStep4");
+  console.log(gameStep);
+  if (playerTurn < numberOfPlayers) {
+    playerTurn += 1;
+    for (i = 0; i < numberOfDices; i++) {
+      var rollingDice = diceRoll();
+      diceNumbersThrown.push(rollingDice);
+      console.log("diceNumbersThrown");
+      console.log(diceNumbersThrown);
+    }
+    for (var i of diceNumbersThrown) {
+      sortedDiceNumbers.push(i);
+    }
+    counter = 0;
+    sortedDiceNumbers.sort();
+    console.log("sortedDiceNumbers");
+    console.log(sortedDiceNumbers);
+    var createOptimalValue = "";
+    while (counter < numberOfDices) {
+      createOptimalValue = createOptimalValue + String(sortedDiceNumbers.pop());
+      counter += 1;
+      console.log("createOptimalValue");
+      console.log(createOptimalValue);
+    }
+    console.log("createOptimalValue");
+    console.log(createOptimalValue);
+    listPlayersOptimal.push(Number(createOptimalValue));
+    console.log("listPlayersOptimal");
+    console.log(listPlayersOptimal);
+    return `${
+      listPlayerNames[playerTurn - 1]
+    } dice numbers thrown were ${diceNumbersThrown} and your optimal value is ${createOptimalValue}!`;
   }
-  if (
-    input == "Dice 1" ||
-    input == "dice 1" ||
-    input == "Dice1" ||
-    input == "dice1" ||
-    input == 1
-  ) {
-    console.log("player2Dice1");
-    console.log(player2Dice1);
-    console.log("player2Dice2");
-    console.log(player2Dice2);
-    player2Choice = `${player2Dice1}${player2Dice2}`;
-    player2Choice = Number(player2Choice);
-    console.log("player2Choice");
-    console.log(player2Choice);
-    myOutputValue = `${userName2} chose Dice 1 to be the first number! Your score is now ${player2Choice}. <br><br> Now, let's click 'Submit' and compare the scores!`;
-    return myOutputValue;
-  }
-  if (
-    input == "Dice 2" ||
-    input == "dice 2" ||
-    input == "Dice2" ||
-    input == "dice2" ||
-    input == 2
-  ) {
-    console.log("player2Dice1");
-    console.log(player2Dice1);
-    console.log("player2Dice2");
-    console.log(player2Dice2);
-    player2Choice = `${player2Dice2}${player2Dice1}`;
-    player2Choice = Number(player2Choice);
-    console.log("player2Choice");
-    console.log(player2Choice);
-    myOutputValue = `${userName2} chose Dice 2 to be the first number! Your score is now ${player2Choice}. <br><br> Now, let's click 'Submit' and compare the scores!`;
-    return myOutputValue;
-  }
-  return `Come on! Pay attention man, please key in either '1' or '2'!`;
+  gameStep = "compareResults";
+  return `Now, let's see who is the winner!!`;
 };
 
-// setting of the player 1 username. assumption is user cannot not type or key in 1 space
-var setUserName1 = function (input) {
-  if (input == "" || input == " ") {
-    myOutputValue = `Player 1 please set a username first by typing your username in the input box.`;
-    return myOutputValue;
-  }
-  userName1 = input.bold();
-  myOutputValue = `Player 1 name is ${userName1}. Player 2 please set a username now.`;
-  return myOutputValue;
-};
-
-// setting of the player 2 username. assumption is user cannot not type or key in 1 space
-var setUserName2 = function (input) {
-  if (input == "" || input == " ") {
-    myOutputValue = `Player 2 please set a username first by typing your username in the input box.`;
-    return myOutputValue;
-  }
-  userName2 = input.bold();
-  myOutputValue = `Player 2 name is ${userName2}. <br><br> Are you ${userName1} (player 1) and ${userName2} (player 2) ready because we are going to ... Beat That!! <br><br> ${userName1} please click 'Submit' to start the game BUT FIRST, ${userName2} scoot away, no peeking!!`;
-  return myOutputValue;
-};
-
-//player 1 dice throw numbers
-var player1Turn = function () {
-  var throwDice1 = dice1();
-  var throwDice2 = dice2();
-  player1Dice1 = throwDice1;
-  player1Dice2 = throwDice2;
-  console.log("Player 1 DiceRoll 1");
-  console.log(player1Dice1);
-  console.log("Player 1 DiceRoll 2");
-  console.log(player1Dice2);
-  myOutputValue = `Alrighty ${userName1}! <br> You rolled '${player1Dice1}' for Dice 1 and '${player1Dice2}' for Dice 2. <br> Now, choose the order of the dice. <br><br>Do you want 'Dice 1' or 'Dice 2' to be the first number?`;
-  return myOutputValue;
-};
-
-//player 2 dice throw numbers
-var player2Turn = function () {
-  var throwDice1 = dice1();
-  var throwDice2 = dice2();
-  player2Dice1 = throwDice1;
-  player2Dice2 = throwDice2;
-  console.log("Player 2 DiceRoll 1");
-  console.log(player2Dice1);
-  console.log("Player 2 DiceRoll 2");
-  console.log(player2Dice2);
-  myOutputValue = `Alrighty ${userName2}! <br> You rolled '${player2Dice1}' for Dice 1 and '${player2Dice2}' for Dice 2. <br> Now, choose the order of the dice. <br><br>Do you want 'Dice 1' or 'Dice 2' to be the first number?`;
-  return myOutputValue;
-};
-
-// dice1 throw
-var dice1 = function () {
-  var diceRoll1 = randomThrow();
-  return diceRoll1;
-};
-
-//dice2 throw
-var dice2 = function () {
-  var diceRoll2 = randomThrow();
-  return diceRoll2;
+var resultsTime = function (listPlayersOptimal, listPlayerNames) {
+  var highestOptimal = Math.max(...listPlayersOptimal);
+  console.log("highestOptimal");
+  console.log(highestOptimal);
+  var highestOptimalIndex = listPlayersOptimal.indexOf(highestOptimal);
+  return `The winner is ${listPlayerNames[highestOptimalIndex]} with a score of ${highestOptimal}. Here are the optimal numbers for every player...<br><br> ${listPlayerNames}<br>${listPlayersOptimal} <br><br> To replay the game, please refresh the page!`;
 };
 
 // dice throw of values 1-6
-var randomThrow = function () {
+var diceRoll = function () {
   // random number between 0-1 then multiple by 3
   var randomDecimal = Math.random() * 6;
   // rounding down the value to the nearest integer
