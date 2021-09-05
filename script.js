@@ -58,7 +58,9 @@ var settingPlayerNames = function (input) {
     console.log(gameStep);
     console.log("listPlayerNames");
     console.log(listPlayerNames);
-    return `Player ${counter} name is ${input.bold()}. <br><br> List of names so far: ${listPlayerNames}.`;
+    return `Player ${counter} name is ${input.bold()}. <br><br> List of names so far: ${listPlayerNames}.<br><br> Player ${
+      counter + 1
+    }, it's your turn to key in your name.`;
   }
   // to let the players know all players have set their names, now its time to start the game. Anymore keying of names will throw an error
   if (counter == numberOfPlayers - 1) {
@@ -132,7 +134,7 @@ var resultsTime = function (listPlayersOptimal, listPlayerNames) {
   console.log("highestOptimal");
   console.log(highestOptimal);
   var highestOptimalIndex = listPlayersOptimal.indexOf(highestOptimal);
-  return `The winner is ${listPlayerNames[highestOptimalIndex]} with a score of ${highestOptimal}. Here are the optimal numbers for every player...<br><br> ${listPlayerNames}<br>${listPlayersOptimal} <br><br> To replay the game, please refresh the page!`;
+  return `The winner is ${listPlayerNames[highestOptimalIndex]} with a score of ${highestOptimal}. Here =0-re the optimal numbers for every player...<br><br> ${listPlayerNames}<b0-r>${listPlayersOptimal} <br><br> To replay the game, please refresh the page!`;
 };
 
 // dice throw of values 1-6
