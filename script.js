@@ -1,5 +1,7 @@
 var myOutputValue = " ";
 var gameMode = "Get player 1 dice roll";
+var sumPlayer1Num = 0;
+var sumPlayer2Num = 0;
 
 // roll a random number between 1-6
 var diceRoll = function () {
@@ -13,6 +15,8 @@ var main = function (input) {
   if (gameMode == "Get player 1 dice roll") {
     player1Dice = [];
     player2Dice = [];
+    player1Num = 0;
+    player2Num = 0;
     currPlayer = 1;
     myOutputValue = getRandomDiceRoll();
     gameMode = "Choose dice order";
@@ -52,35 +56,49 @@ var getRandomDiceRoll = function () {
 var chooseDiceOrder = function (input) {
   if (currPlayer == 1 && input == 1) {
     player1Num = `${player1Dice[0]}${player1Dice[1]}`;
+    sumPlayer1Num += Number(player1Num);
     return `Player ${currPlayer}, you chose Dice 1 first. <br>
     Your number is ${player1Num}. <br>
-    It is now Player 2's turn. `;
+    Your total sum is ${sumPlayer1Num}. <br>
+    It is now Player 2's turn. Click 'Submit' to roll dice.`;
   } else if (currPlayer == 1 && input == 2) {
     player1Num = `${player1Dice[1]}${player1Dice[0]}`;
+    sumPlayer1Num += Number(player1Num);
     return `Player ${currPlayer}, you chose Dice 2 first. <br>
     Your number is ${player1Num}.<br>
-    It is now Player 2's turn. `;
+    Your total sum is ${sumPlayer1Num}. <br>
+    It is now Player 2's turn. Click 'Submit' to roll dice.`;
   } else if (currPlayer == 2 && input == 1) {
     player2Num = `${player2Dice[0]}${player2Dice[1]}`;
+    sumPlayer2Num += Number(player2Num);
     return `Player ${currPlayer}, you chose Dice 1 first. <br>
     Your number is ${player2Num}. <br>
-    ${results()} `;
+    Your total sum is ${sumPlayer2Num}. <br>
+    ${results()} <br><br>
+    Click 'Submit' to continue the game!`;
   } else if (currPlayer == 2 && input == 2) {
     player2Num = `${player2Dice[1]}${player2Dice[0]}`;
+    sumPlayer2Num += Number(player2Num);
     return `Player ${currPlayer}, you chose Dice 2 first. <br>
     Your number is ${player2Num}.<br>
-    ${results()} `;
+    Your total sum is ${sumPlayer2Num}. <br>
+    ${results()} <br><br>
+    Click 'Submit' to continue the game! `;
   }
 };
 
 var results = function () {
-  console.log(player1Num);
-  console.log(player2Num);
-  if (player1Num > player2Num) {
-    return `Player 1 number is ${player1Num} and Player 2 number is ${player2Num}.<br>
-    Player 1 Wins!`;
-  } else if (player1Num < player2Num) {
-    return `Player 1 number is ${player1Num} and Player 2 number is ${player2Num}.<br>
-    Player 2 Wins!`;
+  if (sumPlayer1Num > sumPlayer2Num) {
+    return `Player 1 number is ${player1Num} and Player 2 number is ${player2Num}.<br><br>
+    <u>Total Sum: </u><br>
+    Player 1 = ${sumPlayer1Num}<br>
+    Player 2 = ${sumPlayer2Num}<br>
+    <b>Player 1 is winning!</b>`;
+  } else if (sumPlayer1Num < sumPlayer2Num) {
+    return `Player 1 number is ${player1Num} and Player 2 number is ${player2Num}.<br><br>
+    <u>Total Sum: </u><br>
+    Player 1 = ${sumPlayer1Num}<br>
+    Player 2 = ${sumPlayer2Num}<br>
+    <b>Player 2 is winning!</b>`;
   }
 };
