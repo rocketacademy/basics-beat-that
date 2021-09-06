@@ -90,15 +90,15 @@ var chooseDiceOrder = function (input) {
 var results = function () {
   if (sumPlayer1Num > sumPlayer2Num) {
     return `Player 1 number is ${player1Num} and Player 2 number is ${player2Num}.<br><br>
-    <u>Total Sum: </u><br>
+    <b><u>Leaderboard </u></b><br>
     Player 1 = ${sumPlayer1Num}<br>
     Player 2 = ${sumPlayer2Num}<br>
     <b>Player 1 is winning!</b>`;
   } else if (sumPlayer1Num < sumPlayer2Num) {
     return `Player 1 number is ${player1Num} and Player 2 number is ${player2Num}.<br><br>
-    <u>Total Sum: </u><br>
-    Player 1 = ${sumPlayer1Num}<br>
+    <b><u>Leaderboard </u></b><br>
     Player 2 = ${sumPlayer2Num}<br>
+    Player 1 = ${sumPlayer1Num}<br>
     <b>Player 2 is winning!</b>`;
   }
 };
