@@ -26,22 +26,30 @@ var diceRoll = function () {
   if (playersMode == "player 1") {
     gameMode = "dice order";
     return (
-      `Player 1, you have rolled ${roll1} for dice 1 and ${roll2} for dice 2. Please indicate the order you want your dice roll to be recorded in.` +
+      "Nice rollin', Player 1!" +
       "<br><br>" +
-      "If you want dice 1 to be recorded first, enter '1'. If you want dice 2 to be recorded first, enter '2'."
+      `Dice One: ${roll1}` +
+      "<br>" +
+      `Dice Two: ${roll2}` +
+      "<br><br>" +
+      "Please indicate the order you want your dice roll to be recorded in. If you want dice 1 to be recorded first, enter '1'. If you want dice 2 to be recorded first, enter '2'."
     );
   }
   if (playersMode == "player 2") {
     gameMode = "dice order";
     return (
-      `Player 2, you have rolled ${roll1} for dice 1 and ${roll2} for dice 2. Please indicate the order you want your dice roll to be recorded in.` +
+      "Nice rollin', Player 2!" +
       "<br><br>" +
-      "If you want dice 1 to be recorded first, enter '1'. If you want dice 2 to be recorded first, enter '2'."
+      `Dice One: ${roll1}` +
+      "<br>" +
+      `Dice Two: ${roll2}` +
+      "<br><br>" +
+      "Please indicate the order you want your dice roll to be recorded in. If you want dice 1 to be recorded first, enter '1'. If you want dice 2 to be recorded first, enter '2'."
     );
   }
 };
 
-// return result of dice ordering
+// return results of dice ordering and announce winner
 var diceOrder = function (input) {
   if (playersMode == "player 1") {
     if (input == 1) {
@@ -61,34 +69,39 @@ var diceOrder = function (input) {
   }
   if (playersMode == "player 2") {
     if (input == 1) {
-      gameMode = "result";
       player2 = roll1 + roll2;
       console.log("Player 2:", player2);
-      return `Your recorded dice roll is ${roll1}${roll2}.`;
+      if (player1 > player2) {
+        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 1 wins!`;
+      }
+      if (player1 < player2) {
+        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 2 wins!`;
+      }
+      if (player1 == player2) {
+        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. It's a draw!`;
+      }
+      gameMode = "dice roll";
+      playersMode = "player 1";
+      return myOutputValue;
     }
     if (input == 2) {
-      gameMode = "result";
       player2 = roll2 + roll1;
       console.log("Player 2:", player2);
-      return `Your recorded dice roll is ${roll2}${roll1}.`;
+      if (player1 > player2) {
+        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 1 wins!`;
+      }
+      if (player1 < player2) {
+        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 2 wins!`;
+      }
+      if (player1 == player2) {
+        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. It's a draw!`;
+      }
+      gameMode = "dice roll";
+      playersMode = "player 1";
+      return myOutputValue;
     }
   }
   return "Invalid input. Please indicate '1' if you want dice 1 to be recorded first, and '2' if you want dice 2 to be recorded first.";
-};
-
-var result = function () {
-  if (player1 > player2) {
-    myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 1 wins!`;
-  }
-  if (player1 < player2) {
-    myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 2 wins!`;
-  }
-  if (player1 == player2) {
-    myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. It's a draw!`;
-  }
-  gameMode = "dice roll";
-  playersMode = "player 1";
-  return myOutputValue;
 };
 
 var main = function (input) {
@@ -98,15 +111,4 @@ var main = function (input) {
   if (gameMode == "dice order") {
     return diceOrder(input);
   }
-  if (gameMode == "result") {
-    return result();
-  }
 };
-
-// create a 2 player mode
-// generate 2 random dice rolls and return the results of the 2 dice rolls for player 1
-// allow player 1 to specify dice order
-// return results of dice order and invite player 2 to start rolling
-// generate 2 random dice rolls and return the results of the 2 dice rolls for player 2
-// allow player 2 to specify dice order
-// return results of dice order, compare with player 1's results and indicate winner
