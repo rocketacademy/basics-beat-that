@@ -210,12 +210,25 @@ var userKnockOutSelection = function (randomNo1, input) {
     winningMethod = "low";
     possibleWinningNumber = 0;
     playerThrew = 1;
+    counterIndex = 0;
+    allNumber = [];
+    counterPlayer = 0;
+    counterLastWinning = 0;
+
+    winningIndex = 0;
+
     return `Current mode have change to <b>low</b>, <br> Press Submit to re-roll the dice`;
   }
   if (input == "high" && winningMethod == "low") {
     winningMethod = "high";
     possibleWinningNumber = 0;
     playerThrew = 1;
+    counterIndex = 0;
+    allNumber = [];
+    counterPlayer = 0;
+    counterLastWinning = 0;
+
+    winningIndex = 0;
     return `Current mode have change to <b>high</b>, <br> Press Submit to re-roll the dice`;
   }
   if (playerThrew == 1) {
@@ -274,7 +287,7 @@ var userKnockOutSelection = function (randomNo1, input) {
           possibleWinningNumber = realNumber;
           index = counterIndex;
           console.log(index, "when possible number =0");
-        } else if (possibleWinningNumber > realNumber) {
+        } else if (possibleWinningNumber >= realNumber) {
           if (possibleWinningNumber == realNumber) {
             extraNumber = realNumber;
             console.log(extraNumber, "extraNumber");
@@ -318,11 +331,13 @@ var userKnockOutSelection = function (randomNo1, input) {
     }
   }
   if (counterPlayer == 2) {
+    console.log(extraNumber, "extraNumber");
+    console.log(possibleWinningNumber, "Possible Winning Number");
     if (playerThrew <= noOfPlayer) {
       if (possibleWinningNumber != extraNumber) {
         counterPlayer = 0;
         counterLastWinning = counterIndex;
-        // counterIndex = index;
+        counterIndex = index;
         winningIndex = index;
         winningNumber = possibleWinningNumber;
         possibleWinningNumber = 0;
@@ -340,7 +355,7 @@ var userKnockOutSelection = function (randomNo1, input) {
         counterLastWinning = 0;
         counterIndex = 0;
         winningIndex = 0;
-        playerThrew -= 1;
+        playerThrew = playerThrew - 1;
         winningNumber = possibleWinningNumber;
         possibleWinningNumber = 0;
         extraNumber = 0;
@@ -352,11 +367,12 @@ var userKnockOutSelection = function (randomNo1, input) {
     if (playerThrew > noOfPlayer) {
       if (possibleWinningNumber != extraNumber) {
         winningIndex = index;
+        scoring[winningIndex] = scoring[winningIndex] + 1;
         playerThrew = 1;
         counterPlayer = 0;
         console.log("winningindex", winningIndex);
         winningNumber = possibleWinningNumber;
-        scoring[winningIndex] = scoring[winningIndex] + 1;
+
         possibleWinningNumber = 0;
         allNumber = [];
         counterIndex = 0;
@@ -368,7 +384,7 @@ var userKnockOutSelection = function (randomNo1, input) {
         possibleWinningNumber = 0;
         extraNumber = 0;
         allNumber = [];
-        playerThrew -= 1;
+        playerThrew = playerThrew - 1;
         return ` <b>It's a draw</b>, please throw again`;
       }
     }
@@ -419,6 +435,7 @@ var main = function (input) {
     } else {
       counter = counter + 1;
       scoring.push(0);
+
       var name = input;
       var nameOfAllPlayer = playerName.push(input);
       counter = 0;
