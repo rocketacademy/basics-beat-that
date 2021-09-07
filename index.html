@@ -2,81 +2,98 @@
 <html>
   <head>
     <title>Coding Basics</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
-      }
-
-      #header {
-        text-align: center;
-      }
-
-      #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
-      }
-
-      input {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 9px;
-        width: 100%;
-      }
-
-      button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
-      }
-
-      #output-div {
-        background-color: lightgrey;
-        margin: 20px auto;
-        padding: 20px;
-        width: 100%;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div">
-        Welcome to Beat That!<br /><br />Type 1 for Highest Combined Number
-        mode.<br />Type 2 for Lowest Combined Number mode.
+      <div id="game-state">
+        <div>
+          <p>Number of players:</p>
+          <input
+            id="num-player"
+            type="number"
+            min="2"
+            max="10"
+            value="2"
+            onkeydown="return false"
+          />
+        </div>
+        <div>
+          <p>Number of dice:</p>
+          <input
+            id="num-dice"
+            type="number"
+            min="2"
+            max="10"
+            value="2"
+            onkeydown="return false"
+          />
+        </div>
+        <div>
+          <p>Calculate score using:</p>
+          <select id="calc-score">
+            <option value="highest">Highest Combined Number Mode</option>
+            <option value="lowest">Lowest Combined Number Mode</option>
+          </select>
+        </div>
+        <div>
+          <p>Game mode:</p>
+          <select id="game-mode">
+            <option value="running">Running Mode</option>
+            <option value="knockout">Knockout Mode</option>
+          </select>
+        </div>
       </div>
+      <button id="start-game-button">Start Game</button>
+      <button id="continue-button">Continue</button>
+      <button id="quit-button">Quit</button>
+      <p>Output:</p>
+      <div id="output-div"></div>
     </div>
+
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+      var start = document.querySelector("#start-game-button");
+      var cont = document.querySelector("#continue-button");
+      var quit = document.querySelector("#quit-button");
+      var output = document.querySelector("#output-div");
 
-        // Display result in output element
-        var output = document.querySelector("#output-div");
+      start.addEventListener("click", function () {
+        var numPlayers = document.querySelector("#num-player");
+        var numDice = document.querySelector("#num-dice");
+        var calcScore = document.querySelector("#calc-score");
+        var gameMode = document.querySelector("#game-mode");
+        var result = setGameState(
+          numPlayers.value,
+          numDice.value,
+          calcScore.value,
+          gameMode.value
+        );
+
+        start.disabled = true;
+        numPlayers.disabled = true;
+        numDice.disabled = true;
+        calcScore.disabled = true;
+        gameMode.disabled = true;
+        cont.style.visibility = "visible";
+        quit.style.visibility = "visible";
+
         output.innerHTML = result;
+      });
 
-        // Reset input value
-        input.value = "";
+      cont.addEventListener("click", function () {
+        // Set result to input value
+        var result = main();
+        output.innerHTML = result;
+      });
+
+      quit.addEventListener("click", function () {
+        resetGame();
+        output.innerHTML = "Quit game.";
       });
     </script>
   </body>
