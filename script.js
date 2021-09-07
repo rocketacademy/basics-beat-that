@@ -1,5 +1,8 @@
 // state variables
-var highestNumberMode, knockoutMode, numDice, numPlayers;
+var highestNumberMode;
+var knockoutMode;
+var numDice;
+var numPlayers;
 var diceRolls = [];
 var curPlayer = 1;
 var players = [];
@@ -7,6 +10,23 @@ var players = [];
 // knockout mode state variables
 var roundPlayers = [];
 var playerIndex = 0;
+
+var resetGame = function () {
+  // reset game by resetting relevant variables and changing state of ui
+  diceRolls = [];
+  curPlayer = 1;
+  players = [];
+  playerIndex = 0;
+  roundPlayers = [];
+
+  document.querySelector("#start-game-button").disabled = false;
+  document.querySelector("#continue-button").style.visibility = "hidden";
+  document.querySelector("#quit-button").style.visibility = "hidden";
+  document.querySelector("#num-player").disabled = false;
+  document.querySelector("#num-dice").disabled = false;
+  document.querySelector("#calc-score").disabled = false;
+  document.querySelector("#game-mode").disabled = false;
+};
 
 var getDiceRolls = function () {
   // generate a player's dice rolls and store it in diceRolls array, output msg for each roll
@@ -42,7 +62,7 @@ var generateLeaderboard = function () {
 
   // output scores
   var output = "<br><br>Leaderboard:<br>";
-  for (var j = 0; j < players.length; j++) {
+  for (var j = 0; j < players.length; j += 1) {
     output += `${j + 1}. Player ${players[j].playerNum}: ${
       players[j].score
     }<br>`;
@@ -77,7 +97,7 @@ var generateEndKnockoutRoundOutput = function () {
 
   // output the scores of the players who played the recent round
   var output = `<br><br>`;
-  for (var j = 0; j < roundPlayers.length; j++) {
+  for (var j = 0; j < roundPlayers.length; j += 1) {
     output += `Player ${roundPlayers[j].playerNum}'s number is ${roundPlayers[j].score}.<br>`;
   }
 
@@ -95,7 +115,7 @@ var generateEndKnockoutRoundOutput = function () {
     resetGame();
   } else {
     output += `<br><br>Remaining players: `;
-    for (let i = 0; i < players.length; i++) {
+    for (let i = 0; i < players.length; i += 1) {
       players[i].score = 0;
       output += `${players[i].playerNum} `;
     }
@@ -120,23 +140,6 @@ var setGameState = function (playerNum, diceNum, calcScore, gameMode) {
   return knockoutMode
     ? randomSelectTwoPlayers()
     : `Starting game. It is Player 1's turn. Press Submit to roll.`;
-};
-
-var resetGame = function () {
-  // reset game by resetting relevant variables and changing state of ui
-  diceRolls = [];
-  curPlayer = 1;
-  players = [];
-  playerIndex = 0;
-  roundPlayers = [];
-
-  document.querySelector("#start-game-button").disabled = false;
-  document.querySelector("#continue-button").style.visibility = "hidden";
-  document.querySelector("#quit-button").style.visibility = "hidden";
-  document.querySelector("#num-player").disabled = false;
-  document.querySelector("#num-dice").disabled = false;
-  document.querySelector("#calc-score").disabled = false;
-  document.querySelector("#game-mode").disabled = false;
 };
 
 var main = function () {
