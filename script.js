@@ -49,19 +49,32 @@ var diceRoll = function () {
   }
 };
 
+var declareWinner = function () {
+  if (player1 > player2) {
+    myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 1 wins!`;
+  }
+  if (player1 < player2) {
+    myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 2 wins!`;
+  }
+  if (player1 == player2) {
+    myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. It's a draw!`;
+  }
+  gameMode = "dice roll";
+  playersMode = "player 1";
+  return myOutputValue;
+};
+
 // return results of dice ordering and announce winner
 var diceOrder = function (input) {
   if (playersMode == "player 1") {
+    playersMode = "player 2";
+    gameMode = "dice roll";
     if (input == 1) {
-      playersMode = "player 2";
-      gameMode = "dice roll";
       player1 = roll1 + roll2;
       console.log("Player 1:", player1);
       return `Your recorded dice roll is ${roll1}${roll2}. Player 2 may roll now.`;
     }
     if (input == 2) {
-      playersMode = "player 2";
-      gameMode = "dice roll";
       player1 = roll2 + roll1;
       console.log("Player 1:", player1);
       return `Your recorded dice roll is ${roll2}${roll1}. Player 2 may roll now.`;
@@ -71,34 +84,12 @@ var diceOrder = function (input) {
     if (input == 1) {
       player2 = roll1 + roll2;
       console.log("Player 2:", player2);
-      if (player1 > player2) {
-        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 1 wins!`;
-      }
-      if (player1 < player2) {
-        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 2 wins!`;
-      }
-      if (player1 == player2) {
-        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. It's a draw!`;
-      }
-      gameMode = "dice roll";
-      playersMode = "player 1";
-      return myOutputValue;
+      return declareWinner();
     }
     if (input == 2) {
       player2 = roll2 + roll1;
       console.log("Player 2:", player2);
-      if (player1 > player2) {
-        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 1 wins!`;
-      }
-      if (player1 < player2) {
-        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. Player 2 wins!`;
-      }
-      if (player1 == player2) {
-        myOutputValue = `Player 1, you got ${player1}. Player 2, you got ${player2}. It's a draw!`;
-      }
-      gameMode = "dice roll";
-      playersMode = "player 1";
-      return myOutputValue;
+      return declareWinner();
     }
   }
   return "Invalid input. Please indicate '1' if you want dice 1 to be recorded first, and '2' if you want dice 2 to be recorded first.";
