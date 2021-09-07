@@ -2,12 +2,10 @@
 var highestNumberMode, knockoutMode, numDice, numPlayers;
 var diceRolls = [];
 var curPlayer = 1;
-var playerScores = [];
+var players = [];
 
 // knockout mode state variables
-var playerChoices = [];
-var players = [];
-var scores = [];
+var roundPlayers = [];
 var playerIndex = 0;
 
 var getDiceRolls = function () {
@@ -35,18 +33,24 @@ var getScore = function () {
   return Number(score);
 };
 
-var getWinningScore = function (scoresArr) {
-  return highestNumberMode ? Math.max(...scoresArr) : Math.min(...scoresArr);
-};
+var generateLeaderboard = function () {
+  // upon each player having rolled dice, output leaderboard
 
-var generateEndTurnOutput = function () {
-  // upon each player having rolled dice, output each player's number and the leader
-  var output = "<br><br>";
-  for (var j = 0; j < playerScores.length; j++) {
-    output += `Player ${j + 1}'s number is ${playerScores[j]}.<br>`;
+  // sort players array by score
+  if (highestNumberMode) players.sort((a, b) => b.score - a.score);
+  else players.sort((a, b) => a.score - b.score);
+
+  // output scores
+  var output = "<br><br>Leaderboard:<br>";
+  for (var j = 0; j < players.length; j++) {
+    output += `${j + 1}. Player ${players[j].playerNum}: ${
+      players[j].score
+    }<br>`;
   }
-  var winningScore = getWinningScore(playerScores);
-  var winner = playerScores.indexOf(winningScore) + 1;
+
+  // output winner
+  var winner = players[0].playerNum;
+  players.sort((a, b) => a.playerNum - b.playerNum); //resort players by playernum
   output += `The current leader is Player ${winner}!`;
   return output;
 };
@@ -54,53 +58,63 @@ var generateEndTurnOutput = function () {
 var randomSelectTwoPlayers = function () {
   var playerOne;
   var playerTwo;
-  // generate two random unique players from playerChoices and store them in players array
-  playerOne = playerChoices[Math.floor(Math.random() * playerChoices.length)];
+  // generate two random unique players and store them in roundPlayers array
+  playerOne = players[Math.floor(Math.random() * players.length)];
   do {
-    playerTwo = playerChoices[Math.floor(Math.random() * playerChoices.length)];
+    playerTwo = players[Math.floor(Math.random() * players.length)];
   } while (playerOne == playerTwo);
-  players = [playerOne, playerTwo];
+  roundPlayers = [playerOne, playerTwo];
 
-  return `Player ${playerOne} and Player ${playerTwo} are selected to play. Player ${playerOne}, press submit to roll.`;
+  return `Player ${playerOne.playerNum} and Player ${playerTwo.playerNum} are selected to play. Player ${playerOne.playerNum}, press submit to roll.`;
 };
 
 var generateEndKnockoutRoundOutput = function () {
-  var output = `<br><br>`;
-  for (var j = 0; j < players.length; j++) {
-    output += `Player ${players[j]}'s number is ${scores[j]}.<br>`;
-  }
-  var winningScore = getWinningScore(scores);
-  var winner = players[scores.indexOf(winningScore)];
-  var loser = players[1 - scores.indexOf(winningScore)];
-  output += `The winner is player ${winner}!`;
-  playerChoices = playerChoices.filter((x) => x != loser); // remove loser from playerchoices
-  playerIndex = 0;
-  players = [];
-  scores = [];
+  // upon end of every knockout round, generate output
 
-  if (playerChoices.length == 1) {
+  // sort scores
+  if (highestNumberMode) roundPlayers.sort((a, b) => b.score - a.score);
+  else roundPlayers.sort((a, b) => a.score - b.score);
+
+  // output the scores of the players who played the recent round
+  var output = `<br><br>`;
+  for (var j = 0; j < roundPlayers.length; j++) {
+    output += `Player ${roundPlayers[j].playerNum}'s number is ${roundPlayers[j].score}.<br>`;
+  }
+
+  // output winner and reset relevant variables
+  var winner = roundPlayers[0].playerNum;
+  var loser = roundPlayers[1].playerNum;
+  output += `The winner is Player ${winner}! Player ${loser} is eliminated.`;
+  players = players.filter((p) => p.playerNum != loser); // remove loser from players
+  playerIndex = 0;
+  roundPlayers = [];
+
+  if (players.length == 1) {
     // knockout game over, there is a winner
-    output += `<br><br>After a long fought battle, the ultimate winner of the knockout round is player ${playerChoices[0]}! Congratulations!`;
+    output += `<br><br>After a long fought battle, the ultimate winner of the knockout round is Player ${players[0].playerNum}! Congratulations!`;
     resetGame();
   } else {
-    output += `<br><br>Remaining players: ${playerChoices}`;
+    output += `<br><br>Remaining players: `;
+    for (let i = 0; i < players.length; i++) {
+      players[i].score = 0;
+      output += `${players[i].playerNum} `;
+    }
   }
   return output;
 };
 
-var setGameState = function (players, dice, calcScore, gameMode) {
-  numPlayers = Number(players);
-  numDice = Number(dice);
+var setGameState = function (playerNum, diceNum, calcScore, gameMode) {
+  // input from user, this function is called from the script in index.html
+  numPlayers = Number(playerNum);
+  numDice = Number(diceNum);
   highestNumberMode = calcScore == "highest";
   knockoutMode = gameMode == "knockout";
 
-  playerScores = new Array(numPlayers).fill(0); // create a playerScores array with numPlayers elements all set to 0
-
-  if (knockoutMode) {
-    // fill the playerChoices array with the player nums which will be used in gameplay later
-    for (var i = 1; i <= numPlayers; i += 1) {
-      playerChoices.push(i);
-    }
+  // initalise players to be an array with numPlayers elements
+  // each element is an object with playerNum and score
+  players = new Array(numPlayers);
+  for (var i = 0; i < players.length; i += 1) {
+    players[i] = { playerNum: i + 1, score: 0 };
   }
 
   return knockoutMode
@@ -109,13 +123,12 @@ var setGameState = function (players, dice, calcScore, gameMode) {
 };
 
 var resetGame = function () {
+  // reset game by resetting relevant variables and changing state of ui
   diceRolls = [];
   curPlayer = 1;
-  playerScores = [];
-  playerChoices = [];
   players = [];
-  scores = [];
   playerIndex = 0;
+  roundPlayers = [];
 
   document.querySelector("#start-game-button").disabled = false;
   document.querySelector("#continue-button").style.visibility = "hidden";
@@ -127,9 +140,11 @@ var resetGame = function () {
 };
 
 var main = function () {
-  if (knockoutMode && players.length == 0) return randomSelectTwoPlayers();
+  // knockout mode but no players chosen to play the next round
+  if (knockoutMode && roundPlayers.length == 0) return randomSelectTwoPlayers();
 
-  curPlayer = knockoutMode ? players[playerIndex] : curPlayer;
+  // initialise output
+  curPlayer = knockoutMode ? roundPlayers[playerIndex].playerNum : curPlayer;
   var output = `Welcome Player ${curPlayer}.<br>`;
   output += getDiceRolls();
   var score = getScore();
@@ -137,20 +152,21 @@ var main = function () {
   output += `<br>Your number is ${score}.`;
 
   if (!knockoutMode) {
-    // calculate score for cur player and add to playerScores array
-    playerScores[curPlayer - 1] += score;
+    // calculate score for cur player and increment score
+    players[curPlayer - 1].score += score;
 
     curPlayer += 1; // next player
     if (curPlayer > numPlayers) curPlayer = 1; // go back to player 1
-    output += `<br>It is now Player ${curPlayer}'s turn.`;
-    output += generateEndTurnOutput();
-  } else {
-    // calculate score for cur player and add to scores array
-    scores.push(score);
 
-    if (playerIndex < players.length - 1) {
+    output += `<br>It is now Player ${curPlayer}'s turn.`;
+    output += generateLeaderboard();
+  } else {
+    // calculate score for cur player and increment score
+    roundPlayers[playerIndex].score += score;
+
+    if (playerIndex < roundPlayers.length - 1) {
       playerIndex += 1; // next player
-      output += `<br>It is now Player ${players[playerIndex]}'s turn.`;
+      output += `<br>It is now Player ${roundPlayers[playerIndex].playerNum}'s turn.`;
     } else {
       output += generateEndKnockoutRoundOutput();
     }
