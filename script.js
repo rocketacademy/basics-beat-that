@@ -11,7 +11,7 @@ var validateInput = function (input) {
   if (validCommands.includes(input)) {
     return true;
   }
-  console.log("Invalid Input.");
+  // console.log("Invalid Input.");
   return false;
 };
 
@@ -22,13 +22,10 @@ var rollDice = function () {
 var playerTurnRoll = function (playerNumber) {
   currentPlayerArray[0] = rollDice();
   currentPlayerArray[1] = rollDice();
-  console.log(`Rolled ${currentPlayerArray[0]} and ${currentPlayerArray[1]}`);
-  var returnstring =
-    `It is now Player ${playerNumber}'s turn.` +
-    "<br><br>" +
-    `You rolled ${currentPlayerArray[0]} for Dice 1, and  ${currentPlayerArray[1]} for Dice 2` +
-    "<br><br>" +
-    "Choose the order of the dice - enter 'dice 1' or 'dice 2'";
+  // console.log(`Rolled ${currentPlayerArray[0]} and ${currentPlayerArray[1]}`);
+  var returnstring = `It is now Player ${playerNumber}'s turn. <br>
+    You rolled ${currentPlayerArray[0]} for Dice 1, and  ${currentPlayerArray[1]} for Dice 2. <br>
+    Choose the order of the dice - enter 'dice 1' or 'dice 2'`;
   return returnstring;
 };
 
@@ -41,26 +38,23 @@ var calcPlayerScore = function (firstNumeralSelection) {
       currentPlayerArray[1].toString() + currentPlayerArray[0].toString();
   }
   currentScore = Number(currentScore);
-  console.log(currentScore);
+  // console.log(currentScore);
   return currentScore;
 };
 
 var writePlayerScore = function () {
   var index = activePlayer - 1;
   scoreArray[index].push(currentScore);
-  console.log(`Score Array for Player ${activePlayer}: ${scoreArray[index]}`);
-  console.log("Score recorded.");
+  // console.log(`Score Array for Player ${activePlayer}: ${scoreArray[index]}`);
+  // console.log("Score recorded.");
 };
 
 var playerTurnSelection = function (input) {
   var score = calcPlayerScore(input);
-  var returnstring =
-    `Player ${activePlayer}, you chose ${input} to be the first numeral.` +
-    "<br><br>" +
-    `The number you generated is: ${score}` +
-    "<br><br>" +
-    "Please type 'next' to continue.";
-  console.log(`Score Generated: ${score}`);
+  var returnstring = `Player ${activePlayer}, you chose ${input} to be the first numeral. <br>
+    The number you generated is ${score}. <br><br>
+    Please type 'next' to continue.`;
+  // console.log(`Score Generated: ${score}`);
   writePlayerScore();
   return returnstring;
 };
@@ -68,116 +62,135 @@ var playerTurnSelection = function (input) {
 var indexofMax = function (arr) {
   var currentMax = arr[0];
   var currentMaxIndex = 0;
-  for (var i = 1; i < arr.length; i++) {
+  for (var i = 1; i < arr.length; i += 1) {
     if (arr[i] > currentMax) {
       // ^ loops over array and updates values
       currentMax = arr[i];
       currentMaxIndex = i;
     }
-    return currentMaxIndex;
   }
+  return currentMaxIndex;
 };
 
 var chooseWinner = function () {
   var currentRoundArray = [];
-  for (let i = 0; i < scoreArray.length; i++) {
-    var lastElement = scoreArray[i].previousPlayer;
+  var scoreArrayCopy = Array.from(scoreArray);
+  // makes a shallow copy, because a simple = doesnt do it
+  for (let iterator = 0; iterator < scoreArrayCopy.length; iterator += 1) {
+    var lastElement =
+      scoreArrayCopy[iterator][scoreArrayCopy[iterator].length - 1];
+    // pls no pop
+    // thank u nested lists very cool
     currentRoundArray.push(lastElement);
     // ^ loop over scoreArray, pop last value into currentRoundArray for comparison
     // player 1 is index 0, etc
   }
   var roundWinner = indexofMax(currentRoundArray) + 1;
   console.log(`Player ${roundWinner} wins this round.`);
+  // console.log(scoreArray);
   return roundWinner;
 };
 
 var calcCumulativeScore = function () {
+  // this can probably be simplified
   var cumulativeScoreArray = [];
-  for (let i = 0; i < scoreArray.length; i++) {
+  for (let i = 0; i < scoreArray.length; i += 1) {
     // loop players
     var tempScore = 0;
     var subArray = scoreArray[i];
-    for (let s = 0; s < subArray.length; s++) {
+    for (let s = 0; s < subArray.length; s += 1) {
       // loop score records
       tempScore = tempScore + scoreArray[i][s];
     }
     cumulativeScoreArray.push(tempScore);
     // contains all
   }
-  console.log(`cumulativeScoreArray: ${cumulativeScoreArray}`);
+  console.log(`cumulativeScoreArray:`);
+  console.log(cumulativeScoreArray);
   return cumulativeScoreArray;
 };
 
-var generateLeaderboardObject = function (arr) {
-  // first sorts an array?????
-  // takes cumulativeScoreArray and maps into dictionary/object thing
-  var leaderboardObject = {};
-  for (let entry = 0; entry < arr.length; entry++) {
-    leaderboardObject[entry] = arr[entry];
-  }
-  console.log(`unsorted: ${leaderboardObject}`);
-  const sortedLeaderboardObject = Object.fromEntries(
-    Object.entries(leaderboardObject).sort(([, a], [, b]) => a - b) //magic
-    // ^ takes entries of an object
-    // then sorts them
-    // https://stackoverflow.com/questions/1069666/sorting-object-property-by-values
-  );
-  console.log(`sorted: ${sortedLeaderboardObject}`);
-  return sortedLeaderboardObject;
-};
+// var generateLeaderboardObject = function (arr) {
+//   // takes cumulativeScoreArray and maps into dictionary/object thing
+//   console.log("Now generating leaderboardObject.");
+//   var leaderboardObject = {};
+//   for (let entry = 0; entry < arr.length; entry += 1) {
+//     leaderboardObject[entry] = arr[entry];
+//     console.log(`item added to object: ${leaderboardObject[entry]}`);
+//   }
+//   console.log(`unsorted: ${leaderboardObject}`);
+//   const sortedLeaderboardObject = Object.fromEntries(
+//     Object.entries(leaderboardObject).sort(([, a], [, b]) => a - b) //magic
+//     // ^ takes entries of an object
+//     // then sorts them
+//     // https://stackoverflow.com/questions/1069666/sorting-object-property-by-values
+//   );
+//   console.log(`sorted: ${sortedLeaderboardObject}`);
+//   return sortedLeaderboardObject;
+// };
 
-var generateLeaderboardMessage = function (obj) {
-  var messageString = "Leaderboard: <br><br>";
-  for (let [key, value] of Object.entries(obj)) {
-    messageString = messageString + `Player ${key}:   ${value}` + "<br><br>";
+var generateLeaderboardMessage = function (arr) {
+  var messageString = `Leaderboard: <br>`;
+  var iterator = 0;
+  while (iterator < arr.length) {
+    var leaderboardPlayerNumber = iterator + 1;
+    // console.log(`iterator: ${iterator}
+    // score: ${arr[iterator]}`);
+    messageString += `Player ${leaderboardPlayerNumber}:   ${arr[iterator]} <br>`;
+    iterator += 1;
   }
-  console.log(messageString);
+  // console.log(`messageString for LeaderboardMessage: <br>
+  // ${messageString}`);
   return messageString;
 };
 
 var switchPlayer = function () {
   var previousPlayer = activePlayer;
-  activePlayer++;
+  activePlayer += 1;
   activePlayer = ((activePlayer + 1) % 2) + 1;
   // ^toggles between 1 and 2, conveniently assumes 2 players
   console.log(`New Player Turn: ${activePlayer}`);
   return `Player ${previousPlayer}'s turn has ended. Moving to next player, type 'Roll' to continue.`;
 };
 
+var endRound = function () {
+  // console.log(`Round Complete. scoreArray: ${scoreArray}`);
+  // indicates 1 round is done
+  var roundwinner = chooseWinner();
+  progressNumber = 0;
+  var leaderboardMessage = generateLeaderboardMessage(calcCumulativeScore());
+  // console.log(`leaderboardMessage: ${leaderboardMessage}`);
+  // console.log(calcCumulativeScore());
+  // console.log(generateLeaderboardMessage(calcCumulativeScore()));
+  return `The winner for this round is Player ${roundwinner}. <br><br>
+      ${leaderboardMessage}<br><br>
+      Type 'Roll' to play again!`;
+};
+
 var main = function (input) {
-  if (validateInput(input) == true) {
-    // this catches all non-valid input
-    if (currentMode == "waiting to start" && input == "start") {
-      currentMode = "turn in progress";
-      console.log("Started Playing");
-      return "Hello Player 1. Enter 'Roll' to continue.";
+  if (validateInput(input) == false) {
+    return "Looks like you submitted something invalid.";
+  }
+  // if valid input
+  if (currentMode == "waiting to start" && input == "start") {
+    currentMode = "turn in progress";
+    return "Hello Player 1. Enter 'Roll' to continue.";
+  }
+  if (progressNumber < 3) {
+    if (input.includes("dice")) {
+      return playerTurnSelection(input);
     }
-    if (progressNumber < 4) {
-      if (progressNumber < 2 && input == "Roll") {
-        return playerTurnRoll(activePlayer);
-      }
-      if (input.includes("dice")) {
-        writePlayerScore();
-        // ^ i believe this is WRONGFULLY called twice
-        // check later
-        return playerTurnSelection(input); // return?
-      }
-      if (input == "next") {
-        progressNumber++;
-        console.log(`progressNumber: ${progressNumber}`);
-        return switchPlayer();
-      }
-      if (progressNumber == 2 && input == "Roll") {
-        console.log(`scoreArray: ${scoreArray}`);
-        // indicates 1 round is done
-        var roundwinner = chooseWinner();
-        //generateLeaderboardObject(calcCumulativeScore);
-        progressNumber = 0;
-        console.log(calcCumulativeScore());
-        console.log(generateLeaderboardMessage(calcCumulativeScore()));
-        return `The winner for this round is ${roundwinner}. Type 'Roll' to play again!`;
-      }
+    if (input == "next") {
+      progressNumber += 1;
+      return switchPlayer();
+    }
+    // "Roll" must be entered to access the lines below
+    if (progressNumber < 2) {
+      return playerTurnRoll(activePlayer);
+    }
+    if (progressNumber == 2) {
+      return endRound();
     }
   }
-  return "Looks like you submitted something invalid.";
+  return "You're not supposed to be able to reach this line";
 };
