@@ -17,23 +17,60 @@ var player2ScoreSum = 0;
 var main = function (input) {
   var myOutputValue = "";
 
-  console.clear();
+  // console.clear();
 
-  if (gameMode == "mode selection") {
-    gameMode = "game intro";
+  console.log(`Current game mode is ${gameMode}.`);
+  console.log(`Current game version is ${gameVersion}.`);
 
-    if (input == "Lowest Combined") {
-      gameVersion = "lowestCombined";
+  var inputValidationResults = inputValidation(input);
+  console.log(`Result of input validation is ${inputValidationResults}`);
+
+  if (inputValidationResults == true) {
+    if (gameMode == "mode selection") {
+      gameMode = "game intro";
+
+      if (input == "Lowest Combined") {
+        gameVersion = "lowestCombined";
+      } else {
+        gameVersion = "normal";
+      }
+      console.log(`Current game mode is ${gameMode}.`);
+      console.log(`Current game version is ${gameVersion}.`);
+      myOutputValue = `You have selected the ${input} version. Please click submit to start rolling!`;
+      return myOutputValue;
     } else {
-      gameVersion = "normal";
+      return playGame(gameMode, input);
     }
-    console.log(`Current game mode is ${gameMode}.`);
-    console.log(`Current game version is ${gameVersion}.`);
-    myOutputValue = `You have selected the ${input} version. Please click submit to start rolling!`;
-    return myOutputValue;
   } else {
-    console.log(`Yeah!! you reached this point!`);
-    return playGame(gameMode, input);
+    return inputValidationResults;
+  }
+};
+
+// Function for input validation
+
+var inputValidation = function (input) {
+  var returnStatement = "";
+  if (gameMode == "mode selection") {
+    if (!(input == "Normal" || input == "Lowest Combined")) {
+      returnStatement = `Wrong input. Please enter only "Normal" or "Lowest Combined" to start the game.`;
+      return returnStatement;
+    } else {
+      console.log(`Validation Result is true`);
+      return true;
+    }
+  } else if (gameMode == "game intro" || gameMode == "player 2 roll dice") {
+    return true;
+  } else if (
+    gameMode == "player 1 selection" ||
+    gameMode == "player 2 selection"
+  ) {
+    if (!(input == "Dice 1" || input == "Dice 2")) {
+      returnStatement = `Wrong input. Please enter only "Dice 1" or "Dice 2"`;
+      return returnStatement;
+    } else {
+      console.log(`Validation Result is true`);
+      return true;
+    }
   }
 };
 
