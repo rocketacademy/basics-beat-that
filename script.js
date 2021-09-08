@@ -1,18 +1,60 @@
 var activePlayer = 1;
-var currentMode = "waiting to start";
+var currentGameProgressMode = "initializing";
 var currentPlayerArray = [0, 0];
 var currentScore = 0;
 var scoreArray = [[], []];
 // ^this is meant to be a nested array - index 0 corresponds to player 1's scores, etc.
+// initialize later in main
 var progressNumber = 0;
 
+var scoringModeIsHighest = true;
+var numberOfPlayers = 2; // default
+var numberOfDice = 2; // default
+const validCommands = ["start", "Roll", "dice 1", "dice 2", "next"];
+const validModifiers = ["--lowestCombined", "--auto"];
+// ^ modes must be applied with "--" modifiers, e.g. --lowestCombined
+// a full command might look like start --auto
+
 var validateInput = function (input) {
-  var validCommands = ["start", "Roll", "dice 1", "dice 2", "next"];
-  if (validCommands.includes(input)) {
+  var parsedInput = "";
+  if (input.includes("dice") || input.includes(" ") == false) {
+    parsedInput = input;
+  } else if (input.includes(" ") == true) {
+    parsedInput = input.substr(0, input.indexOf(" "));
+    // check only substring before the first space
+  }
+  // console.log(`parsedInput: ${parsedInput}`);
+  if (validCommands.includes(parsedInput)) {
     return true;
   }
+  // console.log(input);
   // console.log("Invalid Input.");
   return false;
+};
+
+var applyModifiers = function (mdf) {
+  // only 1 modifier is allowed to be applied at a time
+  var startMessage = "Hello Player 1! <br>";
+  if (mdf.includes("--") == false) {
+    startMessage +=
+      "No modifiers will be applied. The player with the larger number wins each round.<br>";
+  }
+  if (mdf.includes("lowestCombined") == true) {
+    scoringModeIsHighest = false;
+    startMessage +=
+      "You have applied the 'lowestCombined' modifier. For this game, the player with the smaller number wins each round.<br>";
+  }
+  startMessage += "Enter 'Roll' to start your turn!";
+  return startMessage;
+  // to add auto mode later
+};
+
+var initializeScoreArray = function () {
+  scoreArray = [];
+  for (var i = 1; i <= numberOfPlayers; i += 1) {
+    scoreArray.push([]); // create new nested array for every player
+  }
+  return scoreArray;
 };
 
 var rollDice = function () {
@@ -29,16 +71,24 @@ var playerTurnRoll = function (playerNumber) {
   return returnstring;
 };
 
+var concatenateTwoNumbers = function (num1, num2) {
+  var combinedNumbers = num1.toString() + num2.toString();
+  combinedNumbers = Number(combinedNumbers);
+  return combinedNumbers;
+};
+
 var calcPlayerScore = function (firstNumeralSelection) {
   if (firstNumeralSelection == "dice 1") {
-    currentScore =
-      currentPlayerArray[0].toString() + currentPlayerArray[1].toString();
+    currentScore = concatenateTwoNumbers(
+      currentPlayerArray[0],
+      currentPlayerArray[1]
+    );
   } else if (firstNumeralSelection == "dice 2") {
-    currentScore =
-      currentPlayerArray[1].toString() + currentPlayerArray[0].toString();
+    currentScore = concatenateTwoNumbers(
+      currentPlayerArray[1],
+      currentPlayerArray[0]
+    );
   }
-  currentScore = Number(currentScore);
-  // console.log(currentScore);
   return currentScore;
 };
 
@@ -50,6 +100,7 @@ var writePlayerScore = function () {
 };
 
 var playerTurnSelection = function (input) {
+  // console.log("playerTurnSelection is now running.");
   var score = calcPlayerScore(input);
   var returnstring = `Player ${activePlayer}, you chose ${input} to be the first numeral. <br>
     The number you generated is ${score}. <br><br>
@@ -72,8 +123,22 @@ var indexofMax = function (arr) {
   return currentMaxIndex;
 };
 
+var indexOfMin = function (arr) {
+  var currentMin = arr[0];
+  var currentMinIndex = 0;
+  for (var i = 1; i < arr.length; i += 1) {
+    if (arr[i] < currentMin) {
+      // ^ loops over array and updates values
+      currentMin = arr[i];
+      currentMinIndex = i;
+    }
+  }
+  return currentMinIndex;
+};
+
 var chooseWinner = function () {
   var currentRoundArray = [];
+  var roundWinner = -1; // nonsensical
   var scoreArrayCopy = Array.from(scoreArray);
   // makes a shallow copy, because a simple = doesnt do it
   for (let iterator = 0; iterator < scoreArrayCopy.length; iterator += 1) {
@@ -82,12 +147,16 @@ var chooseWinner = function () {
     // pls no pop
     // thank u nested lists very cool
     currentRoundArray.push(lastElement);
-    // ^ loop over scoreArray, pop last value into currentRoundArray for comparison
-    // player 1 is index 0, etc
   }
-  var roundWinner = indexofMax(currentRoundArray) + 1;
+
+  if (scoringModeIsHighest == true) {
+    roundWinner = indexofMax(currentRoundArray) + 1;
+  }
+  if (scoringModeIsHighest == false) {
+    roundWinner = indexOfMin(currentRoundArray) + 1;
+  }
+  console.log(scoreArray);
   console.log(`Player ${roundWinner} wins this round.`);
-  // console.log(scoreArray);
   return roundWinner;
 };
 
@@ -105,8 +174,8 @@ var calcCumulativeScore = function () {
     cumulativeScoreArray.push(tempScore);
     // contains all
   }
-  console.log(`cumulativeScoreArray:`);
-  console.log(cumulativeScoreArray);
+  // console.log(`cumulativeScoreArray:`);
+  // console.log(cumulativeScoreArray);
   return cumulativeScoreArray;
 };
 
@@ -149,7 +218,7 @@ var switchPlayer = function () {
   activePlayer += 1;
   activePlayer = ((activePlayer + 1) % 2) + 1;
   // ^toggles between 1 and 2, conveniently assumes 2 players
-  console.log(`New Player Turn: ${activePlayer}`);
+  // console.log(`New Player Turn: ${activePlayer}`);
   return `Player ${previousPlayer}'s turn has ended. Moving to next player, type 'Roll' to continue.`;
 };
 
@@ -172,9 +241,13 @@ var main = function (input) {
     return "Looks like you submitted something invalid.";
   }
   // if valid input
-  if (currentMode == "waiting to start" && input == "start") {
-    currentMode = "turn in progress";
-    return "Hello Player 1. Enter 'Roll' to continue.";
+  if (
+    currentGameProgressMode == "initializing" &&
+    input.includes("start") == true
+  ) {
+    currentGameProgressMode = "playing";
+    initializeScoreArray();
+    return applyModifiers(input);
   }
   if (progressNumber < 3) {
     if (input.includes("dice")) {
