@@ -16,14 +16,14 @@ var main = function (input) {
     gameMode = 1;
   } else if (gameMode == 1 && (input == 1 || input == 2)) {
     myOutputValue = currentSelection(input) + thirdStatement();
-    myOutputValue += trackScore(); // here
+    myOutputValue += trackScore();
     changePlayer();
     gameMode = 0;
   }
   //console.log(currentDices);
   //console.log(currentCombos);
-  console.log(playerOneScore);
-  console.log(playerTwoScore);
+  //console.log(playerOneScore);
+  //console.log(playerTwoScore);
 
   return myOutputValue;
 };
@@ -39,9 +39,9 @@ var trackScore = function () {
     var playerOneSum = playerOneScore.reduce((a, b) => a + b);
     var playerTwoSum = playerTwoScore.reduce((a, b) => a + b);
     if (playerOneSum > playerTwoSum) {
-      return `<br><br>Player 1 is leading with a score of ${playerOneSum} versus ${playerTwoSum}.`;
+      return `<br><br> Leaderboard: <br>Player 1 score: ${playerOneSum} <br>Player 2 score: ${playerTwoSum}.`;
     } else if (playerOneSum < playerTwoSum) {
-      return `<br><br>Player 2 is leading with a score of ${playerTwoSum} versus ${playerOneSum}.`;
+      return `<br><br> Leaderboard: <br>Player 2 score: ${playerTwoSum} <br>Player 1 score: ${playerOneSum}.`;
     } else {
       return `<br><br>Players are tied with a score of ${playerOneSum} versus ${playerTwoSum}.`;
     }
