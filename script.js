@@ -115,26 +115,50 @@ var calcPlayerScore = function (firstNumeralSelection) {
 };
 
 var writePlayerScore = function () {
+  console.log(scoreArray);
   var index = activePlayer - 1;
+  console.log(`currentScore: ${currentScore}`);
   scoreArray[index].push(currentScore);
   // console.log(`Score Array for Player ${activePlayer}: ${scoreArray[index]}`);
   // console.log("Score recorded.");
 };
 
+var generateBestScoreAutomatically = function () {
+  var bestScore = 0;
+  var option1 = concatenateTwoNumbers(
+    currentPlayerArray[0],
+    currentPlayerArray[1]
+  );
+  var option2 = concatenateTwoNumbers(
+    currentPlayerArray[1],
+    currentPlayerArray[0]
+  );
+  if (scoringModeIsHighest == true) {
+    bestScore = Math.max(option1, option2);
+  } else {
+    bestScore = Math.min(option1, option2);
+  }
+  return bestScore;
+};
+
 var playerTurnSelection = function (input) {
-  // console.log("playerTurnSelection is now running.");
-  var score = calcPlayerScore(input);
-  var returnstring = `Player ${activePlayer}, you chose ${input} to be the first numeral. <br>
-    The number you generated is ${score}. <br><br>
-    Please type 'next' to continue.`;
-  // console.log(`Score Generated: ${score}`);
+  var returnstring = `Player ${activePlayer}, `;
+  if (diceChoiceSelectionSkip == true) {
+    // auto mode still requires user input, but always makes the best choice for them
+    currentScore = generateBestScoreAutomatically();
+    returnstring +=
+      "your score was generated automatically with the '--auto' modifier. <br>";
+  } else if (diceChoiceSelectionSkip == false) {
+    currentScore = calcPlayerScore(input);
+    returnstring += `you chose ${input} to be the first numeral. <br>`;
+  }
+  returnstring += `The number you generated is ${currentScore}. <br><br>Please type 'next' to continue.`;
   writePlayerScore();
   return returnstring;
 };
 
 var indexofMinMax = function (arr) {
-  // combine this later
-  console.log(`scoringModeIsHighest: ${scoringModeIsHighest}`);
+  // console.log(`scoringModeIsHighest: ${scoringModeIsHighest}`);
   var currentMinMax = arr[0];
   var currentMinMaxIndex = 0;
   for (var i = 1; i < arr.length; i += 1) {
@@ -221,13 +245,9 @@ var generateLeaderboardMessage = function (arr) {
   var iterator = 0;
   while (iterator < arr.length) {
     var leaderboardPlayerNumber = iterator + 1;
-    // console.log(`iterator: ${iterator}
-    // score: ${arr[iterator]}`);
     messageString += `Player ${leaderboardPlayerNumber}:   ${arr[iterator]} <br>`;
     iterator += 1;
   }
-  // console.log(`messageString for LeaderboardMessage: <br>
-  // ${messageString}`);
   return messageString;
 };
 
