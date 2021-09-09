@@ -8,10 +8,11 @@ var scoreArray = [[], []];
 var progressNumber = 0;
 
 var scoringModeIsHighest = true;
+var diceChoiceSelectionSkip = false;
 var numberOfPlayers = 2; // default
-var numberOfDice = 2; // default
+// var numberOfDice = 2; // default
 const validCommands = ["start", "Roll", "dice 1", "dice 2", "next"];
-const validModifiers = ["--lowestCombined", "--auto"];
+// const validModifiers = ["--lowestCombined", "--auto"];
 // ^ modes must be applied with "--" modifiers, e.g. --lowestCombined
 // a full command might look like start --auto
 
@@ -32,21 +33,42 @@ var validateInput = function (input) {
   return false;
 };
 
+var createArrayFromString = function (str) {
+  var arr = str.split(" ");
+  var removedElement = arr.shift(); // remove the first entry, which should ALWAYS be "start"
+  console.log(`removed ${removedElement}`);
+  return arr;
+};
+
 var applyModifiers = function (mdf) {
-  // only 1 modifier is allowed to be applied at a time
-  var startMessage = "Hello Player 1! <br>";
-  if (mdf.includes("--") == false) {
+  console.log(`Player entered: ${mdf}`);
+  var startMessage = "Hello Player 1! <br><br>";
+  var modifiersArray = createArrayFromString(mdf);
+  if (modifiersArray.length == 0) {
     startMessage +=
       "No modifiers will be applied. The player with the larger number wins each round.<br>";
   }
-  if (mdf.includes("lowestCombined") == true) {
-    scoringModeIsHighest = false;
-    startMessage +=
-      "You have applied the 'lowestCombined' modifier. For this game, the player with the smaller number wins each round.<br>";
+  // loop over array of modifiers
+  for (var mod = 0; mod < modifiersArray.length; mod += 1) {
+    if (modifiersArray[mod] == "--lowestCombined") {
+      console.log("LC included");
+      scoringModeIsHighest = false;
+      startMessage +=
+        "You have applied the 'lowestCombined' modifier. For this game, the player with the smaller number wins each round.<br>";
+    } else if (modifiersArray[mod] == "--auto") {
+      console.log("auto included");
+      diceChoiceSelectionSkip = true;
+      startMessage +=
+        "You have applied the 'auto' modifier. The best combination for your chosen scoring rules will always be applied.<br>";
+    } else {
+      currentGameProgressMode = "initializing";
+      startMessage =
+        "You have entered an invalid modifier. Only --lowestCombined and --auto are accepted. Please try again.";
+      return startMessage;
+    }
   }
-  startMessage += "Enter 'Roll' to start your turn!";
+  startMessage += "<br>Enter 'Roll' to start your turn!";
   return startMessage;
-  // to add auto mode later
 };
 
 var initializeScoreArray = function () {
@@ -110,30 +132,31 @@ var playerTurnSelection = function (input) {
   return returnstring;
 };
 
-var indexofMax = function (arr) {
-  var currentMax = arr[0];
-  var currentMaxIndex = 0;
+var indexofMinMax = function (arr) {
+  // combine this later
+  console.log(`scoringModeIsHighest: ${scoringModeIsHighest}`);
+  var currentMinMax = arr[0];
+  var currentMinMaxIndex = 0;
   for (var i = 1; i < arr.length; i += 1) {
-    if (arr[i] > currentMax) {
-      // ^ loops over array and updates values
-      currentMax = arr[i];
-      currentMaxIndex = i;
+    if (scoringModeIsHighest == true) {
+      // normal mode
+      // find maximum
+      if (arr[i] > currentMinMax) {
+        currentMinMax = arr[i];
+        currentMinMaxIndex = i;
+      }
+    } else if (scoringModeIsHighest == false) {
+      // LC mode
+      // find minimum
+      if (arr[i] < currentMinMax) {
+        currentMinMax = arr[i];
+        currentMinMaxIndex = i;
+      }
     }
   }
-  return currentMaxIndex;
-};
-
-var indexOfMin = function (arr) {
-  var currentMin = arr[0];
-  var currentMinIndex = 0;
-  for (var i = 1; i < arr.length; i += 1) {
-    if (arr[i] < currentMin) {
-      // ^ loops over array and updates values
-      currentMin = arr[i];
-      currentMinIndex = i;
-    }
-  }
-  return currentMinIndex;
+  console.log(arr);
+  console.log(`currentMinMax: ${currentMinMax}`);
+  return currentMinMaxIndex;
 };
 
 var chooseWinner = function () {
@@ -141,6 +164,7 @@ var chooseWinner = function () {
   var roundWinner = -1; // nonsensical
   var scoreArrayCopy = Array.from(scoreArray);
   // makes a shallow copy, because a simple = doesnt do it
+  // this was originally a workaround for .pop(), not sure if still needed
   for (let iterator = 0; iterator < scoreArrayCopy.length; iterator += 1) {
     var lastElement =
       scoreArrayCopy[iterator][scoreArrayCopy[iterator].length - 1];
@@ -148,13 +172,7 @@ var chooseWinner = function () {
     // thank u nested lists very cool
     currentRoundArray.push(lastElement);
   }
-
-  if (scoringModeIsHighest == true) {
-    roundWinner = indexofMax(currentRoundArray) + 1;
-  }
-  if (scoringModeIsHighest == false) {
-    roundWinner = indexOfMin(currentRoundArray) + 1;
-  }
+  roundWinner = indexofMinMax(currentRoundArray) + 1;
   console.log(scoreArray);
   console.log(`Player ${roundWinner} wins this round.`);
   return roundWinner;
@@ -237,20 +255,21 @@ var endRound = function () {
 };
 
 var main = function (input) {
+  // this whole thing is too long
+  // and apparently has too many returns
   if (validateInput(input) == false) {
     return "Looks like you submitted something invalid.";
   }
   // if valid input
-  if (
-    currentGameProgressMode == "initializing" &&
-    input.includes("start") == true
-  ) {
+  if (currentGameProgressMode == "initializing" && input.includes("start")) {
     currentGameProgressMode = "playing";
     initializeScoreArray();
-    return applyModifiers(input);
+    return applyModifiers(input); //condense these 3 lines?
   }
   if (progressNumber < 3) {
+    // maybe change to while loop?
     if (input.includes("dice")) {
+      //make some playgame(input) function?
       return playerTurnSelection(input);
     }
     if (input == "next") {
