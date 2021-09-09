@@ -6,22 +6,14 @@ var currentCombos = [];
 var currentDices = [];
 
 var main = function (input) {
-  var myOutputValue = "hello world";
+  var myOutputValue = "Please input either 1 or 2.";
   if (gameMode == 0) {
-    currentCombos = [];
+    resetCombos();
     myOutputValue = currentTurn();
     gameMode = 1;
-  } else if (gameMode == 1) {
+  } else if (gameMode == 1 && (input == 1 || input == 2)) {
     myOutputValue = currentSelection(input);
-    myOutputValue += nextPlay();
-    changePlayer();
-    gameMode = 2;
-  } else if (gameMode == 2) {
-    myOutputValue = currentTurn();
-    gameMode = 3;
-  } else if (gameMode == 3) {
-    myOutputValue = currentSelection(input);
-    myOutputValue += determineWinner();
+    myOutputValue += thirdStatement();
     changePlayer();
     gameMode = 0;
   }
@@ -29,6 +21,20 @@ var main = function (input) {
   console.log(currentCombos);
 
   return myOutputValue;
+};
+
+var thirdStatement = function () {
+  if (currentPlayer == "Player 1") {
+    return nextPlay();
+  } else if (currentPlayer == "Player 2") {
+    return determineWinner();
+  }
+};
+
+var resetCombos = function () {
+  if (currentPlayer == "Player 1") {
+    currentCombos = [];
+  }
 };
 
 var rollDice = function () {
