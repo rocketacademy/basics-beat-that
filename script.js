@@ -9,12 +9,12 @@ var playerNumbers = [];
 // helper functions
 // generate dice number and convert to string
 var generateDiceNumber = function () {
-  diceNumber = Math.ceil(Math.random() * 6);
+  var diceNumber = Math.ceil(Math.random() * 6);
   return diceNumber.toString();
 };
 
 // check if dice 1 and dice 2 are of the same value
-var areDicesSame = function (dice1, dice2) {
+var areDicesSame = function () {
   if (dice1 == dice2) {
     return true;
   }
@@ -26,9 +26,7 @@ var combineNumber = function (userChoice) {
   if (userChoice == 1) {
     return dice1 + dice2;
   }
-  if (userChoice == 2) {
-    return dice2 + dice1;
-  }
+  return dice2 + dice1;
 };
 
 // reset game
@@ -58,14 +56,16 @@ var main = function (input) {
   // output: player playing, dice rolls for player
   myOutputValue = `Welcome, Player ${currPlayer}. <br>
    You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br>`;
-  // if dices are the same, automatically combine values and store in array. else, change game mode to "choose order"
-  if (areDicesSame(dice1, dice2)) {
+  // if dices are the same, automatically combine values and store in array.
+  if (areDicesSame()) {
     playerNumbers.push(dice1 + dice2);
     console.log("player numbers array: " + playerNumbers);
     myOutputValue += `Your number is ${
       playerNumbers[currPlayer - 1]
     }. <br><br>`;
-  } else {
+  }
+  // else, change game mode to "choose order"
+  else {
     currGameMode = "choose order";
     console.log("game mode: " + currGameMode);
   }
@@ -85,7 +85,6 @@ var main = function (input) {
   if (currPlayer < numOfPlayers) {
     currGameMode = "roll dice";
     myOutputValue += `It is now Player ${(currPlayer += 1)}'s turn.`;
-    return myOutputValue;
   } else {
     var higherScore = Math.max(...playerNumbers);
     console.log("higher score: " + higherScore);
