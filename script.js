@@ -1,6 +1,7 @@
 var currentPlayer = "Player 1";
 var nextPlayer = "Player 2";
 var gameMode = 0;
+var maxFlag = "";
 
 var currentCombos = [];
 var currentDices = [];
@@ -11,14 +12,23 @@ var playerTwoScore = [];
 var main = function (input) {
   var myOutputValue = "Please input either 1 or 2.";
   if (gameMode == 0) {
+    myOutputValue =
+      "Input true for normal mode or false for lowest combined mode.";
+    if (input == "true" || input == "false") {
+      maxFlag = input;
+      gameMode = 1;
+      myOutputValue = `You said ${maxFlag} to normal mode.`;
+    }
+  } else if (gameMode == 1) {
     resetCombos();
     myOutputValue = currentTurn();
-    gameMode = 1;
-  } else if (gameMode == 1 && (input == 1 || input == 2)) {
+    gameMode = 2;
+  } else if (gameMode == 2 && (input == 1 || input == 2)) {
+    console.log("here");
     myOutputValue = currentSelection(input) + thirdStatement();
     myOutputValue += trackScore();
     changePlayer();
-    gameMode = 0;
+    gameMode = 1;
   }
   //console.log(currentDices);
   //console.log(currentCombos);
@@ -38,12 +48,22 @@ var trackScore = function () {
   if (playerOneScore.length > 0 && playerTwoScore.length > 0) {
     var playerOneSum = playerOneScore.reduce((a, b) => a + b);
     var playerTwoSum = playerTwoScore.reduce((a, b) => a + b);
-    if (playerOneSum > playerTwoSum) {
-      return `<br><br> Leaderboard: <br>Player 1 score: ${playerOneSum} <br>Player 2 score: ${playerTwoSum}.`;
-    } else if (playerOneSum < playerTwoSum) {
-      return `<br><br> Leaderboard: <br>Player 2 score: ${playerTwoSum} <br>Player 1 score: ${playerOneSum}.`;
+    if (maxFlag == "true") {
+      if (playerOneSum > playerTwoSum) {
+        return `<br><br> Leaderboard: <br>Player 1 score: ${playerOneSum} <br>Player 2 score: ${playerTwoSum}.`;
+      } else if (playerOneSum < playerTwoSum) {
+        return `<br><br> Leaderboard: <br>Player 2 score: ${playerTwoSum} <br>Player 1 score: ${playerOneSum}.`;
+      } else {
+        return `<br><br>Players are tied with a score of ${playerOneSum} versus ${playerTwoSum}.`;
+      }
     } else {
-      return `<br><br>Players are tied with a score of ${playerOneSum} versus ${playerTwoSum}.`;
+      if (playerOneSum < playerTwoSum) {
+        return `<br><br> Leaderboard: <br>Player 1 score: ${playerOneSum} <br>Player 2 score: ${playerTwoSum}.`;
+      } else if (playerOneSum > playerTwoSum) {
+        return `<br><br> Leaderboard: <br>Player 2 score: ${playerTwoSum} <br>Player 1 score: ${playerOneSum}.`;
+      } else {
+        return `<br><br>Players are tied with a score of ${playerOneSum} versus ${playerTwoSum}.`;
+      }
     }
   }
   return "";
@@ -101,12 +121,22 @@ var changePlayer = function () {
 };
 
 var determineWinner = function () {
-  if (currentCombos[0] > currentCombos[1]) {
-    return `<br> Player 1 wins with ${currentCombos[0]} versus Player 2 with ${currentCombos[1]}`;
-  } else if (currentCombos[0] < currentCombos[1]) {
-    return `<br> Player 2 wins with ${currentCombos[1]} versus Player 1 with ${currentCombos[0]}`;
+  if (maxFlag == "true") {
+    if (currentCombos[0] > currentCombos[1]) {
+      return `<br> Player 1 wins with ${currentCombos[0]} versus Player 2 with ${currentCombos[1]}`;
+    } else if (currentCombos[0] < currentCombos[1]) {
+      return `<br> Player 2 wins with ${currentCombos[1]} versus Player 1 with ${currentCombos[0]}`;
+    } else {
+      return `<br> It is a tie with ${currentCombos[0]} versus ${currentCombos[1]}`;
+    }
   } else {
-    return `<br> It is a tie with ${currentCombos[0]} versus ${currentCombos[1]}`;
+    if (currentCombos[0] < currentCombos[1]) {
+      return `<br> Player 1 wins with ${currentCombos[0]} versus Player 2 with ${currentCombos[1]}`;
+    } else if (currentCombos[0] > currentCombos[1]) {
+      return `<br> Player 2 wins with ${currentCombos[1]} versus Player 1 with ${currentCombos[0]}`;
+    } else {
+      return `<br> It is a tie with ${currentCombos[0]} versus ${currentCombos[1]}`;
+    }
   }
 };
 
