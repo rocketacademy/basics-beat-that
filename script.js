@@ -5,6 +5,9 @@ var gameMode = 0;
 var currentCombos = [];
 var currentDices = [];
 
+var playerOneScore = [];
+var playerTwoScore = [];
+
 var main = function (input) {
   var myOutputValue = "Please input either 1 or 2.";
   if (gameMode == 0) {
@@ -12,15 +15,38 @@ var main = function (input) {
     myOutputValue = currentTurn();
     gameMode = 1;
   } else if (gameMode == 1 && (input == 1 || input == 2)) {
-    myOutputValue = currentSelection(input);
-    myOutputValue += thirdStatement();
+    myOutputValue = currentSelection(input) + thirdStatement();
+    myOutputValue += trackScore(); // here
     changePlayer();
     gameMode = 0;
   }
-  console.log(currentDices);
-  console.log(currentCombos);
+  //console.log(currentDices);
+  //console.log(currentCombos);
+  console.log(playerOneScore);
+  console.log(playerTwoScore);
 
   return myOutputValue;
+};
+
+var trackScore = function () {
+  if (currentPlayer == "Player 1") {
+    playerOneScore.push(Number(currentCombos.at(-1)));
+  } else if (currentPlayer == "Player 2") {
+    playerTwoScore.push(Number(currentCombos.at(-1)));
+  }
+
+  if (playerOneScore.length > 0 && playerTwoScore.length > 0) {
+    var playerOneSum = playerOneScore.reduce((a, b) => a + b);
+    var playerTwoSum = playerTwoScore.reduce((a, b) => a + b);
+    if (playerOneSum > playerTwoSum) {
+      return `<br><br>Player 1 is leading with a score of ${playerOneSum} versus ${playerTwoSum}.`;
+    } else if (playerOneSum < playerTwoSum) {
+      return `<br><br>Player 2 is leading with a score of ${playerTwoSum} versus ${playerOneSum}.`;
+    } else {
+      return `<br><br>Players are tied with a score of ${playerOneSum} versus ${playerTwoSum}.`;
+    }
+  }
+  return "";
 };
 
 var thirdStatement = function () {
