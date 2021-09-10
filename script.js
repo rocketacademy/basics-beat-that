@@ -19,8 +19,8 @@ var main = function (input) {
 
   // console.clear();
 
-  console.log(`Current game mode is ${gameMode}.`);
-  console.log(`Current game version is ${gameVersion}.`);
+  // console.log(`Current game mode is ${gameMode}.`);
+  // console.log(`Current game version is ${gameVersion}.`);
 
   var inputValidationResults = inputValidation(input);
   console.log(`Result of input validation is ${inputValidationResults}`);
@@ -117,10 +117,49 @@ var concatenateDiceNum = function (input) {
   }
 };
 
+// Function to auto concatenate dice numbers
+
+var autoConcatenateDiceNum = function () {
+  var dicePosition1 = "";
+  var dicePosition2 = "";
+  if (gameVersion == "normal") {
+    if (rollDiceResult[0] > rollDiceResult[1]) {
+      dicePosition1 = rollDiceResult[0];
+      dicePosition2 = rollDiceResult[1];
+      concatenateNum = Number(
+        dicePosition1.toString() + dicePosition2.toString()
+      );
+      return concatenateNum;
+    } else {
+      dicePosition1 = rollDiceResult[1];
+      dicePosition2 = rollDiceResult[0];
+      concatenateNum = Number(
+        dicePosition1.toString() + dicePosition2.toString()
+      );
+      return concatenateNum;
+    }
+  } else if (gameVersion == "lowestCombined") {
+    if (rollDiceResult[0] > rollDiceResult[1]) {
+      dicePosition1 = rollDiceResult[1];
+      dicePosition2 = rollDiceResult[0];
+      concatenateNum = Number(
+        dicePosition1.toString() + dicePosition2.toString()
+      );
+      return concatenateNum;
+    } else {
+      dicePosition1 = rollDiceResult[0];
+      dicePosition2 = rollDiceResult[1];
+      concatenateNum = Number(
+        dicePosition1.toString() + dicePosition2.toString()
+      );
+      return concatenateNum;
+    }
+  }
+};
+
 // Function to check who wins for the round
 var checkWhoWins = function (player1CurrentScore, player2CurrentScore) {
   var resultStatement = "";
-  gameMode = "game intro";
 
   if (player1CurrentScore == player2CurrentScore) {
     resultStatement = `It's a draw! Click submit to try again.`;
@@ -201,17 +240,17 @@ var playGame = function (input) {
     player1ConcatenateNum = concatenateDiceNum(input);
     player1ScoreSum += player1ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
+    gameMode = "player 2 roll dice";
 
     myOutputValue = `Player 1, you chose ${input} first.<br><br>
     Your number is ${player1ConcatenateNum}.<br><br>
     It is now Player 2's turn. Click Submit to roll dice.<br><br>
     ${leaderBoardResults}`;
 
-    gameMode = "player 2 roll dice";
     return myOutputValue;
   } else if (gameMode == "player 2 roll dice") {
-    gameMode = "player 2 selection";
     player2RollDiceResult = generateDiceResult();
+    gameMode = "player 2 selection";
 
     myOutputValue = `Welcome Player 2.<br><br>
     You rolled ${player2RollDiceResult[0]} for Dice 1 and ${player2RollDiceResult[1]} for Dice 2.<br><br>
@@ -222,6 +261,7 @@ var playGame = function (input) {
     player2ConcatenateNum = concatenateDiceNum(input);
     player2ScoreSum += player2ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
+    gameMode = "game intro";
 
     if (gameVersion == "normal") {
       winResults = checkWhoWins(player1ConcatenateNum, player2ConcatenateNum);
