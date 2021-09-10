@@ -58,16 +58,14 @@ var main = function (input) {
   }
 
   // output: player playing, dice rolls for player
-  myOutputValue = `Welcome, Player ${currPlayer}. <br>
-  You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2. <br>`;
+  myOutputValue = `<b>🎲  WELCOME, PLAYER ${currPlayer}  🎲</b><br><br>
+  You rolled ${dice1} for dice one and ${dice2} for dice two. <br><br>`;
 
   // if dices are the same, automatically combine values and store in array.
   if (areDicesSame()) {
     playerNumbers.push(dice1 + dice2);
     console.log("player numbers array: " + playerNumbers);
-    myOutputValue += `Your number is ${
-      playerNumbers[currPlayer - 1]
-    }. <br><br>`;
+    myOutputValue += `Your number is ${playerNumbers[currPlayer - 1]}.<br><br>`;
   }
   // else, change game mode to "choose order"
   else {
@@ -81,8 +79,10 @@ var main = function (input) {
     if (input == 1 || input == 2) {
       playerNumbers.push(combineNumber(input));
       console.log("player numbers array: " + playerNumbers);
-      myOutputValue = `Player ${currPlayer}, you chose Dice ${input} first. <br>
-        Your number is ${playerNumbers[currPlayer - 1]}. <br><br>`;
+      myOutputValue = `<b>🎲  PLAYER ${currPlayer}  🎲</b><br><br>
+      You chose Dice ${input} first. Your number is ${
+        playerNumbers[currPlayer - 1]
+      }. <br><br>`;
     }
     // else, add-on output msg: choose order of dice
     else {
@@ -99,31 +99,34 @@ var main = function (input) {
 
   // else (current player is last player), evaluate the players' numbers and select winner.
   else {
+    // get highest score from player numbers array
     var highScore = Math.max(...playerNumbers);
     console.log("higher score: " + highScore);
 
+    // check player numbers array if there's any draws and push to new array
     for (var i = 0; i < playerNumbers.length; i++) {
       if (playerNumbers[i] == highScore) {
-        winnersArr.push(" " + (i += 1));
+        winnersArr.push(" " + (i + 1));
       }
     }
-
     console.log("winners: " + winnersArr);
+
+    // if everyone drew the same number, output draw msg.
     if (winnersArr.length == numOfPlayers) {
-      myOutputValue += `You guys drew. Play again?<br><br>`;
+      myOutputValue += `<hr><br><b>You guys drew. Play again?</b><br><br>`;
+    } else if (winnersArr.length > 1) {
+      // if there is more than 1 winner, output multiple winner msg.
+      myOutputValue += `<hr><br><b>The winner(s) are Players${winnersArr}.</b><br><br>`;
     }
-
-    if (winnersArr.length > 1) {
-      myOutputValue += `The winner(s) are Players${winnersArr}.<br><br>`;
-    }
-
+    // if there is only 1 winner, output winner msg.
     if (winnersArr.length == 1) {
       // var winner = playerNumbers.indexOf(highScore.toString()) + 1;
       // console.log("winner: " + winner);
-      myOutputValue += `The winner is Player${winnersArr}.<br><br>`;
+      myOutputValue += `<hr><br><b>The winner is Player${winnersArr}.</b><br><br>`;
     }
 
     myOutputValue += `Press 'Submit' to play again.`;
+    // reset game
     resetGame();
   }
 
