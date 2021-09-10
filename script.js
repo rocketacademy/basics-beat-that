@@ -2,6 +2,7 @@ var currentPlayer = "Player 1";
 var nextPlayer = "Player 2";
 var gameMode = 0;
 var maxFlag = "";
+var autoFlag = false;
 
 var currentCombos = [];
 var currentDices = [];
@@ -25,8 +26,7 @@ var main = function (input) {
     gameMode = 2;
   } else if (gameMode == 2 && (input == 1 || input == 2)) {
     console.log("here");
-    myOutputValue = currentSelection(input) + thirdStatement();
-    myOutputValue += trackScore();
+    myOutputValue = currentSelection(input) + thirdStatement() + trackScore(); // concat trackscore
     changePlayer();
     gameMode = 1;
   }
@@ -143,3 +143,5 @@ var determineWinner = function () {
 var nextPlay = function () {
   return `<br>It is now ${nextPlayer}'s turn.`;
 };
+
+// doing auto mode
