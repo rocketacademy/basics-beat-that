@@ -60,7 +60,7 @@ var generateLeaderboard = function () {
   else players.sort((a, b) => a.score - b.score);
 
   // output scores
-  var output = "<br><br>Leaderboard:<br>";
+  var output = "<br><br><b>💪 Leaderboard: 💪</b><br>";
   for (var j = 0; j < players.length; j += 1) {
     output += `${j + 1}. Player ${players[j].playerNum}: ${
       players[j].score
@@ -76,8 +76,8 @@ var generateLeaderboard = function () {
     i += 1;
   }
 
-  if (tied.length > 1) output += `Players ${tied} are currently tied!`;
-  else output += `The current leader is Player ${winner}!`;
+  if (tied.length > 1) output += `<br>Players ${tied} are currently tied!`;
+  else output += `<br>The current leader is Player ${winner}! 🎉🎉🎉`;
 
   players.sort((a, b) => a.playerNum - b.playerNum); //resort players by playernum
   return output;
@@ -114,13 +114,13 @@ var generateEndKnockoutRoundOutput = function () {
     roundPlayers[1].score = 0;
     output += `There's a tie! Player ${roundPlayers[0].playerNum}, press Continue to roll again.`;
   } else {
-    output += `The winner is Player ${roundPlayers[0].playerNum}! Player ${roundPlayers[1].playerNum} is eliminated.`;
+    output += `The winner is Player ${roundPlayers[0].playerNum}! Player ${roundPlayers[1].playerNum} is eliminated. ❌`;
     players = players.filter((p) => p.playerNum != roundPlayers[1].playerNum); // remove loser from players
     roundPlayers = [];
 
     if (players.length == 1) {
       // knockout game over, there is a winner
-      output += `<br><br>After a long fought battle, the ultimate winner of the knockout round is Player ${players[0].playerNum}! Congratulations!`;
+      output += `<br><br>After a long fought battle, the ultimate winner of the knockout is Player ${players[0].playerNum}! 🎉🎉🎉<br>Congratulations!`;
       resetGame();
     } else {
       output += `<br><br>Remaining players: `;
@@ -149,7 +149,7 @@ var setGameState = function (playerNum, diceNum, calcScore, gameMode) {
 
   return knockoutMode
     ? randomSelectTwoPlayers()
-    : `Starting game. It is Player 1's turn. Press Submit to roll.`;
+    : `Starting game. It is Player 1's turn. Press Continue to roll.`;
 };
 
 var main = function () {
@@ -163,7 +163,7 @@ var main = function () {
   var output = `Welcome Player ${playerNum}.<br>`;
   output += getDiceRolls();
   var score = getScore();
-  output += `<br>Your number is ${score}.`;
+  output += `<br>Your number is <b>${score}</b>.`;
 
   if (!knockoutMode) {
     // calculate score for cur player and increment score
