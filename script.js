@@ -69,8 +69,17 @@ var generateLeaderboard = function () {
 
   // output winner
   var winner = players[0].playerNum;
+  var tied = [winner];
+  var i = 1;
+  while (i < players.length && players[i].score == players[0].score) {
+    tied.push(players[i].playerNum);
+    i += 1;
+  }
+
+  if (tied.length > 1) output += `Players ${tied} are currently tied!`;
+  else output += `The current leader is Player ${winner}!`;
+
   players.sort((a, b) => a.playerNum - b.playerNum); //resort players by playernum
-  output += `The current leader is Player ${winner}!`;
   return output;
 };
 
@@ -84,7 +93,7 @@ var randomSelectTwoPlayers = function () {
   } while (playerOne == playerTwo);
   roundPlayers = [playerOne, playerTwo];
 
-  return `Player ${playerOne.playerNum} and Player ${playerTwo.playerNum} are selected to play. Player ${playerOne.playerNum}, press submit to roll.`;
+  return `Player ${playerOne.playerNum} and Player ${playerTwo.playerNum} are selected to play. Player ${playerOne.playerNum}, press Continue to roll.`;
 };
 
 var generateEndKnockoutRoundOutput = function () {
@@ -95,28 +104,30 @@ var generateEndKnockoutRoundOutput = function () {
   else roundPlayers.sort((a, b) => a.score - b.score);
 
   // output the scores of the players who played the recent round
-  var output = `<br><br>`;
-  for (var j = 0; j < roundPlayers.length; j += 1) {
-    output += `Player ${roundPlayers[j].playerNum}'s number is ${roundPlayers[j].score}.<br>`;
-  }
+  var output = `<br><br>Player ${roundPlayers[0].playerNum}'s number is ${roundPlayers[0].score}.`;
+  output += `<br>Player ${roundPlayers[1].playerNum}'s number is ${roundPlayers[1].score}.<br>`;
 
-  // output winner and reset relevant variables
-  var winner = roundPlayers[0].playerNum;
-  var loser = roundPlayers[1].playerNum;
-  output += `The winner is Player ${winner}! Player ${loser} is eliminated.`;
-  players = players.filter((p) => p.playerNum != loser); // remove loser from players
+  // output winner/tie and reset relevant variables
   curPlayer = 1;
-  roundPlayers = [];
-
-  if (players.length == 1) {
-    // knockout game over, there is a winner
-    output += `<br><br>After a long fought battle, the ultimate winner of the knockout round is Player ${players[0].playerNum}! Congratulations!`;
-    resetGame();
+  if (roundPlayers[0].score == roundPlayers[1].score) {
+    roundPlayers[0].score = 0;
+    roundPlayers[1].score = 0;
+    output += `There's a tie! Player ${roundPlayers[0].playerNum}, press Continue to roll again.`;
   } else {
-    output += `<br><br>Remaining players: `;
-    for (let i = 0; i < players.length; i += 1) {
-      players[i].score = 0;
-      output += `${players[i].playerNum} `;
+    output += `The winner is Player ${roundPlayers[0].playerNum}! Player ${roundPlayers[1].playerNum} is eliminated.`;
+    players = players.filter((p) => p.playerNum != roundPlayers[1].playerNum); // remove loser from players
+    roundPlayers = [];
+
+    if (players.length == 1) {
+      // knockout game over, there is a winner
+      output += `<br><br>After a long fought battle, the ultimate winner of the knockout round is Player ${players[0].playerNum}! Congratulations!`;
+      resetGame();
+    } else {
+      output += `<br><br>Remaining players: `;
+      for (let i = 0; i < players.length; i += 1) {
+        players[i].score = 0;
+        output += `${players[i].playerNum} `;
+      }
     }
   }
   return output;
