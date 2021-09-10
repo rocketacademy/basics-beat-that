@@ -1,4 +1,4 @@
-//assign global variables
+//ASSIGN GLOBAL VARIABLES
 var myOutputValue = ``;
 //keeps track of both players score
 var playerOneScore = 0;
@@ -15,25 +15,34 @@ var playerTwoNumber = 0;
 var winningNumber = 0;
 //game mode
 var gameMode = `player one`;
+//player score
+var playerOneScore = [];
+var playerTwoScore = [];
 
 //MAIN FUNCTION
 var main = function (input) {
   //Player one rolls
   if (gameMode == `player one`) {
     myOutputValue = playerOneDiceRoll();
-  } else if (gameMode == `player one input`) {
-    //Player one chooses which dice goes first
+  } //Change game mode to request for player one input
+  else if (gameMode == `player one input`) {
     myOutputValue = playerOneChoice(input);
     //player two rolls two dices
   } else if (gameMode == `player two`) {
     myOutputValue = playerTwoDiceRoll();
-  } else if (gameMode == `player two input`) {
-    //change game mode to request for player two input
+  } //Change game mode to request for player two input
+  else if (gameMode == `player two input`) {
     myOutputValue = playerTwoChoice(input);
   } else if (gameMode == `announce winner`) {
-    //Announces winner
+    //Announces winner for base variation of beat that
     winningNumber = largerNumber(playerOneNumber, playerTwoNumber);
     myOutputValue = chooseWinner();
+  } else if (gameMode == `lowest combined number`) {
+    winningNumber = smallerNumber(playerOneNumber, playerTwoNumber);
+    myOutputValue = chooseWinner();
+  } //Game mode score
+  else if (gameMode == `score`) {
+    myOutputValue = chooseWinnerScore();
   }
   return myOutputValue;
 };
@@ -96,12 +105,18 @@ var playerOneChoice = function (input) {
   if (input == `1`) {
     playerOneNumber = diceOneFirst(playerOneDiceOne, playerOneDiceTwo);
     gameMode = `player two`;
+    //push player's number into playerOneScore array to keep track of running sum
+    playerOneScore.push(playerOneNumber);
+    console.log(playerOneScore);
     return `Player one = ${playerOneNumber} <br><br> It's player two's turn. Press submit to roll dice.`;
   }
   //if player chooses 2
   else if (input == `2`) {
     playerOneNumber = diceTwoFirst(playerOneDiceOne, playerOneDiceTwo);
     gameMode = `player two`;
+    //push player's number into playerOneScore array to keep track of running sum
+    playerOneScore.push(playerOneNumber);
+    console.log(playerOneScore);
     return `Player one = ${playerOneNumber} <br><br> It's player two's turn. Press submit to roll dice.`;
   }
   //if player does not select a number
@@ -115,13 +130,19 @@ var playerOneChoice = function (input) {
 var playerTwoChoice = function (input) {
   if (input == `1`) {
     playerTwoNumber = diceOneFirst(playerTwoDiceOne, playerTwoDiceTwo);
-    gameMode = `announce winner`;
+    //push player's number into playerTwoScore array to keep track of running sum
+    playerTwoScore.push(playerTwoNumber);
+    console.log(playerTwoScore);
+    gameMode = `score`;
     return `Player two = ${playerTwoNumber} <br><br> Press submit to find out who's the winner :)`;
   }
   //if player chooses 2
   else if (input == `2`) {
     playerTwoNumber = diceTwoFirst(playerTwoDiceOne, playerTwoDiceTwo);
-    gameMode = `announce winner`;
+    //push player's number into playerTwoScore array to keep track of running sum
+    playerTwoScore.push(playerTwoNumber);
+    console.log(playerTwoScore);
+    gameMode = `score`;
     return `Player two = ${playerTwoNumber} <br><br> Press submit to find out who's the winner :)`;
   }
   //if player does not select a number
@@ -136,11 +157,47 @@ var largerNumber = function (playerOneNumber, playerTwoNumber) {
   return winningNumber;
 };
 
+//LOWEST COMBINED NUMBER MODE
+//FUNCTION TO COMPARE BOTH PLAYERS' NUMBERS TO DETERMINE WHICH IS SMALLER
+var smallerNumber = function (playerOneNumber, playerTwoNumber) {
+  var winningNumber = Math.min(playerOneNumber, playerTwoNumber);
+  return winningNumber;
+};
+
 //FUNCTION TO ANNOUNCE WINNER
 var chooseWinner = function () {
+  gameMode = `player one`;
   if (playerOneNumber == winningNumber) {
     return `Player 1: ${playerOneNumber} <br>Player 2: ${playerTwoNumber}<br><br>Player 1 wins with ${winningNumber}!`;
   } else {
     return `Player 1: ${playerOneNumber} <br>Player 2: ${playerTwoNumber}<br><br>Player 2 wins with ${winningNumber}!`;
+  }
+};
+
+//FUNCTION FOR GAME MODE: SCORE
+var chooseWinnerScore = function () {
+  //change game mode to player one to restart game after announcing winner
+  gameMode = `player one`;
+  //initialize sum of each player's scores
+  var playerOneScoreSum = 0;
+  var playerTwoScoreSum = 0;
+  //add up player one's score by looping through array of playerOneScore
+  for (i = 0; i < playerOneScore.length; i++) {
+    playerOneScoreSum += playerOneScore[i];
+    console.log(`playerOneScoreSum`);
+    console.log(playerOneScoreSum);
+  }
+  //add up player two's score by looping through array of playerTwoScore
+  for (j = 0; j < playerTwoScore.length; j++) {
+    playerTwoScoreSum += playerTwoScore[j];
+    console.log(`playerTwoScoreSum`);
+    console.log(playerTwoScoreSum);
+  }
+  //compare which number is larger and output leaderboard
+  if (playerOneScoreSum > playerTwoScoreSum) {
+    return `Player One is leading! <br><br>Score Sum <br>Player 1: ${playerOneScoreSum}<br>Player 2: ${playerTwoScoreSum}`;
+  }
+  if (playerTwoScoreSum > playerOneScoreSum) {
+    return `Player Two is leading! <br><br>Score Sum <br>Player 2: ${playerTwoScoreSum}<br>Player 1: ${playerOneScoreSum}`;
   }
 };
