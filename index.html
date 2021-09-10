@@ -42,14 +42,31 @@
       #output-div {
         background-color: rgb(223, 223, 223);
         margin: 20px auto;
-        padding: 20px;
+        padding: 25px;
         width: 100%;
+        text-align: center;
+      }
+
+      #leaderboard {
+        color: darkblue;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      #instructions {
+        color: rgb(57, 80, 209);
+      }
+
+      #gameinstructions {
+        color: rgb(155, 153, 153);
+        text-align: center;
+        margin-top: 38px;
       }
     </style>
   </head>
 
   <body>
     <h1 id="header">🎲 Beat That! 🎲</h1>
+
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
@@ -57,6 +74,15 @@
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+    </div>
+    <div id="gameinstructions">
+      <p style="font-size: large">
+        <b>How to play beat that❓</b>
+      </p>
+      <p>Roll two dices and put them in order to make the highest number possible.</p>
+      <p>For example, if you roll a 1 and 5, your best answer would be 51.</p>
+      <p>Your numbers are cumulative, and resets when you refresh the page.</p>
+      <p>This game is two-player, so grab a buddy! 🙍🏻‍♀️🙍🏽‍♀️</p>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>

@@ -56,11 +56,11 @@ var rollDice = function () {
 //FUNCTION TO VERIFY IF INPUT IS A VALID NUMBER
 var inputNumber = function (input) {
   if (isNaN(input) || input == ``) {
-    return `You did not enter a number. Please enter a valid number (1 or 2).`;
+    return `<div id="instructions">Oops, you did not enter a number. Please enter a valid number (1 or 2).</div>`;
   } else {
     //verifies if input is 1 or 2
     if (input != 1 || input != 2) {
-      return `Please select either dice 1 or 2.`;
+      return `<div id="instructions">It looks like you didn't enter 1 or 2. Please select either dice 1 or 2.</div>`;
     }
   }
 };
@@ -84,9 +84,8 @@ var playerOneDiceRoll = function () {
   //roll two dices
   playerOneDiceOne = rollDice();
   playerOneDiceTwo = rollDice();
-  //change game mode to request for player one input
   gameMode = `player one input`;
-  return `Player 1 - Your rolls are ${playerOneDiceOne} and ${playerOneDiceTwo}. Please choose the order of the dice`;
+  return `Player 1, your rolls are ${playerOneDiceOne} and ${playerOneDiceTwo}. <br><br><div id="instructions">Please choose the order of the dice by inputting 1 or 2</div>`;
 };
 
 //FUNCTION FOR PLAYER TWO DICE ROLL
@@ -94,9 +93,8 @@ var playerOneDiceRoll = function () {
 var playerTwoDiceRoll = function () {
   playerTwoDiceOne = rollDice();
   playerTwoDiceTwo = rollDice();
-  //change game mode to request for player one input
   gameMode = `player two input`;
-  return `Player 2 - Your rolls are ${playerTwoDiceOne} and ${playerTwoDiceTwo}. Please choose the order of the dice`;
+  return `Player 2, your rolls are ${playerTwoDiceOne} and ${playerTwoDiceTwo}. <br><br><div id="instructions">Please choose the order of the dice by inputting 1 or 2</div>`;
 };
 
 //FUNCTION FOR PLAYER ONE INPUT
@@ -108,7 +106,7 @@ var playerOneChoice = function (input) {
     //push player's number into playerOneScore array to keep track of running sum
     playerOneScore.push(playerOneNumber);
     console.log(playerOneScore);
-    return `Player one = ${playerOneNumber} <br><br> It's player two's turn. Press submit to roll dice.`;
+    return `Player 1, your number is ${playerOneNumber} <br><br><div id="instructions"> It's player two's turn. Press submit to roll dice.</div>`;
   }
   //if player chooses 2
   else if (input == `2`) {
@@ -117,7 +115,7 @@ var playerOneChoice = function (input) {
     //push player's number into playerOneScore array to keep track of running sum
     playerOneScore.push(playerOneNumber);
     console.log(playerOneScore);
-    return `Player one = ${playerOneNumber} <br><br> It's player two's turn. Press submit to roll dice.`;
+    return `Player 1, your number is ${playerOneNumber} <br><br><div id="instructions">It's player two's turn. Press submit to roll dice.</div>`;
   }
   //if player does not select a number
   else {
@@ -134,7 +132,7 @@ var playerTwoChoice = function (input) {
     playerTwoScore.push(playerTwoNumber);
     console.log(playerTwoScore);
     gameMode = `score`;
-    return `Player two = ${playerTwoNumber} <br><br> Press submit to find out who's the winner :)`;
+    return `Player 2, your number is ${playerTwoNumber} <br><br><div id="instructions"> Press submit to find out who's the winner :)</div>`;
   }
   //if player chooses 2
   else if (input == `2`) {
@@ -143,7 +141,7 @@ var playerTwoChoice = function (input) {
     playerTwoScore.push(playerTwoNumber);
     console.log(playerTwoScore);
     gameMode = `score`;
-    return `Player two = ${playerTwoNumber} <br><br> Press submit to find out who's the winner :)`;
+    return `Player 2, your number is ${playerTwoNumber} <br><br><div id="instructions"> Press submit to find out who's the winner :)</div>`;
   }
   //if player does not select a number
   else {
@@ -195,9 +193,9 @@ var chooseWinnerScore = function () {
   }
   //compare which number is larger and output leaderboard
   if (playerOneScoreSum > playerTwoScoreSum) {
-    return `Player One is leading! <br><br>Score Sum <br>Player 1: ${playerOneScoreSum}<br>Player 2: ${playerTwoScoreSum}`;
+    return `Player One is leading! 🏆<br><br><div id="leaderboard"><hr><br>Leaderboard <br>Player 1: ${playerOneScoreSum}<br>Player 2: ${playerTwoScoreSum}<br> Press submit to continue playing</div>`;
   }
   if (playerTwoScoreSum > playerOneScoreSum) {
-    return `Player Two is leading! <br><br>Score Sum <br>Player 2: ${playerTwoScoreSum}<br>Player 1: ${playerOneScoreSum}`;
+    return `Player Two is leading! 🏆 <br><br><div id="leaderboard"><hr><br>Leaderboard<br>Player 2: ${playerTwoScoreSum}<br>Player 1: ${playerOneScoreSum}<br> Press submit to continue playing</div>`;
   }
 };
