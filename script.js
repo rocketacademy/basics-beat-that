@@ -5,6 +5,7 @@ var numOfDice = 2;
 var result = "";
 var leaderBoardResults = "";
 var gameVersion = "";
+var maxNumber = 0;
 
 var player1RollDiceResult = [];
 var player1ConcatenateNum = "";
@@ -27,16 +28,22 @@ var main = function (input) {
 
   if (inputValidationResults == true) {
     if (gameMode == "mode selection") {
-      gameMode = "game intro";
+      gameMode = "dice selection";
 
       if (input == "Lowest Combined") {
         gameVersion = "lowestCombined";
       } else {
         gameVersion = "normal";
       }
-      console.log(`Current game mode is ${gameMode}.`);
-      console.log(`Current game version is ${gameVersion}.`);
-      myOutputValue = `You have selected the ${input} version. Please click submit to start rolling!`;
+
+      myOutputValue = `You have selected the ${input} version. Please enter the number of dice you would like to play.`;
+      return myOutputValue;
+    }
+    if (gameMode == "dice selection") {
+      numOfDice = input;
+      gameMode = "game intro";
+
+      myOutputValue = `You have selected ${input} dice. Please click submit to start rolling!`;
       return myOutputValue;
     } else {
       return playGame(input);
@@ -71,6 +78,13 @@ var inputValidation = function (input) {
       console.log(`Validation Result is true`);
       return true;
     }
+  } else if (gameMode == "dice selection") {
+    if (Number.isNaN(Number(input)) == true || input == 0 || input == "") {
+      returnStatement = `Wrong input. Please enter numbers greater than 0 only.`;
+      return returnStatement;
+    } else {
+      return true;
+    }
   }
 };
 
@@ -88,6 +102,7 @@ var generateDiceResult = function () {
     rollDiceResult.push(rollDice());
     counter += 1;
   }
+  console.log(`Dice results is ${rollDiceResult}.`);
   return rollDiceResult;
 };
 
@@ -117,43 +132,40 @@ var concatenateDiceNum = function (input) {
   }
 };
 
+// Function to copy an array into another array
+
+var copyArray = function (arrayToCopy) {
+  var newArray = [];
+  for (var counter = 0; counter < arrayToCopy.length; counter += 1) {
+    newArray.push(arrayToCopy[counter]);
+  }
+  return newArray;
+};
+
 // Function to auto concatenate dice numbers
 
-var autoConcatenateDiceNum = function () {
+var autoConcatenateDiceNum = function (inputArray) {
+  var tempArray = copyArray(inputArray);
+  var sortedTempArray = tempArray.sort();
   var dicePosition1 = "";
   var dicePosition2 = "";
   if (gameVersion == "normal") {
-    if (rollDiceResult[0] > rollDiceResult[1]) {
-      dicePosition1 = rollDiceResult[0];
-      dicePosition2 = rollDiceResult[1];
-      concatenateNum = Number(
-        dicePosition1.toString() + dicePosition2.toString()
-      );
-      return concatenateNum;
-    } else {
-      dicePosition1 = rollDiceResult[1];
-      dicePosition2 = rollDiceResult[0];
-      concatenateNum = Number(
-        dicePosition1.toString() + dicePosition2.toString()
-      );
-      return concatenateNum;
-    }
+    dicePosition1 = sortedTempArray.pop();
+    dicePosition2 = sortedTempArray.pop();
+    console.log(`Player 1 roll dice result is ${player1RollDiceResult}`);
+    console.log(`Player 2 roll dice result is ${player2RollDiceResult}`);
+
+    concatenateNum = Number(
+      dicePosition1.toString() + dicePosition2.toString()
+    );
+    return concatenateNum;
   } else if (gameVersion == "lowestCombined") {
-    if (rollDiceResult[0] > rollDiceResult[1]) {
-      dicePosition1 = rollDiceResult[1];
-      dicePosition2 = rollDiceResult[0];
-      concatenateNum = Number(
-        dicePosition1.toString() + dicePosition2.toString()
-      );
-      return concatenateNum;
-    } else {
-      dicePosition1 = rollDiceResult[0];
-      dicePosition2 = rollDiceResult[1];
-      concatenateNum = Number(
-        dicePosition1.toString() + dicePosition2.toString()
-      );
-      return concatenateNum;
-    }
+    dicePosition1 = sortedTempArray.splice(0, 1);
+    dicePosition2 = sortedTempArray.splice(0, 1);
+    concatenateNum = Number(
+      dicePosition1.toString() + dicePosition2.toString()
+    );
+    return concatenateNum;
   }
 };
 
@@ -225,18 +237,24 @@ var leaderBoard = function (player1SumScore, player2SumScore) {
 
 var playGame = function (input) {
   console.log(`Current game mode is ${gameMode}`);
+  // console.log(`Player 1 roll dice result is ${player1RollDiceResult}`);
+  // console.log(`Player 2 roll dice result is ${player2RollDiceResult}`);
+
   var winResults = "";
   var myOutputValue = "";
   if (gameMode == "game intro") {
     player1RollDiceResult = generateDiceResult();
-    player1ConcatenateNum = autoConcatenateDiceNum();
+    player1ConcatenateNum = autoConcatenateDiceNum(player1RollDiceResult);
     player1ScoreSum += player1ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
 
     gameMode = "player 2 roll dice";
 
+    // console.log(`Player 1 roll dice result is ${player1RollDiceResult}`);
+    // console.log(`Player 2 roll dice result is ${player2RollDiceResult}`);
+
     myOutputValue = `Welcome Player 1.<br><br>
-    You rolled ${player1RollDiceResult[0]} for Dice 1 and ${player1RollDiceResult[1]} for Dice 2.<br><br>
+    You rolled ${player1RollDiceResult}.<br><br>
     Your number is ${player1ConcatenateNum}.<br><br>
     It is now Player 2's turn. Click Submit to roll dice.<br><br>
     ${leaderBoardResults}`;
@@ -244,7 +262,7 @@ var playGame = function (input) {
     return myOutputValue;
   } else if (gameMode == "player 2 roll dice") {
     player2RollDiceResult = generateDiceResult();
-    player2ConcatenateNum = autoConcatenateDiceNum();
+    player2ConcatenateNum = autoConcatenateDiceNum(player2RollDiceResult);
     player2ScoreSum += player2ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
 
@@ -256,8 +274,11 @@ var playGame = function (input) {
 
     gameMode = "game intro";
 
+    // console.log(`Player 1 roll dice result is ${player1RollDiceResult}`);
+    // console.log(`Player 2 roll dice result is ${player2RollDiceResult}`);
+
     myOutputValue = `Welcome Player 2.<br><br>
-    You rolled ${player2RollDiceResult[0]} for Dice 1 and ${player2RollDiceResult[1]} for Dice 2.<br><br>
+    You rolled ${player2RollDiceResult}<br><br>
     Your number is ${player2ConcatenateNum}.<br><br>
     ${winResults}<br><br>It is now Player 1's turn. Click Submit to roll dice.<br><br>
     ${leaderBoardResults}`;
