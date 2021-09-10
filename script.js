@@ -9,14 +9,12 @@ var players = [];
 
 // knockout mode state variables
 var roundPlayers = [];
-var playerIndex = 0;
 
 var resetGame = function () {
   // reset game by resetting relevant variables and changing state of ui
   diceRolls = [];
   curPlayer = 1;
   players = [];
-  playerIndex = 0;
   roundPlayers = [];
 
   document.querySelector("#start-game-button").disabled = false;
@@ -50,6 +48,7 @@ var getScore = function () {
     // use the sorted dicerolls array to concatenate each roll to a string
     score += diceRolls[i];
   }
+  diceRolls = [];
   return Number(score);
 };
 
@@ -106,7 +105,7 @@ var generateEndKnockoutRoundOutput = function () {
   var loser = roundPlayers[1].playerNum;
   output += `The winner is Player ${winner}! Player ${loser} is eliminated.`;
   players = players.filter((p) => p.playerNum != loser); // remove loser from players
-  playerIndex = 0;
+  curPlayer = 1;
   roundPlayers = [];
 
   if (players.length == 1) {
@@ -147,11 +146,12 @@ var main = function () {
   if (knockoutMode && roundPlayers.length == 0) return randomSelectTwoPlayers();
 
   // initialise output
-  curPlayer = knockoutMode ? roundPlayers[playerIndex].playerNum : curPlayer;
-  var output = `Welcome Player ${curPlayer}.<br>`;
+  var playerNum = knockoutMode
+    ? roundPlayers[curPlayer - 1].playerNum
+    : curPlayer;
+  var output = `Welcome Player ${playerNum}.<br>`;
   output += getDiceRolls();
   var score = getScore();
-  diceRolls = [];
   output += `<br>Your number is ${score}.`;
 
   if (!knockoutMode) {
@@ -165,11 +165,12 @@ var main = function () {
     output += generateLeaderboard();
   } else {
     // calculate score for cur player and increment score
-    roundPlayers[playerIndex].score += score;
+    roundPlayers[curPlayer - 1].score += score;
 
-    if (playerIndex < roundPlayers.length - 1) {
-      playerIndex += 1; // next player
-      output += `<br>It is now Player ${roundPlayers[playerIndex].playerNum}'s turn.`;
+    if (curPlayer < roundPlayers.length) {
+      curPlayer += 1; // next player
+      playerNum = roundPlayers[curPlayer - 1].playerNum;
+      output += `<br>It is now Player ${playerNum}'s turn.`;
     } else {
       output += generateEndKnockoutRoundOutput();
     }
