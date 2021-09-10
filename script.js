@@ -229,20 +229,14 @@ var playGame = function (input) {
   var myOutputValue = "";
   if (gameMode == "game intro") {
     player1RollDiceResult = generateDiceResult();
-    gameMode = "player 1 selection";
+    player1ConcatenateNum = autoConcatenateDiceNum();
+    player1ScoreSum += player1ConcatenateNum;
+    leaderBoard(player1ScoreSum, player2ScoreSum);
+
+    gameMode = "player 2 roll dice";
 
     myOutputValue = `Welcome Player 1.<br><br>
     You rolled ${player1RollDiceResult[0]} for Dice 1 and ${player1RollDiceResult[1]} for Dice 2.<br><br>
-    Choose the order of the dice.`;
-
-    return myOutputValue;
-  } else if (gameMode == "player 1 selection") {
-    player1ConcatenateNum = concatenateDiceNum(input);
-    player1ScoreSum += player1ConcatenateNum;
-    leaderBoard(player1ScoreSum, player2ScoreSum);
-    gameMode = "player 2 roll dice";
-
-    myOutputValue = `Player 1, you chose ${input} first.<br><br>
     Your number is ${player1ConcatenateNum}.<br><br>
     It is now Player 2's turn. Click Submit to roll dice.<br><br>
     ${leaderBoardResults}`;
@@ -250,18 +244,9 @@ var playGame = function (input) {
     return myOutputValue;
   } else if (gameMode == "player 2 roll dice") {
     player2RollDiceResult = generateDiceResult();
-    gameMode = "player 2 selection";
-
-    myOutputValue = `Welcome Player 2.<br><br>
-    You rolled ${player2RollDiceResult[0]} for Dice 1 and ${player2RollDiceResult[1]} for Dice 2.<br><br>
-    Choose the order of the dice.`;
-
-    return myOutputValue;
-  } else if (gameMode == "player 2 selection") {
-    player2ConcatenateNum = concatenateDiceNum(input);
+    player2ConcatenateNum = autoConcatenateDiceNum();
     player2ScoreSum += player2ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
-    gameMode = "game intro";
 
     if (gameVersion == "normal") {
       winResults = checkWhoWins(player1ConcatenateNum, player2ConcatenateNum);
@@ -269,7 +254,10 @@ var playGame = function (input) {
       winResults = lowestComWins(player1ConcatenateNum, player2ConcatenateNum);
     }
 
-    myOutputValue = `Player 2, you chose ${input} first.<br><br>
+    gameMode = "game intro";
+
+    myOutputValue = `Welcome Player 2.<br><br>
+    You rolled ${player2RollDiceResult[0]} for Dice 1 and ${player2RollDiceResult[1]} for Dice 2.<br><br>
     Your number is ${player2ConcatenateNum}.<br><br>
     ${winResults}<br><br>It is now Player 1's turn. Click Submit to roll dice.<br><br>
     ${leaderBoardResults}`;
