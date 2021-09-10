@@ -39,7 +39,7 @@ var main = function (input) {
       myOutputValue = `You have selected the ${input} version. Please click submit to start rolling!`;
       return myOutputValue;
     } else {
-      return playGame(gameMode, input);
+      return playGame(input);
     }
   } else {
     return inputValidationResults;
@@ -184,11 +184,11 @@ var leaderBoard = function (player1SumScore, player2SumScore) {
 
 // Function to play the game
 
-var playGame = function (currentGameMode, input) {
-  console.log(`Current game mode is ${currentGameMode}`);
+var playGame = function (input) {
+  console.log(`Current game mode is ${gameMode}`);
   var winResults = "";
   var myOutputValue = "";
-  if (currentGameMode == "game intro") {
+  if (gameMode == "game intro") {
     player1RollDiceResult = generateDiceResult();
     gameMode = "player 1 selection";
 
@@ -197,7 +197,7 @@ var playGame = function (currentGameMode, input) {
     Choose the order of the dice.`;
 
     return myOutputValue;
-  } else if (currentGameMode == "player 1 selection") {
+  } else if (gameMode == "player 1 selection") {
     player1ConcatenateNum = concatenateDiceNum(input);
     player1ScoreSum += player1ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
@@ -209,7 +209,7 @@ var playGame = function (currentGameMode, input) {
 
     gameMode = "player 2 roll dice";
     return myOutputValue;
-  } else if (currentGameMode == "player 2 roll dice") {
+  } else if (gameMode == "player 2 roll dice") {
     gameMode = "player 2 selection";
     player2RollDiceResult = generateDiceResult();
 
@@ -218,7 +218,7 @@ var playGame = function (currentGameMode, input) {
     Choose the order of the dice.`;
 
     return myOutputValue;
-  } else if (currentGameMode == "player 2 selection") {
+  } else if (gameMode == "player 2 selection") {
     player2ConcatenateNum = concatenateDiceNum(input);
     player2ScoreSum += player2ConcatenateNum;
     leaderBoard(player1ScoreSum, player2ScoreSum);
