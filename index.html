@@ -57,6 +57,10 @@
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+      <div id="intro">
+        Please select the mode that you would like to play by entering
+        "Original" or "Knockout".
+      </div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -74,6 +78,9 @@
 
         // Reset input value
         input.value = "";
+
+        // Hide the instrutions to start game
+        document.getElementById("intro").style.display = "none";
       });
     </script>
   </body>
