@@ -7,8 +7,7 @@
 var mode1 = "Welcome, player 1"
 var mode1A = "Player 1 roll dice";
 // game mode for player 1 - pick dice
-var mode1B = "Player 1 pick which dice to go first"
-var mode1C = "Show player 1 score"
+var mode1B = "Player 1 pick which dice to go first, show player1 score"
 
 // game mode for player 2
 var mode2A = "Time for player to roll 2 dice";
@@ -19,6 +18,13 @@ var mode2B = "Player 2 pick which dice to go first";
 var playerOneScore = 0
 var playerTwoScore = 0
 
+// More comfortable: Score. Keep track of each player's score for each game 
+var playerOneScoreArray = []
+var playerTwoScoreArray = []
+
+// More comfortable: Score. Keep track of players' total score
+var playerOneRunningTotal
+var playerTwoRunningTotal
 
 
 currentGameMode = mode1;
@@ -51,26 +57,25 @@ var main = function (input) {
     return "Player 1: dice roll 1 is " + diceOne + " and dice roll 2 is " + diceTwo + ". <br><br> Enter 1 or 2 to select if dice 1 or 2 goes first.";
   }
 
-  // player 1 picks roll 1 to go first
-  if (currentGameMode = mode1C) {
+  if (currentGameMode == mode1B) {
+    // player 1 picks roll 1 to go first
     if (input == "1") {
-      playerOneScore = (playerOneRollOne * 10) + playerOneRollTwo;
+      playerOneScore = "" + playerOneRollOne + playerOneRollTwo;
+      return "Player 1 score: " + playerOneScore + ". <br><br> Now it's player 2's turn. <br><br> Player 2, click submit to roll 2 dice."
+    } 
+     // player 1 picks roll 2 to go first
+    if (input == "2") {
+      playerOneScore = "" + playerOneRollTwo + playerOneRollOne;
+      return "Player 1 score: " + playerOneScore + ". <br><br> Now it's player 2's turn. <br><br> Player 2, click submit to roll 2 dice."
+    }
+      // More comfortable: push the score to the array
+      playerOneScoreArray.push(playerOneScore)
+
       console.log ("player 1 score is " + playerOneScore);
       currentGameMode = mode2A;
       console.log (currentGameMode)
-      return "Player 1 score: " + playerOneScore + ". <br><br> Now it's player 2's turn. <br><br> Player 2, click submit to roll 2 dice."
-    } 
   }
 
-  // player 1 picks roll 2 to go first
-  if (currentGameMode = mode1C) {
-    if (input == "2") {
-      playerOneScore = (playerOneRollTwo * 10) + playerOneRollOne;
-      console.log ("player 1 score is " + playerOneScore);
-      currentGameMode = mode2A;
-      console.log (currentGameMode)
-      return "Player 1 score: " + playerOneScore + ". <br><br> Now it's player 2's turn. <br><br> Player 2, click submit to roll 2 dice."
-    } 
 
   // player 2 clicks submit to roll 2 dice
   if (currentGameMode == mode2A) {
@@ -86,8 +91,45 @@ var main = function (input) {
     console.log (currentGameMode)
     return "Player 2: dice roll 1 is " + diceOne + " and dice roll 2 is " + diceTwo + ". <br><br> Enter 1 or 2 to select if dice 1 or 2 goes first.";
   }
+  
+  if (currentGameMode == mode2B) {
+    // player 2 picks roll 1 to go first
+    if (input == "1") {
+      playerTwoScore = "" + playerTwoRollOne + playerTwoRollTwo;
+      var winner = playerWin(playerOneScore, playerTwoScore)
+      return "Player 2 score: " + playerTwoScore + "<br><br>Player 1 score: " + playerOneScore + ". <br><br>  So " + winner
+    } 
+     // player 2 picks roll 2 to go first
+    if (input == "2") {
+      playerTwoScore = "" + playerTwoRollTwo + playerTwoRollOne;
+      var winner = playerWin(playerOneScore, playerTwoScore)
+      return "Player 2 score: " + playerTwoScore + "<br><br>Player 1 score: " + playerOneScore + ". <br><br>  So " + winner
+    }
+      // More comfortable: push the score to the array
+      playerTwoScoreArray.push(playerTwoScore)
+
+      console.log ("player 2 score is " + playerTwoScore);
+
+      // bring mode back to 1A so players can play again. 
+      currentGameMode = mode1A
+  }
 
 };
   
+// function to decide which player wins
+var playerWin = function(playerOneScore,playerTwoScore){
+  if (playerOneScore > playerTwoScore) {
+    return "Player 1 wins!"
+  }
+    if (playerTwoScore > playerOneScore) {
+    return "Player 2 wins!"
+  }
+}
 
+// function to add up each player's running score in the global array 
+var playerOneTotalScore = function(){
+  var counter = 0
+  while (counter < playerOneScoreArray.length){
+  playerOneRunningTotal = playerOneRunningTotal + playerOneScoreArray[counter]
+  }
 }
