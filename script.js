@@ -62,11 +62,10 @@ var parseVariableDiceModifier = function (vdicemdf) {
   var customNumberOfDice = vdicemdf.substring(7); // remove "--vdice" and read remaining numbers
   customNumberOfDice = Number(customNumberOfDice);
   numberOfDice = customNumberOfDice;
-  return;
 };
 
 var applyModifiers = function (mdf) {
-  // cognitive complexity 6
+  // cognitive complexity 7
   console.log(`Player entered: ${mdf}`);
   var startMessage = "Hello Player 1! <br><br>";
   var modifiersArray = createArrayFromString(mdf);
@@ -110,10 +109,9 @@ var rollDice = function () {
 };
 
 var rollAllDice = function () {
-  for (i = 0; i <= numberOfDice; i += 1) {
+  for (var i = 0; i <= numberOfDice; i += 1) {
     currentPlayerArray[i] = rollDice();
   }
-  return;
 };
 
 var sortArray = function (arr) {
@@ -233,7 +231,7 @@ var chooseWinner = function () {
   var scoreArrayCopy = Array.from(scoreArray);
   // makes a shallow copy, because a simple = doesnt do it
   // this was originally a workaround for .pop(), not sure if still needed
-  for (let iterator = 0; iterator < scoreArrayCopy.length; iterator += 1) {
+  for (var iterator = 0; iterator < scoreArrayCopy.length; iterator += 1) {
     var lastElement =
       scoreArrayCopy[iterator][scoreArrayCopy[iterator].length - 1];
     // pls no pop
