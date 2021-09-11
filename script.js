@@ -5,7 +5,7 @@ var gameStateFour = "Game Start";
 var gameState = gameStateOne;
 var gameModeOne = "Auto Mode";
 var gameModeTwo = "KnockOut";
-var gameMode = gameModeTwo;
+var gameMode = gameModeOne;
 var winningMethodLow = "low Mode";
 var winningMethodHigh = "High Mode";
 var winningMethod = winningMethodHigh;
@@ -93,7 +93,8 @@ var userAutoSelection = function (randomNo1, input) {
     }
     counter = 0;
     console.log(winningMethod);
-    playerResult = autodice.toString();
+    autodice.toString();
+    console.log(autodice, "playerResult string");
     var number1 = "";
 
     while (counter < noOfDice) {
@@ -103,7 +104,7 @@ var userAutoSelection = function (randomNo1, input) {
 
     playerThrew = playerThrew + 1;
     realNumber = Number(number1);
-    console.log("before if max");
+    console.log("before if max", realNumber);
     if (
       possibleWinningNumber <= realNumber &&
       winningMethod == winningMethodHigh
@@ -374,6 +375,8 @@ var main = function (input) {
   if (gameMode == gameModeOne && gameState == gameStateFour) {
     if (input == "Knockout") {
       gameMode = gameModeTwo;
+      possibleWinningNumber = 0;
+      playerThrew = 1;
       return `Game mode will now change to Knockout mode`;
     }
     counter = 0;
@@ -382,6 +385,8 @@ var main = function (input) {
   if (gameMode == gameModeTwo && gameState == gameStateFour) {
     if (input == "Auto") {
       gameMode = gameModeOne;
+      possibleWinningNumber = 0;
+      playerThrew = 1;
       return `Game mode will now change to Auto mode`;
     }
     counter = 0;
