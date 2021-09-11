@@ -1,3 +1,13 @@
+// more comfortable features included:
+// Score, Leaderboard, Lowest Combined Mode, Auto-Generate Mode, Variable Number of Dice
+// Score and Leaderboard are generated for every game, BUT Leaderboard is not sorted
+// v-Dice only works with auto, score calculation is broken if not flagged
+// all modified modes are activated with modifier flags
+// multiple flags can be used at a time (see below)
+// v-Players framework exists, but is not implemented
+// knockout is completely not implemented
+
+// variables for MVP- 2 player manual
 var activePlayer = 1;
 var currentGameProgressMode = "initializing";
 var currentPlayerArray = [0, 0];
@@ -5,16 +15,22 @@ var currentScore = 0;
 var scoreArray = [[], []];
 // ^this is meant to be a nested array - index 0 corresponds to player 1's scores, etc.
 // initialize later in main
-var progressNumber = 0;
+var progressNumber = 0; // incremented through player turns until a round is complete
+const validCommands = ["start", "Roll", "dice 1", "dice 2", "next"];
+// ^ modes must be applied with "--" modifiers, e.g. --lowestCombined
+// a full command might look like start --auto
 
+// variables for MC - modifiers
 var scoringModeIsHighest = true;
 var diceChoiceSelectionSkip = false;
 var numberOfPlayers = 2; // default
-// var numberOfDice = 2; // default
-const validCommands = ["start", "Roll", "dice 1", "dice 2", "next"];
-// const validModifiers = ["--lowestCombined", "--auto"];
-// ^ modes must be applied with "--" modifiers, e.g. --lowestCombined
-// a full command might look like start --auto
+var numberOfDice = 2; // default
+const modifierMessages = [
+  "You have applied the 'lowestCombined' modifier. For this game, the player with the smaller number wins each round.<br>",
+  "You have applied the 'auto' modifier. The best combination for your chosen scoring rules will always be applied.<br>",
+  "You have applied the 'vDice' modifier. Note that you MUST use this modifier with the 'auto' modifier.<br>",
+  "You have entered an invalid modifier. Only --lowestCombined, --auto, and --vDiceN are accepted. Please try again.<br>",
+];
 
 var validateInput = function (input) {
   var parsedInput = "";
@@ -40,7 +56,17 @@ var createArrayFromString = function (str) {
   return arr;
 };
 
+var parseVariableDiceModifier = function (vdicemdf) {
+  // vdicemdf should take the form "--vdiceX", where X is an integer
+  // the "--vdice" substring occupies the 0th position to the 6th position
+  var customNumberOfDice = vdicemdf.substring(7); // remove "--vdice" and read remaining numbers
+  customNumberOfDice = Number(customNumberOfDice);
+  numberOfDice = customNumberOfDice;
+  return;
+};
+
 var applyModifiers = function (mdf) {
+  // cognitive complexity 6
   console.log(`Player entered: ${mdf}`);
   var startMessage = "Hello Player 1! <br><br>";
   var modifiersArray = createArrayFromString(mdf);
@@ -51,23 +77,23 @@ var applyModifiers = function (mdf) {
   // loop over array of modifiers
   for (var mod = 0; mod < modifiersArray.length; mod += 1) {
     if (modifiersArray[mod] == "--lowestCombined") {
-      console.log("LC included");
+      // console.log("LC included");
       scoringModeIsHighest = false;
-      startMessage +=
-        "You have applied the 'lowestCombined' modifier. For this game, the player with the smaller number wins each round.<br>";
+      startMessage += modifierMessages[0];
     } else if (modifiersArray[mod] == "--auto") {
-      console.log("auto included");
+      // console.log("auto included");
       diceChoiceSelectionSkip = true;
-      startMessage +=
-        "You have applied the 'auto' modifier. The best combination for your chosen scoring rules will always be applied.<br>";
+      startMessage += modifierMessages[1];
+    } else if (modifiersArray[mod].includes("--vDice")) {
+      parseVariableDiceModifier(modifiersArray[mod]);
+      startMessage += modifierMessages[2];
     } else {
       currentGameProgressMode = "initializing";
-      startMessage =
-        "You have entered an invalid modifier. Only --lowestCombined and --auto are accepted. Please try again.";
+      startMessage = modifierMessages[3];
       return startMessage;
     }
   }
-  startMessage += "<br>Enter 'Roll' to start your turn!";
+  startMessage += "<br><br>Enter 'Roll' to start your turn!";
   return startMessage;
 };
 
@@ -83,14 +109,44 @@ var rollDice = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
 
+var rollAllDice = function () {
+  for (i = 0; i <= numberOfDice; i += 1) {
+    currentPlayerArray[i] = rollDice();
+  }
+  return;
+};
+
+var sortArray = function (arr) {
+  if (scoringModeIsHighest == true) {
+    arr.sort((a, b) => b - a);
+  } else {
+    arr.sort((a, b) => a - b); // ascending order for lowest possible
+  }
+  return arr;
+};
+
+var concatenateNumbersFromArray = function (arr) {
+  var numString = "";
+  for (var i = 0; i < arr.length; i += 1) {
+    numString += arr[i];
+  }
+  numString = Number(numString);
+  return numString;
+};
+
 var playerTurnRoll = function (playerNumber) {
-  currentPlayerArray[0] = rollDice();
-  currentPlayerArray[1] = rollDice();
+  rollAllDice();
+  var returnString = `It is now Player ${playerNumber}'s turn. <br>`;
   // console.log(`Rolled ${currentPlayerArray[0]} and ${currentPlayerArray[1]}`);
-  var returnstring = `It is now Player ${playerNumber}'s turn. <br>
+  if (diceChoiceSelectionSkip == false) {
+    returnString += `
     You rolled ${currentPlayerArray[0]} for Dice 1, and  ${currentPlayerArray[1]} for Dice 2. <br>
     Choose the order of the dice - enter 'dice 1' or 'dice 2'`;
-  return returnstring;
+  } else {
+    returnString +=
+      "Auto Mode is enabled. Please enter 'dice 1' or 'dice 2' to continue.";
+  }
+  return returnString;
 };
 
 var concatenateTwoNumbers = function (num1, num2) {
@@ -103,6 +159,7 @@ var calcPlayerScore = function (firstNumeralSelection) {
   if (firstNumeralSelection == "dice 1") {
     currentScore = concatenateTwoNumbers(
       currentPlayerArray[0],
+
       currentPlayerArray[1]
     );
   } else if (firstNumeralSelection == "dice 2") {
@@ -124,20 +181,8 @@ var writePlayerScore = function () {
 };
 
 var generateBestScoreAutomatically = function () {
-  var bestScore = 0;
-  var option1 = concatenateTwoNumbers(
-    currentPlayerArray[0],
-    currentPlayerArray[1]
-  );
-  var option2 = concatenateTwoNumbers(
-    currentPlayerArray[1],
-    currentPlayerArray[0]
-  );
-  if (scoringModeIsHighest == true) {
-    bestScore = Math.max(option1, option2);
-  } else {
-    bestScore = Math.min(option1, option2);
-  }
+  sortArray(currentPlayerArray);
+  var bestScore = concatenateNumbersFromArray(currentPlayerArray);
   return bestScore;
 };
 
@@ -158,6 +203,7 @@ var playerTurnSelection = function (input) {
 };
 
 var indexofMinMax = function (arr) {
+  // cognitive complexity 10
   // console.log(`scoringModeIsHighest: ${scoringModeIsHighest}`);
   var currentMinMax = arr[0];
   var currentMinMaxIndex = 0;
@@ -178,8 +224,6 @@ var indexofMinMax = function (arr) {
       }
     }
   }
-  console.log(arr);
-  console.log(`currentMinMax: ${currentMinMax}`);
   return currentMinMaxIndex;
 };
 
@@ -197,8 +241,6 @@ var chooseWinner = function () {
     currentRoundArray.push(lastElement);
   }
   roundWinner = indexofMinMax(currentRoundArray) + 1;
-  console.log(scoreArray);
-  console.log(`Player ${roundWinner} wins this round.`);
   return roundWinner;
 };
 
@@ -221,25 +263,6 @@ var calcCumulativeScore = function () {
   return cumulativeScoreArray;
 };
 
-// var generateLeaderboardObject = function (arr) {
-//   // takes cumulativeScoreArray and maps into dictionary/object thing
-//   console.log("Now generating leaderboardObject.");
-//   var leaderboardObject = {};
-//   for (let entry = 0; entry < arr.length; entry += 1) {
-//     leaderboardObject[entry] = arr[entry];
-//     console.log(`item added to object: ${leaderboardObject[entry]}`);
-//   }
-//   console.log(`unsorted: ${leaderboardObject}`);
-//   const sortedLeaderboardObject = Object.fromEntries(
-//     Object.entries(leaderboardObject).sort(([, a], [, b]) => a - b) //magic
-//     // ^ takes entries of an object
-//     // then sorts them
-//     // https://stackoverflow.com/questions/1069666/sorting-object-property-by-values
-//   );
-//   console.log(`sorted: ${sortedLeaderboardObject}`);
-//   return sortedLeaderboardObject;
-// };
-
 var generateLeaderboardMessage = function (arr) {
   var messageString = `Leaderboard: <br>`;
   var iterator = 0;
@@ -256,7 +279,6 @@ var switchPlayer = function () {
   activePlayer += 1;
   activePlayer = ((activePlayer + 1) % 2) + 1;
   // ^toggles between 1 and 2, conveniently assumes 2 players
-  // console.log(`New Player Turn: ${activePlayer}`);
   return `Player ${previousPlayer}'s turn has ended. Moving to next player, type 'Roll' to continue.`;
 };
 
@@ -266,17 +288,13 @@ var endRound = function () {
   var roundwinner = chooseWinner();
   progressNumber = 0;
   var leaderboardMessage = generateLeaderboardMessage(calcCumulativeScore());
-  // console.log(`leaderboardMessage: ${leaderboardMessage}`);
-  // console.log(calcCumulativeScore());
-  // console.log(generateLeaderboardMessage(calcCumulativeScore()));
   return `The winner for this round is Player ${roundwinner}. <br><br>
       ${leaderboardMessage}<br><br>
       Type 'Roll' to play again!`;
 };
 
 var main = function (input) {
-  // this whole thing is too long
-  // and apparently has too many returns
+  // cognitive complexity 12
   if (validateInput(input) == false) {
     return "Looks like you submitted something invalid.";
   }
@@ -287,7 +305,7 @@ var main = function (input) {
     return applyModifiers(input); //condense these 3 lines?
   }
   if (progressNumber < 3) {
-    // maybe change to while loop?
+    // too many returns, maybe change to while loop?
     if (input.includes("dice")) {
       //make some playgame(input) function?
       return playerTurnSelection(input);
@@ -304,5 +322,5 @@ var main = function (input) {
       return endRound();
     }
   }
-  return "You're not supposed to be able to reach this line";
+  return "Fatal Error. Please refresh the page.";
 };
