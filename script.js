@@ -24,7 +24,7 @@ var main = function (input) {
     if (gameStatus == "mode selection") {
       gameStatus = "version selection";
 
-      if (input == "Knockout") {
+      if (input.toUpperCase() == "KNOCKOUT") {
         gameMode = "KNOCKOUT";
       } else {
         gameMode = "RANK";
@@ -38,7 +38,7 @@ var main = function (input) {
     } else if (gameStatus == "version selection") {
       gameStatus = "player selection";
 
-      if (input == "Lowest Combined") {
+      if (input.toUpperCase() == "LOWEST COMBINED") {
         gameVersion = "lowestCombined";
       } else {
         gameVersion = "normal";
@@ -82,7 +82,12 @@ var main = function (input) {
 var inputValidation = function (input) {
   var returnStatement = "";
   if (gameStatus == "version selection") {
-    if (!(input == "Normal" || input == "Lowest Combined")) {
+    if (
+      !(
+        input.toUpperCase() == "NORMAL" ||
+        input.toUpperCase() == "LOWEST COMBINED"
+      )
+    ) {
       returnStatement = `Wrong input. Please enter only "Normal" or "Lowest Combined" to start the game.`;
       return returnStatement;
     } else {
@@ -90,16 +95,6 @@ var inputValidation = function (input) {
     }
   } else if (gameStatus == "game intro" || gameStatus == "player 2 roll dice") {
     return true;
-  } else if (
-    gameStatus == "player 1 selection" ||
-    gameStatus == "player 2 selection"
-  ) {
-    if (!(input == "Dice 1" || input == "Dice 2")) {
-      returnStatement = `Wrong input. Please enter only "Dice 1" or "Dice 2"`;
-      return returnStatement;
-    } else {
-      return true;
-    }
   } else if (gameStatus == "player selection") {
     if (Number.isNaN(Number(input)) == true || input < 2 || input == "") {
       returnStatement = `Wrong input. Please enter a number greater or equal to 2.`;
@@ -115,7 +110,9 @@ var inputValidation = function (input) {
       return true;
     }
   } else if (gameStatus == "mode selection") {
-    if (!(input == "Knockout" || input == "Original")) {
+    if (
+      !(input.toUpperCase() == "KNOCKOUT" || input.toUpperCase() == "ORIGINAL")
+    ) {
       returnStatement = `Wrong input. Please enter only "Original" or "Knockout" to start the game.`;
       return returnStatement;
     } else {
@@ -159,7 +156,7 @@ var autoConcatenateDiceNum = function (inputArray) {
   var concatenateString = "";
 
   if (gameVersion == "normal") {
-    for (counter = sortedTempArray.length - 1; counter >= 0; counter -= 1) {
+    for (var counter = sortedTempArray.length - 1; counter >= 0; counter -= 1) {
       var diceNumber = sortedTempArray[counter];
       concatenateString = concatenateString + diceNumber.toString();
     }
@@ -168,7 +165,7 @@ var autoConcatenateDiceNum = function (inputArray) {
 
     return concatenateNum;
   } else if (gameVersion == "lowestCombined") {
-    for (counter = 0; counter < sortedTempArray.length; counter += 1) {
+    for (var counter = 0; counter < sortedTempArray.length; counter += 1) {
       var diceNumber = sortedTempArray[counter];
       concatenateString = concatenateString + diceNumber.toString();
     }
@@ -187,14 +184,14 @@ var checkWhoWins = function (array) {
 
   // Find the maximum score
   if (gameVersion == "normal") {
-    for (counter = 0; counter < array.length; counter += 1) {
+    for (var counter = 0; counter < array.length; counter += 1) {
       if (array[counter].playerConcatenateNum > currentScore) {
         currentScore = array[counter].playerConcatenateNum;
         maxScoreIndex = counter;
       }
     }
   } else if (gameVersion == "lowestCombined") {
-    for (counter = 0; counter < array.length; counter += 1) {
+    for (var counter = 0; counter < array.length; counter += 1) {
       if (array[counter].playerConcatenateNum < currentScore) {
         currentScore = array[counter].playerConcatenateNum;
         maxScoreIndex = counter;
@@ -210,8 +207,8 @@ var checkWhoWins = function (array) {
     resultStatement = `Player ${array[maxScoreIndex].playerNum} is the final winner of this round!`;
   }
 
-  // Find if there is duplicate scores
-  for (counter = 0; counter < array.length; counter += 1) {
+  // Find for duplicate scores. It will be a draw if there are duplicate scores
+  for (var counter = 0; counter < array.length; counter += 1) {
     if (currentScore == array[counter].playerConcatenateNum) {
       duplicateCount += 1;
     }
@@ -239,7 +236,7 @@ var generateLeaderBoard = function (array) {
   var leaderBoardTitle = "<u>Leaderboard</u><br>";
   var playerResults = "";
 
-  for (counter = 0; counter < array.length; counter += 1) {
+  for (var counter = 0; counter < array.length; counter += 1) {
     playerResults =
       playerResults +
       "Player " +
@@ -256,7 +253,7 @@ var generateLeaderBoard = function (array) {
 // Function to create an object for each player
 
 var createPlayersArray = function (inputPlayersNum) {
-  for (counter = 0; counter < inputPlayersNum; counter += 1) {
+  for (var counter = 0; counter < inputPlayersNum; counter += 1) {
     var playerObj = {
       playerNum: counter + 1,
       playerDiceRollResult: [],
@@ -273,13 +270,13 @@ var createPlayersArray = function (inputPlayersNum) {
 
 var combineAllPlayersScore = function (array) {
   var allPlayersScore = [];
-  for (counter = 0; counter < array.length; counter += 1) {
+  for (var counter = 0; counter < array.length; counter += 1) {
     allPlayersScore.push(array[counter].playerConcatenateNum);
   }
   return allPlayersScore;
 };
 
-// Function to play the game
+// Function to play the game in ORIGINAL MODE
 
 var playGame = function (inputNumOfPlayers) {
   var winResults = "";
@@ -337,7 +334,7 @@ var playGame = function (inputNumOfPlayers) {
   }
 };
 
-// Function to randomly assign player
+// Function to randomly assign player for each round
 
 var assignRandomPlayer = function (inputNumOfPlayers) {
   var counter = 0;
@@ -359,7 +356,8 @@ var assignRandomPlayer = function (inputNumOfPlayers) {
   return randomPlayer;
 };
 
-// Function to create array
+// Function to create array of 2 objects
+// Used to store current round of players to compare result
 
 var createArray = function (object1, object2) {
   var newArray = [];
@@ -368,10 +366,10 @@ var createArray = function (object1, object2) {
   return newArray;
 };
 
-// Function to reset player's status
+// Function to reset player's status to start a new round
 
 var resetPlayerStatus = function (array) {
-  for (counter = 0; counter < array.length; counter += 1) {
+  for (var counter = 0; counter < array.length; counter += 1) {
     array[counter].playerStatus = "NOT PLAYED";
   }
 };
@@ -391,6 +389,7 @@ var playKnockoutGame = function (inputNumOfPlayers) {
     Click Submit to roll dice.<br><br>`;
 
     knockoutTurn = "player 1";
+
     return myOutputValue;
   }
 
