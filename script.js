@@ -1,6 +1,7 @@
-// create global variables for player and an array for both dice rolls
+// create global variables for player and an array for dice rolls
 var player = 'player 1'
 var diceRolls = []
+var sortDiceRolls = []
 
 //create global variables to store both players combined numbers
 var player1CombinedNo = 0
@@ -13,23 +14,39 @@ var player2Score = 0
 //create global variable for game mode
 var gameMode = 'Beat that dice game'
 
+//create a global variable for no of dice
+var noOfDice = 0
+
 
 var main = function (input) {
 
+  //if no of dice is 0, ask players to input no of dice to roll
+  if (noOfDice == 0 && input == ''){
+    return `Welcome to the dice game!<br>How many dice would you like to play?`
+   
+  //assign input to no of dice to roll  
+  }else if (input !=0 && input != 'Lowest combined number'){
+    noOfDice = Number(input)
+    return `You have decided to play ${noOfDice} dice. Press submit to start game.`
+  
   //if game mode is 'Beat that dice game'
-  if (gameMode == 'Beat that dice game' && input == ''){
+  }else if (gameMode == 'Beat that dice game' && input == ''){
     return beatThatGame()
     }
   
   //if input is 'Lowest combined number', change the game mode
   else if (input == 'Lowest combined number'){
     gameMode = 'Lowest combined number'
-    return 'You have entered Lowest combined number mode. Press submit to start.'
+    return 'Welcome to Lowest combined number mode!<br>How many dice would you like to play?'
 
-  }else if (gameMode == 'Lowest combined number'){
-    return beatThatGame()
+  }else if (gameMode == 'Lowest combined number' && input !=0){
+    noOfDice = Number(input)
+    return `You have decided to play ${noOfDice} dice. Press submit to start game.`
     
+  }else if (gameMode == 'Lowest combined number' && input == ''){
+    return beatThatGame()
   }
+  
 };
 
 //create a function that runs the dice game for 2 players
@@ -56,7 +73,7 @@ var diceRoll = function(){
   return diceNumber
 }
 
-//create function to roll 2 dice rolls
+//create function to roll dice rolls
 var generateDiceRolls = function(){
   console.log('show dice roll function is running')
   
@@ -64,8 +81,8 @@ var generateDiceRolls = function(){
   diceRolls = []
   var counter = 0
 
-  //create a while loop to run dice roll function twice to get 2 dice rolls
-  while (counter < 2){
+  //create a while loop to run dice roll function based on no of dice decided by players to roll
+  while (counter < noOfDice){
 
     var randomDiceRolls = diceRoll()
 
@@ -81,72 +98,81 @@ var generateDiceRolls = function(){
 var autoCombineDiceRolls = function(){
   console.log('auto combine dice rolls function is running')
 
-  //dice rolls results
-  var diceRollsResults = generateDiceRolls()
+  //dice roll results
+  var diceRollResults = generateDiceRolls()
+  console.log(`dice roll results1: ${diceRollResults}`)
 
-  //In Beat that dice game, if 1st dice is larger than 2nd dice, add 1st dice followed by 2nd dice
-  //In Lowest combined no game, if 1st dice is smaller than 2nd dice, add 1st dice followed by 2nd dice
-  //if 1st dice is same as 2nd dice, add 1st dice followed by 2nd dice
-  
-  if ((gameMode == 'Beat that dice game' && diceRolls[0]>diceRolls[1]) ||
-  (gameMode == 'Lowest combined number' && diceRolls[0]<diceRolls[1]) ||
-  (diceRolls[0] == diceRolls[1])){
+  //reset sort dice rolls to empty array
+  sortDiceRolls = []
 
-    //if player = player 1
+  //if game mode is Beat that dice game
+  if (gameMode == 'Beat that dice game'){
+
+    //sort the dice rolls in descending order
+    sortDiceRolls = diceRollResults.sort(function(a,b){return b-a})
+    console.log(`sort dice rolls: ${sortDiceRolls}`)
+    console.log(`dice roll results2: ${diceRollResults}`)
+
+    //combine the numbers 
+    sortDiceRolls = Number(sortDiceRolls.join(''))
+
     if (player == 'player 1'){
 
-    //reset combine no to 0
-    player1CombinedNo = 0
-    player1CombinedNo = `${diceRolls[0]}${diceRolls[1]}`
-    
-    //change to player 2
-    player = 'player 2'
-    
-    return `Player 1, your number is ${player1CombinedNo}.<br>It is now Player 2's turn.<br><br>${leaderboard()}`
+      //reset combined no to 0
+      player1CombinedNo = 0
+      player1CombinedNo = sortDiceRolls
+      
+      //change to player 2
+      player = 'player 2'
 
-    //else if player = player 2
+      return `Player 1, your combined number is ${player1CombinedNo}.<br>It is now Player 2's turn.<br><br>${leaderboard()}`
+
+    //else if player is player 2
     }else if (player == 'player 2'){
 
-    //reset combine no to 0
-    player2CombinedNo = 0
-    player2CombinedNo = `${diceRolls[0]}${diceRolls[1]}`
+      //reset combined no to 0
+      player2CombinedNo = 0
+      player2CombinedNo = sortDiceRolls
 
-    //change to player 1
-    player = 'player 1'
+      //change to player 1
+      player = 'player 1'
 
-    return compareDiceRolls()
+      return compareDiceRolls()
     }
-  
-  //In Beat that dice game, if 2nd dice is larger than 1st dice, add 2nd dice followed by 1st dice
-  //In Lowest combined no game, if 2nd dice is smaller than 1st dice, add 2nd dice followed by 1st dice
-  }else if ((gameMode == 'Beat that dice game' && diceRolls[1]>diceRolls[0]) ||
-  (gameMode == 'Lowest combined number' && diceRolls[1]<diceRolls[0])){
+ 
+  //if game mode is Lowest combined number, sort the dice rolls in ascending order and combine the numbers
+  }else if (gameMode == 'Lowest combined number'){
 
-    //if player = player 1
-    if (player == 'player 1'){
-    
-    //reset combine no to 0
-    player1CombinedNo = 0
-    player1CombinedNo = `${diceRolls[1]}${diceRolls[0]}`
+    //sort the dice rolls in ascending order
+    sortDiceRolls = diceRollResults.sort(function(a,b){return a-b})
 
-    //change to player 2
-    player = 'player 2'
+    //combine the numbers
+    sortDiceRolls = Number(sortDiceRolls.join(''))
 
-    return `Player 1, your number is ${player1CombinedNo}.<br>It is now Player 2's turn.<br><br>${leaderboard()}`
+    //if player is player 1
+  }if (player == 'player 1'){
 
-    //else if player = player 2
-    }if (player == 'player 2'){
+      //reset combined no to 0
+      player1CombinedNo = 0
+      player1CombinedNo = sortDiceRolls
+      
+      //change to player 2
+      player = 'player 2'
 
-    //reset combine no to 0
-    player2CombinedNo = 0
-    player2CombinedNo = `${diceRolls[1]}${diceRolls[0]}` 
+      return `Player 1, your combined number is ${player1CombinedNo}.<br>It is now Player 2's turn.<br><br>${leaderboard()}`
 
-    //change to player 1
-    player = 'player 1'
+    //else if player is player 2
+    }else if (player == 'player 2'){
 
-    return compareDiceRolls()
+      //reset combined no to 0
+      player2CombinedNo = 0
+      player2CombinedNo = sortDiceRolls
+
+      //change to player 1
+      player = 'player 1'
+
+      return compareDiceRolls()
     }
-  }
   
 }
 
