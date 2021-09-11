@@ -3,26 +3,22 @@ var gameMode = "RANK";
 var concatenateNum = "";
 var rollDiceResult = [];
 var numOfDice = 2;
-var result = "";
 var leaderBoardResults = "";
 var gameVersion = "";
 var numOfPlayers = 2;
 var playersArray = [];
 var turnCounter = 0;
+var knockoutTurn = "start knockout";
+var tempWinner = {};
 
-var player1RollDiceResult = [];
-var player1ConcatenateNum = "";
-var player1ScoreSum = 0;
-
-var player2RollDiceResult = [];
-var player2ConcatenateNum = "";
-var player2ScoreSum = 0;
+var player1 = {};
+var player2 = {};
+var nextPlayer = {};
 
 var main = function (input) {
   var myOutputValue = "";
 
   var inputValidationResults = inputValidation(input);
-  console.log(`Result of input validation is ${inputValidationResults}`);
 
   if (inputValidationResults == true) {
     if (gameStatus == "mode selection") {
@@ -69,8 +65,12 @@ var main = function (input) {
       Please click submit to start rolling!`;
 
       return myOutputValue;
-    } else {
-      return playGame(numOfPlayers);
+    } else if (gameStatus == "game intro") {
+      if (gameMode == "RANK") {
+        return playGame(numOfPlayers);
+      } else if (gameMode == "KNOCKOUT") {
+        return playKnockoutGame(numOfPlayers);
+      }
     }
   } else {
     return inputValidationResults;
@@ -86,7 +86,6 @@ var inputValidation = function (input) {
       returnStatement = `Wrong input. Please enter only "Normal" or "Lowest Combined" to start the game.`;
       return returnStatement;
     } else {
-      // console.log(`Validation Result is true`);
       return true;
     }
   } else if (gameStatus == "game intro" || gameStatus == "player 2 roll dice") {
@@ -99,15 +98,18 @@ var inputValidation = function (input) {
       returnStatement = `Wrong input. Please enter only "Dice 1" or "Dice 2"`;
       return returnStatement;
     } else {
-      // console.log(`Validation Result is true`);
       return true;
     }
-  } else if (
-    gameStatus == "dice selection" ||
-    gameStatus == "player selection"
-  ) {
+  } else if (gameStatus == "player selection") {
+    if (Number.isNaN(Number(input)) == true || input < 2 || input == "") {
+      returnStatement = `Wrong input. Please enter a number greater or equal to 2.`;
+      return returnStatement;
+    } else {
+      return true;
+    }
+  } else if (gameStatus == "dice selection") {
     if (Number.isNaN(Number(input)) == true || input == 0 || input == "") {
-      returnStatement = `Wrong input. Please enter numbers greater than 0 only.`;
+      returnStatement = `Wrong input. Please enter a number greater than 0.`;
       return returnStatement;
     } else {
       return true;
@@ -117,7 +119,6 @@ var inputValidation = function (input) {
       returnStatement = `Wrong input. Please enter only "Original" or "Knockout" to start the game.`;
       return returnStatement;
     } else {
-      // console.log(`Validation Result is true`);
       return true;
     }
   }
@@ -137,34 +138,7 @@ var generateDiceResult = function () {
     rollDiceResult.push(rollDice());
     counter += 1;
   }
-  // console.log(`Dice results is ${rollDiceResult}.`);
   return rollDiceResult;
-};
-
-// Function to concatenate dice numbers
-
-var concatenateDiceNum = function (input) {
-  var dicePosition1 = "";
-  var dicePosition2 = "";
-  if (input == "Dice 1") {
-    dicePosition1 = rollDiceResult[0];
-    // console.log(`Number in Dice Position 1 is ${dicePosition1}`);
-    dicePosition2 = rollDiceResult[1];
-    // console.log(`Number in Dice Position 2 is ${dicePosition2}`);
-    concatenateNum = Number(
-      dicePosition1.toString() + dicePosition2.toString()
-    );
-    return concatenateNum;
-  } else {
-    dicePosition1 = rollDiceResult[1];
-    // console.log(`Number in Dice Position 1 is ${dicePosition1}`);
-    dicePosition2 = rollDiceResult[0];
-    // console.log(`Number in Dice Position 2 is ${dicePosition2}`);
-    concatenateNum = Number(
-      dicePosition1.toString() + dicePosition2.toString()
-    );
-    return concatenateNum;
-  }
 };
 
 // Function to copy an array into another array
@@ -192,9 +166,6 @@ var autoConcatenateDiceNum = function (inputArray) {
 
     concatenateNum = Number(concatenateString);
 
-    // console.log(typeof concatenateNum);
-    // console.log(`Concatenate Number is ${concatenateNum}`);
-
     return concatenateNum;
   } else if (gameVersion == "lowestCombined") {
     for (counter = 0; counter < sortedTempArray.length; counter += 1) {
@@ -203,67 +174,64 @@ var autoConcatenateDiceNum = function (inputArray) {
     }
     concatenateNum = Number(concatenateString);
 
-    // console.log(typeof concatenateNum);
-    // console.log(`Concatenate Number is ${concatenateNum}`);
-
     return concatenateNum;
   }
 };
 
 // Function to check who wins for the round
-var checkWhoWins = function (playersArray) {
+var checkWhoWins = function (array) {
   var resultStatement = "";
   var maxScoreIndex = 0;
   var duplicateCount = 0;
-  var currentScore = playersArray[0].playerConcatenateNum;
+  var currentScore = array[0].playerConcatenateNum;
 
   // Find the maximum score
   if (gameVersion == "normal") {
-    for (counter = 0; counter < playersArray.length; counter += 1) {
-      if (playersArray[counter].playerConcatenateNum > currentScore) {
-        currentScore = playersArray[counter].playerConcatenateNum;
+    for (counter = 0; counter < array.length; counter += 1) {
+      if (array[counter].playerConcatenateNum > currentScore) {
+        currentScore = array[counter].playerConcatenateNum;
         maxScoreIndex = counter;
       }
     }
   } else if (gameVersion == "lowestCombined") {
-    for (counter = 0; counter < playersArray.length; counter += 1) {
-      if (playersArray[counter].playerConcatenateNum < currentScore) {
-        currentScore = playersArray[counter].playerConcatenateNum;
+    for (counter = 0; counter < array.length; counter += 1) {
+      if (array[counter].playerConcatenateNum < currentScore) {
+        currentScore = array[counter].playerConcatenateNum;
         maxScoreIndex = counter;
       }
     }
   }
 
-  resultStatement = `Player ${playersArray[maxScoreIndex].playerNum} won this round!`;
+  tempWinner = array[maxScoreIndex];
+
+  resultStatement = `Player ${array[maxScoreIndex].playerNum} won this round!`;
+
+  if (gameMode == "KNOCKOUT" && turnCounter + 1 == playersArray.length) {
+    resultStatement = `Player ${array[maxScoreIndex].playerNum} is the final winner of this round!`;
+  }
 
   // Find if there is duplicate scores
-  for (counter = 0; counter < playersArray.length; counter += 1) {
-    if (currentScore == playersArray[counter].playerConcatenateNum) {
+  for (counter = 0; counter < array.length; counter += 1) {
+    if (currentScore == array[counter].playerConcatenateNum) {
       duplicateCount += 1;
     }
   }
   if (duplicateCount >= 2) {
     resultStatement = `It's a draw! Nobody wins for this round!`;
+    if (gameMode == "KNOCKOUT" && turnCounter + 1 == playersArray.length) {
+      tempWinner = array[0];
+
+      resultStatement = `It's a draw! Player ${array[0].playerNum} had the first player advantage.
+      Thus, player ${array[0].playerNum} is the final winner of this round!`;
+    } else if (gameMode == "KNOCKOUT") {
+      tempWinner = array[0];
+
+      resultStatement = `It's a draw! Player ${array[0].playerNum} had the first player advantage.
+      Thus, player ${array[0].playerNum} won this round!`;
+    }
   }
 
   return resultStatement;
-};
-
-// Function for lowest combined number wins
-
-var lowestComWins = function (player1CurrentScore, player2CurrentScore) {
-  var resultStatement = "";
-  checkWhoWins(player1CurrentScore, player2CurrentScore);
-  if (result == "draw") {
-    resultStatement = `It's a draw! Click submit to try again.`;
-    return resultStatement;
-  } else if (result == "player1") {
-    resultStatement = `Player 2 won this round!`;
-    return resultStatement;
-  } else {
-    resultStatement = `Player 1 won this round!`;
-    return resultStatement;
-  }
 };
 
 // Function to generate leaderboard results
@@ -279,7 +247,6 @@ var generateLeaderBoard = function (array) {
       ": " +
       array[counter].playerSumScore +
       "<br>";
-    // console.log(`${playerResults}`);
   }
 
   leaderBoardResults = leaderBoardTitle + playerResults;
@@ -315,8 +282,6 @@ var combineAllPlayersScore = function (array) {
 // Function to play the game
 
 var playGame = function (inputNumOfPlayers) {
-  console.log(`Current game mode is ${gameStatus}`);
-
   var winResults = "";
   var myOutputValue = "";
   var currentPlayerNum = 0;
@@ -343,8 +308,6 @@ var playGame = function (inputNumOfPlayers) {
 
     turnCounter += 1;
 
-    // console.log(playersArray);
-
     return myOutputValue;
   } else if (turnCounter == inputNumOfPlayers - 1) {
     playersArray[turnCounter].playerDiceRollResult = generateDiceResult();
@@ -370,7 +333,124 @@ var playGame = function (inputNumOfPlayers) {
     turnCounter = 0;
     gameStatus = "dice selection";
 
-    // console.log(playersArray);
+    return myOutputValue;
+  }
+};
+
+// Function to randomly assign player
+
+var assignRandomPlayer = function (inputNumOfPlayers) {
+  var counter = 0;
+  var randomPlayer = 0;
+
+  if (turnCounter < numOfPlayers) {
+    while (counter < 1) {
+      var randomNum = Math.floor(Math.random() * inputNumOfPlayers);
+      if (playersArray[randomNum].playerStatus == "NOT PLAYED") {
+        randomPlayer = playersArray[randomNum];
+        playersArray[randomNum].playerStatus = "PLAYED";
+        counter += 1;
+      } else {
+        counter = 0;
+      }
+    }
+  }
+
+  return randomPlayer;
+};
+
+// Function to create array
+
+var createArray = function (object1, object2) {
+  var newArray = [];
+  newArray.push(object1);
+  newArray.push(object2);
+  return newArray;
+};
+
+// Function to reset player's status
+
+var resetPlayerStatus = function (array) {
+  for (counter = 0; counter < array.length; counter += 1) {
+    array[counter].playerStatus = "NOT PLAYED";
+  }
+};
+
+// Function to play the game in KNOCKOUT MODE
+
+var playKnockoutGame = function (inputNumOfPlayers) {
+  var winResults = "";
+  var myOutputValue = "";
+
+  if (knockoutTurn == "start knockout") {
+    player1 = assignRandomPlayer(inputNumOfPlayers);
+    nextPlayer = assignRandomPlayer(inputNumOfPlayers);
+
+    myOutputValue = `Player ${player1.playerNum} you will start first.<br><br>
+    You will play against Player ${nextPlayer.playerNum}.<br><br>
+    Click Submit to roll dice.<br><br>`;
+
+    knockoutTurn = "player 1";
+    return myOutputValue;
+  }
+
+  if (knockoutTurn == "player 1") {
+    player1.playerDiceRollResult = generateDiceResult();
+    player1.playerConcatenateNum = autoConcatenateDiceNum(
+      player1.playerDiceRollResult
+    );
+    player1.playerSumScore += player1.playerConcatenateNum;
+
+    generateLeaderBoard(playersArray);
+
+    myOutputValue = `Welcome Player ${player1.playerNum}.<br><br>
+    You rolled ${player1.playerDiceRollResult}.<br><br>
+    Your number is ${player1.playerConcatenateNum}.<br><br>
+    It is now player ${nextPlayer.playerNum}'s turn. Click Submit to roll dice.<br><br>
+    ${leaderBoardResults}`;
+
+    turnCounter += 1;
+
+    knockoutTurn = "next player";
+
+    return myOutputValue;
+  } else if (knockoutTurn == "next player") {
+    player2 = nextPlayer;
+
+    player2.playerDiceRollResult = generateDiceResult();
+    player2.playerConcatenateNum = autoConcatenateDiceNum(
+      player2.playerDiceRollResult
+    );
+    player2.playerSumScore += player2.playerConcatenateNum;
+
+    winResults = checkWhoWins(createArray(player1, player2));
+
+    player1 = tempWinner;
+
+    generateLeaderBoard(playersArray);
+
+    myOutputValue = `Welcome Player ${player2.playerNum}.<br><br>
+    You rolled ${player2.playerDiceRollResult}.<br><br>
+    Your number is ${player2.playerConcatenateNum}.<br><br>
+    ${winResults}<br><br>`;
+
+    turnCounter += 1;
+
+    if (turnCounter < numOfPlayers) {
+      knockoutTurn = "next player";
+      nextPlayer = assignRandomPlayer(inputNumOfPlayers);
+      myOutputValue =
+        myOutputValue +
+        `Player ${nextPlayer.playerNum} you are up next. Click submit to play another round!<br><br>${leaderBoardResults}`;
+    } else {
+      knockoutTurn = "start knockout";
+      gameStatus = "dice selection";
+      resetPlayerStatus(playersArray);
+      turnCounter = 0;
+      myOutputValue =
+        myOutputValue +
+        `Please submit the number of dice to play another round!<br><br>${leaderBoardResults}`;
+    }
 
     return myOutputValue;
   }
