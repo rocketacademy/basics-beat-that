@@ -7,6 +7,7 @@ var player1FinalDice;
 var player2FinalDice;
 var player1NumberofWins = 0;
 var player2NumberofWins = 0;
+var myOutputValue;
 
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -38,8 +39,6 @@ var compareHighest = function () {
 };
 
 var main = function (input) {
-  var myOutputValue = "";
-
   if (currentGameMode == "Player 1 Roll") {
     player1Roll();
     currentGameMode = "Player 1 Choose";
