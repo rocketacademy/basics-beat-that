@@ -7,12 +7,13 @@ var GAME_MODE_CHOOSE_DICE_ORDER_AUTOMATICALLY =
 var REGULAR = "regular";
 var LOWEST_COMBINED_NUMBER = "lowest combined number";
 var numberOfDice = "number of dice";
+var mode = "";
 
 // Track num of dice user has chosen to play with
 var numDiceChosen = 0;
 
-// Initialise the game to start with the dice roll game mode
-var gameMode = GAME_MODE_CHOOSE_NUM_DICE;
+// Initialise the game
+var gameMode = "";
 
 var currPlayer = 1;
 
@@ -111,6 +112,7 @@ var getPlayerNumber = function () {
     playerOneNum = playerNum;
   } else {
     playerTwoNum = playerNum;
+    addNumToRunningScore(determineWinner());
   }
 
   // Return generated player num to parent function
@@ -125,26 +127,31 @@ var determineWinner = function () {
   return playerProfiles[1].id;
 };
 
-var addNumToRunningScore = function (roundScore) {
+// addNumToRunningScore(determineWinner())
+var addNumToRunningScore = function (playerCurrent) {
   // If player 1 is playing, add to his score
-  if (currPlayer == 1) {
-    playerProfiles[0].score += roundScore;
+  if (playerCurrent == 1) {
+    playerProfiles[0].score += 1;
   }
   // If player 2 is playing, add to his score
-  if (currPlayer == 2) {
-    playerProfiles[1].score += roundScore;
+  if (playerCurrent == 2) {
+    playerProfiles[1].score += 1;
   }
 };
-
+/////////////////////////////////////////////////////////////////////////////////////
+// Leaderboard output //
 var createLeaderBoardOutput = function () {
   // set the preamble and assign it to a variable that will eventually be returned from this function
   var leaderBoardOutput = "Leaderboard: <br>";
 
   // If in regular mode, display the player with the larger score first
   if (mode == REGULAR) {
+    console.log(1);
     // If the larger scores is in index 0, loop thru the array
     if (playerProfiles[0].score > playerProfiles[1].score) {
+      console.log(2);
       for (var i = 0; i < playerProfiles.length; i += 1) {
+        console.log(3);
         // In each iteration of the loop, add on to the preamble by displaying the player name and scores
         leaderBoardOutput +=
           "Player " +
@@ -155,7 +162,9 @@ var createLeaderBoardOutput = function () {
       }
       // If the larger scores is in index 1, loop from the back of the array
     } else if (playerProfiles[1].score > playerProfiles[0].score) {
+      console.log(4);
       for (var i = playerProfiles.length - 1; i > -1; i -= 1) {
+        console.log(5);
         // In each iteration of the loop, add on to the preamble by displaying the player name and scores
         leaderBoardOutput +=
           "Player " +
@@ -245,12 +254,13 @@ var main = function (input) {
     }
     // if the input is valid, re-assign mode with the input value
     mode = input;
+    gameMode = GAME_MODE_CHOOSE_NUM_DICE;
     return (
       "You have selected " +
       mode +
       " mode. Player " +
       currPlayer +
-      ", click submit to roll your dice"
+      ", click submit to select number of dice"
     );
   }
 
@@ -337,7 +347,9 @@ var main = function (input) {
       " | Player 2 number: " +
       playerTwoNum +
       "<br>" +
-      "Press Submit to play again."
+      "Press Submit to play again." +
+      "<br>" +
+      createLeaderBoardOutput()
     );
   }
 
