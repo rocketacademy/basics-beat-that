@@ -1,6 +1,8 @@
 var firstArray;
 var secondArray;
 var currentStatus = 0;
+var countPlayer1 = 0;
+var countPlayer2 = 0;
 
 var main = function (input) {
   console.log("current status is " + currentStatus);
@@ -71,12 +73,27 @@ var getRandomIndex = function (max) {
 
 var compareNumbers = function (inputArray1, inputArray2) {
   if (inputArray1[0] > inputArray2[0]) {
+    countPlayer1++;
+    currentStatus = 0;
+
     return (
-      "Player 1 wins! " + inputArray1[0] + " is greater than " + inputArray2[0]
+      "Player 1 wins! " +
+      inputArray1[0] +
+      " is greater than " +
+      inputArray2[0] +
+      " and the count for player 1 is " +
+      countPlayer1
     );
   } else if (inputArray1[0] < inputArray2[0]) {
+    countPlayer2++;
+    currentStatus = 0;
     return (
-      "Player 2 wins! " + inputArray2[0] + " is greater than " + inputArray1[0]
+      "Player 2 wins! " +
+      inputArray2[0] +
+      " is greater than " +
+      inputArray1[0] +
+      " and the count for player 2 is " +
+      countPlayer2
     );
   } else {
     return "Error!";
