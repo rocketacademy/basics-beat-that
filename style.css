@@ -34,6 +34,13 @@ button {
   padding: 0 6px;
 }
 
+#instructions {
+  background-color: blanchedalmond;
+  margin: 10px auto;
+  padding: 20px;
+  width: 100%;
+}
+
 #output-div {
   background-color: lightgrey;
   margin: 20px auto;
@@ -55,4 +62,8 @@ button {
   max-height: auto;
   margin-left: auto;
   margin-right: auto;
+}
+
+.hidden {
+  display: none;
 }
