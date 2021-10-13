@@ -8,16 +8,28 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <p>Instructions:</p>
+      <div id="instructions">Roll dice to start the game! 🎲</div>
       <br />
-      <button id="submit-button">Submit</button>
+      <button id="submit-button" class="roll-dice">Roll Dice!</button>
+      <button id="submit-button" class="select-dice-1 hidden">Dice 1</button>
+      <button id="submit-button" class="select-dice-2 hidden">Dice 2</button>
       <div class="image-container">
         <div class="image-child">
-          <img src="dice-1.png" alt="dice image" id="dice" class="dice1" />
+          <img
+            src="dice-1.png"
+            alt="dice image"
+            id="dice"
+            class="dice1 hidden"
+          />
         </div>
         <div class="image-child">
-          <img src="dice-2.png" alt="dice image" id="dice" class="dice2" />
+          <img
+            src="dice-2.png"
+            alt="dice image"
+            id="dice"
+            class="dice2 hidden"
+          />
         </div>
       </div>
 
