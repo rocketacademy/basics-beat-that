@@ -16,25 +16,28 @@
       <button id="submit-button" class="select-dice-2 hidden">Dice 2</button>
       <div class="image-container">
         <div class="image-child">
-          <img
-            src="dice-1.png"
-            alt="dice image"
-            id="dice"
-            class="dice1 hidden"
-          />
+          <img src="dice-1.png" alt="dice image" id="dice" class="dice1" />
+          <p class="img-text">Dice 1</p>
         </div>
         <div class="image-child">
-          <img
-            src="dice-2.png"
-            alt="dice image"
-            id="dice"
-            class="dice2 hidden"
-          />
+          <img src="dice-1.png" alt="dice image" id="dice" class="dice2" />
+          <p class="img-text">Dice 2</p>
         </div>
       </div>
 
       <p>Output:</p>
       <div id="output-div"></div>
+    </div>
+    <!-- scoreboard -->
+    <div id="scoreboard">
+      <section class="player-0">
+        <h2 class="name">Player 1</h2>
+        <p class="score score-0">0</p>
+      </section>
+      <section class="player-1">
+        <h2 class="name">Player 2</h2>
+        <p class="score score-1">0</p>
+      </section>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
