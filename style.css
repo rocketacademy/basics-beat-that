@@ -77,26 +77,35 @@ button {
   max-width: 800px;
   margin: 20px auto;
   padding: 10px;
-  height: 13rem;
+  height: 12rem;
 }
 
 .player-0 {
   text-align: center;
   float: left;
-  width: 375px;
+  /* width: 360px; */
   height: 100px;
-  padding: 10px;
+  margin: 0px auto;
+  /* padding: 10px; */
 }
 .player-1 {
   text-align: center;
-  float: left;
-  width: 375px;
+  float: right;
+  width: 360px;
   height: 100px;
-  padding: 10px;
+  margin: 0px auto;
+  /* padding: 10px; */
 }
 
 .name {
-  width: 250px;
-  margin: 0px 50px;
+  width: auto;
+  margin: 0px auto;
   text-align: center;
+}
+
+.current {
+  background-color: gold;
+  width: 360px;
+  margin: 0px auto;
+  height: 5rem;
 }

@@ -9,7 +9,7 @@
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
       <p>Instructions:</p>
-      <div id="instructions">Roll dice to start the game! 🎲</div>
+      <div id="instructions">Player 1, Roll dice to start the game! 🎲</div>
       <br />
       <button id="submit-button" class="roll-dice">Roll Dice!</button>
       <button id="submit-button" class="select-dice-1 hidden">Dice 1</button>
@@ -25,18 +25,26 @@
         </div>
       </div>
 
-      <p>Output:</p>
+      <p></p>
       <div id="output-div"></div>
     </div>
     <!-- scoreboard -->
     <div id="scoreboard">
       <section class="player-0">
-        <h2 class="name">Player 1</h2>
+        <h2 class="name" id="name-0">Player 1 Score</h2>
         <p class="score score-0">0</p>
+        <div class="current">
+          <h3 class="current-label">Current Roll</h3>
+          <p class="current-score" id="current-0">0</p>
+        </div>
       </section>
       <section class="player-1">
-        <h2 class="name">Player 2</h2>
+        <h2 class="name" id="name-1">Player 2 Score</h2>
         <p class="score score-1">0</p>
+        <div class="current">
+          <h3 class="current-label">Current Roll</h3>
+          <p class="current-score" id="current-1">0</p>
+        </div>
       </section>
     </div>
     <!-- Import program logic -->
