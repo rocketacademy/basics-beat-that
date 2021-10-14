@@ -43,6 +43,7 @@ const determineWinner = function () {
     player1Score += 1;
   }
   currentRoll = [];
+
   // scoreboard
   playerScoreEl0.textContent = player0Score;
   playerScoreEl1.textContent = player1Score;
@@ -60,6 +61,8 @@ const randomNumberGenerator = function () {
 btnDice1.addEventListener('click', function () {
   if (currentRoll.length < 2) {
     // console.log(Number('' + dice1 + dice2));
+    let concatOfDice = Number('' + dice1 + dice2);
+    currentRoll[`${activePlayer}`] = concatOfDice;
     gameLogic();
     if (currentRoll.length >= 2) {
       determineWinner();
@@ -68,6 +71,8 @@ btnDice1.addEventListener('click', function () {
 });
 btnDice2.addEventListener('click', function () {
   if (currentRoll.length < 2) {
+    let concatOfDice = Number('' + dice2 + dice1);
+    currentRoll[`${activePlayer}`] = concatOfDice;
     // console.log(Number('' + dice1 + dice2));
     gameLogic();
     if (currentRoll.length >= 2) {
@@ -77,8 +82,8 @@ btnDice2.addEventListener('click', function () {
 });
 
 const gameLogic = function () {
-  let concatOfDice = Number('' + dice1 + dice2);
-  currentRoll[`${activePlayer}`] = concatOfDice;
+  // let concatOfDice = Number('' + dice1 + dice2);
+  // currentRoll[`${activePlayer}`] = concatOfDice;
   // console.log(currentRoll);
   document.getElementById(`current-${activePlayer}`).textContent =
     currentRoll[`${activePlayer}`];
@@ -104,5 +109,5 @@ const rollDice = function () {
   btnRollDice.classList.add('hidden');
   btnDice1.classList.remove('hidden');
   btnDice2.classList.remove('hidden');
-  instructionsEl.textContent = 'Choose the order of the dice. 🤹';
+  instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please choose the order of the dice. 🤹`;
 };
