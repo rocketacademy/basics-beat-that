@@ -15,7 +15,6 @@ const playerScoreEl0 = document.querySelector('.score-0');
 const playerScoreEl1 = document.querySelector('.score-1');
 
 // global variables
-
 let dice1,
   dice2,
   player0Score = 0,
@@ -33,7 +32,7 @@ btnRollDice.addEventListener('click', function () {
 
 instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 
-// determine winner
+// function to determine winner based on the current scores
 const determineWinner = function () {
   if (currentRoll[0] > currentRoll[1]) {
     // console.log(`player 1 won`);
@@ -49,15 +48,18 @@ const determineWinner = function () {
   playerScoreEl1.textContent = player1Score;
 };
 
+// function to change player in the game
 const changePlayer = function () {
   activePlayer = activePlayer === 0 ? 1 : 0;
   instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 };
 
+// function to get a random number
 const randomNumberGenerator = function () {
   return Math.trunc(Math.random() * 6 + 1);
 };
 
+// function that executes on 'click 1' press
 btnDice1.addEventListener('click', function () {
   if (currentRoll.length < 2) {
     // console.log(Number('' + dice1 + dice2));
@@ -69,6 +71,8 @@ btnDice1.addEventListener('click', function () {
     }
   }
 });
+
+// function that executes on 'click 2' press
 btnDice2.addEventListener('click', function () {
   if (currentRoll.length < 2) {
     let concatOfDice = Number('' + dice2 + dice1);
@@ -81,10 +85,8 @@ btnDice2.addEventListener('click', function () {
   }
 });
 
+// function that determines what happens when buttons are pressed and to change player after 1 turn is over.
 const gameLogic = function () {
-  // let concatOfDice = Number('' + dice1 + dice2);
-  // currentRoll[`${activePlayer}`] = concatOfDice;
-  // console.log(currentRoll);
   document.getElementById(`current-${activePlayer}`).textContent =
     currentRoll[`${activePlayer}`];
   // hide rollDice button
