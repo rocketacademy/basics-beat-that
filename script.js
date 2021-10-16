@@ -1,6 +1,6 @@
 var playersScore = [0, 0]; // holds players scores
 var player1DiceArray = []; // holds array of dice rolls
-var player2DiceArray = [];
+var player2DiceArray = []; //     "
 var diceOrder1 = ""; // dice order taken by player 1
 var diceOrder2 = ""; // dice order taken by player 2
 var currentPlayer = 1; // control flow of players
@@ -68,7 +68,7 @@ var main = function (input) {
   // Player 1 to roll 2 dices and outputs to player and guides player to select dice order.
   if (playing && userNameRound > 2 && currentPlayer == 1 && input == "") {
     var diceRoll1 = diceRoll(6);
-    player1DiceArray.push(diceRoll1);
+    player1DiceArray.push(diceRoll1); // adds dice value to array @ last position
     var diceRoll2 = diceRoll(6);
     player1DiceArray.push(diceRoll2);
     myOutputValue = `🤞${players[0]}, you rolled 🕐🐪${diceRoll1} for Dice 1 and 🕑🐫${diceRoll2} for Dice 2.<br> Choose ✍✍Dice 1 or Dice 2 to be first order.`;
@@ -135,7 +135,7 @@ var player1DiceOrder = function (input) {
     var outputValue = `☀${players[0]} has chosen the order of 👩‍⚖️${diceOrder1}. <br/>Now next 🙃up is 🥱${players[1]}.<br/>🥱${players[1]}, please click submit to 🎲roll`;
   } else {
     diceOrder1 = "".concat(player1DiceArray[1], player1DiceArray[0]);
-    outputValue = `☀${players[0]} has chosen the order of 👉👉${diceOrder1}.<br/> Now next up is 🥱${players[1]}.<br/> 🥱${players[1]}, please click submit to 🎲roll`;
+    outputValue = `☀${players[0]} has chosen the order of 👉${diceOrder1}.<br/> Now next up is 🥱${players[1]}.<br/> 🥱${players[1]}, please click submit to 🎲roll`;
   }
   return outputValue;
 };
