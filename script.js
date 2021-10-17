@@ -40,28 +40,28 @@ var main = function (input) {
   // forces players to input names // player 1 to start input first
   if (userNameRound == 1 && input == "") {
     players[0] = input;
-    return `🤼Both players, begin with player 1.<br/> Please input your names.🙌🎖🎅🥳<br/> 😅📣The game won't begin till you do so.`;
+    return `🤼👬 Both players, begin with player 1.<br/>🥳🥳 Please input your names.<br/> 😅📣 The game won't begin till you do so.`;
   }
   // stores player 1 name and guides player 2 to input name
   if (userNameRound == 1 && input !== "") {
     players[0] = input;
     userNameRound += 1;
-    return `🙏Thank you ${players[0]} for joining us 👨‍👩‍👦. <br/>🥈Player 2, please input your name as well.😅`;
+    return `🙏 Thank you ${players[0]} for joining us 👨‍👩‍👦. <br/>🥈Player 2, please input your name as well.😅`;
   }
   // stores player 2 name // ends guiding player names input //intro message
   if (userNameRound == 2 && input !== "") {
     players[1] = input;
     userNameRound += 1; // ends guiding players to input names
-    return `🙏Thank you ${players[0]} and ${players[1]} for joining us, the game is set for 10 rounds and will auto reset.<br/><br/> You may also reset the game at anytime by input ✍✍"reset".<br/><br/>🚦${players[0]}, you may 🏃‍♀️begin the game by pressing submit.`;
+    return `🙏 Thank you ${players[0]} and ${players[1]} for joining us, the game is set for 10 rounds and will auto reset.<br/><br/>❓❓ You may also reset the game at anytime by input ✍✍ "reset".<br/><br/>🚦 ${players[0]}, you may 🏃‍♀️begin the game by pressing submit.`;
   }
   // notifies player--2 that input name is required and can't click submit to roll yet.
   if (userNameRound == 2 && input == "") {
-    return `🤦‍♀️🤦‍♂️Player 2, you have tried clicking submit before inputting your name.<br/> Please give us your 📛name before the game begins🏃‍♀️.`;
+    return `🤦‍♀️🤦‍♂️ Player 2, you have tried clicking submit before inputting your name.<br/> Please give us your 📛 name before the game begins🏃‍♀️.`;
   }
 
   // after game starts,guide players from input anything other than the following inputs "Dice 1", "Dice 2" or "" in relevant circumstances
   if (!(input == "Dice 1" || input == "Dice 2" || input == "")) {
-    myOutputValue = `🛑🧨🏴‍☠️❌⭕🚫 Do not recognise input. Only press submit to roll or input Dice 1 or Dice 2 when prompt.`;
+    myOutputValue = `🛑 Do not recognise input. Only press submit to roll or input Dice 1 or Dice 2 when prompt.`;
     return myOutputValue;
   }
 
@@ -71,14 +71,14 @@ var main = function (input) {
     player1DiceArray.push(diceRoll1); // adds dice value to array @ last position
     var diceRoll2 = diceRoll(6);
     player1DiceArray.push(diceRoll2);
-    myOutputValue = `🤞${players[0]}, you rolled 🕐🐪${diceRoll1} for Dice 1 and 🕑🐫${diceRoll2} for Dice 2.<br> Choose ✍✍Dice 1 or Dice 2 to be first order.`;
+    myOutputValue = `🤞 ${players[0]}, you rolled 🕐🐪 ${diceRoll1} for Dice 1 and 🕑🐫 ${diceRoll2} for Dice 2.<br> Choose ✍✍ Dice 1 or Dice 2 to be first order.`;
     // stops submit to roll, but allows dice order
     playing = false;
     return myOutputValue;
   }
   // prevents players to roll more than once and guides players to input Dice 1 or Dice 2 for order selection
   if (!playing && input == "") {
-    return `😡💢👿😠🗯 Error. You are trying to roll when not supposed to. <br/>Input only ✍✍"Dice 1" or "Dice 2" to determine your first dice order`;
+    return `😡💢👿😠🗯<br/>Error. You are trying to roll when not supposed to. <br/>Input only ✍✍ "Dice 1" or "Dice 2" to determine your first dice order`;
   }
 
   // Player 2 to roll dices and outputs to player and guides player to select dice order.
@@ -90,7 +90,7 @@ var main = function (input) {
     player2DiceArray.push(diceRoll2);
     //stops submit to roll but allows dice order
     playing = false;
-    myOutputValue = `👩‍🦰${players[1]}, you rolled 🎲${diceRoll1} for Dice 1 and 🎲🎲${diceRoll2} for Dice 2.<br>👉👈 Choose Dice 1 or Dice 2 to be first order.`;
+    myOutputValue = `👩‍🦰 ${players[1]}, you rolled 🎲 ${diceRoll1} for Dice 1 and 🎲🎲 ${diceRoll2} for Dice 2.<br>👉👈 Choose Dice 1 or Dice 2 to be first order.`;
     return myOutputValue;
   }
 
@@ -128,28 +128,28 @@ var main = function (input) {
   }
 };
 
-//Player 1 function that outputs to browser the choice of order taken by Player 1
+//Player 1 function that concatenates from diceArray and outputs to browser the choice of order taken by Player 1
 var player1DiceOrder = function (input) {
   if (input == "Dice 1") {
     diceOrder1 = "".concat(player1DiceArray[0], player1DiceArray[1]);
-    var outputValue = `☀${players[0]} has chosen the order of 👩‍⚖️${diceOrder1}. <br/>Now next 🙃up is 🥱${players[1]}.<br/>🥱${players[1]}, please click submit to 🎲roll`;
+    var outputValue = `☀ ${players[0]} has chosen the order of 👩‍⚖️ ${diceOrder1}. <br/>Now next 🙃 up is 🥱 ${players[1]}.<br/>🥱 ${players[1]}, please click submit to 🎲 roll`;
   } else {
     diceOrder1 = "".concat(player1DiceArray[1], player1DiceArray[0]);
-    outputValue = `☀${players[0]} has chosen the order of 👉${diceOrder1}.<br/> Now next up is 🥱${players[1]}.<br/> 🥱${players[1]}, please click submit to 🎲roll`;
+    outputValue = `☀ ${players[0]} has chosen the order of 👉 ${diceOrder1}.<br/> Now next up is 🥱 ${players[1]}.<br/> 🥱 ${players[1]}, please click submit to 🎲 roll`;
   }
   return outputValue;
 };
 
-//Player 2 function that outputs to browser the choice of order taken by Player 2
+//Player 2 function that concatenates from diceArray and outputs to browser the choice of order taken by Player 2
 var player2DiceOrder = function (input) {
   if (input == "Dice 1") {
     diceOrder2 = "".concat(player2DiceArray[0], player2DiceArray[1]);
 
-    myOutputValue = `🧠🤩🙏${players[1]} has chosen the order of ${diceOrder2}.`;
+    myOutputValue = `🧠🤩🙏 ${players[1]} has chosen the order of ${diceOrder2}.`;
   } else {
     diceOrder2 = "".concat(player2DiceArray[1], player2DiceArray[0]);
 
-    myOutputValue = `🧠🤩🙏${players[1]} has chosen the order of ${diceOrder2}.`;
+    myOutputValue = `🧠🤩🙏 ${players[1]} has chosen the order of ${diceOrder2}.`;
   }
   return myOutputValue;
 };
@@ -166,12 +166,12 @@ var whoWins = function () {
       gameRound += 1;
       // if player 1 wins and is game 10th --> game ends + game restarts
       if (gameRound == 10) {
-        var output1 = `👱‍♂️${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️${players[0]} 💪wins.<br>👱‍♂️${players[0]} score is score ${playersScore[0]}.<br/>👩‍🦰${players[1]} score is ${playersScore[1]}..<br/>This is round ${gameRound} of 10 games 🏓. Game has ended😥🛑🏅.<br/>`;
+        var output1 = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️ ${players[0]} wins 💪.<br>👱‍♂️ ${players[0]} score is score ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}..<br/>This is round ${gameRound} of 10 games 🏓. Game has ended😥🛑🏅.<br/>`;
         var restartGame = initGame();
         return output1 + restartGame;
       }
-      // game not ended and announces winning player 1
-      return `👱‍♂️${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️${players[0]} 💪wins.<br>👱‍♂️${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰${players[1]} score is ${playersScore[1]}.<br/> Next up is 👱‍♂️${players[0]}, please press submit to 🎲roll.<br?>This is round ${gameRound} of 10 games.🏓`;
+      // game not yet ended and announces winning player 1
+      return `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️ ${players[0]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.<br/> Next up is 👱‍♂️ ${players[0]}, please press submit to 🎲roll.<br?>This is round ${gameRound} of 10 games.🏓`;
     }
     // player 2 wins
     if (diceOrderPlayer2 > diceOrderPlayer1) {
@@ -179,22 +179,22 @@ var whoWins = function () {
       gameRound += 1;
       // game 10th and to end game + restart game
       if (gameRound == 10) {
-        output1 = `👱‍♂️${players[0]} order is ${diceOrderPlayer1}.<br/>👩‍🦰${players[1]} 💪wins.<br>👱‍♂️${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰${players[1]} score is ${playersScore[1]}.  <br/>This is round ${gameRound} of 10 games🏓. Game has ended😥🛑📉.<br/>`;
+        output1 = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👩‍🦰 ${players[1]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.  <br/>This is round ${gameRound} of 10 games🏓. Game has ended😥🛑📉.<br/>`;
         restartGame = initGame();
         return output1 + restartGame;
       }
-      return `👱‍♂️${players[0]} order is ${diceOrderPlayer1}.<br/>👩‍🦰${players[1]} 💪wins.<br>👱‍♂️${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰${players[1]} score is ${playersScore[1]}. <br/> Next up is 👱‍♂️${players[0]}, please press submit to 🎲roll. <br/>This is round ${gameRound} of 10 games.🏓`;
+      return `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👩‍🦰 ${players[1]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}. <br/> Next up is 👱‍♂️ ${players[0]}, please press submit to 🎲 roll. <br/>This is round ${gameRound} of 10 games.🏓`;
     }
     // draw game
     if (diceOrderPlayer1 == diceOrderPlayer2) {
       gameRound += 1;
       // end game + restarts game
       if (gameRound == 10) {
-        output1 = `👱‍♂️${players[0]} order is ${diceOrderPlayer1}. It is a 👔tie. <br>👱‍♂️${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰${players[1]} score is ${playersScore[1]}.<br/>  This is round ${gameRound} of 10 games 🏓. Game has ended.😥🛑💢<br/>`;
+        output1 = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}. It is a 👔 tie. <br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.<br/>  This is round ${gameRound} of 10 games 🏓. Game has ended.😥🛑💢<br/>`;
         restartGame = initGame();
         return output1 + restartGame;
       }
-      return `👱‍♂️${players[0]} order is ${diceOrderPlayer1}}. It is a 👔Tie. <br/>👱‍♂️${players[0]}, submit to 🎲roll.<br/> This is ${gameRound} of 10 games🏓.`;
+      return `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}}. It is a 👔 Tie. <br/>👱‍♂️ ${players[0]}, submit to 🎲 roll.<br/> This is ${gameRound} of 10 games🏓.`;
     }
   }
 };
