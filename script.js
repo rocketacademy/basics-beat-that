@@ -52,7 +52,7 @@ var main = function (input) {
   if (userNameRound == 2 && input !== "") {
     players[1] = input;
     userNameRound += 1; // ends guiding players to input names
-    return `🙏 Thank you ${players[0]} and ${players[1]} for joining us, the game is set for 10 rounds and will auto reset.<br/><br/>❓❓ You may also reset the game at anytime by input ✍✍ "reset".<br/><br/>🚦 ${players[0]}, you may 🏃‍♀️begin the game by pressing submit.`;
+    return `🙏 Thank you ${players[0]} and ${players[1]} for joining us, the game is set for 10 rounds and will auto reset.<br/><br/>❓❓ You may also reset the game at anytime by ✍✍ "reset".<br/><br/>🚦 ${players[0]}, you may 🏃‍♀️begin the game by pressing submit.`;
   }
   // notifies player--2 that input name is required and can't click submit to roll yet.
   if (userNameRound == 2 && input == "") {
@@ -71,14 +71,14 @@ var main = function (input) {
     player1DiceArray.push(diceRoll1); // adds dice value to array @ last position
     var diceRoll2 = diceRoll(6);
     player1DiceArray.push(diceRoll2);
-    myOutputValue = `🤞 ${players[0]}, you rolled 🕐🐪 ${diceRoll1} for Dice 1 and 🕑🐫 ${diceRoll2} for Dice 2.<br> Choose ✍✍ Dice 1 or Dice 2 to be first order.`;
+    myOutputValue = `🤞 ${players[0]}, you rolled 🕐🐪 ${diceRoll1} for Dice 1 and 🕑🐫 ${diceRoll2} for Dice 2.<br> 👉👈 Choose by ✍✍ Dice 1 or Dice 2 to be first order.`;
     // stops submit to roll, but allows dice order
     playing = false;
     return myOutputValue;
   }
   // prevents players to roll more than once and guides players to input Dice 1 or Dice 2 for order selection
   if (!playing && input == "") {
-    return `😡💢👿😠🗯<br/>Error. You are trying to roll when not supposed to. <br/>Input only ✍✍ "Dice 1" or "Dice 2" to determine your first dice order`;
+    return `😡💢👿😠🗯<br/>Error. You are trying to roll when not supposed to. <br/>✍✍ "Dice 1" or "Dice 2" to determine your first dice order`;
   }
 
   // Player 2 to roll dices and outputs to player and guides player to select dice order.
