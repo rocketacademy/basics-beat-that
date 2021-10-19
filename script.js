@@ -1,11 +1,13 @@
 // Global States
 var playerTurn = 1; // 1 = Player 1; 2 = Player 2
 var gamePhase = 1; // 1 = Dice Roll; 2 = Choose Order; 3 = Conclusion
-var player1Rolls = [];
-var player2Rolls = [];
+var player1Rolls = []; // Contains the 2 dice rolls for Player 1
+var player2Rolls = []; // Contains the 2 dice rolls for Player 2
 var playerChoice = 0; // If 1, choose 1st numerical; If 2, choose 2nd numerical
 var finalNumber1 = 0; // Stores final number for Player 1
 var finalNumber2 = 0; // Stores final number for Player 2
+var scorePlayer1 = 0; // Stores running score for Player 1
+var scorePlayer2 = 0; // Stores running score for player 2
 
 // Function: Returns random number from 1 to 6 -inclusive
 var rollDice = function () {
@@ -38,6 +40,12 @@ var errorMessage = function () {
   return `Please try again. Enter '1' for Dice 1 or '2' for Dice 2.`;
 };
 
+// Function: Generates Scoreboard
+var scoreBoard = function () {
+  score = `<br><br><u>Scoreboard</u><br>Player 1: <b>${scorePlayer1}</b><br>Player 2: <b>${scorePlayer2}</b>`;
+  return score;
+};
+
 var main = function (input) {
   var myOutputValue = "";
   // 1st IF: If game is in Phase 3 (Conclusion)
@@ -50,7 +58,10 @@ var main = function (input) {
     } else if (finalNumber1 == finalNumber2) {
       myOutputValue += `<b>It's a draw</b>.`;
     }
+    scorePlayer1 += finalNumber1;
+    scorePlayer2 += finalNumber2;
     myOutputValue += `<br>Press 'Submit' to play again!`;
+    myOutputValue += scoreBoard();
     gamePhase = 1;
     player1Rolls = [];
     player2Rolls = [];
