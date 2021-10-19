@@ -85,7 +85,7 @@ var errorInputCheck = function (input) {
   if (!(input == "Dice 1" || input == "Dice 2" || input == "")) {
     var myOutputValue = `🛑 Do not recognise input. Only press 'SUBMIT' to roll or input Dice 1 or Dice 2 when prompt.`;
   }
-  // prevents players to roll more than once and guides inputting Dice 1 or Dice 2 for order selection
+  // prevents players to roll more than once and guides Dice 1 / Dice 2 input for order selection
   if (!playing && input == "") {
     myOutputValue = `😡💢👿😠🗯<br/>Error. You are trying to roll when not supposed to. <br/>✍✍ "Dice 1" or "Dice 2" to determine your first dice order`;
   }
@@ -140,7 +140,7 @@ var endGameTallyForceRestart = function (diceOrderPlayer1, diceOrderPlayer2) {
   return myOutputValue;
 };
 
-// determines winning and losing or draw players //update players scores // auto restarts game at 10th round.
+// winning and losing or draw players //update players scores // auto restarts game.
 var whoWins = function () {
   // roll two separate dices and store
   var diceOrderPlayer1 = Number(diceOrder1);
@@ -150,7 +150,7 @@ var whoWins = function () {
   // if player 1 wins
   if (diceOrderPlayer1 > diceOrderPlayer2) {
     playersScore[0] += 1;
-    myOutputValue = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️ ${players[0]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.<br/> Next up is 👱‍♂️ ${players[0]}, please press submit to 🎲roll.<br?>This is round ${gameRound} of 10 games.🏓`;
+    var myOutputValue = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️ ${players[0]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.<br/> Next up is 👱‍♂️ ${players[0]}, please press submit to 🎲roll.<br?>This is round ${gameRound} of 10 games.🏓`;
   }
 
   // player 2 wins
@@ -163,7 +163,7 @@ var whoWins = function () {
     myOutputValue = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}}. It is a 👔 Tie. <br/>👱‍♂️ ${players[0]}, submit to 🎲 roll.<br/> This is ${gameRound} of 10 games🏓.`;
   }
   if (gameRound == 10) {
-    var myOutputValue = endGameTallyForceRestart(
+    myOutputValue = endGameTallyForceRestart(
       diceOrderPlayer1,
       diceOrderPlayer2
     );
@@ -180,7 +180,7 @@ var main = function (input) {
     return rollAndSelect2Dices(input);
   }
   if (!playing && (input == "Dice 1" || input == "Dice 2")) {
-    myOutputValue = playerDiceOrder(input);
+    var myOutputValue = playerDiceOrder(input);
     playing = true;
     if (currentPlayer == 1) {
       currentPlayer = 2;
