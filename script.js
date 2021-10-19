@@ -18,8 +18,8 @@ const playerScoreEl1 = document.querySelector('.score-1');
 let dice1,
   dice2,
   player0Score = 0,
-  player1Score = 0;
-let activePlayer = 0;
+  player1Score = 0,
+  activePlayer = 0;
 let currentRoll = [];
 let nameOfPlayers = ['Player 1', 'Player 2'];
 
@@ -30,6 +30,7 @@ btnRollDice.addEventListener('click', function () {
   rollDice();
 });
 
+// Main instructions
 instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 
 // determines winner based on the current scores
@@ -64,6 +65,7 @@ btnDice1.addEventListener('click', function () {
   if (currentRoll.length < 2) {
     // console.log(Number('' + dice1 + dice2));
     let concatOfDice = Number('' + dice1 + dice2);
+    // add current roll to active player
     currentRoll[`${activePlayer}`] = concatOfDice;
     imgDice1.src = `dice-1.png`;
     imgDice2.src = `dice-1.png`;
@@ -95,21 +97,21 @@ btnDice2.addEventListener('click', function () {
 
 // determines what happens when buttons are pressed and to change player after 1 turn is over.
 const gameLogic = function () {
+  // show current score for active player
   document.getElementById(`current-${activePlayer}`).textContent =
     currentRoll[`${activePlayer}`];
-  // hide rollDice button
+  // unhide rollDice button
   btnRollDice.classList.remove('hidden');
   btnDice1.classList.add('hidden');
   btnDice2.classList.add('hidden');
-  // add current score to active player
-  currentRoll[`${activePlayer}`];
   // change player
   changePlayer();
 };
 
 // roll dice
 const rollDice = function () {
-  if (player0Score >= 1 || player1Score >= 1) {
+  // resets current rolls text if player 1 rolls dice
+  if (activePlayer === 0) {
     currentScoreEl0.textContent = 0;
     currentScoreEl1.textContent = 0;
   }
