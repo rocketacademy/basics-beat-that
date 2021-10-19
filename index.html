@@ -1,80 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Coding Basics</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
-      }
+<head>
+  <title>Basics Project - Beat That</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- UIkit CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.4/dist/css/uikit.min.css" />
 
-      #header {
-        text-align: center;
-      }
+  <!-- UIkit JS -->
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.4/dist/js/uikit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.4/dist/js/uikit-icons.min.js"></script>
 
-      #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
-      }
+  <style>
+    .uk-background-rocketacademy {
+      background-color: pink;
+    }
 
-      input {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 9px;
-        width: 100%;
-      }
+    .uk-link,
+    a {
+      color: white !important;
+    }
 
-      button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
-      }
+    .uk-subnav-pill>.uk-active>a {
+      background-color: crimson !important;
+      color: white !important;
+    }
 
-      #output-div {
-        background-color: lightgrey;
-        margin: 20px auto;
-        padding: 20px;
-        width: 100%;
-      }
-    </style>
-  </head>
+    .uk-subnav-pill>*> :first-child {
+      background-color: transparent !important;
+      color: black !important;
+    }
+  </style>
+</head>
 
-  <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
-    <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+<body>
+  <h1 class="uk-text-center uk-margin-top uk-margin-bottom">Basics: Beat That! 🚀</h1>
+  <div class="uk-section uk-margin-left uk-margin-right">
+    <div class="uk-container uk-background-rocketacademy">
+      <div class="uk-margin-top uk-margin-bottom">
+        <h4 id="instructions"></h4>
+        <input id="input-beat-that" class="uk-form-small uk-input" />
+      </div>
+      <div class="uk-flex uk-flex-center">
+        <button class="uk-button uk-width-small" id="submit-button">Submit</button>
+      </div>
+      <h4 class="uk-margin-top uk-margin-bottom">Output:</h4>
+      <h5 class="uk-margin-top uk-margin-bottom">
+        <div id="output-div" class="uk-padding-small uk-background-muted"></div>
+      </h5>
     </div>
-    <!-- Import program logic -->
-    <script src="script.js"></script>
-    <!-- Define button click functionality -->
-    <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+  </div>
+  <!-- Import program logic -->
+  <script src="script.js"></script>
+</body>
 
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
-      });
-    </script>
-  </body>
 </html>
