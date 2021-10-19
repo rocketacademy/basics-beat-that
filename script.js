@@ -65,7 +65,6 @@ var rollAndSelect2Dices = function (input) {
     var myOutputValue = `🤞 ${players[0]}, you rolled 🕐🐪 ${diceRoll1} for Dice 1 and 🕑🐫 ${diceRoll2} for Dice 2.<br> 👉👈 Choose by ✍✍ Dice 1 or Dice 2 to be first order.`;
     // stops submit to roll, but allows dice order
     playing = false;
-    return myOutputValue;
   }
 
   // Player 2 to roll dices and outputs to player and guides player 2 to select dice order.
@@ -77,8 +76,8 @@ var rollAndSelect2Dices = function (input) {
     //stops submit to roll but allows dice order
     playing = false;
     myOutputValue = `👩‍🦰 ${players[1]}, you rolled 🎲 ${diceRoll1} for Dice 1 and 🎲🎲 ${diceRoll2} for Dice 2.<br>👉👈 Choose Dice 1 or Dice 2 to be first order.`;
-    return myOutputValue;
   }
+  return myOutputValue;
 };
 // error checking of inputs ensuring game flow
 var errorInputCheck = function (input) {
