@@ -4,7 +4,7 @@ var player2DiceArray = []; //     "
 var diceOrder1 = ""; // dice order taken by player 1
 var diceOrder2 = ""; // dice order taken by player 2
 var currentPlayer = 1; // control flow of players
-var gameRound = 9; // control flow: acts as counter to end game at 10th and to also start game
+var gameRound = 0; // control flow: acts as counter to end game at 10th and to also start game
 var userNameRound = 1; // control flow:: forces players to input names
 var players = []; // array store of players names
 var playing = true; // Control flow of rolling dice
@@ -79,7 +79,7 @@ var rollAndSelect2Dices = function (input) {
   }
   return myOutputValue;
 };
-// error checking of inputs ensuring game flow
+// function that does error checking of inputs ensuring game flow
 var errorInputCheck = function (input) {
   // after game starts, guides players to type correct inputs
   if (!(input == "Dice 1" || input == "Dice 2" || input == "")) {
@@ -118,20 +118,21 @@ var playerDiceOrder = function (input) {
   }
   return myOutputValue;
 };
-// ends at game 10th, tallies scores and force restart
+// function that ends at game 10th, tallies scores and force restart
 var endGameTallyForceRestart = function (diceOrderPlayer1, diceOrderPlayer2) {
+  // player 1 wins
   if (diceOrderPlayer1 > diceOrderPlayer2) {
     playersScore[0] += 1;
     var output1 = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️ ${players[0]} wins 💪.<br>👱‍♂️ ${players[0]} score is score ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}..<br/>This is round ${gameRound} of 10 games 🏓. Game has ended😥🛑🏅.<br/>`;
     var restartGame = initGame();
     var myOutputValue = output1 + restartGame;
-  }
+  } // player 2 wins
   if (diceOrderPlayer2 > diceOrderPlayer1) {
     playersScore[1] += 1;
     output1 = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👩‍🦰 ${players[1]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.  <br/>This is round ${gameRound} of 10 games🏓. Game has ended😥🛑📉.<br/>`;
     restartGame = initGame();
     myOutputValue = output1 + restartGame;
-  }
+  } // draw
   if (diceOrderPlayer1 == diceOrderPlayer2) {
     output1 = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}. It is a 👔 tie. <br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.<br/>  This is round ${gameRound} of 10 games 🏓. Game has ended.😥🛑💢<br/>`;
     restartGame = initGame();
@@ -140,14 +141,14 @@ var endGameTallyForceRestart = function (diceOrderPlayer1, diceOrderPlayer2) {
   return myOutputValue;
 };
 
-// winning and losing or draw players //update players scores // auto restarts game.
+// function determine win/lose/draw //updates players scores // auto restarts game.
 var whoWins = function () {
-  // roll two separate dices and store
+  // converts string type dice order to Number for comparison
   var diceOrderPlayer1 = Number(diceOrder1);
   var diceOrderPlayer2 = Number(diceOrder2);
   gameRound += 1;
 
-  // if player 1 wins
+  // player 1 wins
   if (diceOrderPlayer1 > diceOrderPlayer2) {
     playersScore[0] += 1;
     var myOutputValue = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}.<br/>👱‍♂️ ${players[0]} wins 💪.<br>👱‍♂️ ${players[0]} score is ${playersScore[0]}.<br/>👩‍🦰 ${players[1]} score is ${playersScore[1]}.<br/> Next up is 👱‍♂️ ${players[0]}, please press submit to 🎲roll.<br?>This is round ${gameRound} of 10 games.🏓`;
@@ -162,6 +163,7 @@ var whoWins = function () {
   if (diceOrderPlayer1 == diceOrderPlayer2) {
     myOutputValue = `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}}. It is a 👔 Tie. <br/>👱‍♂️ ${players[0]}, submit to 🎲 roll.<br/> This is ${gameRound} of 10 games🏓.`;
   }
+  // end, resets, tally game
   if (gameRound == 10) {
     myOutputValue = endGameTallyForceRestart(
       diceOrderPlayer1,
@@ -173,12 +175,15 @@ var whoWins = function () {
 
 // browser output function
 var main = function (input) {
+  //player name request round
   if (userNameRound < 3) {
     return userNameCreate(input);
   }
+  //player roll dice round
   if (playing && userNameRound > 2 && input == "") {
     return rollAndSelect2Dices(input);
   }
+  //player determining dice order
   if (!playing && (input == "Dice 1" || input == "Dice 2")) {
     var myOutputValue = playerDiceOrder(input);
     playing = true;
@@ -188,15 +193,14 @@ var main = function (input) {
     }
     if (currentPlayer == 2) {
       currentPlayer = 1;
-      // check for final winner
       var winningPlayer = whoWins();
       return myOutputValue + " " + winningPlayer;
     }
-  }
+  } // auto OR manual reset of game
   if (gameRound == 10 || input == "reset") {
-    console.log(gameRound);
     var restartGame = initGame();
     return restartGame;
   }
+  // function error checking to ensure smooth flow of input
   return errorInputCheck(input);
 };
