@@ -4,7 +4,7 @@ var player2DiceArray = []; //     "
 var diceOrder1 = ""; // dice order taken by player 1
 var diceOrder2 = ""; // dice order taken by player 2
 var currentPlayer = 1; // control flow of players
-var gameRound = 9; // control flow: acts as counter to end game at 10th and to also start game
+var gameRound = 0; // control flow: acts as counter to end game at 10th and to also start game
 var userNameRound = 1; // control flow:: forces players to input names
 var players = []; // array store of players names
 var playing = true; // Control flow of rolling dice
@@ -82,12 +82,12 @@ var rollAndSelect2Dices = function (input) {
 };
 // error checking of inputs ensuring game flow
 var errorInputCheck = function (input) {
-  // after game starts,guide players from input anything other than the following inputs "Dice 1", "Dice 2" or "" in relevant circumstances
+  // after game starts, guides players to type correct inputs
   if (!(input == "Dice 1" || input == "Dice 2" || input == "")) {
-    myOutputValue = `🛑 Do not recognise input. Only press 'SUBMIT' to roll or input Dice 1 or Dice 2 when prompt.`;
+    var myOutputValue = `🛑 Do not recognise input. Only press 'SUBMIT' to roll or input Dice 1 or Dice 2 when prompt.`;
     return myOutputValue;
   }
-  // prevents players to roll more than once and guides players to input Dice 1 or Dice 2 for order selection
+  // prevents players to roll more than once and guides inputting Dice 1 or Dice 2 for order selection
   if (!playing && input == "") {
     return `😡💢👿😠🗯<br/>Error. You are trying to roll when not supposed to. <br/>✍✍ "Dice 1" or "Dice 2" to determine your first dice order`;
   }
@@ -95,36 +95,6 @@ var errorInputCheck = function (input) {
   if (playing && (input == "Dice 1" || input == "Dice 2")) {
     return `You have not rolled the dices yet, you can't choose order of dice yet. 😠💢🗯<br/>👍 Please click submit to roll.`;
   }
-};
-
-// browser output function
-var main = function (input) {
-  if (userNameRound < 3) {
-    return userNameCreate(input);
-  }
-  if (playing && userNameRound > 2 && input == "") {
-    return rollAndSelect2Dices(input);
-  }
-  if (!playing && (input == "Dice 1" || input == "Dice 2")) {
-    myOutputValue = playerDiceOrder(input);
-    playing = true;
-    if (currentPlayer == 1) {
-      currentPlayer = 2;
-      return myOutputValue;
-    }
-    if (currentPlayer == 2) {
-      currentPlayer = 1;
-      // check for final winner
-      var winningPlayer = whoWins();
-      return myOutputValue + " " + winningPlayer;
-    }
-  }
-  if (gameRound == 10 || input == "reset") {
-    console.log(gameRound);
-    var restartGame = initGame();
-    return restartGame;
-  }
-  return errorInputCheck(input);
 };
 
 // function that determines order of dice
@@ -148,8 +118,7 @@ var playerDiceOrder = function (input) {
     }
   }
 };
-
-//
+// ends at game 10th, tallies scores and force restart
 var endGameTallyForceRestart = function (diceOrderPlayer1, diceOrderPlayer2) {
   if (diceOrderPlayer1 > diceOrderPlayer2) {
     playersScore[0] += 1;
@@ -195,4 +164,34 @@ var whoWins = function () {
   if (diceOrderPlayer1 == diceOrderPlayer2) {
     return `👱‍♂️ ${players[0]} order is ${diceOrderPlayer1}}. It is a 👔 Tie. <br/>👱‍♂️ ${players[0]}, submit to 🎲 roll.<br/> This is ${gameRound} of 10 games🏓.`;
   }
+};
+
+// browser output function
+var main = function (input) {
+  if (userNameRound < 3) {
+    return userNameCreate(input);
+  }
+  if (playing && userNameRound > 2 && input == "") {
+    return rollAndSelect2Dices(input);
+  }
+  if (!playing && (input == "Dice 1" || input == "Dice 2")) {
+    myOutputValue = playerDiceOrder(input);
+    playing = true;
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      return myOutputValue;
+    }
+    if (currentPlayer == 2) {
+      currentPlayer = 1;
+      // check for final winner
+      var winningPlayer = whoWins();
+      return myOutputValue + " " + winningPlayer;
+    }
+  }
+  if (gameRound == 10 || input == "reset") {
+    console.log(gameRound);
+    var restartGame = initGame();
+    return restartGame;
+  }
+  return errorInputCheck(input);
 };
