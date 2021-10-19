@@ -20,6 +20,8 @@ var losingScore = 0;
 var gameMode = 0;
 var standard = `Standard Beat That! Game`;
 var reverse = `Reverse Beat That! Game`;
+var auto = `Auto Standard Beat That! Game`;
+var autoReverse = `Auto Reverse Beat That! Game`;
 var currentGame = ``;
 
 // Initial game prompt
@@ -73,16 +75,71 @@ var chooseDiceOrder = function (playerOrderChoice) {
   }
 };
 
+var generateCombinedNum = function () {
+  player1Dice1 = generateRandomDiceNumber();
+  player1Dice2 = generateRandomDiceNumber();
+  player2Dice1 = generateRandomDiceNumber();
+  player2Dice2 = generateRandomDiceNumber();
+  if (gameMode == 3) {
+    if (currentPlayer == player1) {
+      if (player1Dice1 >= player1Dice2) {
+        player1Num = Number("" + player1Dice1 + player1Dice2);
+        console.log(`auto ${player1Num}`);
+        return player1Num;
+      } else if (player1Dice1 < player1Dice2) {
+        player1Num = Number("" + player1Dice2 + player1Dice1);
+        console.log(`auto ${player1Num}`);
+        return player1Num;
+      }
+    }
+    if (currentPlayer == player2) {
+      if (player2Dice1 >= player2Dice2) {
+        player2Num = Number("" + player2Dice1 + player2Dice2);
+        console.log(`auto ${player2Num}`);
+        return player2Num;
+      } else if (player2Dice1 < player2Dice2) {
+        player2Num = Number("" + player2Dice2 + player2Dice1);
+        console.log(`auto ${player2Num}`);
+        return player2Num;
+      }
+    }
+  }
+  if (gameMode == 4) {
+    if (currentPlayer == player1) {
+      if (player1Dice1 >= player1Dice2) {
+        player1Num = Number("" + player1Dice2 + player1Dice1);
+        console.log(`auto ${player1Num}`);
+        return player1Num;
+      } else if (player1Dice1 < player1Dice2) {
+        player1Num = Number("" + player1Dice1 + player1Dice2);
+        console.log(`auto ${player1Num}`);
+        return player1Num;
+      }
+    }
+    if (currentPlayer == player2) {
+      if (player2Dice1 >= player2Dice2) {
+        player2Num = Number("" + player2Dice2 + player2Dice1);
+        console.log(`auto ${player2Num}`);
+        return player2Num;
+      } else if (player2Dice1 < player2Dice2) {
+        player2Num = Number("" + player2Dice1 + player2Dice2);
+        console.log(`auto ${player2Num}`);
+        return player2Num;
+      }
+    }
+  }
+};
+
 // Compare Player 1 and Player 2 Num
 var comparePlayerNum = function () {
-  if (gameMode == 1) {
+  if (gameMode == 1 || gameMode == 3) {
     if (player1Num > player2Num) {
       winner = player1;
     } else if (player1Num < player2Num) {
       winner = player2;
     }
   }
-  if (gameMode == 2) {
+  if (gameMode == 2 || gameMode == 4) {
     if (player1Num > player2Num) {
       winner = player2;
     } else if (player1Num < player2Num) {
@@ -100,13 +157,19 @@ var checkGameSelected = function () {
   if (gameMode == 2) {
     currentGame = reverse;
   }
+  if (gameMode == 3) {
+    currentGame = auto;
+  }
+  if (gameMode == 4) {
+    currentGame = autoReverse;
+  }
   return currentGame;
 };
 
 // leaderboard
 var showCurrentLeader = function () {
-  if (gameMode == 1) {
-    if (player1Score > player2Score) {
+  if (gameMode == 1 || gameMode == 3) {
+    if (player1Score >= player2Score) {
       leadingPlayer = player1;
       leadingScore = player1Score;
       losingPlayer = player2;
@@ -118,8 +181,8 @@ var showCurrentLeader = function () {
       losingScore = player1Score;
     }
   }
-  if (gameMode == 2) {
-    if (player1Score > player2Score) {
+  if (gameMode == 2 || gameMode == 4) {
+    if (player1Score >= player2Score) {
       leadingPlayer = player2;
       leadingScore = player2Score;
       losingPlayer = player1;
@@ -134,19 +197,6 @@ var showCurrentLeader = function () {
   return `<br>---Leaderboard---<br>${leadingPlayer} is leading. Score is ${leadingScore}<br>${losingPlayer} is losing. Score is ${losingScore}`;
 };
 
-// switch game mode
-var resetGameMode = function (userInput) {
-  if (userInput == `x`) {
-    // reset game mode
-    gameMode = 0;
-    // reset game stage
-    gameStage = 1;
-    // switch player
-    currentPlayer = player1;
-    return gameMode;
-  }
-};
-
 var main = function (input) {
   var myOutputValue = ``;
   if (input == `x`) {
@@ -159,16 +209,17 @@ var main = function (input) {
     // reset scores
     player1Score = 0;
     player2Score = 0;
-    return `Game reset, please choose game mode to start<br>Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game`;
+    return `Game reset, please choose game mode to start<br>Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game`;
   } else if (gameMode == 0) {
     // check if input is a number
     if (Number.isNaN(Number(input)) == true) {
-      return `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game`;
+      return `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game`;
     }
-    // check if input is the number 1 or 2.
-    else if (input != 1 && input != 2) {
-      return `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game`;
-    } else if (input == 1 || input == 2) {
+    // check if input is the number 1 or 2 or 3 or 4.
+    else if (input != 1 && input != 2 && input != 3 && input != 4) {
+      return `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game`;
+    } else if (input == 1 || input == 2 || input == 3 || input == 4) {
+      // set gamemode
       gameMode = Number(input);
       console.log(gameMode);
       return `${checkGameSelected()} is selected, click submit to start playing`;
@@ -187,7 +238,9 @@ var main = function (input) {
       // check if input is the number 1 or 2.
       else if (input != 1 && input != 2) {
         return `Sorry Please enter the number '1' or '2'.`;
-      } else if (input == 1 || input == 2) {
+      }
+      // begin game
+      else if (input == 1 || input == 2) {
         player1Num = chooseDiceOrder(input);
         console.log(`player 1 number is ${player1Num}`);
         // swtich game stage
@@ -213,7 +266,9 @@ var main = function (input) {
       // check if input is the number 1 or 2.
       else if (input != 1 && input != 2) {
         return `Sorry Please enter the number '1' or '2'.`;
-      } else if (input == 1 || input == 2) {
+      }
+      //begin game
+      else if (input == 1 || input == 2) {
         player2Num = chooseDiceOrder(input);
         console.log(`player 2 number is ${player2Num}`);
         // swtich game stage
@@ -224,20 +279,60 @@ var main = function (input) {
         return `Player 2 number is ${player2Num}.<br>Player 2 click submit to find the winner.`;
       }
     }
-    if (gameStage == 5 && player1Num == player2Num) {
-      // reset game stage
-      gameStage = 1;
+  } else if (gameMode == 3) {
+    if (gameStage == 1) {
+      player1Num = generateCombinedNum();
+      // swtich game stage
+      gameStage = 3;
       // switch player
-      currentPlayer = player1;
-      return `It's a draw!<br>Player 1 number is ${player1Num}<br>Player 2 number is ${player2Num}<br><br>click submit to start playing again<br>${showCurrentLeader()}`;
-    } else if (gameStage == 5 && player1Num != player2Num) {
-      winner = comparePlayerNum();
-      // reset game stage
-      gameStage = 1;
-      // switch player
-      currentPlayer = player1;
-      return `Winner is ${winner}<br>Player 1 number is ${player1Num}<br>Player 2 number is ${player2Num}<br><br>click submit to start playing again<br>${showCurrentLeader()}`;
+      currentPlayer = player2;
+      // Add Player 1 Score
+      player1Score += player1Num;
+      return `Player 1 number is ${player1Num}.<br>Player 2 click submit to play.`;
     }
+    if (gameStage == 3) {
+      player2Num = generateCombinedNum();
+      // swtich game stage
+      gameStage = 5;
+      // Add Player 1 Score
+      player2Score += player2Num;
+      console.log(`player2Score = ${player2Score}`);
+      return `Player 2 number is ${player2Num}.<br>Player 2 click submit to find the winner.`;
+    }
+  } else if (gameMode == 4) {
+    if (gameStage == 1) {
+      player1Num = generateCombinedNum();
+      // swtich game stage
+      gameStage = 3;
+      // switch player
+      currentPlayer = player2;
+      // Add Player 1 Score
+      player1Score += player1Num;
+      return `Player 1 number is ${player1Num}.<br>Player 2 click submit to play.`;
+    }
+    if (gameStage == 3) {
+      player2Num = generateCombinedNum();
+      // swtich game stage
+      gameStage = 5;
+      // Add Player 1 Score
+      player2Score += player2Num;
+      console.log(`player2Score = ${player2Score}`);
+      return `Player 2 number is ${player2Num}.<br>Player 2 click submit to find the winner.`;
+    }
+  }
+  if (gameStage == 5 && player1Num == player2Num) {
+    // reset game stage
+    gameStage = 1;
+    // switch player
+    currentPlayer = player1;
+    return `It's a draw!<br>Player 1 number is ${player1Num}<br>Player 2 number is ${player2Num}<br><br>click submit to start playing again<br>${showCurrentLeader()}`;
+  } else if (gameStage == 5 && player1Num != player2Num) {
+    winner = comparePlayerNum();
+    // reset game stage
+    gameStage = 1;
+    // switch player
+    currentPlayer = player1;
+    return `Winner is ${winner}<br>Player 1 number is ${player1Num}<br>Player 2 number is ${player2Num}<br><br>click submit to start playing again<br>${showCurrentLeader()}`;
   }
   return myOutputValue;
 };
