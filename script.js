@@ -35,7 +35,8 @@ instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice t
 
 // determines winner based on the current scores
 const determineWinner = function () {
-  if (currentRoll[0] > currentRoll[1]) {
+  if (currentRoll[0] === currentRoll[1]) {
+  } else if (currentRoll[0] > currentRoll[1]) {
     // console.log(`player 1 won`);
     player0Score += 1;
   } else {
