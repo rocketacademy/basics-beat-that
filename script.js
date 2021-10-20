@@ -38,7 +38,7 @@ class App {
           this.print(`It is now ${this.#players[this.#currentTurnIndex + 1].getName()}'s turn.`);
           this.print("");
         } else {
-          this.print("Game over! Press submit to view scores!");
+          this.print("Round is over! Press submit to view scores!");
         }
 
         this.#currentTurnIndex += 1;
@@ -57,10 +57,21 @@ class App {
 
   endGame() {
     this.clearOutput();
-    // console.log("END GAME!");
-    for (const [index, player] of this.#players.entries()) {
+
+    // Copy array, as sort() mutates the original array
+    const playerData = this.#players.slice(0);
+    // Reverse a - b to sort in descending order
+    playerData.sort((a, b) => b.getScore() - a.getScore());
+
+    for (const player of playerData) {
       this.print(`${player.getName()} has ${player.getScore()} points.`);
     }
+
+    this.#currentTurnIndex = this.#currentTurnIndex % this.#players.length;
+    this.state = GameState.NewRound;
+
+    this.print("");
+    this.print(`Click submit to continue playing. It's ${this.#players[this.#currentTurnIndex].getName()}'s turn.`);
   }
 
   reset() {
