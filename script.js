@@ -7,12 +7,12 @@ var finalNumbers = []; // Contains the final numbers for all players
 var scorePlayer1 = 0; // Stores running score for Player 1
 var scorePlayer2 = 0; // Stores running score for player 2
 var gameMode = "Choosing Game Mode"; // 2 Choices - Highest Mode or Lowest Mode
+var autoGenerate = 0; // 0 = No auto-generate; 1 = auto-generate
 
 // Function: Returns random number from 1 to 6 -inclusive
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
-  ß;
   var diceNum = randomInteger + 1;
   return diceNum;
 };
@@ -71,9 +71,12 @@ var leaderBoard = function () {
 // Function: Refactored Game Phase 1 (Roll)
 var phase1 = function () {
   eval(`player${playerTurn}Rolls.push(rollDice(),rollDice())`);
-  var message = `Welcome Player ${playerTurn}.<br>${playerXRolls(
-    playerTurn
-  )}<br>Choose the order of the dice (1 or 2).`;
+  var message = `Welcome Player ${playerTurn}.<br>${playerXRolls(playerTurn)}`;
+  if (autoGenerate == 0) {
+    message += `<br>Choose the order of the dice (1 or 2).`;
+  } else if (autoGenerate == 1) {
+    message += `<br><b>Auto-Generate Mode</b>: Press 'Submit' to continue...`;
+  }
   gamePhase = 2;
   return message;
 };
@@ -87,9 +90,32 @@ var phase2 = function (choice) {
   return message;
 };
 
+// Function: Refactored Game Phase 2 (Choice - Auto-Generated Combined Number)
+var phase2Auto = function () {
+  var diceRoll1 = eval(`player${playerTurn}Rolls[0]`);
+  var diceRoll2 = eval(`player${playerTurn}Rolls[1]`);
+  if (gameMode == "Highest Mode") {
+    if (diceRoll1 >= diceRoll2) {
+      finalNumbers.push(chosenOrderNum(1, eval(`player${playerTurn}Rolls`)));
+    } else if (diceRoll2 > diceRoll1) {
+      finalNumbers.push(chosenOrderNum(2, eval(`player${playerTurn}Rolls`)));
+    }
+  } else if (gameMode == "Lowest Mode") {
+    if (diceRoll1 <= diceRoll2) {
+      finalNumbers.push(chosenOrderNum(1, eval(`player${playerTurn}Rolls`)));
+    } else if (diceRoll2 < diceRoll1) {
+      finalNumbers.push(chosenOrderNum(2, eval(`player${playerTurn}Rolls`)));
+    }
+  }
+  var message = `Player ${playerTurn}, your number is <b>${
+    finalNumbers[playerTurn - 1]
+  }</b>`;
+  return message;
+};
+
 // Function: Refactored Game Phase 3 (Conclusion - Default Highest Number)
 var phase3 = function () {
-  message = `Player 1's number is <b>${finalNumbers[0]}</b> and Player 2's number is <b>${finalNumbers[1]}</b>.<br>`;
+  var message = `Player 1's number is <b>${finalNumbers[0]}</b> and Player 2's number is <b>${finalNumbers[1]}</b>.<br>`;
   if (finalNumbers[0] > finalNumbers[1]) {
     message += `<b>Player 1 won</b>.`;
   } else if (finalNumbers[1] > finalNumbers[0]) {
@@ -102,7 +128,7 @@ var phase3 = function () {
 
 // Function: Alternate Game Phase 3 (Conclusion - Lowest Number)
 var phase3Lowest = function () {
-  message = `Player 1's number is <b>${finalNumbers[0]}</b> and Player 2's number is <b>${finalNumbers[1]}</b>.<br>`;
+  var message = `Player 1's number is <b>${finalNumbers[0]}</b> and Player 2's number is <b>${finalNumbers[1]}</b>.<br>`;
   if (finalNumbers[0] < finalNumbers[1]) {
     message += `<b>Player 1 won</b>.`;
   } else if (finalNumbers[1] < finalNumbers[0]) {
@@ -146,16 +172,28 @@ var header = function () {
 // MAIN Function
 var main = function (input) {
   var myOutputValue = "";
-  // First page for Players to select game mode
-  if (input == "Lowest Mode") {
-    gameMode = "Lowest Mode";
-    return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press 'Submit' to continue...`;
-  } else if (input == "Highest Mode") {
-    gameMode = "Highest Mode";
-    return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press 'Submit' to continue...`;
-  } else if (gameMode == "Choosing Game Mode") {
-    return `Welcome to Beat That!<br><br>Enter either:<br>1. '<b>Highest Mode</b>' for Highest Combined Number Game Mode<br>2. '<b>Lowest Mode</b>' for Lowest Combined Number Game Mode`;
+  // Allows Players to activate/deactivate auto-generate at any point
+  if (input == "Activate Auto-Generate" && autoGenerate == 0) {
+    autoGenerate = 1;
+    return `The computer <b>will now</b> auto-generate the highest/lowest two-digit number.`;
+  } else if (input == "Deactivate Auto-Generate" && autoGenerate == 1) {
+    autoGenerate = 0;
+    return `The computer <b>will now stop</b> auto-generating the highest/lowest two-digit number.`;
   }
+
+  // First page for Players to select game mode
+  if (gameMode == "Choosing Game Mode") {
+    if (input == "Lowest Mode") {
+      gameMode = "Lowest Mode";
+      return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press 'Submit' to continue...`;
+    } else if (input == "Highest Mode") {
+      gameMode = "Highest Mode";
+      return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press 'Submit' to continue...`;
+    } else if (gameMode == "Choosing Game Mode") {
+      return `Welcome to Beat That!<br><br>Enter either:<br>1. '<b>Highest Mode</b>' for Highest Combined Number Game Mode<br>2. '<b>Lowest Mode</b>' for Lowest Combined Number Game Mode`;
+    }
+  }
+
   // 1st IF: If game is in Phase 3 (Conclusion)
   if (gamePhase == 3 && gameMode == "Highest Mode") {
     myOutputValue = header();
@@ -166,7 +204,7 @@ var main = function (input) {
     myOutputValue += phase3Lowest();
     myOutputValue += reset();
   }
-  // Option for Players to swap game modes after every round
+  // Option for Players to swap game modes between Highest Mode and Lowest Mode after every round
   else if (
     gamePhase == 1 &&
     ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
@@ -190,10 +228,14 @@ var main = function (input) {
     if (gamePhase == 1) {
       myOutputValue += phase1();
     } else if (gamePhase == 2) {
-      if (input != 1 && input != 2) {
-        return header() + errorMessage();
+      if (autoGenerate == 0) {
+        if (input != 1 && input != 2) {
+          return header() + errorMessage();
+        }
+        myOutputValue += phase2(input);
+      } else if (autoGenerate == 1) {
+        myOutputValue += phase2Auto();
       }
-      myOutputValue += phase2(input);
       myOutputValue += `<br>It is now Player 2's turn. Press 'Submit' to continue...`;
       playerTurn = 2;
       gamePhase = 1;
@@ -205,10 +247,14 @@ var main = function (input) {
     if (gamePhase == 1) {
       myOutputValue += phase1();
     } else if (gamePhase == 2) {
-      if (input != 1 && input != 2) {
-        return header() + errorMessage();
+      if (autoGenerate == 0) {
+        if (input != 1 && input != 2) {
+          return header() + errorMessage();
+        }
+        myOutputValue += phase2(input);
+      } else if (autoGenerate == 1) {
+        myOutputValue += phase2Auto();
       }
-      myOutputValue += phase2(input);
       myOutputValue += `<br>Press 'Submit' to see Final Score.`;
       playerTurn = 1;
       gamePhase = 3;
