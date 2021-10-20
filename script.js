@@ -6,8 +6,10 @@ var player2Rolls = []; // Contains the 2 dice rolls for Player 2
 var finalNumbers = []; // Contains the final numbers for all players
 var scorePlayer1 = 0; // Stores running score for Player 1
 var scorePlayer2 = 0; // Stores running score for player 2
+var gameType = "Choosing Game Type"; // 2 Choices - Standard or Variable Number of Dice
 var gameMode = "Choosing Game Mode"; // 2 Choices - Highest Mode or Lowest Mode
 var autoGenerate = 0; // 0 = No auto-generate; 1 = auto-generate
+var numOfDice = 0; // Stores number of dice used for the round
 
 // Function: Returns random number from 1 to 6 -inclusive
 var rollDice = function () {
@@ -75,8 +77,23 @@ var phase1 = function () {
   if (autoGenerate == 0) {
     message += `<br>Choose the order of the dice (1 or 2).`;
   } else if (autoGenerate == 1) {
-    message += `<br><b>Auto-Generate Mode</b>: Press 'Submit' to continue...`;
+    message += `<br><b>Auto-Generate Mode</b>: Press '<b>Submit</b>' to continue...`;
   }
+  gamePhase = 2;
+  return message;
+};
+
+// Function: Game Phase 1 (Roll - Variable Number of Dice)
+var phase1VariableDice = function () {
+  var counter = 0;
+  var message = `Player ${playerTurn} has rolled - `;
+  while (counter < numOfDice) {
+    var roll = rollDice();
+    eval(`player${playerTurn}Rolls.push(${roll})`);
+    message += `<br>Dice ${counter + 1}: ${roll}`;
+    counter += 1;
+  }
+  message += `<br>Press '<b>Submit</b>' to see optimal combined number.`;
   gamePhase = 2;
   return message;
 };
@@ -88,6 +105,44 @@ var phase2 = function (choice) {
     finalNumbers[playerTurn - 1]
   }</b>`;
   return message;
+};
+
+// Function: Game Phase 2 (Choice - Variable Number of Dice)
+var phase2VariableDice = function () {
+  var currentPlayerArray = eval(`player${playerTurn}Rolls`);
+  var index = 0;
+  if (gameMode == "Highest Mode") {
+    var number = 6;
+    var highestNum = "";
+    while (number > 0) {
+      index = 0;
+      while (index < currentPlayerArray.length) {
+        if (currentPlayerArray[index] == number) {
+          highestNum += currentPlayerArray[index];
+        }
+        index += 1;
+      }
+      number -= 1;
+    }
+    eval(finalNumbers.push(Number(highestNum)));
+    return `Your highest number is <b>${highestNum}</b>`;
+  } else if (gameMode == "Lowest Mode") {
+    var number = 0;
+    var lowestNum = "";
+    while (number <= 6) {
+      index = 0;
+      while (index < currentPlayerArray.length) {
+        console.log("a");
+        if (currentPlayerArray[index] == number) {
+          lowestNum += currentPlayerArray[index];
+        }
+        index += 1;
+      }
+      number += 1;
+    }
+    eval(finalNumbers.push(Number(lowestNum)));
+    return `Your lowest number is <b>${lowestNum}</b>`;
+  }
 };
 
 // Function: Refactored Game Phase 2 (Choice - Auto-Generated Combined Number)
@@ -143,13 +198,14 @@ var phase3Lowest = function () {
 var reset = function () {
   scorePlayer1 += finalNumbers[0];
   scorePlayer2 += finalNumbers[1];
-  var message = `<br><br>Press 'Submit' to play again!`;
+  var message = `<br><br>Press '<b>Submit</b>' to play again!`;
   if (gameMode == "Highest Mode") {
     message += `<br>Alternatively, enter '<b>Lowest Mode</b>' to switch to Lowest Combined Number Mode.`;
   } else if (gameMode == "Lowest Mode") {
     message += `<br>Alternatively, enter '<b>Highest Mode</b>' to switch to Highest Combined Number Mode.`;
   }
   message += `<br><i>*do note that swapping game modes resets the Leaderboard*</i>`;
+  message += `<br><br>To try other game modes or change number of dice <i>(For Variable Dice Game Mode)</i>, enter '<b>Restart</b>' to return to Home Page.`;
   message += leaderBoard();
   gamePhase = 1;
   player1Rolls = [];
@@ -169,10 +225,19 @@ var header = function () {
   return message;
 };
 
+// Function: Return back to Home Page
+var restart = function () {
+  gameType = "Choosing Game Type";
+  gameMode = "Choosing Game Mode";
+  autoGenerate = 0;
+  numOfDice = 0;
+  return `Returning back to Home Page. Press '<b>Submit</b>' to continue...`;
+};
+
 // MAIN Function
 var main = function (input) {
   var myOutputValue = "";
-  // Allows Players to activate/deactivate auto-generate at any point
+  // Allows Players to activate/deactivate auto-generate at any point (For Standard version)
   if (input == "Activate Auto-Generate" && autoGenerate == 0) {
     autoGenerate = 1;
     return `The computer <b>will now</b> auto-generate the highest/lowest two-digit number.`;
@@ -181,83 +246,169 @@ var main = function (input) {
     return `The computer <b>will now stop</b> auto-generating the highest/lowest two-digit number.`;
   }
 
-  // First page for Players to select game mode
-  if (gameMode == "Choosing Game Mode") {
-    if (input == "Lowest Mode") {
-      gameMode = "Lowest Mode";
-      return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press 'Submit' to continue...`;
-    } else if (input == "Highest Mode") {
-      gameMode = "Highest Mode";
-      return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press 'Submit' to continue...`;
-    } else if (gameMode == "Choosing Game Mode") {
-      return `Welcome to Beat That!<br><br>Enter either:<br>1. '<b>Highest Mode</b>' for Highest Combined Number Game Mode<br>2. '<b>Lowest Mode</b>' for Lowest Combined Number Game Mode`;
+  // First page for Players to select game type (Standard or Variable Dice)
+  if (
+    gameType == "Choosing Game Type" ||
+    "Variable Dice - Choosing Dice Number"
+  ) {
+    if (input == "Standard") {
+      gameType = "Standard";
+      return `Welcome to Beat That! standard version. Press '<b>Submit</b>' to select between Highest or Lowest Combined Number Mode.`;
+    } else if (input == "Variable Dice") {
+      gameType = "Variable Dice - Choosing Dice Number";
+      return `Welcome to Beat That! variable dice version. <br>Press enter <b>number of dice</b> you wish to use (at least 2).`;
+    } else if (gameType == "Variable Dice - Choosing Dice Number") {
+      if (input < 2) {
+        return `Please input <b>number of dice</b> you wish to use that is more than 2.`;
+      } else {
+        numOfDice = input;
+        gameType = "Variable Dice";
+      }
+    } else if (gameType == "Choosing Game Type") {
+      return `Welcome to Beat That!<br><br>Enter either:<br>1. '<b>Standard</b>' for Standard Beat That! version<br>2. '<b>Variable Dice</b>' for Variable Dice Beat That! version`;
     }
   }
 
-  // 1st IF: If game is in Phase 3 (Conclusion)
-  if (gamePhase == 3 && gameMode == "Highest Mode") {
-    myOutputValue = header();
-    myOutputValue += phase3();
-    myOutputValue += reset();
-  } else if (gamePhase == 3 && gameMode == "Lowest Mode") {
-    myOutputValue = header();
-    myOutputValue += phase3Lowest();
-    myOutputValue += reset();
-  }
-  // Option for Players to swap game modes between Highest Mode and Lowest Mode after every round
-  else if (
-    gamePhase == 1 &&
-    ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
-      (gameMode == "Lowest Mode" && input == "Highest Mode"))
-  ) {
+  // Second page for Players to select game mode (Highest or Lowest)
+  if (gameMode == "Choosing Game Mode") {
     if (input == "Lowest Mode") {
       gameMode = "Lowest Mode";
-      scorePlayer1 = 0;
-      scorePlayer2 = 0;
-      return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press 'Submit' to continue...`;
+      return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press '<b>Submit</b>' to continue...`;
     } else if (input == "Highest Mode") {
       gameMode = "Highest Mode";
-      scorePlayer1 = 0;
-      scorePlayer2 = 0;
-      return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press 'Submit' to continue...`;
+      return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press '<b>Submit</b>' to continue...`;
+    } else if (gameMode == "Choosing Game Mode") {
+      return `Enter either:<br>1. '<b>Highest Mode</b>' for Highest Combined Number Game Mode<br>2. '<b>Lowest Mode</b>' for Lowest Combined Number Game Mode`;
     }
   }
-  // 2nd IF: If game is in 1st Player's Turn (Phase 1 & 2)
-  else if (playerTurn == 1) {
-    myOutputValue = header();
-    if (gamePhase == 1) {
-      myOutputValue += phase1();
-    } else if (gamePhase == 2) {
-      if (autoGenerate == 0) {
-        if (input != 1 && input != 2) {
-          return header() + errorMessage();
-        }
-        myOutputValue += phase2(input);
-      } else if (autoGenerate == 1) {
-        myOutputValue += phase2Auto();
+  // Standard Beat That! version
+  if (gameType == "Standard") {
+    // 1st IF: If game is in Phase 3 (Conclusion)
+    if (gamePhase == 3 && gameMode == "Highest Mode") {
+      myOutputValue = header();
+      myOutputValue += phase3();
+      myOutputValue += reset();
+    } else if (gamePhase == 3 && gameMode == "Lowest Mode") {
+      myOutputValue = header();
+      myOutputValue += phase3Lowest();
+      myOutputValue += reset();
+    }
+    // Option for Players to swap game modes between Highest Mode and Lowest Mode after every round
+    else if (
+      gamePhase == 1 &&
+      ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
+        (gameMode == "Lowest Mode" && input == "Highest Mode") ||
+        input == "Restart")
+    ) {
+      if (input == "Restart") {
+        return restart();
+      } else if (input == "Lowest Mode") {
+        gameMode = "Lowest Mode";
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+        return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press '<b>Submit</b>' to continue...`;
+      } else if (input == "Highest Mode") {
+        gameMode = "Highest Mode";
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+        return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press '<b>Submit</b>' to continue...`;
       }
-      myOutputValue += `<br>It is now Player 2's turn. Press 'Submit' to continue...`;
-      playerTurn = 2;
-      gamePhase = 1;
+    }
+    // 2nd IF: If game is in 1st Player's Turn (Phase 1 & 2)
+    else if (playerTurn == 1) {
+      myOutputValue = header();
+      if (gamePhase == 1) {
+        myOutputValue += phase1();
+      } else if (gamePhase == 2) {
+        if (autoGenerate == 0) {
+          if (input != 1 && input != 2) {
+            return header() + errorMessage();
+          }
+          myOutputValue += phase2(input);
+        } else if (autoGenerate == 1) {
+          myOutputValue += phase2Auto();
+        }
+        myOutputValue += `<br>It is now Player 2's turn. Press '<b>Submit</b>' to continue...`;
+        playerTurn = 2;
+        gamePhase = 1;
+      }
+    }
+    // 3rd IF: If game is in 2nd Player's Turn (Phase 1 & 2)
+    else if (playerTurn == 2) {
+      myOutputValue = header();
+      if (gamePhase == 1) {
+        myOutputValue += phase1();
+      } else if (gamePhase == 2) {
+        if (autoGenerate == 0) {
+          if (input != 1 && input != 2) {
+            return header() + errorMessage();
+          }
+          myOutputValue += phase2(input);
+        } else if (autoGenerate == 1) {
+          myOutputValue += phase2Auto();
+        }
+        myOutputValue += `<br>Press '<b>Submit</b>' to see Final Score.`;
+        playerTurn = 1;
+        gamePhase = 3;
+      }
     }
   }
-  // 3rd IF: If game is in 2nd Player's Turn (Phase 1 & 2)
-  else if (playerTurn == 2) {
-    myOutputValue = header();
-    if (gamePhase == 1) {
-      myOutputValue += phase1();
-    } else if (gamePhase == 2) {
-      if (autoGenerate == 0) {
-        if (input != 1 && input != 2) {
-          return header() + errorMessage();
-        }
-        myOutputValue += phase2(input);
-      } else if (autoGenerate == 1) {
-        myOutputValue += phase2Auto();
+  // Variable Dice Beat That! version
+  if (gameType == "Variable Dice") {
+    // 1st IF: If game is in Phase 3 (Conclusion)
+    if (gamePhase == 3 && gameMode == "Highest Mode") {
+      myOutputValue = header();
+      myOutputValue += phase3();
+      myOutputValue += reset();
+    } else if (gamePhase == 3 && gameMode == "Lowest Mode") {
+      myOutputValue = header();
+      myOutputValue += phase3Lowest();
+      myOutputValue += reset();
+    }
+    // Option for Players to swap game modes between Highest Mode and Lowest Mode after every round or return to Home Page
+    else if (
+      gamePhase == 1 &&
+      ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
+        (gameMode == "Lowest Mode" && input == "Highest Mode") ||
+        input == "Restart")
+    ) {
+      if (input == "Restart") {
+        return restart();
+      } else if (input == "Lowest Mode") {
+        gameMode = "Lowest Mode";
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+        return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press '<b>Submit</b>' to continue...`;
+      } else if (input == "Highest Mode") {
+        gameMode = "Highest Mode";
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+        return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press '<b>Submit</b> to continue...`;
       }
-      myOutputValue += `<br>Press 'Submit' to see Final Score.`;
-      playerTurn = 1;
-      gamePhase = 3;
+    }
+    // 2nd IF: If game is in 1st Player's Turn (Phase 1 & 2)
+    else if (playerTurn == 1) {
+      myOutputValue = header();
+      if (gamePhase == 1) {
+        myOutputValue += phase1VariableDice();
+      } else if (gamePhase == 2) {
+        myOutputValue = phase2VariableDice();
+        myOutputValue += `<br>It is now Player 2's turn. Press '<b>Submit</b>' to continue...`;
+        playerTurn = 2;
+        gamePhase = 1;
+      }
+    }
+    // 3rd IF: If game is in 2nd Player's Turn (Phase 1 & 2)
+    else if (playerTurn == 2) {
+      myOutputValue = header();
+      if (gamePhase == 1) {
+        myOutputValue += phase1VariableDice();
+      } else if (gamePhase == 2) {
+        myOutputValue = phase2VariableDice();
+        myOutputValue += `<br>Press '<b>Submit</b>' to see Final Score.`;
+        playerTurn = 1;
+        gamePhase = 3;
+      }
     }
   }
 
