@@ -7,36 +7,33 @@ var list_of_scores = [];
 var winner = "";
 var round = 0;
 
-game_mode = 0;
+var game_mode = 0;
+var no_of_dice = 0;
+var check_done_input = false;
+
+var game_mode_knockout = false;
 
 var main = function (input) {
   var myOutputValue = "";
-  //// Key in the number of players as long as below 2. Cannot proceed /////
-  if (number_of_players < 2) {
-    console.log(!input);
-    if (!input) {
-      myOutputValue =
-        "Please fill number of players. Minimum 2! Don't leave it blank!";
-    } else if (Number.isNaN(Number(input))) {
-      myOutputValue =
-        "Please fill number of players. Minimum 2! Don't fill in letters!";
-    } else {
-      number_of_players = Number(input);
-      if (number_of_players < 2) {
-        myOutputValue = `The number of players is: ${number_of_players}. It is insufficient. Minimum 2!`;
-      } else {
-        myOutputValue = `The number of players is: ${number_of_players}. <br> Let's begin.<br><br> Please fill in a game mode. <br><br> '1' - Highest Number Wins <br> '2' - Lowest Number Wins <br> `;
-        //Create the score_list
-        list_of_scores = new Array(number_of_players).fill(0);
-        console.log(`Generated a list of scores: ${list_of_scores}`);
-      }
+
+  // function is used to check that number_of_players entered is valid.
+  if (check_done_input == false) {
+    check_input = check_input_players(number_of_players, input);
+    if (check_input[1] == false) {
+      myOutputValue = check_input[0];
+      return myOutputValue;
     }
+    check_done_input = check_input[1];
+    myOutputValue =
+      "Please fill in a game mode. <br><br> '1' - Highest Number Wins <br> '2' - Lowest Number Wins <br>";
+    number_of_players = check_input[2];
     return myOutputValue;
   }
+
   ////////////////////// Ask for game mode ///////////////////////
   if (!game_mode) {
     game_mode = Number(input);
-    myOutputValue = `You've selected Game Mode: ${game_mode}.<br><br> Press 'Submit' to roll 2 dices. `;
+    myOutputValue = `You've selected Game Mode: ${game_mode}.<br><br> Press 'Submit' to choose the number of dices. `;
     if (!input) {
       myOutputValue =
         "Please fill in a game mode. <br><br> '1' - Highest Number Wins <br> '2' - Lowest Number Wins <br>";
@@ -45,63 +42,80 @@ var main = function (input) {
         "Please fill in either '1' or '2'. <br><br>'1' - Highest Number Wins <br> '2' - Lowest Number Wins <br>";
       game_mode = 0;
     }
+    console.log("The game mode is: " + game_mode);
     return myOutputValue;
   }
-  console.log("The game mode is: " + game_mode);
+
+  ///////////////////////// Ask for Number of Dice //////////////////////
+  if (!no_of_dice) {
+    no_of_dice = Number(input);
+    myOutputValue = `You've selected ${no_of_dice} dices.<br><br> Press 'Submit' to roll ${no_of_dice} dices.`;
+    if (!input) {
+      myOutputValue = "Please fill in number of dices. From 1 to infinity.";
+    } else if (no_of_dice < 1) {
+      myOutputValue = `Please input a positive value from 1 to infinity.`;
+      no_of_dice = 0;
+    }
+    console.log("The number of dice is: " + no_of_dice);
+    return myOutputValue;
+  }
 
   ////////////////////////// Game Play //////////////////////////////////
   while (plays < number_of_players + 1) {
     if (internal_counter % 2 == 0) {
       var dice_holder = [];
-      var dice1 = diceRoll();
-      var dice2 = diceRoll();
-      // Append into the list
-      dice_holder.push(dice1, dice2);
-      player_dice = dice_holder;
+      var dice_msg = "";
+      // Fix the dice at 2 first
+      player_dice = generate_no_of_dice(dice_holder, no_of_dice);
       console.log(`Player ${plays} rolled: ${player_dice}`);
 
-      myOutputValue = `Welcome Player ${plays}. <br> You rolled:<br> Dice 1: ${dice1}. <br> Dice 2: ${dice2}. <br> Choose the order of the dice. <br><br> Choose '1' for dice 1 first<br> Choose '2' for dice 2 first. <br><br> Otherwise, it'll be automatically optimise for you to win.`;
+      a = 0;
+      while (a < no_of_dice) {
+        dice_msg += `<br> Dice ${a + 1}: ${player_dice[a]}.`;
+        a++;
+      }
+
+      myOutputValue = `Welcome Player ${plays}. ${dice_msg} <br><br> Dice will be automatically optimise for you to win. Click 'Submit' to continue to see your value`;
 
       internal_counter += 1;
       return myOutputValue;
     } else {
-      // check the largest number or smallest number within the 2 dices. Depending on the game_mode
-      index_of_dice_win = Number(winning_gamemode(player_dice, game_mode));
-      console.log(player_dice[index_of_dice_win]);
-
-      var player_select = index_of_dice_win + 1;
-      // The 5 lines below maybe redundant.
-      if (player_select != 1 && player_select != 2) {
-        myOutputValue = `Please select '1' or '2' to choose dices 1 or 2 respectively.<br><br> You rolled:<br> Dice 1: ${player_dice[0]}.<br> Dice 2: ${player_dice[1]}.`;
-        return myOutputValue;
-      } // redundant
       internal_counter += 1;
-
-      // Allows manual overwrite instead of automatically select
-      if (Number(input) == 1 || Number(input) == 2) {
-        player_select = Number(input);
-      }
-      // var player_select = Number(input);
-      if (player_select == 1) {
-        // if player selected first dice, extract out first dice from array.
-        first_digit = player_dice[player_select - 1];
-        second_digit = player_dice[player_select];
-      } else {
-        // if player selected second dice, extract out second dice from array
-        first_digit = player_dice[player_select - 1];
-        second_digit = player_dice[player_select - 2];
-      }
-      value = first_digit.toString() + second_digit.toString();
+      // Sort and obtain the final output value
+      value = optimise_values_of_dice(player_dice, game_mode);
+      // Update the scores in the array
       list_of_scores[plays - 1] += Number(value);
       console.log(list_of_scores);
       // Let users know what is their actual value after selection
-      myOutputValue = `Player ${plays}, Dice ${player_select} was selected. <br> Your number is: ${value}.`;
+      myOutputValue = `Player ${plays}<br> Your number is: ${value}.`;
       plays += 1;
 
       // Adds the next player statement only if there is a next player.
-      if (plays <= number_of_players) {
+      if (plays <= number_of_players && game_mode_knockout == false) {
         myOutputValue += `<br> It is now Player ${plays}'s turn. <br><br> Click 'Submit' to roll 2 dices. ${winner}`;
-      } else if (plays == number_of_players + 1) {
+      }
+      // // game knockout mode later shift down below the else if//
+      // if (plays <= number_of_players && game_mode_knockout == true) {
+      //   b = 0;
+      //   for (i = 0; i < list_of_scores.length; i++) {
+      //     if (list_of_scores[i] != 0) {
+      //       b++;
+      //     }
+      //   }
+      //   if (b == 2 && game_mode == 1) {
+      //     // If game_mode is 1 which gets high number, I want to obtain lower number to delete it off the array. Hence, flip the 2nd input.
+      //     game_winner_knockout_index = winning_gamemode(
+      //       list_of_scores,
+      //       game_mode
+      //     );
+      //     game_loser_knockout_index = winning_gamemode(list_of_scores, 2);
+
+      //     list_of_scores
+      //   }
+      // }
+
+      //
+      else if (plays == number_of_players + 1 && game_mode_knockout == false) {
         location_of_index = winning_gamemode(list_of_scores, game_mode);
 
         winner = `<br> The winner is Player ${
@@ -124,11 +138,37 @@ var main = function (input) {
 
   round += 1;
   score_msg = generate_final_scorecard(list_of_scores);
-  myOutputValue = `Round ${round} is completed! This is game mode ${game_mode}. <br><br> The total score thus far is: <br> ${score_msg} ${winner} <br><br> Click 'Submit' to continue onto next round`;
-
+  myOutputValue = `Round ${round} is completed! This is game mode ${game_mode}. <br><br> <b>Leaderboard</b> <br> ${score_msg} ${winner} <br><br> Click 'Submit' to continue onto next round`;
+  console.log(myOutputValue);
   winner = "";
 
   return myOutputValue;
+};
+
+var check_input_players = function (number_of_players, input) {
+  state = false;
+  if (number_of_players < 2) {
+    console.log(!input);
+    if (!input) {
+      myOutputValue =
+        "Please fill number of players. Minimum 2! Don't leave it blank!";
+    } else if (Number.isNaN(Number(input))) {
+      myOutputValue =
+        "Please fill number of players. Minimum 2! Don't fill in letters!";
+    } else {
+      number_of_players = Number(input);
+      if (number_of_players < 2) {
+        myOutputValue = `The number of players is: ${number_of_players}. It is insufficient. Minimum 2!`;
+      } else {
+        myOutputValue = `The number of players is: ${number_of_players}. <br> Let's begin.<br><br> Please fill in a game mode. <br><br> '1' - Highest Number Wins <br> '2' - Lowest Number Wins <br> `;
+        //Create the score_list based on the number of players. Fill it with '0's
+        list_of_scores = new Array(number_of_players).fill(0);
+        console.log(`Generated a list of scores: ${list_of_scores}`);
+        state = true;
+      }
+    }
+  }
+  return [myOutputValue, state, number_of_players];
 };
 
 var diceRoll = function () {
@@ -185,4 +225,67 @@ var winning_gamemode = function (list_of_scores, game_mode) {
   }
   // winning condition returns the index of the lower or higher number within array.
   return winning_condn;
+};
+
+// Variable number of dice
+var generate_no_of_dice = function (dice_holder, no_of_dice) {
+  var k = 0;
+  while (k < no_of_dice) {
+    // Generate a random dice and push it into the array.
+    dice_holder.push(diceRoll());
+    k++;
+  }
+  return dice_holder;
+};
+
+// Obtain the correct value either highest or lowest
+var optimise_values_of_dice = function (player_dice, game_mode) {
+  // sort the values from smallest to largest
+  var numArray = new Float64Array(player_dice);
+  numArray = numArray.sort();
+  // start a loop to combine the values
+  var k = 0;
+  temp_value = "";
+
+  if (game_mode == 2) {
+    // Append values from front to the back to obtain smallest value
+    while (k < numArray.length) {
+      temp_value += numArray[k].toString();
+      k++;
+    }
+  } else if (game_mode == 1) {
+    // Append values from the back to the front to obtain largest value
+    while (k < numArray.length) {
+      k++;
+      temp_value += numArray[numArray.length - k].toString();
+    }
+  }
+
+  return temp_value;
+};
+
+var knockout_mode = function (number_of_players, no_of_dice) {
+  // Only 2 competing at one go
+  knockout_scores = new Array(2).fill(0);
+
+  while (plays < number_of_players + 1) {
+    if (internal_counter % 2 == 0) {
+      var dice_holder = [];
+      var dice_msg = "";
+      // Fix the dice at 2 first
+      player_dice = generate_no_of_dice(dice_holder, no_of_dice);
+      console.log(`Player ${plays} rolled: ${player_dice}`);
+
+      a = 0;
+      while (a < no_of_dice) {
+        dice_msg += `<br> Dice ${a + 1}: ${player_dice[a]}.`;
+        a++;
+      }
+
+      myOutputValue = `Welcome Player ${plays}. ${dice_msg} <br><br> Dice will be automatically optimise for you to win. Click 'Submit' to continue to see your value`;
+
+      internal_counter += 1;
+      return myOutputValue;
+    }
+  }
 };
