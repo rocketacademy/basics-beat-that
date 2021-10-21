@@ -390,21 +390,6 @@ var header = function () {
   return message;
 };
 
-// Function: Option to Restart or Change Game Mode (Highest/Lowest)
-var endGameOptions = function (choice) {
-  if (choice == "Restart") {
-    return restart();
-  } else if (choice == "Lowest Mode") {
-    gameMode = "Lowest Mode";
-    scorePlayer = [];
-    return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press '<b>Submit</b>' to continue...`;
-  } else if (choice == "Highest Mode") {
-    gameMode = "Highest Mode";
-    scorePlayer = [];
-    return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press '<b>Submit</b>' to continue...`;
-  }
-};
-
 // Function: Return back to Starting Home Page
 var restart = function () {
   gameType = "Choosing Game Type";
@@ -419,6 +404,21 @@ var restart = function () {
   playerTurn = 1;
   gamePhase = 1;
   return `Returning back to Starting Home Page 🏡. Press '<b>Submit</b>' to continue...`;
+};
+
+// Function: Option to Restart or Change Game Mode (Highest/Lowest)
+var endGameOptions = function (choice) {
+  if (choice == "Restart") {
+    return restart();
+  } else if (choice == "Lowest Mode") {
+    gameMode = "Lowest Mode";
+    scorePlayer = [];
+    return `Welcome to '<b>Lowest Combined Number Mode</b>'. The player with the lowest combined number wins. Press '<b>Submit</b>' to continue...`;
+  } else if (choice == "Highest Mode") {
+    gameMode = "Highest Mode";
+    scorePlayer = [];
+    return `Welcome to '<b>Highest Combined Number Mode</b>'. The player with the highest combined number wins. Press '<b>Submit</b>' to continue...`;
+  }
 };
 
 //============================MAIN Function====================================
@@ -446,7 +446,7 @@ var main = function (input) {
     // Page for Players to select game type (Standard or Variable Dice)
     if (
       gameType == "Choosing Game Type" ||
-      "Variable Dice - Choosing Dice Number"
+      gameType == "Variable Dice - Choosing Dice Number"
     ) {
       if (input == "Standard") {
         gameType = "Standard";
