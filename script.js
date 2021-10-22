@@ -43,11 +43,8 @@ var main = function (input) {
     currentMode = "Dice rolled";
   } else if (currentMode == "Dice rolled" && player == "Player 1") {
     player1Results = orderOfDice(input);
-    myOutputValue =
-      "Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Player 2: It is now your turn to roll the dice.<br><br> Press enter to begin.";
+    myOutputValue = `Player 1: ${player1Results}
+      <br><br> Player 2: It is now your turn to roll the dice.<br><br> Press enter to begin.`;
     currentMode = "Roll the dice";
     player = "Player 2";
   } else if (currentMode == "Dice rolled" && player == "Player 2") {
@@ -57,30 +54,20 @@ var main = function (input) {
     player = "results";
   }
   if (currentMode == "End" && player == "results") {
-    myOutputValue =
-      " Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Plkayer 2: " +
-      player2Results;
+    myOutputValue = `Player 1: ${player1Results}
+      <br><br> Player 2: ${player2Results}`;
     player = "End play";
   }
   if (player1Results > player2Results && player == "End play") {
-    myOutputValue =
-      " Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Player 2: " +
-      player2Results +
-      ". <br><br> Player 1 wins!";
+    myOutputValue = `Player 1: 
+      ${player1Results}
+      <br><br> Player 2: 
+      ${player2Results} <br><br> Player 1 wins!`;
   } else if (player2Results > player1Results && player == "End play") {
-    myOutputValue =
-      " Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Plkayer 2: " +
-      player2Results +
-      ". <br><br> Player 2 wins!";
+    myOutputValue = `Player 1: 
+      ${player1Results}
+      <br><br> Player 2: 
+      ${player2Results} <br><br> Player 2 wins!`;
   }
   return myOutputValue;
 };
