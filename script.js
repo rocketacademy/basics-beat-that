@@ -32,12 +32,6 @@ var p1dice1 = 0;
 var p1dice2 = 0;
 var p2dice1 = 0;
 var p2dice2 = 0;
-
-console.log("P1 Dice 1: ", p1dice1);
-console.log("P1 Dice 2: ", p1dice2);
-console.log("P2 Dice 1: ", p2dice1);
-console.log("P2 Dice 2: ", p2dice2);
-
 var p1CombinedNumber = 0;
 var p2CombinedNumber = 0;
 
@@ -48,6 +42,43 @@ var rollDice = function () {
   return diceNumber;
 };
 
+var getRolledNums = function (player) {
+  // For Player 1
+  if (player == "Player 1") {
+    p1dice1 = rollDice().toString();
+    p1dice2 = rollDice().toString();
+    console.log("P1 Dice 1: ", p1dice1);
+    console.log("P1 Dice 2: ", p1dice2);
+
+    var rolledNumsMessage = `
+      <b>${player}!</b><br><br>
+      You rolled ${p1dice1} and ${p1dice2}.<br><br>
+      The next step is to arrange the numbers.<br><br>
+      Enter "1" to get the combined number '${p1dice1 + p1dice2}'<br>
+      Enter "2" to get the combined number '${p1dice2 + p1dice1}'
+      `;
+    gameStatus = "Combined number created";
+    return rolledNumsMessage;
+  }
+  // For Player 2
+  else {
+    p2dice1 = rollDice().toString();
+    p2dice2 = rollDice().toString();
+    console.log("P2 Dice 1: ", p2dice1);
+    console.log("P2 Dice 2: ", p2dice2);
+
+    var rolledNumsMessage = `
+      <b>${player}!</b><br><br>
+      You rolled ${p2dice1} and ${p2dice2}.<br><br>
+      The next step is to arrange the numbers.<br><br>
+      Enter "1" to get the combined number '${p2dice1 + p2dice2}'<br>
+      Enter "2" to get the combined number '${p2dice2 + p2dice1}''
+      `;
+    gameStatus = "Combined number created";
+    return rolledNumsMessage;
+  }
+};
+
 var main = function (input) {
   var myOutputValue = "";
 
@@ -55,17 +86,7 @@ var main = function (input) {
   if (player == "Player 1") {
     // Part 1: roll the dice
     if (gameStatus == "Waiting to roll dice") {
-      p1dice1 = rollDice().toString();
-      p1dice2 = rollDice().toString();
-
-      console.log("P1 Dice 1: ", p1dice1);
-      console.log("P1 Dice 2: ", p1dice2);
-
-      myOutputValue = `
-      Hi ${player}, you rolled ${p1dice1} and ${p1dice2}.<br><br>
-      The next step is to combine the numbers. Choose which number you'd like as your first digit: enter "1" for ${p1dice1} and "2" for ${p1dice2}.
-      `;
-      gameStatus = "Combined number created";
+      myOutputValue = getRolledNums(player);
       return myOutputValue;
     }
     // Part 2: combine the numbers
@@ -95,17 +116,7 @@ var main = function (input) {
   if (player == "Player 2") {
     // Part 1: roll the dice
     if (gameStatus == "Waiting to roll dice") {
-      p2dice1 = rollDice().toString();
-      p2dice2 = rollDice().toString();
-
-      console.log("P2 Dice 1: ", p2dice1);
-      console.log("P2 Dice 2: ", p2dice2);
-
-      myOutputValue = `
-      Hi ${player}, you rolled ${p2dice1} and ${p2dice2}.<br><br>
-      The next step is to combine the numbers. Choose which number you'd like as your first digit: enter "1" for ${p2dice1} and "2" for ${p2dice2}.
-      `;
-      gameStatus = "Combined number created";
+      myOutputValue = getRolledNums(player);
       return myOutputValue;
     }
     // Part 2: combine the numbers
