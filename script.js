@@ -50,7 +50,7 @@ var playerXRolls = function (playerNum) {
 var errorMessage = function () {
   return `⛔️ Please try again. Enter '1' for Dice 1 or '2' for Dice 2.<br><br>${playerXRolls(
     playerTurn
-  )}<br>Choose the order of the dice (1 or 2).`;
+  )}<br><br>Choose the order of the dice (1 or 2).`;
 };
 
 // Function: Generates Leaderboard for Standard & Variable Dice Versions (Highest Mode - Highest on top; Lowest Mode - Lowest on top)
@@ -92,11 +92,11 @@ var phase1 = function () {
   playerRolls.push(String(playerTurn));
   playerRolls.push(rollDice(6));
   playerRolls.push(rollDice(6));
-  var message = `Welcome Player ${playerTurn}.<br><br>${playerXRolls(
+  var message = `Welcome <b>Player ${playerTurn}</b>!<br><br>${playerXRolls(
     playerTurn
   )}`;
   if (autoGenerate == 0) {
-    message += `<br>Choose the order of the dice (1 or 2).`;
+    message += `<br><br>Choose the order of the dice (1 or 2).`;
   } else if (autoGenerate == 1) {
     message += `<br><b>Auto-Generate Mode</b>: Press '<b>Submit</b>' to continue...`;
   }
@@ -123,13 +123,13 @@ var phase1VariableDice = function () {
 // Function: Game Phase 1 (Roll - Knockout)
 var phase1Knockout = function () {
   knockoutGone.push(playerTurn);
-  var message = `Player <b>${playerTurn}</b>, you're up!<br><br>`;
+  var message = `<b>Player ${playerTurn}</b>, you're up!<br><br>`;
   playerRolls.push(String(playerTurn));
   playerRolls.push(rollDice(6));
   playerRolls.push(rollDice(6));
   var roll1 = playerRolls[(knockoutRound - 1) * 3 + 1];
   var roll2 = playerRolls[(knockoutRound - 1) * 3 + 2];
-  message += `You rolled <b>${roll1}</b> for Dice 1 and <b>${roll2}</b> for Dice 2.<br>Choose the order of the dice (1 or 2).`;
+  message += `You rolled <b>${roll1}</b> for Dice 1 and <b>${roll2}</b> for Dice 2.<br><br>Choose the order of the dice (1 or 2).`;
   gamePhase = 2;
   return message;
 };
@@ -137,7 +137,7 @@ var phase1Knockout = function () {
 // Function: Game Phase 2 (Choice - Standard)
 var phase2 = function (choice) {
   finalNumbers.push(chosenOrderNum(choice, playerRolls));
-  var message = `Player ${playerTurn}, you chose Dice ${choice} first.<br><br>Your number is <b>${
+  var message = `<b>Player ${playerTurn}</b>, you chose Dice ${choice} first.<br><br>Your number is <b>${
     finalNumbers[playerTurn - 1]
   }</b>`;
   return message;
@@ -224,7 +224,7 @@ var phase2Knockout = function (choice) {
   }
   finalNumbers.push(String(playerTurn));
   finalNumbers.push(chosenNum);
-  var message = `Player ${playerTurn}, you chose Dice ${choice} first.<br><br>Your number is <b>${
+  var message = `<b>Player ${playerTurn}</b>, you chose Dice ${choice} first.<br><br>Your number is <b>${
     finalNumbers[finalNumbers.length - 1]
   }`;
   knockoutRound += 1;
@@ -247,7 +247,7 @@ var phase2Knockout = function (choice) {
 // Function: Game Phase 2.5 (Versus - Knockout)
 var phase2Versus = function () {
   var message = `Between Player ${finalNumbers[0]} with <b>${finalNumbers[1]}</b> and Player ${finalNumbers[2]} with <b>
-        ${finalNumbers[3]}</b>...`;
+        ${finalNumbers[3]}</b>...<br>`;
 
   if (finalNumbers[1] == finalNumbers[3]) {
     var randomChance = rollDice(2);
@@ -256,21 +256,21 @@ var phase2Versus = function () {
     } else if (randomChance == 2) {
       finalNumbers = [finalNumbers[2], finalNumbers[3]];
     }
-    message += `<br>It's a draw! Player <b>${finalNumbers[0]}</b> has been randomly chosen to pass this round!`;
+    message += `<br>It's a draw! <b>Player ${finalNumbers[0]}</b> has been randomly chosen to pass this round!`;
   } else if (gameMode == "Highest Mode") {
     if (finalNumbers[1] > finalNumbers[3]) {
-      message += `<br>Player <b>${finalNumbers[0]}</b> wins and has passed this round!`;
+      message += `<br><b>Player ${finalNumbers[0]}</b> wins and has passed this round!`;
       finalNumbers = [finalNumbers[0], finalNumbers[1]];
     } else if (finalNumbers[1] < finalNumbers[3]) {
-      message += `<br>Player <b>${finalNumbers[2]}</b> wins and has passed this round!`;
+      message += `<br><b>Player ${finalNumbers[2]}</b> wins and has passed this round!`;
       finalNumbers = [finalNumbers[2], finalNumbers[3]];
     }
   } else if (gameMode == "Lowest Mode") {
     if (finalNumbers[1] < finalNumbers[3]) {
-      message += `<br>Player <b>${finalNumbers[0]}</b> wins and has passed this round!`;
+      message += `<br><b>Player ${finalNumbers[0]}</b> wins and has passed this round!`;
       finalNumbers = [finalNumbers[0], finalNumbers[1]];
     } else if (finalNumbers[1] > finalNumbers[3]) {
-      message += `<br>Player <b>${finalNumbers[2]}</b> wins and has passed this round!`;
+      message += `<br><b>Player ${finalNumbers[2]}</b> wins and has passed this round!`;
       finalNumbers = [finalNumbers[2], finalNumbers[3]];
     }
   }
@@ -326,6 +326,21 @@ var phase3Lowest = function () {
     counter2 += 1;
   }
   message += `<br><br><b>${lowest}</b> is the lowest number! 🎉🎉🎉`;
+  return message;
+};
+
+// Function: Turn advance or Round end (For Standard and Variable Dice Versions)
+var advanceOrEnd = function () {
+  var message = "";
+  if (playerTurn == numOfPlayers) {
+    gamePhase = 3;
+    playerTurn = 1;
+    message += `<br><br>Press '<b>Submit</b>' to see Final Score.`;
+  } else {
+    gamePhase = 1;
+    playerTurn += 1;
+    message += `<br><br>It is now <b>Player ${playerTurn}'s</b> turn. Press '<b>Submit</b>' to continue...`;
+  }
   return message;
 };
 
@@ -421,15 +436,15 @@ var endGameOptions = function (choice) {
   }
 };
 
-//============================MAIN Function====================================
+//============================MAIN Function============================
 var main = function (input) {
   if (gameState == "Choosing Number of Players") {
     if (input > 1) {
       numOfPlayers = Number(input);
       gameState = "Game";
-      return `You have entered <b>${numOfPlayers}</b> number of players. Press '<b>Submit</b>' to continue...`;
+      return `You have entered <b>${numOfPlayers} players</b> to play. Press '<b>Submit</b>' to continue...`;
     }
-    return `Welcome to Beat That! 🤜🏼🤛🏼<br><br>To begin, enter '<b>Number of Players</b>' (at least 2).`;
+    return `Welcome to Beat That! 🤜🏼🤛🏼<br><br>To begin, enter '<b>Number of Players</b>' 👥 (at least 2).`;
   }
 
   if (gameState == "Game") {
@@ -488,6 +503,16 @@ var main = function (input) {
       }
     }
 
+    // Option for Players to swap between Highest Mode and Lowest Mode after each round
+    if (
+      gamePhase == 1 &&
+      ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
+        (gameMode == "Lowest Mode" && input == "Highest Mode") ||
+        input == "Restart")
+    ) {
+      return endGameOptions(input);
+    }
+
     // Standard Beat That! Version
     if (gameType == "Standard") {
       // Phase 3: Conclusion - Standard
@@ -499,15 +524,6 @@ var main = function (input) {
         myOutputValue = header();
         myOutputValue += phase3Lowest();
         myOutputValue += reset();
-      }
-      // Option for Players to swap game modes between Highest Mode and Lowest Mode after every round
-      else if (
-        gamePhase == 1 &&
-        ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
-          (gameMode == "Lowest Mode" && input == "Highest Mode") ||
-          input == "Restart")
-      ) {
-        return endGameOptions(input);
       } else {
         myOutputValue = header();
         // Phase 1: Roll - Standard
@@ -525,15 +541,7 @@ var main = function (input) {
           } else if (autoGenerate == 1) {
             myOutputValue += phase2Auto();
           }
-          if (playerTurn == numOfPlayers) {
-            gamePhase = 3;
-            playerTurn = 1;
-            myOutputValue += `<br><br>Press '<b>Submit</b>' to see Final Score.`;
-          } else {
-            gamePhase = 1;
-            playerTurn += 1;
-            myOutputValue += `<br><br>It is now Player ${playerTurn}'s turn. Press '<b>Submit</b>' to continue...`;
-          }
+          myOutputValue += advanceOrEnd();
         }
       }
     }
@@ -549,15 +557,6 @@ var main = function (input) {
         myOutputValue = header();
         myOutputValue += phase3Lowest();
         myOutputValue += reset();
-      }
-      // Option for Players to swap game modes between Highest Mode and Lowest Mode after every round or return to Starting Home Page
-      else if (
-        gamePhase == 1 &&
-        ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
-          (gameMode == "Lowest Mode" && input == "Highest Mode") ||
-          input == "Restart")
-      ) {
-        return endGameOptions(input);
       } else {
         myOutputValue = header();
         // Phase 1: Roll - Variable Dice
@@ -567,32 +566,17 @@ var main = function (input) {
         // Phase 2: Choice - Variable Dice
         else if (gamePhase == 2) {
           myOutputValue = phase2VariableDice();
-          if (playerTurn == numOfPlayers) {
-            gamePhase = 3;
-            playerTurn = 1;
-            myOutputValue += `<br><br>Press '<b>Submit</b>' to see Final Score.`;
-          } else {
-            gamePhase = 1;
-            playerTurn += 1;
-            myOutputValue += `<br><br>It is now Player ${playerTurn}'s turn. Press '<b>Submit</b>' to continue...`;
-          }
+          myOutputValue += advanceOrEnd();
         }
       }
     }
+
     // Knockout Beat That! Version
     if (gameType == "Knockout") {
-      console.log(`final numbers`, finalNumbers);
       myOutputValue = header();
       // Phase 3: Conclusion - Knockout
       if (gamePhase == 3) {
         myOutputValue += resetKnockout();
-      } else if (
-        gamePhase == 1 &&
-        ((gameMode == "Highest Mode" && input == "Lowest Mode") ||
-          (gameMode == "Lowest Mode" && input == "Highest Mode") ||
-          input == "Restart")
-      ) {
-        return endGameOptions(input);
       }
       // Phase 2.5: Versus - Knockout
       else if (gamePhase == 2.5) {
@@ -612,7 +596,7 @@ var main = function (input) {
               playerRolls[(knockoutRound - 1) * 3 + 1]
             }</b> for Dice 1 and <b>${
               playerRolls[(knockoutRound - 1) * 3 + 2]
-            }</b> for Dice 2.<br>Choose the order of the dice (1 or 2).`
+            }</b> for Dice 2.<br><br>Choose the order of the dice (1 or 2).`
           );
         }
         myOutputValue += phase2Knockout(input);
