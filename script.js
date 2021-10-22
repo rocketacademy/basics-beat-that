@@ -15,7 +15,6 @@ var player = "Player 1";
 var player1Results = "";
 var player2Results = "";
 
-
 // Generate dices
 var diceRollGenerator = function () {
   var randomDecimal = Math.random() * 6;
@@ -35,62 +34,6 @@ var orderOfDice = function (input) {
     return `Your number is ${diceRoll2}${diceRoll1}`;
   }
 };
-
-// Fn to run the game 
-var beatThat = funtion(input){
-  if (currentMode == "Roll the dice") {
-    diceRoll1 = diceRollGenerator();
-    diceRoll2 = diceRollGenerator();
-    myOutputValue = `Dice 1 rolled ${diceRoll1} and Dice 2 rolled ${diceRoll2}. <br><br> Please input 1 or 2 to choose the order of your dice roll.`;
-    currentMode = "Dice rolled";
-  } else if (currentMode == "Dice rolled" && player == "Player 1") {
-    player1Results = orderOfDice(input);
-    myOutputValue =
-      "Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Player 2: It is now your turn to roll the dice.<br><br> Press enter to begin.";
-    currentMode = "Roll the dice";
-    player = "Player 2";
-  } else if (currentMode == "Dice rolled" && player == "Player 2") {
-    player2Results = orderOfDice(input);
-    myOutputValue = player2Results;
-    currentMode = "End";
-    player = "results";
-  }
-  if (currentMode == "End" && player == "results") {
-    myOutputValue =
-      " Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Plkayer 2: " +
-      player2Results;
-    player = "End play";
-  }
-  if (player1Results > player2Results && player == "End play") {
-    myOutputValue =
-      " Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Player 2: " +
-      player2Results +
-      ". <br><br> Player 1 wins!";
-  } else if (player2Results > player1Results && player == "End play") {
-    myOutputValue =
-      " Player 1: " +
-      player1Results +
-      "<br><br>" +
-      "Plkayer 2: " +
-      player2Results +
-      ". <br><br> Player 2 wins!";
-  }
-}
-
-
-
-
-
-
 
 var main = function (input) {
   if (currentMode == "Roll the dice") {
