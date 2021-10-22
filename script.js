@@ -36,7 +36,9 @@ var orderOfDice = function (input) {
     return `Your number is ${diceRoll2}${diceRoll1}`;
   }
 };
-var main = function (input) {
+
+// Running the game
+var generateBeatThat = function (input) {
   if (currentMode == "Roll the dice") {
     diceRoll1 = diceRollGenerator();
     diceRoll2 = diceRollGenerator();
@@ -92,6 +94,10 @@ var main = function (input) {
     myOutputValue = `Press Enter to start rolling the dice.`;
     currentMode = "Roll the dice";
   }
-
   return myOutputValue;
+};
+
+var main = function (input) {
+  var beatThat = generateBeatThat(input);
+  return beatThat;
 };
