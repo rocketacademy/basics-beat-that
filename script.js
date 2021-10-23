@@ -23,13 +23,6 @@ let dice1,
 let currentRoll = [];
 let nameOfPlayers = ['Player 1', 'Player 2'];
 
-// roll dice
-btnRollDice.addEventListener('click', function () {
-  // let input = inputEl.value;
-  // outputEl.textContent = input;
-  rollDice();
-});
-
 // Main instructions
 instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 
@@ -50,15 +43,26 @@ const determineWinner = function () {
   playerScoreEl1.textContent = player1Score;
 };
 
-// change player in the game
-const changePlayer = function () {
-  activePlayer = activePlayer === 0 ? 1 : 0;
-  instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
-};
-
-// get a random number
-const randomNumberGenerator = function () {
-  return Math.trunc(Math.random() * 6 + 1);
+// FUNCTIONS FOR BUTTON PRESSES IN HTML
+// roll dice
+const rollDice = function () {
+  // resets current rolls text if player 1 rolls dice
+  if (activePlayer === 0) {
+    currentScoreEl0.textContent = 0;
+    currentScoreEl1.textContent = 0;
+  }
+  dice1 = randomNumberGenerator();
+  dice2 = randomNumberGenerator();
+  outputEl.textContent = `${nameOfPlayers[activePlayer]} rolled ${dice1} and ${dice2}
+  `;
+  imgDice1.src = `dice-${dice1}.png`;
+  imgDice2.src = `dice-${dice2}.png`;
+  // hide rollDice button
+  btnRollDice.classList.add('hidden');
+  // show choices button
+  btnDice1.classList.remove('hidden');
+  btnDice2.classList.remove('hidden');
+  instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please choose the order of the dice. 🤹`;
 };
 
 // executes on 'click 1' press
@@ -96,6 +100,25 @@ btnDice2.addEventListener('click', function () {
   }
 });
 
+// FUNCTIONS THAT SUPPORT THE MAIN CODE
+// roll dice
+btnRollDice.addEventListener('click', function () {
+  // let input = inputEl.value;
+  // outputEl.textContent = input;
+  rollDice();
+});
+
+// change player in the game
+const changePlayer = function () {
+  activePlayer = activePlayer === 0 ? 1 : 0;
+  instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
+};
+
+// get a random number
+const randomNumberGenerator = function () {
+  return Math.trunc(Math.random() * 6 + 1);
+};
+
 // determines what happens when buttons are pressed and to change player after 1 turn is over.
 const gameLogic = function () {
   // show current score for active player
@@ -107,25 +130,4 @@ const gameLogic = function () {
   btnDice2.classList.add('hidden');
   // change player
   changePlayer();
-};
-
-// roll dice
-const rollDice = function () {
-  // resets current rolls text if player 1 rolls dice
-  if (activePlayer === 0) {
-    currentScoreEl0.textContent = 0;
-    currentScoreEl1.textContent = 0;
-  }
-  dice1 = randomNumberGenerator();
-  dice2 = randomNumberGenerator();
-  outputEl.textContent = `${nameOfPlayers[activePlayer]} rolled ${dice1} and ${dice2}
-  `;
-  imgDice1.src = `dice-${dice1}.png`;
-  imgDice2.src = `dice-${dice2}.png`;
-  // hide rollDice button
-  btnRollDice.classList.add('hidden');
-  // show choices button
-  btnDice1.classList.remove('hidden');
-  btnDice2.classList.remove('hidden');
-  instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please choose the order of the dice. 🤹`;
 };
