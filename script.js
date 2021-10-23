@@ -21,9 +21,11 @@ compare results, higher result win
 */
 
 // GLOBAL VARIBLES
-var MODE = "init"; // init and order
+var MODE = "player 1 init"; // init and order
 var PLAYER1 = [];
+var PLAYER2 = [];
 var resultPlayer1 = "";
+var resultPlayer2 = "";
 
 var rollDice = function () {
   var diceValue = Math.floor(Math.random() * 6) + 1; // return 1 to 6 inclusive
@@ -34,11 +36,11 @@ var rollDice = function () {
 
 var main = function (input) {
   // first load = init, player 1 starts first
-  if (MODE === "init") {
+  if (MODE === "player 1 init") {
     // when submit, roll 2 dice
     PLAYER1[0] = rollDice();
     PLAYER1[1] = rollDice();
-    MODE = "order";
+    MODE = "player 1 order";
     return `Welcome Player 1.
     <br>
     You rolled ${PLAYER1[0]} for Dice 1 and ${PLAYER1[1]} for Dice 2
@@ -49,22 +51,71 @@ var main = function (input) {
   }
 
   // mode = order, player 1 choose dice order '12' or '21'
-  if (MODE === "order") {
+  if (MODE === "player 1 order") {
     // check if input is '12' or '21'
     // TODO user input verification
     if (input === "12") {
       resultPlayer1 = String(PLAYER1[0]) + String(PLAYER1[1]);
       console.log(`running input '12': ${resultPlayer1}`);
       console.log("====================");
+      MODE = "player 2 init";
+      return `Player 1, you chose Dice 1 first.
+      <br>
+      Your number is ${resultPlayer1}.
+      <br>
+      It is now Player 2's turn.`;
     }
     if (input === "21") {
       resultPlayer1 = String(PLAYER1[1]) + String(PLAYER1[0]);
       console.log(`running input '21': ${resultPlayer1}`);
       console.log("====================");
+      MODE = "player 2 init";
+      return `Player 1, you chose Dice 2 first.
+      <br>
+      Your number is ${resultPlayer1}.
+      <br>
+      It is now Player 2's turn.`;
     }
   }
 
   // Repeat for Player 2
+  if (MODE === "player 2 init") {
+    // when submit, roll 2 dice
+    PLAYER2[0] = rollDice();
+    PLAYER2[1] = rollDice();
+    MODE = "player 2 order";
+    return `Welcome Player 2.
+    <br>
+    You rolled ${PLAYER2[0]} for Dice 1 and ${PLAYER2[1]} for Dice 2
+    <br>
+    Choose the order of the dice.
+    <br>
+    Input "12" or "21" for your dice order.`;
+  }
+
+  // mode = order, player 2 choose dice order '12' or '21'
+  if (MODE === "player 2 order") {
+    // check if input is '12' or '21'
+    // TODO user input verification
+    if (input === "12") {
+      resultPlayer2 = String(PLAYER2[0]) + String(PLAYER2[1]);
+      console.log(`running input '12': ${resultPlayer2}`);
+      console.log("====================");
+      MODE = "compare";
+      return `Player 2, you chose Dice 1 first.
+      <br>
+      Your number is ${resultPlayer2}.`;
+    }
+    if (input === "21") {
+      resultPlayer2 = String(PLAYER2[1]) + String(PLAYER2[0]);
+      console.log(`running input '21': ${resultPlayer2}`);
+      console.log("====================");
+      MODE = "compare";
+      return `Player 2, you chose Dice 2 first.
+      <br>
+      Your number is ${resultPlayer2}.`;
+    }
+  }
 
   var myOutputValue = "hello world";
   return myOutputValue;
