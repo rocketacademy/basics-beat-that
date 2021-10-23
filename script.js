@@ -21,8 +21,9 @@ compare results, higher result win
 */
 
 // GLOBAL VARIBLES
-var MODE = "init"; // init, order
+var MODE = "init"; // init and order
 var PLAYER1 = [];
+var resultPlayer1 = "";
 
 var rollDice = function () {
   var diceValue = Math.floor(Math.random() * 6) + 1; // return 1 to 6 inclusive
@@ -37,12 +38,33 @@ var main = function (input) {
     // when submit, roll 2 dice
     PLAYER1[0] = rollDice();
     PLAYER1[1] = rollDice();
+    MODE = "order";
     return `Welcome Player 1.
     <br>
     You rolled ${PLAYER1[0]} for Dice 1 and ${PLAYER1[1]} for Dice 2
     <br>
-    Choose the order of the dice.`;
+    Choose the order of the dice.
+    <br>
+    Input "12" or "21" for your dice order.`;
   }
+
+  // mode = order, player 1 choose dice order '12' or '21'
+  if (MODE === "order") {
+    // check if input is '12' or '21'
+    // TODO user input verification
+    if (input === "12") {
+      resultPlayer1 = String(PLAYER1[0]) + String(PLAYER1[1]);
+      console.log(`running input '12': ${resultPlayer1}`);
+      console.log("====================");
+    }
+    if (input === "21") {
+      resultPlayer1 = String(PLAYER1[1]) + String(PLAYER1[0]);
+      console.log(`running input '21': ${resultPlayer1}`);
+      console.log("====================");
+    }
+  }
+
+  // Repeat for Player 2
 
   var myOutputValue = "hello world";
   return myOutputValue;
