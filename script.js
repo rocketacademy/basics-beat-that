@@ -63,7 +63,9 @@ var main = function (input) {
       <br>
       Your number is ${resultPlayer1}.
       <br>
-      It is now Player 2's turn.`;
+      It is now Player 2's turn.
+      <br>
+      Click Submit`;
     }
     if (input === "21") {
       resultPlayer1 = String(PLAYER1[1]) + String(PLAYER1[0]);
@@ -74,7 +76,9 @@ var main = function (input) {
       <br>
       Your number is ${resultPlayer1}.
       <br>
-      It is now Player 2's turn.`;
+      It is now Player 2's turn.
+      <br>
+      Click Submit`;
     }
   }
 
@@ -117,6 +121,17 @@ var main = function (input) {
     }
   }
 
+  if (MODE === "compare") {
+    // assume no draw
+    if (Number(resultPlayer1) > Number(resultPlayer2)) {
+      MODE = "player 1 init";
+      return `Player 1 wins`;
+    } else {
+      MODE = "player 1 init";
+      return `Player 2 wins`;
+    }
+  }
+  // TO DO - REFACTOR
   var myOutputValue = "hello world";
   return myOutputValue;
 };
