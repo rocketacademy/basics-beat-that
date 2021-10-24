@@ -112,6 +112,8 @@ button {
 #leaderboard {
   background-color: goldenrod;
   padding: 0.2rem 1rem;
+  width: 400px;
+  margin: 20px auto;
 }
 .leaderboard-heading {
   text-align: center;
