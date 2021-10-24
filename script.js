@@ -46,6 +46,7 @@ var rollDice = function () {
   return diceNumber;
 };
 
+// Function to roll numbers and move to part 2 for each player
 var getRolledNums = function (currentPlayer) {
   var rolledNumsMessage = "";
 
@@ -115,6 +116,7 @@ var getRolledNums = function (currentPlayer) {
   return rolledNumsMessage;
 };
 
+// Function to combine numbers
 var combineNumbers = function (currentPlayer, input) {
   var combinedNumsMessage = "";
 
@@ -155,6 +157,7 @@ var combineNumbers = function (currentPlayer, input) {
   }
 };
 
+// Function to compare numbers and determine the winner
 var determineWinner = function (p1number, p2number) {
   var winner = "";
   if (p1number == p2number) {
@@ -165,26 +168,44 @@ var determineWinner = function (p1number, p2number) {
     winner = `The winner of this round is <b>Player 2! 🥇</b>`;
   }
 
-  // Compare running score to see who's leading
-  var leader = "<b>Player 1 is in the lead! 🥳</b>";
-  if (p1score == p2score) {
-    leader = "<b>Your scores are tied! 🤝</b>";
-  }
-  if (p1score < p2score) {
-    leader = "<b>Player 2 is in the lead! 🎉</b>";
-  }
+  var scoreboard = updateLeaderboard();
 
   var resultsMessage = `
   Player 1's combined number is ${p1CombinedNumber}.<br>
   Player 2's combined number is ${p2CombinedNumber}.<br>
   ${winner}<br><br>
-  The running sum of your combined numbers is:<br>
-  Player 1: ${p1score}<br>
-  Player 2: ${p2score}<br>
-  ${leader}
-  <br><br>
+  ${scoreboard}<br><br>
   Hit submit to play again!`;
+
   return resultsMessage;
+};
+
+// Function to update leaderboard
+var updateLeaderboard = function () {
+  var leaderboard = "";
+
+  // Compare running score to see who's leading
+  var leader = "<b>Player 1 is in the lead! 🥳</b>";
+  if (p1score == p2score) {
+    leader = "<b>Your scores are tied! 🤝</b>";
+  } else if (p1score < p2score) {
+    leader = "<b>Player 2 is in the lead! 🎉</b>";
+  }
+
+  // Arrange scores in descending order
+  var scoreList = `
+  1. Player 1 - ${p1score}<br>
+  2. Player 2 - ${p2score}`;
+  if (p1score < p2score) {
+    scoreList = `
+    1. Player 2 - ${p2score}<br>
+    2. Player 1 - ${p1score}`;
+  }
+
+  leaderboard = `${leader}<br>
+  ${scoreList}`;
+
+  return leaderboard;
 };
 
 var main = function (input) {
