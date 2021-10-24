@@ -23,6 +23,9 @@ let dice1,
 let currentRoll = [];
 let nameOfPlayers = ['Player 1', 'Player 2'];
 
+let player0Rolls = []; // for use in leaderboard
+let player1Rolls = []; // for use in leaderboard
+
 // Main instructions
 instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 
@@ -43,6 +46,15 @@ const determineWinner = function () {
   // scoreboard
   playerScoreEl0.textContent = player0Score;
   playerScoreEl1.textContent = player1Score;
+
+  // displays leaderboard in descending order
+  leaderboard();
+  document.querySelector('.player-0-descending').textContent = [
+    ...player0Rolls,
+  ];
+  document.querySelector('.player-1-descending').textContent = [
+    ...player1Rolls,
+  ];
 };
 
 // FUNCTIONS FOR BUTTON PRESSES IN HTML
@@ -73,7 +85,10 @@ btnDice1.addEventListener('click', function () {
     // console.log(Number('' + dice1 + dice2));
     let concatOfDice = Number('' + dice1 + dice2);
     // add current roll to active player
-    currentRoll[`${activePlayer}`] = concatOfDice;
+    currentRoll[activePlayer] = concatOfDice;
+    // records active player's rolls
+    activePlayer === 0 && player0Rolls.push(concatOfDice);
+    activePlayer === 1 && player1Rolls.push(concatOfDice);
     imgDice1.src = `dice-1.png`;
     imgDice2.src = `dice-1.png`;
     gameLogic();
@@ -88,9 +103,13 @@ btnDice1.addEventListener('click', function () {
 // executes on 'click 2' press
 btnDice2.addEventListener('click', function () {
   if (currentRoll.length < 2) {
-    let concatOfDice = Number('' + dice2 + dice1);
-    currentRoll[`${activePlayer}`] = concatOfDice;
     // console.log(Number('' + dice1 + dice2));
+    let concatOfDice = Number('' + dice2 + dice1);
+    // add current roll to active player
+    currentRoll[activePlayer] = concatOfDice;
+    // records active player's rolls
+    activePlayer === 0 && player0Rolls.push(concatOfDice);
+    activePlayer === 1 && player1Rolls.push(concatOfDice);
     imgDice1.src = `dice-1.png`;
     imgDice2.src = `dice-1.png`;
     gameLogic();
@@ -132,4 +151,14 @@ const gameLogic = function () {
   btnDice2.classList.add('hidden');
   // change player
   changePlayer();
+};
+
+// sorts rolled dice scores in descending order
+const leaderboard = function () {
+  player0Rolls.sort(function (a, b) {
+    return b - a;
+  });
+  player1Rolls.sort(function (a, b) {
+    return b - a;
+  });
 };
