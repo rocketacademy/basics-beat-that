@@ -5,7 +5,7 @@ const btnRollDice = document.querySelector('.roll-dice');
 const btnDice1 = document.querySelector('.select-dice-1');
 const btnDice2 = document.querySelector('.select-dice-2');
 const inputEl = document.querySelector('#input-field');
-const outputEl = document.getElementById('output-div');
+const outputEl = document.querySelector('#output-div');
 const instructionsEl = document.getElementById('instructions');
 const imgDice1 = document.querySelector('.dice1');
 const imgDice2 = document.querySelector('.dice2');
@@ -13,6 +13,7 @@ const currentScoreEl0 = document.getElementById('current-0');
 const currentScoreEl1 = document.getElementById('current-1');
 const playerScoreEl0 = document.querySelector('.score-0');
 const playerScoreEl1 = document.querySelector('.score-1');
+const btnReverse = document.querySelector('#btn-reverse');
 
 // global variables
 let dice1,
@@ -25,21 +26,48 @@ let nameOfPlayers = ['Player 1', 'Player 2'];
 
 let player0Rolls = []; // for use in leaderboard
 let player1Rolls = []; // for use in leaderboard
+let normalMode = true;
 
 // Main instructions
 instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 
+// lowest number mode
+btnReverse.addEventListener('click', function () {
+  document.querySelector('.container').classList.toggle('reverse');
+  normalMode = normalMode === true ? false : true;
+  normalMode === true
+    ? (document.querySelector(
+        '#instructions'
+      ).textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`)
+    : (document.querySelector(
+        '#instructions'
+      ).textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲 (reverse)`);
+});
+
 // determines winner based on the current scores
 const determineWinner = function () {
-  if (currentRoll[0] === currentRoll[1]) {
-    player0Score += 0;
-    player1Score += 0;
-  } else if (currentRoll[0] > currentRoll[1]) {
-    // console.log(`player 1 won`);
-    player0Score += 1;
+  if (normalMode === true) {
+    if (currentRoll[0] === currentRoll[1]) {
+      player0Score += 0;
+      player1Score += 0;
+    } else if (currentRoll[0] > currentRoll[1]) {
+      // console.log(`player 1 won`);
+      player0Score += 1;
+    } else {
+      // console.log(`player 2 won`);
+      player1Score += 1;
+    }
   } else {
-    // console.log(`player 2 won`);
-    player1Score += 1;
+    if (currentRoll[0] === currentRoll[1]) {
+      player0Score += 0;
+      player1Score += 0;
+    } else if (currentRoll[0] < currentRoll[1]) {
+      // console.log(`player 1 won`);
+      player0Score += 1;
+    } else {
+      // console.log(`player 2 won`);
+      player0Score += 1;
+    }
   }
   currentRoll = [];
 
