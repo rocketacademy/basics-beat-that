@@ -1,16 +1,17 @@
-var currentGameMode = "Select Number of Players";
+var currentGameMode = "Start";
 var numofPlayers = 0;
 var numofDice = 0;
-var playersScore = [];
 var currentPlayerDiceResults = [];
-var playersChosenNumber = [];
 
 var numofRounds = 0;
+var numofTurns = 0;
 var totalPlayers = [];
 var remainingPlayers = [];
 var currentRoundPlayersWon = [];
 var currentPlayer = 0;
 var indexCurrentPlayer = 0;
+
+var everyPlayerCurrentScore = [];
 
 var rollDice = function () {
   var diceOutcome = Math.floor(Math.random() * 6) + 1;
@@ -18,7 +19,7 @@ var rollDice = function () {
 };
 
 var selectPlayer = function () {
-  var index = Math.floor(Math.random() * (numofPlayers - numofRounds));
+  var index = Math.floor(Math.random() * (numofPlayers - numofTurns));
   var playerSelected = remainingPlayers[index];
 
   remainingPlayers.splice(remainingPlayers.indexOf(playerSelected), 1);
@@ -44,6 +45,14 @@ var generateOptimalNumber = function (arrayInput) {
   return Number(lowestNum);
 };
 
+var getDescendingScore = function (arrayInput) {
+  var sortedArray = arrayInput.sort(function (a, b) {
+    return a - b;
+  });
+
+  return sortedArray;
+};
+
 // var rollDiceTwice = function () {
 //   var dice1 = rollDice();
 //   var dice2 = rollDice();
@@ -61,6 +70,12 @@ var generateOptimalNumber = function (arrayInput) {
 var main = function (input) {
   var mainOutputMessage = "";
 
+  if (currentGameMode == "Start") {
+    mainOutputMessage = "Input the number of players that will be playing.";
+    currentGameMode = "Select Number of Players";
+    return mainOutputMessage;
+  }
+
   // Select num of players mode
   if (currentGameMode == "Select Number of Players") {
     numofPlayers = input;
@@ -71,8 +86,7 @@ var main = function (input) {
     }
 
     for (var counter = 1; counter <= numofPlayers; counter += 1) {
-      playersScore.push(0);
-      playersChosenNumber.push(0);
+      everyPlayerCurrentScore.push(0);
       totalPlayers.push(counter);
     }
 
@@ -106,12 +120,14 @@ var main = function (input) {
 
   // Rolling dice mode
   if (currentGameMode == "Roll Dice") {
-    console.log("current num of rds --> " + numofRounds);
-    if (numofRounds == 0) {
+    console.log("current num of rds --> " + numofTurns);
+    if (numofTurns == 0) {
+      // Clone from 1 array to another w/o referencing
       remainingPlayers = totalPlayers.map((x) => x);
+      numofRounds += 1;
     }
 
-    numofRounds += 1;
+    numofTurns += 1;
     currentPlayer = selectPlayer();
     indexCurrentPlayer = currentPlayer - 1;
 
@@ -146,7 +162,7 @@ var main = function (input) {
 
     mainOutputMessage = `Welcome Player ${currentPlayer}!<br>
     ${diceMessage}<br>
-    The order of your dice will be auto rearrange to form the lowest possible number.`;
+    The order of your dice will auto rearrange to form the lowest possible number.`;
     currentGameMode = "Show Leaderboard";
 
     // For manual select dice order mode
@@ -159,7 +175,7 @@ var main = function (input) {
     return mainOutputMessage;
   }
 
-  // Select dice order mode
+  // // Select dice order mode
   //   if (currentGameMode == "Select Dice Order") {
   //     var chosenNumber = "";
 
@@ -191,20 +207,37 @@ var main = function (input) {
   if (currentGameMode == "Show Leaderboard") {
     lowestOptimalNumber = generateOptimalNumber(currentPlayerDiceResults);
 
-    playersChosenNumber[indexCurrentPlayer] += lowestOptimalNumber;
+    everyPlayerCurrentScore[indexCurrentPlayer] += lowestOptimalNumber;
 
-    mainOutputMessage = `Player ${currentPlayer}'s number is ${lowestOptimalNumber}<br><br>`;
+    mainOutputMessage = `Round ${numofRounds}, Turn ${numofTurns}<br>Player ${currentPlayer}'s number is ${lowestOptimalNumber}<br><br>`;
+
+    var duplicatedScore = everyPlayerCurrentScore.map((x) => x);
+    var descendingScore = getDescendingScore(
+      everyPlayerCurrentScore.map((x) => x)
+    );
+
+    var chosenPlayer = 0;
 
     for (var counter = 1; counter <= numofPlayers; counter += 1) {
-      mainOutputMessage = `${mainOutputMessage}Player ${counter}'s score: ${
-        playersChosenNumber[counter - 1]
+      chosenPlayer = duplicatedScore.indexOf(descendingScore[counter - 1]) + 1;
+      // console.log(chosenPlayer);
+
+      mainOutputMessage = `${mainOutputMessage}Player ${chosenPlayer}'s score: ${
+        descendingScore[counter - 1]
       }<br>`;
+
+      duplicatedScore[chosenPlayer - 1] = -1;
+      // console.log(duplicatedScore);
+
+      // mainOutputMessage = `${mainOutputMessage}Player ${counter}'s score: ${
+      //   everyPlayerCurrentScore[counter - 1]
+      // }<br>`;
     }
 
-    console.log("current no of rds --> " + numofRounds);
+    console.log("current no of rds --> " + numofTurns);
 
-    if (numofRounds == numofPlayers) {
-      numofRounds = 0;
+    if (numofTurns == numofPlayers) {
+      numofTurns = 0;
     }
 
     currentGameMode = "Roll Dice";
