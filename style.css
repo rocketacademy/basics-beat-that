@@ -12,11 +12,24 @@ body {
   text-align: center;
 }
 
-#container {
+.container {
   background-color: pink;
   margin: 10px auto;
   max-width: 800px;
   padding: 10px 31px;
+}
+
+#btn-reverse {
+  position: relative;
+  float: right;
+  background-color: indigo;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.reverse {
+  background-color: darkturquoise;
 }
 
 input {
@@ -112,7 +125,7 @@ button {
 #leaderboard {
   background-color: goldenrod;
   padding: 0.2rem 1rem;
-  width: 400px;
+  width: 500px;
   margin: 20px auto;
 }
 .leaderboard-heading {
