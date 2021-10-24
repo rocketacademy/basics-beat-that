@@ -16,7 +16,7 @@ body {
   background-color: pink;
   margin: 10px auto;
   max-width: 800px;
-  padding: 38px 31px;
+  padding: 10px 31px;
 }
 
 input {
@@ -108,4 +108,11 @@ button {
   width: 360px;
   margin: 0px auto;
   height: 5rem;
+}
+#leaderboard {
+  background-color: goldenrod;
+  padding: 0.2rem 1rem;
+}
+.leaderboard-heading {
+  text-align: center;
 }
