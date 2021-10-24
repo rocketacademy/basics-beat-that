@@ -2,12 +2,15 @@ var diceRolls = [];
 var playerValues = [];
 var playerValuesHistory = [[], []];
 var winnerHistory = [];
+var modeHistory = [];
 var playerScores = [0, 0];
 var currentPlayer = 0;
 var currentLeader = [];
 var totalPlayers = 2;
 var currentRound = 1;
 var winnerIndex = -1;
+var modeCanBeChanged = true;
+var gameMode = "Highest";
 
 var main = function (input) {
   var output = "";
@@ -33,6 +36,8 @@ var main = function (input) {
     output += `Choose the order of the dice. <br />`;
     output += `e.g. Type 1 if you want the value of Dice 1 to be first. <br />`;
 
+    modeCanBeChanged = false;
+
     return output;
   } else if (diceRolls.length != 0 && (input == 1 || input == 2)) {
     // for either Player 1 or Player 2 to decide the order of their dices
@@ -55,6 +60,7 @@ var main = function (input) {
     } else {
       winnerIndex = findWinner(playerValues);
       findCurrentLeader(winnerIndex);
+      modeHistory.push(gameMode);
 
       output += `Player ${winnerIndex + 1} wins with dice values ${
         playerValues[winnerIndex]
@@ -98,13 +104,22 @@ var rollTheDice = function (noOfTimes) {
 // after all users have selected their dice values
 // find a winner. returns index of playerValues
 var findWinner = function (playerValues) {
-  console.log("inside findWinner");
   if (playerValues[0] > playerValues[1]) {
-    winnerHistory.push(0);
-    return 0;
+    if (gameMode == "Highest") {
+      winnerHistory.push(0);
+      return 0;
+    } else {
+      winnerHistory.push(1);
+      return 1;
+    }
   } else {
-    winnerHistory.push(1);
-    return 1;
+    if (gameMode == "Highest") {
+      winnerHistory.push(1);
+      return 1;
+    } else {
+      winnerHistory.push(0);
+      return 0;
+    }
   }
 };
 
@@ -113,12 +128,13 @@ var resetRound = function () {
   playerValues = [];
   currentPlayer = 0;
   currentRound++;
+  modeCanBeChanged = true;
 };
 
 var findCurrentLeader = function (winnerIndex) {
   playerScores[winnerIndex]++;
 
-  // find the player with the highest score
+  // find the player with the Highest score
   // return index which represents the player number e.g. 0 for player 1
   // if tie, return -1
 
@@ -139,10 +155,12 @@ var findCurrentLeader = function (winnerIndex) {
 };
 
 var generateRoundHistory = function () {
-  var table = `<h3>Round History</h3><table style="width:100%"><thead><tr><th>Round</th><th>Player 1</th><th>Player 2</th><th>Winner</th></tr></thead><tbody>`;
+  var table = `<h3>Round History</h3><table style="width:100%"><thead><tr><th>Round</th><th>Round</th><th>Player 1</th><th>Player 2</th><th>Winner</th></tr></thead><tbody>`;
 
   for (var counter = 0; counter < currentRound; counter++) {
-    table += `<tr><td style="text-align: center;">${counter + 1}</td>`;
+    table += `<tr><td style="text-align: center;">${
+      counter + 1
+    }</td><td style="text-align: center;">${gameMode}</td>`;
 
     for (var counter2 = 0; counter2 < totalPlayers; counter2++) {
       table += `<td style="text-align: center;">${playerValuesHistory[counter2][counter]}</td>`;

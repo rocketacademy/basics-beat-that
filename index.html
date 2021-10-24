@@ -46,6 +46,11 @@
         width: 100%;
       }
 
+      #mode {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+
       table,
       th,
       td {
@@ -61,10 +66,14 @@
       <p>
         Create a two-digit number by selecting the order of your dice rolls.
       </p>
-      <p>The player with the highest number wins! Good luck!</p>
+      <p>
+        The player with the <span id="mode">highest</span> number wins! Good
+        luck!
+      </p>
       <p>Input:</p>
       <input id="input-field" />
       <br />
+      <button id="change-mode-button">Change Mode</button>
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
@@ -85,6 +94,24 @@
 
         // Reset input value
         input.value = "";
+
+        // Check whether mode can be changed
+        if (modeCanBeChanged) {
+          document.getElementById("change-mode-button").style.display = "";
+        } else {
+          document.getElementById("change-mode-button").style.display = "none";
+        }
+      });
+
+      var changeModeButton = document.querySelector("#change-mode-button");
+      changeModeButton.addEventListener("click", function () {
+        if (gameMode == "Highest") {
+          gameMode = "Lowest";
+          document.getElementById("mode").innerHTML = "Lowest";
+        } else {
+          gameMode = "Highest";
+          document.getElementById("mode").innerHTML = "Highest";
+        }
       });
     </script>
   </body>
