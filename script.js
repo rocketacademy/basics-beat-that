@@ -64,6 +64,7 @@ var main = function (input) {
       output += `Round ${currentRound} has ended. You can play again.<br/>`;
       output += `<hr/>`;
       output += generateRoundHistory();
+      output += generateScoreTable();
 
       resetRound();
     }
@@ -138,7 +139,7 @@ var findCurrentLeader = function (winnerIndex) {
 };
 
 var generateRoundHistory = function () {
-  var table = `<table style="width:100%"><thead><tr><th>Round</th><th>Player 1</th><th>Player 2</th><th>Winner</th></tr></thead><tbody>`;
+  var table = `<h3>Round History</h3><table style="width:100%"><thead><tr><th>Round</th><th>Player 1</th><th>Player 2</th><th>Winner</th></tr></thead><tbody>`;
 
   for (var counter = 0; counter < currentRound; counter++) {
     table += `<tr><td style="text-align: center;">${counter + 1}</td>`;
@@ -154,21 +155,31 @@ var generateRoundHistory = function () {
 
   table += `</tbody>`;
 
-  table += `<tfoot><tr><td colspan=${
-    totalPlayers + 2
-  } style="text-align: center;">Current Leader: `;
+  table += `</table><hr/>`;
 
-  for (var counter = 0; counter < currentLeader.length; counter++) {
-    table += `Player ${currentLeader[counter] + 1}`;
+  return table;
+};
 
-    if (counter == currentLeader.length - 1) {
-      table += `.`;
+var generateScoreTable = function () {
+  var table = `<h3>Score Table</h3><table style="width:100%"><thead><tr><th></th><th>Player 1</th><th>Player 2</th></tr></thead><tbody>`;
+
+  table += `<tr><td style="text-align: center;">Score</td>`;
+
+  for (var counter = 0; counter < playerScores.length; counter++) {
+    table += `<td style="text-align: center;">${playerScores[counter]}</td>`;
+  }
+
+  table += `</tr><tr><td style="text-align: center;">Leader</td>`;
+
+  for (var counter = 0; counter < playerScores.length; counter++) {
+    if (currentLeader.indexOf(counter) != -1) {
+      table += `<td style="text-align: center;">👑</td>`;
     } else {
-      table += `, `;
+      table += `<td></td>`;
     }
   }
 
-  table += `</td></tr></tfoot></table>`;
+  table += `</tr></tbody></table>`;
 
   return table;
 };
