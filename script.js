@@ -101,7 +101,7 @@ var main = function (input) {
       return "Please choose 1 or 2 as the first numeral index for your dice rolls";
     }
     // Get combined number for current player
-    var playerCombined = getPlayerNumber(firstNumeralIndex);
+    var playerCombined = getPlayerNumber();
     console.log(playerCombined);
     var playerNumResponse = `Player ${currentPlayer}, you chose Dice ${firstNumeralIndex} first. <br>
       Your number is ${playerCombined}.`;
