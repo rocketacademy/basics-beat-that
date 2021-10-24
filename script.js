@@ -60,18 +60,6 @@ var main = function (input) {
         playerValues[winnerIndex]
       }!<br /><br />`;
 
-      console.log("before check");
-      console.log("currentLeader");
-      console.log(currentLeader);
-
-      if (currentLeader.length > 1) {
-        for (var counter = 0; counter < currentLeader.length; counter++) {
-          output += `Player ${currentLeader[counter] + 1} - Tied Leader<br/>`;
-        }
-      } else {
-        output += `Player ${currentLeader[0] + 1} - Current Leader<br/>`;
-      }
-
       output += `<br/>`;
       output += `Round ${currentRound} has ended. You can play again.<br/>`;
       output += `<hr/>`;
@@ -164,7 +152,23 @@ var generateRoundHistory = function () {
     }</td></tr>`;
   }
 
-  table += `</tbody></table>`;
+  table += `</tbody>`;
+
+  table += `<tfoot><tr><td colspan=${
+    totalPlayers + 2
+  } style="text-align: center;">Current Leader: `;
+
+  for (var counter = 0; counter < currentLeader.length; counter++) {
+    table += `Player ${currentLeader[counter] + 1}`;
+
+    if (counter == currentLeader.length - 1) {
+      table += `.`;
+    } else {
+      table += `, `;
+    }
+  }
+
+  table += `</td></tr></tfoot></table>`;
 
   return table;
 };
