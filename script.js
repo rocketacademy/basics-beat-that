@@ -35,6 +35,10 @@ var p2dice2 = 0;
 var p1CombinedNumber = 0;
 var p2CombinedNumber = 0;
 
+var p1score = 0;
+var p2score = 0;
+console.log(p1score);
+
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
@@ -61,9 +65,12 @@ var getRolledNums = function (currentPlayer) {
       <hr><br>
       Player 2, it's now your turn. Hit submit to roll your two numbers.
       `;
+      p1score += Number(p1CombinedNumber);
       player = "Player 2";
       gameStatus = "Waiting to roll dice";
-    } else {
+    }
+    // Output the numbers rolled and ask for user's choice of arrangement
+    else {
       rolledNumsMessage = `<b>Player 1</b><br><br>
       You rolled ${p1dice1} and ${p1dice2}.<br><br>
       The next step is to arrange the numbers.<br><br>
@@ -80,6 +87,7 @@ var getRolledNums = function (currentPlayer) {
     console.log("P2 Dice 1: ", p2dice1);
     console.log("P2 Dice 2: ", p2dice2);
 
+    // If dice roll the same number, auto combine them and compare nums to determine winner
     if (p2dice1 == p2dice2) {
       p2CombinedNumber = p2dice1 + p2dice2;
       var gameResult = determineWinner(p1CombinedNumber, p2CombinedNumber);
@@ -89,9 +97,12 @@ var getRolledNums = function (currentPlayer) {
       <hr><br>
       ${gameResult}
       `;
+      p2score += Number(p2CombinedNumber);
       player = "Player 1";
       gameStatus = "Waiting to roll dice";
-    } else {
+    }
+    // Output the numbers rolled and ask for user's choice of arrangement
+    else {
       rolledNumsMessage = `<b>Player 2</b><br><br>
       You rolled ${p2dice1} and ${p2dice2}.<br><br>
       The next step is to arrange the numbers.<br><br>
@@ -114,11 +125,13 @@ var combineNumbers = function (currentPlayer, input) {
     } else {
       p1CombinedNumber = p1dice2 + p1dice1;
     }
-    combinedNumsMessage = `
+    combinedNumsMessage = `<b>Player 1</b><br><br>
         Your combined number is ${p1CombinedNumber}.<br><br>
         <hr><br>
         Player 2, it's now your turn. Hit submit to roll your two numbers.
         `;
+
+    p1score += Number(p1CombinedNumber);
     player = "Player 2";
     gameStatus = "Waiting to roll dice";
     return combinedNumsMessage;
@@ -130,10 +143,12 @@ var combineNumbers = function (currentPlayer, input) {
     } else {
       p2CombinedNumber = p2dice2 + p2dice1;
     }
-    combinedNumsMessage = `
+    combinedNumsMessage = `<b>Player 2</b><br><br>
         Your combined number is ${p2CombinedNumber}. <br><br>
         <hr><br>
         `;
+    p2score += Number(p2CombinedNumber);
+
     player = "Player 1";
     gameStatus = "Waiting to roll dice";
     return combinedNumsMessage;
@@ -143,16 +158,31 @@ var combineNumbers = function (currentPlayer, input) {
 var determineWinner = function (p1number, p2number) {
   var winner = "";
   if (p1number == p2number) {
-    winner = `<b>It's a draw! What are the chances?</b>`;
+    winner = `<b>It's a draw! What are the odds? 🤔</b>`;
   } else if (p1number > p2number) {
-    winner = `<b>Player 1 wins!</b>`;
+    winner = `The winner of this round is <b>Player 1! 🥇</b>`;
   } else {
-    winner = `<b>Player 2 wins!</b>`;
+    winner = `The winner of this round is <b>Player 2! 🥇</b>`;
   }
+
+  // Compare running score to see who's leading
+  var leader = "<b>Player 1 is in the lead! 🥳</b>";
+  if (p1score == p2score) {
+    leader = "<b>Your scores are tied! 🤝</b>";
+  }
+  if (p1score < p2score) {
+    leader = "<b>Player 2 is in the lead! 🎉</b>";
+  }
+
   var resultsMessage = `
-  Player 1's combined number is ${p1CombinedNumber}.<br><br>
-  Player 2's combined number is ${p2CombinedNumber}.<br><br>
+  Player 1's combined number is ${p1CombinedNumber}.<br>
+  Player 2's combined number is ${p2CombinedNumber}.<br>
   ${winner}<br><br>
+  The running sum of your combined numbers is:<br>
+  Player 1: ${p1score}<br>
+  Player 2: ${p2score}<br>
+  ${leader}
+  <br><br>
   Hit submit to play again!`;
   return resultsMessage;
 };
