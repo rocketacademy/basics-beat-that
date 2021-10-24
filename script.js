@@ -42,40 +42,64 @@ var rollDice = function () {
   return diceNumber;
 };
 
-var getRolledNums = function (player) {
+var getRolledNums = function (currentPlayer) {
   var rolledNumsMessage = "";
 
-  // For Player 1
-  if (player == "Player 1") {
+  // For Player 1 ------------------------
+  if (currentPlayer == "Player 1") {
     p1dice1 = rollDice().toString();
     p1dice2 = rollDice().toString();
     console.log("P1 Dice 1: ", p1dice1);
     console.log("P1 Dice 2: ", p1dice2);
 
-    rolledNumsMessage = `
-      <b>${player}!</b><br><br>
+    // If dice roll the same number, auto combine them and move to Player 2
+    if (p1dice1 == p1dice2) {
+      p1CombinedNumber = p1dice1 + p1dice2;
+      rolledNumsMessage = `<b>Player 1</b><br><br>
+      You rolled ${p1dice1} and ${p1dice2}.<br><br>
+      Your combined number is ${p1CombinedNumber}.<br><br>
+      <hr><br>
+      Player 2, it's now your turn. Hit submit to roll your two numbers.
+      `;
+      player = "Player 2";
+      gameStatus = "Waiting to roll dice";
+    } else {
+      rolledNumsMessage = `<b>Player 1</b><br><br>
       You rolled ${p1dice1} and ${p1dice2}.<br><br>
       The next step is to arrange the numbers.<br><br>
       Enter "1" to get the combined number '${p1dice1 + p1dice2}'<br>
       Enter "2" to get the combined number '${p1dice2 + p1dice1}'
       `;
-    gameStatus = "Combined number created";
+      gameStatus = "Combined number created";
+    }
   }
-  // For Player 2
+  // For Player 2 ------------------------
   else {
     p2dice1 = rollDice().toString();
     p2dice2 = rollDice().toString();
     console.log("P2 Dice 1: ", p2dice1);
     console.log("P2 Dice 2: ", p2dice2);
 
-    rolledNumsMessage = `
-      <b>${player}!</b><br><br>
+    if (p2dice1 == p2dice2) {
+      p2CombinedNumber = p2dice1 + p2dice2;
+      var gameResult = determineWinner(p1CombinedNumber, p2CombinedNumber);
+      rolledNumsMessage = `<b>Player 2</b><br><br>
+      You rolled ${p2dice1} and ${p2dice2}.<br><br>
+      Your combined number is ${p2CombinedNumber}.<br><br>
+      <hr><br>
+      ${gameResult}
+      `;
+      player = "Player 1";
+      gameStatus = "Waiting to roll dice";
+    } else {
+      rolledNumsMessage = `<b>Player 2</b><br><br>
       You rolled ${p2dice1} and ${p2dice2}.<br><br>
       The next step is to arrange the numbers.<br><br>
       Enter "1" to get the combined number '${p2dice1 + p2dice2}'<br>
       Enter "2" to get the combined number '${p2dice2 + p2dice1}'
       `;
-    gameStatus = "Combined number created";
+      gameStatus = "Combined number created";
+    }
   }
   return rolledNumsMessage;
 };
@@ -91,7 +115,6 @@ var combineNumbers = function (currentPlayer, input) {
       p1CombinedNumber = p1dice2 + p1dice1;
     }
     combinedNumsMessage = `
-        <b>Player 1!</b><br><br>
         Your combined number is ${p1CombinedNumber}.<br><br>
         <hr><br>
         Player 2, it's now your turn. Hit submit to roll your two numbers.
@@ -108,7 +131,6 @@ var combineNumbers = function (currentPlayer, input) {
       p2CombinedNumber = p2dice2 + p2dice1;
     }
     combinedNumsMessage = `
-        <b>Player 2!</b><br><br>
         Your combined number is ${p2CombinedNumber}. <br><br>
         <hr><br>
         `;
@@ -127,7 +149,12 @@ var determineWinner = function (p1number, p2number) {
   } else {
     winner = `<b>Player 2 wins!</b>`;
   }
-  return winner;
+  var resultsMessage = `
+  Player 1's combined number is ${p1CombinedNumber}.<br><br>
+  Player 2's combined number is ${p2CombinedNumber}.<br><br>
+  ${winner}<br><br>
+  Hit submit to play again!`;
+  return resultsMessage;
 };
 
 var main = function (input) {
@@ -162,10 +189,7 @@ var main = function (input) {
       var results = determineWinner(p1CombinedNumber, p2CombinedNumber);
 
       myOutputValue = `${player2nums}
-        Player 1's combined number is ${p1CombinedNumber}.<br><br>
-        Player 2's combined number is ${p2CombinedNumber}.<br><br>
-        ${results}<br><br>
-        Hit submit to play again!`;
+      ${results}`;
 
       return myOutputValue;
     }
