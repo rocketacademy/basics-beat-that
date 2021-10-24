@@ -42,7 +42,6 @@ var getPlayerNumber = function (firstNumeralIndex) {
   } else {
     var diceArray = playerTwoDice;
   }
-  console.log("dice array");
 
   var playerNum;
   // If the chosen first numeral index is 1, create player number starting with 1st dice
@@ -81,7 +80,7 @@ var main = function (input) {
   if ((input == "") & (currentGameMode == AWAITING_PLAYER_ONE)) {
     currentGameMode = START_PLAYER_DICE_ROLL;
     myOutputValue =
-      "Hi Player One, welcome to the dice roll game. <br> <br> To start, please hit the submit button to roll the dice!";
+      "Hi Player One, welcome to the 🎲 dice 🎲 roll game! <br> <br> To start, please hit the submit button to roll the dice 🎲!";
   } else if (currentGameMode == START_PLAYER_DICE_ROLL) {
     var playerDiceRollOne = diceRollOne();
     var playerDiceRollTwo = diceRollTwo();
@@ -93,17 +92,17 @@ var main = function (input) {
       playerDiceRollOne +
       " and " +
       playerDiceRollTwo +
-      "<br> Please enter 1 or 2 as the first numeral index for your dice rolls to get the highest combined number and hit the submit button.";
+      "<br> Please enter ❶ or ❷ as the first numeral index for your dice rolls to get the highest combined number and hit the submit button.";
   } else if (currentGameMode == CHOOSE_COMBINATION_PLAYER) {
     // Validate the input. If first numeral index is neither 1 nor 2, tell the user.
     var firstNumeralIndex = Number(input);
     if (firstNumeralIndex !== 1 && firstNumeralIndex !== 2) {
-      return "Please choose 1 or 2 as the first numeral index for your dice rolls";
+      return "Please choose ❶ or ❷ as the first numeral index for your dice rolls";
     }
     // Get combined number for current player
-    var playerCombined = getPlayerNumber();
+    var playerCombined = getPlayerNumber(firstNumeralIndex);
     console.log(playerCombined);
-    var playerNumResponse = `Player ${currentPlayer}, you chose Dice ${firstNumeralIndex} first. <br>
+    var playerNumResponse = `Player ${currentPlayer}, you chose 🎲 Dice ${firstNumeralIndex} first. <br>
       Your number is ${playerCombined}.`;
     // If currentPlayer is Player 1, change currentPlayer to Player 2, switch mode to dice roll
     if (currentPlayer === 1) {
@@ -111,7 +110,7 @@ var main = function (input) {
       currentGameMode = START_PLAYER_DICE_ROLL;
       // Return player number to Player 1, let Player 2 know it is their turn
       return `${playerNumResponse} <br>
-        It is now Player 2's turn. Press Submit to roll Player 2's dice.`;
+        It is now Player 2's turn. Press Submit to roll Player 2's 🎲 dice.`;
     }
 
     // Else if currentPlayer is Player 2, determine the winner and let the players know who won.
@@ -123,7 +122,7 @@ var main = function (input) {
 
     // Return the game end response
     return `${playerNumResponse} <br>
-      Player ${winningPlayer} has won. <br>
+      Congrats, Player ${winningPlayer} has won 👏🏻👏🏻👏🏻. <br>
       Player 1's number: ${playerOneCombination} | Player 2's number: ${playerTwoCombination} <br> <br>
       Press Submit to play again.`;
   }
@@ -148,3 +147,4 @@ var diceRollTwo = function () {
 // Base with some help from the ref solution
 // NaN when concatenating two numbers, I tried debugging but I still don't know what is the problem
 //
+// Keep score for each player. The score is the running sum of all numbers that player has generated so far. This means there is no permanent winner, only a temporary leader.
