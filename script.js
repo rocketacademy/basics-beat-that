@@ -104,12 +104,18 @@ var diceRoll1 = diceRollGenerator();
 var diceRoll2 = diceRollGenerator();
 
 var orderOfDice = function (input) {
-  if (input == 1) {
-    return `${diceRoll1}${diceRoll2}`;
+  var choice = "";
+  switch (input) {
+    case 1:
+      choice = `${diceRoll1}${diceRoll2}`;
+      break;
+    case 2:
+      choice = `${diceRoll2}${diceRoll1}`;
+      break;
+    default:
+      choice = `${diceRoll1}${diceRoll2}`;
   }
-  if (input == 2) {
-    return `${diceRoll2}${diceRoll1}`;
-  }
+  return choice;
 };
 
 // Running the game
@@ -117,7 +123,7 @@ var generateBeatThat = function (input) {
   if (currentMode == "Roll the dice") {
     diceRoll1 = diceRollGenerator();
     diceRoll2 = diceRollGenerator();
-    myOutputValue = `Welcome ${player}. <br><br> You rolled ${diceRoll1} for Dice 1 and ${diceRoll2} for Dice 2. <br><br> ${player}, please input 1 or 2 to pick either Dice 1 or Dice 2 respectively as the first numeral of the combined number.`;
+    myOutputValue = `Welcome ${player}. <br><br> You rolled ${diceRoll1} for Dice 1 and ${diceRoll2} for Dice 2. <br><br> ${player}, please input 1 or 2 to pick either Dice 1 or Dice 2 respectively as the first numeral of the combined number. <br><br> If input received isn't 1 or 2, 1 will be chosen as the default choice`;
     currentMode = "Dice rolled, choose number";
   } else if (
     currentMode == "Dice rolled, choose number" &&
