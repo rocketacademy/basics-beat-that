@@ -162,7 +162,7 @@ var main = function (input) {
 
     mainOutputMessage = `Welcome Player ${currentPlayer}!<br>
     ${diceMessage}<br>
-    The order of your dice will auto rearrange to form the lowest possible number.`;
+    The order of your dice will auto rearrange to form the lowest possible number, click "Submit" to continue.`;
     currentGameMode = "Show Leaderboard";
 
     // For manual select dice order mode
