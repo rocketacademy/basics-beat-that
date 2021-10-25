@@ -1,23 +1,21 @@
 //fixed variables
 CHOOSENUM = "Choose Number";
-ACTUALGAME = "Actual Game";
+ROLLNUM = "roll number";
 NORMAL = "normal";
 LOWESTWINS = "lowest wins";
 
 //variables
-var player1num = 0;
-var player2num = 0;
+var num = [];
 var player1sum = 0;
 var player2sum = 0;
 var player = 1;
-var section = CHOOSENUM;
+var section = ROLLNUM;
 var gameMode = "";
-var roll1 = 0;
-var roll2 = 0;
+var roll = [];
 
 //message
-var chooseOrderMessage = function (player, roll1, roll2) {
-  return `Player ${player}, please choose the order which order you want. Either <br><br> 1: ${roll1} before ${roll2} <br> 2: ${roll2} before ${roll1}`;
+var chooseOrderMessage = function (player, roll) {
+  return `Player ${player}, please choose the order which order you want. Either <br><br> 1: ${roll[0]} before ${roll[1]} <br> 2: ${roll[1]} before ${roll[0]}`;
 };
 
 var main = function (input) {
@@ -34,97 +32,50 @@ var main = function (input) {
     return " Welcome players, press submit start the game";
   }
 
-  //input for player 1
+  //player1 choose the order
+  if (section == ROLLNUM) {
+    roll = [randomNumber(), randomNumber()];
+    console.log("Roll", roll);
+    section = CHOOSENUM;
+  }
+
   if (section == CHOOSENUM) {
-    if (roll1 == 0) {
-      roll1 = randomNumber();
-      roll2 = randomNumber();
+    if (!input || !(input == 1 || input == 2)) {
+      return chooseOrderMessage(player, roll);
     }
 
+    var playerChoice = input;
+    console.log("Player's Choice", playerChoice);
+    var position = player - 1;
+    num[position] = chosennumber(playerChoice, roll);
+    console.log("numbers", num);
+
     if (player == 1) {
-      if (!input) {
-        return chooseOrderMessage(player, roll1, roll2);
-      }
-
-      if (!(input == 1 || input == 2)) {
-        return (
-          "Incorrect input!! <br>" + chooseOrderMessage(player, roll1, roll2)
-        );
-      }
-
-      var playerChoice = input;
-      player1num = chosennumber(playerChoice, roll1, roll2);
-      console.log("Player1 number", player1num);
       player = 2;
-      roll1 = 0;
-      return `Player 1, Your number is ${player1num}! <br> Player 2, please press submit to start!`;
+      section = ROLLNUM;
+      return `Player 1, your number is ${num[0]}! <br> Player 2, Press submit to get rolls`;
     }
 
     if (player == 2) {
-      if (!input) {
-        return chooseOrderMessage(player, roll1, roll2);
-      }
-
-      if (!(input == 1 || input == 2)) {
-        return (
-          "Incorrect input!! <br>" + chooseOrderMessage(player, roll1, roll2)
-        );
-      }
-
-      playerChoice = input;
-      player2num = chosennumber(playerChoice, roll1, roll2);
-      console.log("Player2 number", player2num);
-      roll1 = 0;
-      section = ACTUALGAME;
-      return `Player 2, Your number is ${player2num}! <br> Player 2 please press submit to get results!`;
+      player1sum += num[0];
+      player2sum += num[1];
+      var myOutputValue =
+        leaderBoard(num, player1sum, player2sum) +
+        "<br> Press submit to start a new game!";
+      section = ROLLNUM;
+      player = 1;
+      return myOutputValue;
     }
-  }
-
-  if (section == ACTUALGAME) {
-    player1sum += player1num;
-    player2sum += player2num;
-
-    if (gameMode == NORMAL) {
-      var myOutputValue = `Player 2 is leading! Please press submit to start again`;
-
-      if (player1sum > player2sum) {
-        myOutputValue = `Player 1 is leading! Please submit to play again`;
-      }
-
-      if (player1sum == player2sum) {
-        myOutputValue = `Its a draw! Please submit to play again`;
-      }
-    }
-
-    if (gameMode == LOWESTWINS) {
-      var myOutputValue = `Player 2 is leading! Please press submit to start again`;
-
-      if (player1sum < player2sum) {
-        myOutputValue = `Player 1 is leading! Please submit to play again`;
-      }
-
-      if (player1sum == player2sum) {
-        myOutputValue = `Its a draw! Please submit to play again`;
-      }
-    }
-
-    section = CHOOSENUM;
-    player = 1;
-    myOutputValue =
-      `------${gameMode}------ <br><br>` +
-      leaderBoard(player1num, player1sum, player2num, player2sum) +
-      myOutputValue;
-    return myOutputValue;
   }
 };
 
 //generate numbers
-var chosennumber = function (choice, roll1, roll2) {
+var chosennumber = function (choice, roll) {
   if (choice == 1) {
-    var chosennumber = concatenateNumber(roll1, roll2);
+    var chosennumber = concatenateNumber(roll[0], roll[1]);
   }
   if (choice == 2) {
-    chosennumber = concatenateNumber(roll2, roll1);
+    chosennumber = concatenateNumber(roll[1], roll[0]);
   }
   return chosennumber;
 };
@@ -144,11 +95,22 @@ var randomNumber = function () {
   return randNumber;
 };
 
-var leaderBoard = function (player1num, player1sum, player2num, player2sum) {
-  if (player1sum > player2sum || player1sum == player2sum) {
-    return `Player 1 number: ${player1num} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${player2num} <br> Player 2 total: ${player2sum} <br><br>`;
+var leaderBoard = function (num, player1sum, player2sum) {
+  if (gameMode == NORMAL) {
+    if (player1sum > player2sum || player1sum == player2sum) {
+      return `Player 1 is leading! <br> Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br><br>`;
+    }
+    if (player2sum > player1sum) {
+      return `Player 2 is leading! <br> Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br><br>`;
+    }
   }
-  if (player2sum > player1sum) {
-    return `Player 2 number: ${player2num} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${player1num} <br> Player 1 total: ${player1sum} <br><br>`;
+
+  if (gameMode == LOWESTWINS) {
+    if (player1sum < player2sum || player1sum == player2sum) {
+      return `Player 1 is leading! Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br><br>`;
+    }
+    if (player2sum < player1sum) {
+      return `Player 2 is leading! Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br><br>`;
+    }
   }
 };
