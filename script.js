@@ -4,6 +4,7 @@ var player2DiceArray = []; //     "
 var diceOrder1 = ""; // dice order taken by player 1
 var diceOrder2 = ""; // dice order taken by player 2
 var currentPlayer = 1; // control flow of players
+
 var gameRound = 0; // control flow: acts as counter to end game at 10th and to also start game
 var userNameRound = 1; // control flow:: forces players to input names
 var players = []; // array store of players names
@@ -34,7 +35,6 @@ var initGame = function () {
 var userNameCreate = function (input) {
   // forces players to input names // player 1 to start input first
   if (userNameRound == 1 && input == "") {
-    players[0] = input;
     return `🤼👬 Both players, begin with player 1.<br/>🥳🥳 Please input your names.<br/> 😅📣 The game won't begin till you do so.`;
   }
   // stores player 1 name and guides player 2 to input name
@@ -47,7 +47,7 @@ var userNameCreate = function (input) {
   if (userNameRound == 2 && input !== "") {
     players[1] = input;
     userNameRound += 1; // ends guiding players to input names
-    return `🙏 Thank you ${players[0]} and ${players[1]} for joining us, the game is set for 10 rounds and will auto reset.<br/><br/>❓❓ You may also reset the game at anytime by ✍✍ "reset".<br/><br/>🚦 ${players[0]}, you may 🏃‍♀️begin the game by pressing submit to roll.`;
+    return `🙏 Thank you ${players[0]} and ${players[1]} for joining us, the game is set for 10 rounds and will auto RESET.<br/><br/>❓❓ You may also RESET the game at anytime by ✍✍ "reset".<br/><br/>🚦 ${players[0]}, you may 🏃‍♀️begin the game by pressing submit to roll.`;
   }
   // notifies player--2 that input name is required and can't click submit to roll yet.
   if (userNameRound == 2 && input == "") {
