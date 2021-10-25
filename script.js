@@ -38,10 +38,11 @@ console.log("two numbers");
 var getPlayerNumber = function (firstNumeralIndex) {
   var diceArray;
   if (currentPlayer === 1) {
-    var diceArray = playerOneDice;
+    diceArray = playerOneDice;
   } else {
-    var diceArray = playerTwoDice;
+    diceArray = playerTwoDice;
   }
+  console.log("diceArray: " + diceArray);
 
   var playerNum;
   // If the chosen first numeral index is 1, create player number starting with 1st dice
@@ -51,6 +52,7 @@ var getPlayerNumber = function (firstNumeralIndex) {
   } else {
     playerNum = concatenateTwoNumbers(diceArray[1], diceArray[0]);
   }
+  console.log("playerNum: " + playerNum);
 
   // Store player combination in the relevant global player combination variable
   // Return generated player num to parent function
@@ -82,16 +84,15 @@ var main = function (input) {
     myOutputValue =
       "Hi Player One, welcome to the 🎲 dice 🎲 roll game! <br> <br> To start, please hit the submit button to roll the dice 🎲!";
   } else if (currentGameMode == START_PLAYER_DICE_ROLL) {
-    var playerDiceRollOne = diceRollOne();
-    var playerDiceRollTwo = diceRollTwo();
+    var playerDiceRolls = getDiceRolls();
     currentGameMode = CHOOSE_COMBINATION_PLAYER;
     myOutputValue =
       "Hi Player " +
       currentPlayer +
       " , you rolled: " +
-      playerDiceRollOne +
+      playerDiceRolls[0] +
       " and " +
-      playerDiceRollTwo +
+      playerDiceRolls[1] +
       "<br> Please enter ❶ or ❷ as the first numeral index for your dice rolls to get the highest combined number and hit the submit button.";
   } else if (currentGameMode == CHOOSE_COMBINATION_PLAYER) {
     // Validate the input. If first numeral index is neither 1 nor 2, tell the user.
@@ -100,8 +101,10 @@ var main = function (input) {
       return "Please choose ❶ or ❷ as the first numeral index for your dice rolls";
     }
     // Get combined number for current player
+    console.log("firstNumeralIndex: " + firstNumeralIndex);
+
     var playerCombined = getPlayerNumber(firstNumeralIndex);
-    console.log(playerCombined);
+    console.log("playerCombined: " + playerCombined);
     var playerNumResponse = `Player ${currentPlayer}, you chose 🎲 Dice ${firstNumeralIndex} first. <br>
       Your number is ${playerCombined}.`;
     // If currentPlayer is Player 1, change currentPlayer to Player 2, switch mode to dice roll
