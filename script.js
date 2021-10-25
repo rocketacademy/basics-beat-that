@@ -12,6 +12,8 @@ var round_Winner = "";
 var total_Score_Winner = "";
 var player1_score = 0;
 var player2_score = 0;
+var leaderBoard_Player1 = [];
+var leaderBoard_Player2 = [];
 
 var maxNumber = function (input) {
   numberValue = 10 * dice2 + dice1;
@@ -97,6 +99,8 @@ var main = function (input) {
 
       round_Winner = number_Game_Winner(player1_Number, player2_Number);
       total_Score_Winner = score_Winner(player1_score, player2_score);
+      leaderBoard_Player1.push(player1_score);
+      leaderBoard_Player2.push(player2_score);
 
       myOutputValue =
         "Player2, you chose dice" +
@@ -120,7 +124,19 @@ var main = function (input) {
         player2_score +
         "<br>" +
         "Total score game result is " +
-        total_Score_Winner;
+        total_Score_Winner +
+        "<br>" +
+        "Leader Board 🎲🎲" +
+        "<br>" +
+        "Player1 " +
+        leaderBoard_Player1.sort(function (a, b) {
+          return b - a;
+        }) +
+        "<br>" +
+        "Player2 " +
+        leaderBoard_Player2.sort(function (a, b) {
+          return b - a;
+        });
     }
   }
 
