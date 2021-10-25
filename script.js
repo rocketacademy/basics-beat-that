@@ -1,6 +1,4 @@
 //fixed variables
-CHOOSENUM = "Choose Number";
-ROLLNUM = "roll number";
 NORMAL = "normal";
 LOWESTWINS = "lowest wins";
 
@@ -9,14 +7,8 @@ var num = [];
 var player1sum = 0;
 var player2sum = 0;
 var player = 1;
-var section = ROLLNUM;
 var gameMode = "";
 var roll = [];
-
-//message
-var chooseOrderMessage = function (player, roll) {
-  return `Player ${player}, please choose the order which order you want. Either <br><br> 1: ${roll[0]} before ${roll[1]} <br> 2: ${roll[1]} before ${roll[0]}`;
-};
 
 var main = function (input) {
   if (!gameMode) {
@@ -32,49 +24,30 @@ var main = function (input) {
     return " Welcome players, press submit start the game";
   }
 
-  //player1 choose the order
-  if (section == ROLLNUM) {
+  while (player < 3) {
     roll = [randomNumber(), randomNumber()];
     console.log("Roll", roll);
-    section = CHOOSENUM;
-  }
-
-  if (section == CHOOSENUM) {
-    if (!input || !(input == 1 || input == 2)) {
-      return chooseOrderMessage(player, roll);
-    }
-
-    var playerChoice = input;
-    console.log("Player's Choice", playerChoice);
     var position = player - 1;
-    num[position] = chosennumber(playerChoice, roll);
-    console.log("numbers", num);
-
-    if (player == 1) {
-      player = 2;
-      section = ROLLNUM;
-      return `Player 1, your number is ${num[0]}! <br> Player 2, Press submit to get rolls`;
-    }
-
-    if (player == 2) {
-      player1sum += num[0];
-      player2sum += num[1];
-      var myOutputValue =
-        leaderBoard(num, player1sum, player2sum) +
-        "<br> Press submit to start a new game!";
-      section = ROLLNUM;
-      player = 1;
-      return myOutputValue;
-    }
+    num[position] = chosennumber(roll);
+    player += 1;
   }
+
+  console.log("Numbers", num);
+  player = 1;
+  player1sum += num[0];
+  player2sum += num[1];
+  var myOutputValue =
+    leaderBoard(num, player1sum, player2sum) +
+    "<br> Press submit to start a new game!";
+  return myOutputValue;
 };
 
-//generate numbers
-var chosennumber = function (choice, roll) {
-  if (choice == 1) {
+//generate numbers and automatucally generate the highest
+var chosennumber = function (roll) {
+  if (roll[0] >= roll[1]) {
     var chosennumber = concatenateNumber(roll[0], roll[1]);
   }
-  if (choice == 2) {
+  if (roll[0] < roll[1]) {
     chosennumber = concatenateNumber(roll[1], roll[0]);
   }
   return chosennumber;
