@@ -24,7 +24,7 @@
 //
 // *******************************
 
-// ****** Global Variables ******
+// ******* Global Variables *******
 var gameStatus = "Waiting to roll dice";
 var player = "Player 1";
 
@@ -37,7 +37,8 @@ var p2CombinedNumber = 0;
 
 var p1score = 0;
 var p2score = 0;
-console.log(p1score);
+
+// ********** Functions **********
 
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -171,13 +172,31 @@ var determineWinner = function (p1number, p2number) {
   var scoreboard = updateLeaderboard();
 
   var resultsMessage = `
-  Player 1's combined number is ${p1CombinedNumber}.<br>
-  Player 2's combined number is ${p2CombinedNumber}.<br>
+  Player 1's combined number is ${p1number}.<br>
+  Player 2's combined number is ${p2number}.<br>
   ${winner}<br><br>
   ${scoreboard}<br><br>
   Hit submit to play again!`;
 
   return resultsMessage;
+};
+
+// Function for auto-combination of numbers
+// This function should roll the dice, compare numbers, and combine them
+var autoCombine = function () {
+  var num1 = rollDice().toString();
+  var num2 = rollDice().toString();
+  console.log(num1);
+  console.log(num2);
+
+  var combinedNum = 0;
+  if (num1 > num2) {
+    combinedNum = num1 + num2;
+  } else {
+    combinedNum = num2 + num1;
+  }
+  console.log(combinedNum);
+  return combinedNum;
 };
 
 // Function to update leaderboard
@@ -210,6 +229,22 @@ var updateLeaderboard = function () {
 
 var main = function (input) {
   var myOutputValue = "";
+
+  if (input == "auto") {
+    gameStatus = "Auto-combine";
+    return `Initiating auto-combine mode!`;
+  }
+
+  if (gameStatus == "Auto-combine") {
+    p1CombinedNumber = autoCombine();
+    p1score += Number(p1CombinedNumber);
+
+    p2CombinedNumber = autoCombine();
+    p2score += Number(p2CombinedNumber);
+
+    myOutputValue = determineWinner(p1CombinedNumber, p2CombinedNumber);
+    return myOutputValue;
+  }
 
   // <<<< ----- Player 1's Turn ----- >>>>
   if (player == "Player 1") {
