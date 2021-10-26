@@ -1,56 +1,104 @@
 //fixed variables
 NORMAL = "normal";
 LOWESTWINS = "lowest wins";
+ROLLDICE = "roll dice";
+GENERATE = "generate";
 
 //variables
+var section = ROLLDICE;
 var num = [];
+var player1array = [];
+var player2array = [];
 var player1sum = 0;
 var player2sum = 0;
 var player = 1;
 var gameMode = "";
-var roll = [];
+var roll = 0;
+var diceRolls = 0;
 
 var main = function (input) {
   if (!gameMode) {
     if (!input) {
-      return "Please input: 'normal' or 'lowest wins'";
+      return pickMode;
     }
 
     if (!(input == NORMAL || input == LOWESTWINS)) {
-      return "Incorrect input. <br> Please input: 'normal' or 'lowest wins'";
+      return "Incorrect input. <br>" + pickMode;
     }
 
     gameMode = input;
     return " Welcome players, press submit start the game";
   }
 
-  while (player < 3) {
-    roll = [randomNumber(), randomNumber()];
-    console.log("Roll", roll);
-    var position = player - 1;
-    num[position] = chosennumber(roll);
-    player += 1;
+  if (diceRolls == 0) {
+    if (!input) {
+      return "Please input how many times you want to roll the dice";
+    }
+
+    if (isNaN(input)) {
+      return "Please input a number!";
+    }
+
+    diceRolls = input;
+    return `We will be rolling the dice ${diceRolls} number of times <br> Press submit to continue!`;
   }
 
-  console.log("Numbers", num);
-  player = 1;
-  player1sum += num[0];
-  player2sum += num[1];
-  var myOutputValue =
-    leaderBoard(num, player1sum, player2sum) +
-    "<br> Press submit to start a new game!";
-  return myOutputValue;
+  if (section == ROLLDICE) {
+    var currentRolls = 1;
+    while (currentRolls <= diceRolls) {
+      roll = randomNumber();
+      console.log("Roll", roll);
+      num.push(roll);
+      console.log(num);
+      currentRolls += 1;
+    }
+
+    if (player == 1) {
+      player1array = num;
+      num = [];
+      player = 2;
+      return `Player 1, you rolled ${diceRolls} times and your numbers is ${player1array}! <br> Press submit to continue `;
+    }
+
+    if (player == 2) {
+      player2array = num;
+      num = [];
+      section = GENERATE;
+      return `Player 2, you rolled ${diceRolls} times and your numbers is ${player2array} <br> Press submit to continue`;
+    }
+  }
+
+  if (section == GENERATE) {
+    player1array.sort(function (a, b) {
+      return b - a;
+    });
+    player2array.sort(function (a, b) {
+      return b - a;
+    });
+    var player1num = combineNumber(diceRolls, player1array);
+    console.log("Player 1 numbers sorted", player1num);
+    var player2num = combineNumber(diceRolls, player2array);
+    console.log("Player 2 numbers sorted", player2num);
+    player = 1;
+    section = ROLLDICE;
+    player1sum += player1num;
+    player2sum += player2num;
+    var myOutputValue =
+      leaderBoard(player1num, player2num, player1sum, player2sum) +
+      "<br> Press submit to start a new game!";
+    return myOutputValue;
+  }
 };
 
 //generate numbers and automatucally generate the highest
-var chosennumber = function (roll) {
-  if (roll[0] >= roll[1]) {
-    var chosennumber = concatenateNumber(roll[0], roll[1]);
+var combineNumber = function (diceRolls, array) {
+  var pos = 1;
+  var combinednumber = array[0];
+  while (pos < diceRolls) {
+    combinednumber = Number(String(combinednumber) + String(array[pos]));
+    pos += 1;
   }
-  if (roll[0] < roll[1]) {
-    chosennumber = concatenateNumber(roll[1], roll[0]);
-  }
-  return chosennumber;
+  return combinednumber;
 };
 
 //concatenate numbers
@@ -68,13 +116,16 @@ var randomNumber = function () {
   return randNumber;
 };
 
-var leaderBoard = function (num, player1sum, player2sum) {
+//Messages
+var pickMode = "Please input: 'normal' or 'lowest wins'";
+
+var leaderBoard = function (player1num, player2num, player1sum, player2sum) {
   if (gameMode == NORMAL) {
     if (player1sum > player2sum || player1sum == player2sum) {
-      return `Player 1 is leading! <br> Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br><br>`;
+      return `Player 1 is leading! <br> Player 1 number: ${player1num} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${player2num} <br> Player 2 total: ${player2sum} <br><br>`;
     }
     if (player2sum > player1sum) {
-      return `Player 2 is leading! <br> Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br><br>`;
+      return `Player 2 is leading! <br> Player 2 number: ${player2num} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${player1num} <br> Player 1 total: ${player1sum} <br><br>`;
     }
   }
 
