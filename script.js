@@ -118,23 +118,47 @@ var randomNumber = function () {
 
 //Messages
 var pickMode = "Please input: 'normal' or 'lowest wins'";
+var player1Message = function (num1, sum1) {
+  return `Player 1 number: ${num1} <br> Player 1 total: ${sum1} <br>`;
+};
 
-var leaderBoard = function (player1num, player2num, player1sum, player2sum) {
+var player2Message = function (num1, sum1) {
+  return `Player 2 number: ${num1} <br> Player 2 total: ${sum1} <br> `;
+};
+
+var leaderBoard = function (num1, num2, sum1, sum2) {
   if (gameMode == NORMAL) {
-    if (player1sum > player2sum || player1sum == player2sum) {
-      return `Player 1 is leading! <br> Player 1 number: ${player1num} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${player2num} <br> Player 2 total: ${player2sum} <br><br>`;
+    if (sum1 > sum2 || sum1 == sum2) {
+      return (
+        "Player 1 is leading! <br>" +
+        player1Message(num1, sum1) +
+        player2Message(num2, sum2)
+      );
     }
-    if (player2sum > player1sum) {
-      return `Player 2 is leading! <br> Player 2 number: ${player2num} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${player1num} <br> Player 1 total: ${player1sum} <br><br>`;
+
+    if (sum2 > sum1) {
+      return (
+        "Player 2 is leading! <br>" +
+        player2Message(num2, sum2) +
+        player1Message(num1, sum1)
+      );
     }
   }
 
   if (gameMode == LOWESTWINS) {
-    if (player1sum < player2sum || player1sum == player2sum) {
-      return `Player 1 is leading! Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br> Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br><br>`;
+    if (sum1 < sum2 || sum1 == sum2) {
+      return (
+        "Player 1 is leading! <br>" +
+        player1Message(num1, sum1) +
+        player2Message(num2, sum2)
+      );
     }
-    if (player2sum < player1sum) {
-      return `Player 2 is leading! Player 2 number: ${num[1]} <br> Player 2 total: ${player2sum} <br>  Player 1 number: ${num[0]} <br> Player 1 total: ${player1sum} <br><br>`;
+    if (sum2 < sum1) {
+      return (
+        "Player 2 is leading! <br>" +
+        player2Message(num2, sum2) +
+        player1Message(num1, sum1)
+      );
     }
   }
 };
