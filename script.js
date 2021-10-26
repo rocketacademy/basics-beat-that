@@ -57,7 +57,7 @@ var playerSelects = function (diceNumber) {
   console.log(state);
   var output = "Please reenter Dice '1' or '2'";
   if (diceNumber == "1") {
-    combinedNumber = String(diceOne) + String(diceTwo);
+    var combinedNumber = String(diceOne) + String(diceTwo);
     output =
       "Player " +
       playerNumber +
@@ -71,7 +71,7 @@ var playerSelects = function (diceNumber) {
     numbers.push(Number(combinedNumber));
     state = "state3";
   } else if (diceNumber == "2") {
-    combinedNumber = String(diceTwo) + String(diceOne);
+    var combinedNumber = String(diceTwo) + String(diceOne);
     output =
       "Player " +
       playerNumber +
@@ -105,7 +105,7 @@ var playerOption = function (condition) {
     diceOne = generateRandomDiceInteger();
     diceTwo = generateRandomDiceInteger();
 
-    var output =
+    output =
       "Welcome player " +
       playerNumber +
       ".<br> You rolled " +
@@ -127,7 +127,7 @@ var playerOption = function (condition) {
     });
 
     var position = numbers.indexOf(highestNumber) + 1;
-    var output =
+    output =
       "The highest number is " +
       highestNumber +
       ". Player " +
@@ -142,7 +142,7 @@ var playerOption = function (condition) {
     diceOne = 0;
     diceTwo = 0;
     playerNumber = 1;
-    score = [];
+    numbers = [];
   }
 
   return output;
