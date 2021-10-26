@@ -92,6 +92,8 @@ var getRolledNums = function (currentPlayer) {
     // If dice roll the same number, auto combine them and compare nums to determine winner
     if (p2dice1 == p2dice2) {
       p2CombinedNumber = p2dice1 + p2dice2;
+      p2score += Number(p2CombinedNumber);
+
       var gameResult = determineWinner(p1CombinedNumber, p2CombinedNumber);
       rolledNumsMessage = `<b>Player 2</b><br><br>
       You rolled ${p2dice1} and ${p2dice2}.<br><br>
@@ -99,7 +101,7 @@ var getRolledNums = function (currentPlayer) {
       <hr><br>
       ${gameResult}
       `;
-      p2score += Number(p2CombinedNumber);
+
       player = "Player 1";
       gameStatus = "Waiting to roll dice";
     }
@@ -123,7 +125,12 @@ var combineNumbers = function (currentPlayer, input) {
 
   // For Player 1
   if (currentPlayer == "Player 1") {
-    if (input == "1") {
+    // input validation
+    if (input != 1 && input != 2) {
+      return `Please enter 1 or 2 to arrange your numbers.<br>
+       Enter "1" to get the combined number '${p1dice1 + p1dice2}'<br>
+      Enter "2" to get the combined number '${p1dice2 + p1dice1}'`;
+    } else if (input == "1") {
       p1CombinedNumber = p1dice1 + p1dice2;
     } else {
       p1CombinedNumber = p1dice2 + p1dice1;
@@ -141,7 +148,12 @@ var combineNumbers = function (currentPlayer, input) {
   }
   // For Player 2
   else {
-    if (input == "1") {
+    // input validation
+    if (input != 1 && input != 2) {
+      return `Please enter 1 or 2 to arrange your numbers.<br>
+       Enter "1" to get the combined number '${p2dice1 + p2dice2}'<br>
+      Enter "2" to get the combined number '${p2dice2 + p2dice1}'`;
+    } else if (input == "1") {
       p2CombinedNumber = p2dice1 + p2dice2;
     } else {
       p2CombinedNumber = p2dice2 + p2dice1;
@@ -151,7 +163,7 @@ var combineNumbers = function (currentPlayer, input) {
         <hr><br>
         `;
     p2score += Number(p2CombinedNumber);
-
+    console.log(p2CombinedNumber);
     player = "Player 1";
     gameStatus = "Waiting to roll dice";
     return combinedNumsMessage;
@@ -233,6 +245,10 @@ var main = function (input) {
   if (input == "auto") {
     gameStatus = "Auto-combine";
     return `Initiating auto-combine mode!`;
+  } else if (input == "reset") {
+    gameStatus = "Waiting to roll dice";
+    player = "Player 1";
+    return `Resetting the game! Player 1, hit submit to roll your dice.`;
   }
 
   if (gameStatus == "Auto-combine") {
