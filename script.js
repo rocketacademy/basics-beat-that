@@ -1,42 +1,7 @@
-//  FLOW OF THE GAME
-
-// game state: pre-game. Click submit to start
-// game state : player 1's roll'. player 1 rolls a pair of dice
-// game state: player 1 dice selection. Player 1 picks either dice 1 or 2 to be the first digit
-// game state: player 2's roll'. player 2 rolls a pair of dice
-// game state: player 2 dice selection. Player 2 picks either dice 1 or 2 to be the first digit
-// game state: compare and collate score. The player whose dice pair is greater wins the round. Scores for each player are totalled and carried forward via global variables
-
-//example output message:
-
-//Ready to play? click the button.
-
-//player 1's roll
-//player 1's turn!
-//you rolled 3 for dice 1, and 5 for dice 2.
-//pick the dice to be in front. (enter 1 or 2)
-
-// player 1's dice selection
-//Player 1:  you picked dice 2 to be the first digit.
-//your number is 53.
-//It is player 2's turn. Player 2, click the submit button to roll your dice.
-
-//player 2's turn!
-//you rolled 6 for dice 1, and 1 for dice 2.
-//pick the dice to be in front. (enter 1 or 2)
-
-// player 2's dice selection
-//Player 2:  you picked dice 6 to be the first digit.
-//your number is 61.
-//Player 2 wins!
-//Player 2 is now in the lead.
-//Player 1 - 53
-//player 2 - 61
-
 //GLOBAL VARIABLES
-
 var gameState = "preGame";
 var playerTurn = 1;
+var roundNumber = 0;
 
 var player1Score = 0;
 var player2Score = 0;
@@ -47,6 +12,22 @@ var die2 = 0;
 var diceCombo = 0;
 var diceComboP1 = 0;
 var diceComboP2 = 0;
+
+var numberOfDice = 0;
+
+var numberOfPlayers = 0;
+
+//only works up to 4 players because idk how to execute the loop without creating a fixed number of existing array variables
+var p1DiceCombo = 0;
+var p2DiceCombo = 0;
+var p3DiceCombo = 0;
+var p4DiceCombo = 0;
+
+//player score totals
+var player1Score = 0;
+var player2Score = 0;
+var player3Score = 0;
+var player4Score = 0;
 
 //ROLL DICE FUNCTION
 var rollDice = function () {
@@ -111,16 +92,193 @@ var displayResultsMessage = function () {
   Player 1, click the button to start the next round.`;
 };
 
+var displayNewResultsMessage = function () {
+  //example text:
+  //Player 1's selection: 0
+  //Player 2's selection: 0
+  //    (roundCombinationMessage)
+
+  //OVERALL SCORES
+  //Player 1 : 0
+  //Player 2 : 0
+  //    (overallScoreboardMessage)
+
+  //Player 2 is in the lead!
+  //    (leaderMessage)
+
+  //Player 1, click the button to start the next round.
+
+  myOutputValue =
+    roundCombinationMessage() + overallScoreboardMessage() + leaderMessage();
+  return myOutputValue;
+};
+
+//Message functions:
+var roundCombinationMessage = function () {
+  var message = `ROUND ${roundNumber} RESULTS<br><br>
+    Player 1's Combo: ${p1DiceCombo}<br>
+    Player 2's Combo: ${p2DiceCombo}<br>`;
+
+  if (numberOfPlayers == 3) {
+    message = message + `Player 3's Combo: ${p3DiceCombo} <br>`;
+  } else if (numberOfPlayers == 4) {
+    message =
+      message +
+      `Player 3's Combo: ${p3DiceCombo} <br>Player 4's Combo: ${p4DiceCombo} <br>`;
+  }
+  return message;
+};
+
+var overallScoreboardMessage = function () {
+  //total up scores - not sure if should be placed here or elsewhere.
+  player1Score = player1Score + p1DiceCombo;
+  player2Score = player2Score + p2DiceCombo;
+  player3Score = player3Score + p3DiceCombo;
+  player4Score = player4Score + p4DiceCombo;
+
+  var message = `<br><br>OVERALL SCORES<br><br>
+  Player 1: ${player1Score}<br>
+  Player 2: ${player2Score}<br>`;
+
+  if (numberOfPlayers == 3) {
+    message = message + `Player 3: ${player3Score} <br>`;
+  } else if (numberOfPlayers == 4) {
+    message =
+      message + `Player 3: ${player3Score} <br>Player 4: ${player4Score} <br>`;
+  }
+  return message;
+};
+
+var leaderMessage = function () {
+  if (
+    player1Score == player2Score ||
+    player1Score == player3Score ||
+    player1Score == player4Score ||
+    player2Score == player3Score ||
+    player2Score == player4Score ||
+    player3Score == player4Score
+  ) {
+    message = `<br><br>nice draw sia`;
+  } else if (
+    player1Score >= player2Score &&
+    player1Score >= player3Score &&
+    player1Score >= player4Score
+  ) {
+    message = `<br><br>Player 1 is in the lead! <br>Professional gambler siol`;
+  } else if (
+    player2Score >= player1Score &&
+    player2Score >= player3Score &&
+    player2Score >= player4Score
+  ) {
+    message = `<br><br>Player 2 is in the lead! <br>Stonksss`;
+  } else if (
+    player3Score >= player1Score &&
+    player3Score >= player2Score &&
+    player3Score >= player4Score
+  ) {
+    message = `<br><br>Player 3 is in the lead! <br>gg ez`;
+  } else if (
+    player4Score >= player1Score &&
+    player4Score >= player2Score &&
+    player4Score >= player3Score
+  ) {
+    message = `<br><br>Player 4 is in the lead! <br>4D master `;
+  }
+  return message;
+};
+
 //EXECUTE GAME MODE FUNCTIONS
 
 //PRE-GAME
 var executePreGame = function (input) {
   if (input == "") {
-    myOutputValue = `Player ${playerTurn}, click the button to begin.`;
-    gameState = "roll";
+    myOutputValue = `How many players are playing?`;
+    gameState = "chooseNumberOfPlayers";
   } else {
     myOutputValue = "u not rdy aH";
   }
+  return myOutputValue;
+};
+
+//EXECUTE THE 'CHOOSE NUMBER OF PLAYERS' FUNCTION
+var chooseNumberOfPlayers = function (input) {
+  if (input >= 2 && input <= 4) {
+    numberOfPlayers = Number(input);
+    gameState = "chooseDiceNumber";
+    myOutputValue = `How many dice are you playing with?`;
+  } else {
+    myOutputValue = "dun b stuip, enter a proper number 2to4 la";
+  }
+  return myOutputValue;
+};
+
+//EXECUTE THE 'CHOOSE NUMBER OF DICE' FUNCTION
+var chooseDiceNumber = function (input) {
+  myOutputValue = "dun b stuip, enter a proper number 1-10 la";
+  if (input >= 1 && input <= 10) {
+    numberOfDice = Number(input);
+    gameState = "roll";
+    myOutputValue = `Player ${playerTurn}, click the button to roll!`;
+  }
+  return myOutputValue;
+};
+
+//NEW EXECUTE ROLL - rolls into an array and reorders with loops
+var executeNewRoll = function () {
+  //put the dice in an array
+  var diceArray = [];
+  var counter = 0;
+  while (counter < numberOfDice) {
+    //console.log("counter" + counter);
+    diceArray.push(rollDice());
+    counter = counter + 1;
+  }
+
+  //Create a list of dice as a string before sorting them
+  counter = 0;
+  var diceListRollResults = [];
+
+  while (counter < numberOfDice) {
+    diceListRollResults.push(`Die ${counter + 1}: ${diceArray[counter]}`);
+    counter = counter + 1;
+  }
+
+  //Create an array with the dice sorted in descending order.
+  diceComboArray = diceArray.sort(function (a, b) {
+    return b - a;
+  });
+
+  //converts the sorted array into an integer and place into a variable for retriving later
+  if (playerTurn == 1) {
+    p1DiceCombo = Number(diceComboArray.join(""));
+  } else if (playerTurn == 2) {
+    p2DiceCombo = Number(diceComboArray.join(""));
+  } else if (playerTurn == 3) {
+    p3DiceCombo = Number(diceComboArray.join(""));
+  } else if (playerTurn == 4) {
+    p4DiceCombo = Number(diceComboArray.join(""));
+  }
+
+  //at the last player's roll, change to display results mode.
+  if (playerTurn == numberOfPlayers) {
+    gameState = "displayResults";
+  }
+
+  myOutputValue = `PLAYER ${playerTurn}'S ROLLS <br><br> ${diceListRollResults.join(
+    "<br>"
+  )} <br><br> Your number is ${diceComboArray.join("")} <br> <br> Player ${
+    playerTurn + 1
+  }, click the button to roll.`;
+
+  if (playerTurn == numberOfPlayers) {
+    myOutputValue = `PLAYER ${playerTurn}'S ROLLS <br><br> ${diceListRollResults.join(
+      "<br>"
+    )} <br><br> Your number is ${diceComboArray.join(
+      ""
+    )} <br> <br>  Click the button to see the results for the round.`;
+  }
+
+  playerTurn = playerTurn + 1;
   return myOutputValue;
 };
 
@@ -136,7 +294,7 @@ var executeRoll = function (input) {
   return myOutputValue;
 };
 
-//EXECUTE SELECT
+//EXECUTE SELECT - no need to select after implementing auto-select
 /*
 var executeSelect = function (input) {
   //input validation
@@ -171,7 +329,7 @@ var executeSelect = function (input) {
 };
 */
 
-//EXECUTE SELECT AUTO
+//EXECUTE SELECT AUTO -  used in the 'auto-generate combined number' section
 var executeSelectAuto = function (input) {
   if (die1 > die2) {
     diceCombo = Number(`${die1}` + `${die2}`);
@@ -203,8 +361,9 @@ var executeSelectAuto = function (input) {
 var executeDisplayResults = function (input) {
   gameState = "roll";
   playerTurn = 1;
+  roundNumber = roundNumber + 1;
 
-  return displayResultsMessage();
+  return displayNewResultsMessage();
 };
 
 var main = function (input) {
@@ -213,9 +372,15 @@ var main = function (input) {
   if (gameState == "preGame") {
     console.log("pre-game");
     return executePreGame(input);
+  } else if (gameState == "chooseNumberOfPlayers") {
+    console.log("choose number of players");
+    return chooseNumberOfPlayers(input);
+  } else if (gameState == "chooseDiceNumber") {
+    console.log("choose dice number");
+    return chooseDiceNumber(input);
   } else if (gameState == "roll") {
     console.log("roll");
-    return executeRoll(input);
+    return executeNewRoll(input);
   } else if (gameState == "select") {
     console.log("select");
     return executeSelectAuto(input);
