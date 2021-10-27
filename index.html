@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: lightblue;
+        background-color: #ecf0f1;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -46,72 +46,207 @@
         width: 100%;
       }
 
-      #mode {
+      .mode {
         font-weight: bold;
         text-decoration: underline;
       }
-
-      table,
-      th,
-      td {
-        border: 1px solid black;
-      }
     </style>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
   </head>
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
-      <p>
-        Create a two-digit number by selecting the order of your dice rolls.
-      </p>
-      <p>
-        The player with the <span id="mode">highest</span> number wins! Good
-        luck!
-      </p>
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="change-mode-button">Change Mode</button>
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+      <h5 class="text-center">
+        Hello! Welcome to Beat That!
+        <span id="add-player-tag">Add a player to start the game.</span>
+      </h5>
+      <h5 class="text-center" id="round-header" style="display: none">
+        This round, the player with the
+        <span id="highest-lowest-mode" class="mode text-danger">Highest</span>
+        number wins!
+      </h5>
+      <h5
+        class="text-center"
+        id="knockout-running-header"
+        style="display: none"
+      >
+        Additionally, this is a
+        <span id="running-knockout-mode" class="mode text-danger">Running</span>
+        mode, play till you're bored!
+      </h5>
+      <hr />
+      <div id="score-div"></div>
+      <div class="input-group mb-3" id="add-player-div">
+        <input
+          type="text"
+          class="form-control border border-dark"
+          placeholder="Enter player name e.g. Tinaes"
+          aria-label="New player's name"
+          aria-describedby="add-player-button"
+          id="player-name"
+          onkeyup="checkPlayerNameIsNotEmpty()"
+        />
+        <button
+          class="btn btn-dark border border-dark"
+          type="button"
+          id="add-player-button"
+          disabled
+        >
+          Add Player
+        </button>
+      </div>
+      <hr />
+      <div id="dice-div" style="display: none">
+        <h5 class="text-center">--- Choose Number of Dices ---</h5>
+        <div class="input-group mb-3">
+          <input
+            type="number"
+            min="1"
+            class="form-control border border-dark"
+            placeholder="Enter the number of dices to be rolled this round"
+            aria-label="Number of dices to be rolled"
+            aria-describedby="start-round-button"
+            id="no-of-dices"
+            onkeyup="checkNoOfDicesNotEmpty()"
+            onmouseup="checkNoOfDicesNotEmpty()"
+            value="1"
+          />
+          <button
+            class="btn btn-dark border border-dark"
+            type="button"
+            id="start-round-button"
+          >
+            Start Round!
+          </button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button
+              class="btn btn-secondary btn-light"
+              type="button"
+              id="change-mode-button"
+              style="width: 100%"
+            >
+              Toggle <span class="text-danger">Highest</span>/<span
+                class="text-success"
+                >Lowest</span
+              >
+              Mode
+            </button>
+          </div>
+          <div class="col">
+            <button
+              class="btn btn-secondary btn-light"
+              type="button"
+              id="change-mode-button"
+              style="width: 100%"
+            >
+              Toggle <span class="text-danger">Running</span>/<span
+                class="text-success"
+                >Knockout</span
+              >
+              Mode
+            </button>
+          </div>
+        </div>
+        <hr />
+      </div>
+      <div id="history-div" style="display: none">
+        <h5 class="text-center">--- History ---</h5>
+        <div id="history-table"></div>
+      </div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
+    <script src="knockoutscript.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+      // var button = document.querySelector("#submit-button");
+      // button.addEventListener("click", function () {
+      //   // Set result to input value
+      //   var input = document.querySelector("#input-field");
+      //   var result = main(input.value);
 
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
+      //   // Display result in output element
+      //   var output = document.querySelector("#output-div");
+      //   output.innerHTML = result;
 
-        // Reset input value
-        input.value = "";
+      //   // Reset input value
+      //   input.value = "";
 
-        // Check whether mode can be changed
-        if (modeCanBeChanged) {
-          document.getElementById("change-mode-button").style.display = "";
-        } else {
-          document.getElementById("change-mode-button").style.display = "none";
-        }
-      });
+      //   // Check whether mode can be changed
+      //   if (modeCanBeChanged) {
+      //     document.getElementById("change-mode-button").style.display = "";
+      //   } else {
+      //     document.getElementById("change-mode-button").style.display = "none";
+      //   }
+      // });
 
+      // check if player can be added
       var changeModeButton = document.querySelector("#change-mode-button");
       changeModeButton.addEventListener("click", function () {
         if (gameMode == "Highest") {
           gameMode = "Lowest";
-          document.getElementById("mode").innerHTML = "Lowest";
+          document.getElementById("highest-lowest-mode").innerHTML = "Lowest";
+          document.getElementById("highest-lowest-mode").className =
+            "mode text-success";
         } else {
           gameMode = "Highest";
-          document.getElementById("mode").innerHTML = "Highest";
+          document.getElementById("highest-lowest-mode").innerHTML = "Highest";
+          document.getElementById("highest-lowest-mode").className =
+            "mode text-danger";
         }
+      });
+
+      var addPlayerButton = document.querySelector("#add-player-button");
+      addPlayerButton.addEventListener("click", function () {
+        addPlayer(document.getElementById("player-name").value);
+        document.getElementById("player-name").value = "";
+        document.getElementById("add-player-button").disabled = true;
+
+        document.getElementById("round-header").style.display = "";
+        document.getElementById("knockout-running-header").style.display = "";
+        document.getElementById("add-player-tag").style.display = "none";
+      });
+
+      var checkPlayerNameIsNotEmpty = function () {
+        if (document.getElementById("player-name").value.length !== 0) {
+          document.getElementById("add-player-button").disabled = false;
+        } else {
+          document.getElementById("add-player-button").disabled = true;
+        }
+      };
+
+      var checkPlayerCanBeAdded = function () {
+        if (playerCanBeAdded) {
+          document.getElementById("add-player-div").style.display = "";
+        } else {
+          document.getElementById("add-player-div").style.display = "none";
+        }
+      };
+
+      var checkNoOfDicesNotEmpty = function () {
+        if (document.getElementById("no-of-dices").value.length !== 0) {
+          if (document.getElementById("no-of-dices").value <= 0) {
+            document.getElementById("start-round-button").disabled = true;
+          } else {
+            document.getElementById("start-round-button").disabled = false;
+          }
+        } else {
+          document.getElementById("start-round-button").disabled = true;
+        }
+      };
+
+      var startRoundButton = document.querySelector("#start-round-button");
+      startRoundButton.addEventListener("click", function () {
+        startRound(document.getElementById("no-of-dices").value);
       });
     </script>
   </body>
