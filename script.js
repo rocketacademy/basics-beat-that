@@ -41,8 +41,8 @@ let play2DiceTogether = function(input) {
     console.log(`mode is`, mode)
     mode = "p1 order dice"
     console.log(`###############`)
-    return `Welcome Player 1. <br>
-    You rolled ${dice1_1} for Dice 1 and  ${dice1_2} for Dice 2. <br>
+    return `Welcome Player 1. <br><br>
+    You rolled ${dice1_1} for Dice 1 and  ${dice1_2} for Dice 2. <br><br>
     Choose the order of the dice.`
 
   }
@@ -62,8 +62,8 @@ let play2DiceTogether = function(input) {
     mode = "player 2 turn"
     
     console.log(mode,`@@@@@@@@@@@@@`)
-    return `Player 1, you chose Dice 1 first. <br>
-    Your number is ${makeNum}.<br>
+    return `Player 1, you chose Dice 1 first. <br><br>
+    Your number is ${makeNum}.<br><br>
     It is now Player 2's turn.` 
   } 
   if (mode === "p1 order dice" && input === '2'){
@@ -76,14 +76,14 @@ let play2DiceTogether = function(input) {
       console.log(`Submitted score for plyaer 1 to compare`, playersNumbers)
       mode = "player 2 turn"
       console.log(mode,`%%%%%%%%%%%%%`)
-      return `Player 1, you chose Dice 2 first. <br>
-      Your number is ${makeNum}.<br>
+      return `Player 1, you chose Dice 2 first. <br><br>
+      Your number is ${makeNum}.<br><br>
       It is now Player 2's turn.` 
     }
   
   if (mode === "player 2 turn"){
     mode = "player 2 decide"
-    return  `You rolled ${dice2_1} for Dice 1 and ${dice2_2} for Dice 2. <br>
+    return  `You rolled ${dice2_1} for Dice 1 and ${dice2_2} for Dice 2. <br><br>
     Choose the order of the dice.`
   }
   if (mode === "player 2 decide" && input === '1') {
@@ -95,7 +95,7 @@ let play2DiceTogether = function(input) {
     makeNum = makeTens + dice2_2
     playersNumbers.push(makeNum)
     mode = "results"
-    return `Player 2, you chose Dice 1 first. <br>
+    return `Player 2, you chose Dice 1 first. <br><br>
     Your number is ${makeNum}.<br>`
   }
   if (mode === "player 2 decide" && input === '2') {
@@ -106,18 +106,17 @@ let play2DiceTogether = function(input) {
     makeNum = makeTens + dice2_1
     playersNumbers.push(makeNum)
     mode = "results"
-    return `Player 2, you chose Dice 1 first. <br>
+    return `Player 2, you chose Dice 1 first. <br><br>
     Your number is ${makeNum}.<br>`
   }
   if (mode === "results" && (playersNumbers[0]> playersNumbers[1])){
-    return `Player1 created ${playersNumbers[0]} <br>
-            Player2 created ${playersNumbers[1]} <br>
+    return `Player1 created ${playersNumbers[0]} <br><br>
+            Player2 created ${playersNumbers[1]} <br><br>
             Player1 wins`
   }else if (mode === "results" && (playersNumbers[0] < playersNumbers[1])){
-            return `Player1 created ${playersNumbers[0]} <br>
-                    Player2 created ${playersNumbers[1]} <br>
+            return `Player1 created ${playersNumbers[0]} <br><br>
+                    Player2 created ${playersNumbers[1]} <br><br>
                     Player2 wins`
                   }else{`It is a draw!`
                 }
 }
-
