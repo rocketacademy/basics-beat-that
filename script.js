@@ -1,6 +1,6 @@
 var players = 0;
 var playerNum = 0;
-var playerArray = [];
+playerArray = [];
 console.log(playerArray);
 var playerResult = [];
 var score = [];
@@ -17,6 +17,25 @@ var diceOutput = 0
 var numString = ""
 
 var main = function (input) {
+  if (input == "reset"){
+  playerNum = 0;
+  playerArray = [];
+  playerResult = [];
+  step = 0;
+  diceOutput = 0
+  console.log("players: " + players);
+  console.log("playerArray: " + playerArray);
+    for (var counter = 0; counter < players; counter += 1) {
+      //create the Arrays
+      playerArray.push(generateDiceArray(numOfDice));
+      playerResult.push(0);
+    }
+  console.log("A " + playerArray);
+  console.log("B " + playerResult);
+  console.log("C " + score)
+  return "Next round starting, press submit to continue"
+  }
+
   //check input is a number
   if (Number.isNaN(Number(input)) == true) {
     return 'sorry please enter a number.';
@@ -48,10 +67,10 @@ var main = function (input) {
       playerArray.push(generateDiceArray(numOfDice));
       playerResult.push(0);
       score.push(0);
-      playerWinOrder.push(0)
     }
     console.log("A " + playerArray);
     console.log("B " + playerResult);
+    console.log("C " + score)
     return "Number of Players: " + players + "<br>Mode: "+modeName +"<br>Number of Dice: "+numOfDice+"<br> Player 1 starts, press submit to begin"
   }
 
@@ -173,6 +192,7 @@ var main = function (input) {
       displayScore[counter] +
       "<br>";
   }
+  //Recreate arrays
 
   return (
     scoreOutput +
@@ -180,7 +200,7 @@ var main = function (input) {
     output +
     "<br>Player " +
     (playerWin + 1) +
-    " is in the Lead! <br> Press submit to play again"
+    " is in the Lead! <br> Enter 'reset' to play again"
   );
 };
 
