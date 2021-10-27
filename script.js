@@ -66,6 +66,7 @@ var main = function (input) {
   return myOutputValue;
 };
 
+////////////////////// Functions ////////////////////////////////
 var rollDice = function () {
   var diceNumber = Math.floor(Math.random() * 6) + 1;
   return diceNumber;
@@ -74,22 +75,22 @@ var rollDice = function () {
 var getOrder = function (userInput) {
   if (playersTurn == 1) {
     if (userInput == 1) {
-      playerNumber = combinedValue(player1[0], player1[1]);
+      playerNumber = combineValue(player1[0], player1[1]);
     } else if (userInput == 2) {
-      playerNumber = combinedValue(player1[1], player1[0]);
+      playerNumber = combineValue(player1[1], player1[0]);
     }
     playersTurn = 2;
   } else {
     if (userInput == 1) {
-      playerNumber = combinedValue(player2[0], player2[1]);
+      playerNumber = combineValue(player2[0], player2[1]);
     } else if (userInput == 2) {
-      playerNumber = combinedValue(player2[1], player2[0]);
+      playerNumber = combineValue(player2[1], player2[0]);
     }
   }
   return Number(playerNumber);
 };
 
-var combinedValue = function (num1, num2) {
+var combineValue = function (num1, num2) {
   var playerOrder = `${num1}${num2}`;
   return playerOrder;
 };
