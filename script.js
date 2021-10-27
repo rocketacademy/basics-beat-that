@@ -4,9 +4,13 @@ var playerArray = [];
 console.log(playerArray);
 var playerResult = [];
 var score = [];
+var playerWinOrder = []
 var numOfDice = 2;
 var step = 0;
 var round = 0;
+var displayPlayer = []
+var displayScore = []
+var workingScore = []
 
 var main = function (input) {
   if (input == 0 && players == 0) {
@@ -20,6 +24,7 @@ var main = function (input) {
       playerArray.push(generateDiceArray(numOfDice));
       playerResult.push(0);
       score.push(0);
+      playerWinOrder.push(0)
     }
     console.log("A " + playerArray);
     console.log("B " + playerResult);
@@ -81,19 +86,40 @@ var main = function (input) {
   playerNum = 0;
   playerArray = [];
   playerResult = [];
+
   for (var counter = 0; counter < players; counter += 1) {
     playerArray.push(generateDiceArray(numOfDice));
     playerResult.push(0);
   }
+  
+  //Take Score array, and add player number next to it
+  displayScore = []
+  displayPlayer = []
+  workingScore = []
+  workingPlayer = []
+  for (var x = 0; x < score.length; x+= 1){
+    workingScore.push(score[x])
+    workingPlayer.push(x+1)
+  }
+  
+  while(displayPlayer.length != players){
+    workingScore.sort((a,b) => a-b)
+    var highestNum = workingScore.pop()
+    displayScore.push(highestNum)
+    displayPlayer.push(score.indexOf(highestNum)+1)
+  }
+
+
+
   //Total Score Output
   var scoreOutput = "";
   for (var counter = 0; counter < players; counter += 1) {
     scoreOutput =
       scoreOutput +
       "Total score of player " +
-      (counter + 1) +
+      displayPlayer[counter] +
       " is " +
-      score[counter] +
+      displayScore[counter] +
       "<br>";
   }
 
