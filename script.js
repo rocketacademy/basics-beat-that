@@ -1,12 +1,10 @@
 var main = function (input) {
   // let myOutputValue = rollDice();
   // let myOutputValue = makeBigNum(num1, num2) 
-  // let myOutputValue = arrangePlayer2Dice(input)
-  // let myOutputValue = compare2Players2Dice(input)
+
   let myOutputValue = play2DiceTogether(input)
   return myOutputValue;
 };
-
 
 
 let rollDice = function() {
@@ -15,7 +13,6 @@ let rollDice = function() {
   console.log(`rollDice = ` , randomDice)
   return randomDice
 }
-
 
 let makeBigNum = function(num1, num2){
   if (num1 > num2) {
@@ -38,125 +35,9 @@ let dice2_1 = rollDice()
 let dice2_2 = rollDice()
 let playersNumbers = []
 
-// let arrangePlayer1Dice = function(input) {
-//   console.log('start with', mode)
-//   if (mode == "roll dice"){
-//     console.log(`mode is`, mode)
-//     message = `Welcome Player 1. <br>
-//     You rolled ${dice1_1} for Dice 1 and  ${dice1_2} for Dice 2. <br>
-//     Choose the order of the dice.`
-//     mode = "order dice"
-//     console.log(`###############`)
-//   }
-//   console.log("out of the roll dice mode")
-//   console.log(`mode is`, mode)
-//   console.log(`input`, input)
-//   console.log("$$$$$$$$$$$$$$$$$")
-//   if (mode == "order dice" && input == 1){
-//     mode = "make dice 1 big"
-//     console.log(`input`, input)
-//     console.log(`mode is `, mode)
-//     makeTens = dice1_1 * 10
-//     console.log(`The number1 value in tens is,`, makeTens)
-//     makeNum = makeTens + dice1_2
-//     playersNumbers.push(makeNum)
-//     console.log(`Submitted score for plyaer 1 to compare`, playersNumbers)
-//     message = `Player 1, you chose Dice 1 first. <br>
-//     Your number is ${makeNum}.<br>
-//     It is now Player 2's turn.` 
-//     mode = "player 2 turn"
-//     console.log(`@@@@@@@@@@@@@`)
-//   } 
-//   if (mode == "order dice" && input == 2){
-//       mode = "make dice 2 big"
-//       console.log(`input`, input)
-//       makeTens = dice1_2 * 10
-//       console.log(`The number2 value in tens is,`, makeTens)
-//       makeNum = makeTens + dice1_1
-//       playersNumbers.push(makeNum)
-//       console.log(`Submitted score for plyaer 1 to compare`, playersNumbers)
-//       message = `Player 1, you chose Dice 2 first. <br>
-//       Your number is ${makeNum}.<br>
-//       It is now Player 2's turn.` 
-//       mode = "player 2 turn"
-//       console.log(`%%%%%%%%%%%%%`)
-//     }
-//     return message
-//   }
-
-
-// let arrangePlayer2Dice = function(input) {
-//   mode = "player 2 turn"
-//   console.log('start with', mode)
-//   if (mode == "player 2 turn"){
-//     console.log(`mode is`, mode)
-//     message = `Welcome Player 2. <br>
-//     You rolled ${dice2_1} for Dice 1 and ${dice2_2} for Dice 2. <br>
-//     Choose the order of the dice.`
-//     mode = "order dice"
-//     console.log(`###############`)
-//   }
-//   console.log("out of the roll dice mode")
-//   console.log(`mode is`, mode)
-//   console.log(`input`, input)
-//   console.log("$$$$$$$$$$$$$$$$$")
-//   if (mode == "order dice" && input == 1){
-//     mode = "make dice 1 big"
-//     console.log(`input`, input)
-//     console.log(`mode is `, mode)
-//     makeTens = dice2_1 * 10
-//     console.log(`The number1 value in tens is,`, makeTens)
-//     makeNum = makeTens + dice2_2
-//     playersNumbers.push(makeNum)
-//     console.log(`player2`, playersNumbers)
-//     message = `Player 2, you chose Dice 1 first. <br>
-//     Your number is ${makeNum}.<br>`
-//     console.log(`The score array is now `, playersNumbers)
-//     mode = "finalising"
-//     console.log(`@@@@@@@@@@@@@`)
-//   } 
-//   if (mode == "order dice" && input == 2){
-//       mode = "make dice 2 big"
-//       console.log(`input`, input)
-//       makeTens = dice2_2 * 10
-//       console.log(`The number2 value in tens is,`, makeTens)
-//       makeNum = makeTens + dice2_1
-//       playersNumbers.push(makeNum)
-//       console.log(`player2`, playersNumbers)
-//       message = `Player 2, you chose Dice 2 first. <br>
-//       Your number is ${makeNum}.<br>`
-//       console.log(`The score array is now `, playersNumbers)
-//       mode = "finalising"
-//       console.log(`%%%%%%%%%%%%%`)
-//     }
-//     return message
-//   }
-
-// let compare2Players2Dice = function(input){
-//   // player1game = arrangePlayer1Dice(input)
-//   // player2game = arrangePlayer2Dice(input)
-
-//   if (mode == "roll dice") {
-//     let game = arrangePlayer1Dice(input)
-//     return game
-//   }
-//   if (mode ==`player 2 turn`) {
-//     let game = arrangePlayer2Dice(input)
-//     return game
-//   }
-//   console.log(`The players score are now :`, playersNumbers)
-//   if (mode == `finalising`) {
-//     ( if (playersNumbers[0] > playersNumbers[1]){
-//       return `Player 1 wins`
-//       }else{ return  `Player 2 wins `
-//       }
-//     ) 
-//   }
-// }
-
 let play2DiceTogether = function(input) {
   console.log('start with', mode)
-  if (mode == "roll dice"){
+  if (mode === "roll dice"){
     console.log(`mode is`, mode)
     mode = "p1 order dice"
     console.log(`###############`)
@@ -169,7 +50,7 @@ let play2DiceTogether = function(input) {
   console.log(`mode is`, mode)
   console.log(`input`, input)
   console.log("$$$$$$$$$$$$$$$$$")
-  if (mode == "p1 order dice" && input == 1){
+  if (mode === "p1 order dice" && input === '1'){
     mode = "make p1 dice 1 big"
     console.log(`p1 input`, input)
     console.log(`mode is `, mode)
@@ -185,7 +66,7 @@ let play2DiceTogether = function(input) {
     Your number is ${makeNum}.<br>
     It is now Player 2's turn.` 
   } 
-  if (mode == "p1 order dice" && input == 2){
+  if (mode === "p1 order dice" && input === '2'){
       mode = "make p1 dice 2 big"
       console.log(`p1 input`, input)
       makeTens = dice1_2 * 10
@@ -200,12 +81,12 @@ let play2DiceTogether = function(input) {
       It is now Player 2's turn.` 
     }
   
-  if (mode == "player 2 turn"){
+  if (mode === "player 2 turn"){
     mode = "player 2 decide"
     return  `You rolled ${dice2_1} for Dice 1 and ${dice2_2} for Dice 2. <br>
     Choose the order of the dice.`
   }
-  if (mode == "player 2 decide" && input == 1) {
+  if (mode === "player 2 decide" && input === '1') {
     mode = "make p2 dice 1 big"
     console.log(`p2 input`, input)
     console.log(`mode is `, mode)
@@ -217,7 +98,7 @@ let play2DiceTogether = function(input) {
     return `Player 2, you chose Dice 1 first. <br>
     Your number is ${makeNum}.<br>`
   }
-  if (mode == "player 2 decide" && input == 2) {
+  if (mode === "player 2 decide" && input === '2') {
     mode = "make p2 dice 2 big"
     console.log(`p2 input`, input)
     makeTens = dice2_2 * 10
