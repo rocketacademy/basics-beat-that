@@ -1,122 +1,77 @@
-var main = function (input) {
-  // let myOutputValue = rollDice();
-  // let myOutputValue = makeBigNum(num1, num2) 
-
-  let myOutputValue = play2DiceTogether(input)
-  return myOutputValue;
-};
-
+const totalPlayers = 2
+const diceRollPair = []
 
 let rollDice = function() {
   randomNum = (Math.random() * 6) + 1
   randomDice = Math.floor(randomNum)
-  console.log(`rollDice = ` , randomDice)
   return randomDice
 }
 
-let makeBigNum = function(num1, num2){
-  if (num1 > num2) {
-    makeTens = num1 * 10
-    console.log(`The number1 value in tens is,`, makeTens)
-    makeNum = makeTens + num2
-  } else {
-    makeTens = num2 * 10
-    console.log(`The number2 value in tens is,`, makeTens)
-    makeNum = makeTens + num1
-  }
-  return makeNum
+
+for (let i=0; i<totalPlayers; i++) {
+  diceRollPair.push([rollDice(), rollDice()])
+  // jsonObj['Player' + (i + 1)] = diceRollPair[i]
+  // console.log(jsonObj)
 }
 
+let playerIndex = 0
+const playersNumbers = []
 
-mode = "roll dice"
-let dice1_1 = rollDice()
-let dice1_2 = rollDice()
-let dice2_1 = rollDice()
-let dice2_2 = rollDice()
-let playersNumbers = []
 
-let play2DiceTogether = function(input) {
-  console.log('start with', mode)
-  if (mode === "roll dice"){
-    console.log(`mode is`, mode)
-    mode = "p1 order dice"
-    console.log(`###############`)
-    return `Welcome Player 1. <br><br>
-    You rolled ${dice1_1} for Dice 1 and  ${dice1_2} for Dice 2. <br><br>
-    Choose the order of the dice.`
+var main = function (input) {
+  let myOutputValue = getPlayerChoice(input)
+  return myOutputValue;
+};
 
-  }
-  console.log("out of the roll dice mode")
-  console.log(`mode is`, mode)
-  console.log(`input`, input)
-  console.log("$$$$$$$$$$$$$$$$$")
-  if (mode === "p1 order dice" && input === '1'){
-    mode = "make p1 dice 1 big"
-    console.log(`p1 input`, input)
-    console.log(`mode is `, mode)
-    makeTens = dice1_1 * 10
-    console.log(`The dice1 value in tens is,`, makeTens)
-    makeNum = makeTens + dice1_2
-    playersNumbers.push(makeNum)
-    console.log(`Submitted score for plyaer 1 to compare`, playersNumbers)
-    mode = "player 2 turn"
-    
-    console.log(mode,`@@@@@@@@@@@@@`)
-    return `Player 1, you chose Dice 1 first. <br><br>
-    Your number is ${makeNum}.<br><br>
-    It is now Player 2's turn.` 
-  } 
-  if (mode === "p1 order dice" && input === '2'){
-      mode = "make p1 dice 2 big"
-      console.log(`p1 input`, input)
-      makeTens = dice1_2 * 10
-      console.log(`The dice2 value in tens is,`, makeTens)
-      makeNum = makeTens + dice1_1
-      playersNumbers.push(makeNum)
-      console.log(`Submitted score for plyaer 1 to compare`, playersNumbers)
-      mode = "player 2 turn"
-      console.log(mode,`%%%%%%%%%%%%%`)
-      return `Player 1, you chose Dice 2 first. <br><br>
-      Your number is ${makeNum}.<br><br>
-      It is now Player 2's turn.` 
-    }
+
+const getPlayerChoice = function(input) {
+    console.log('getPlayerChoice', input)
   
-  if (mode === "player 2 turn"){
-    mode = "player 2 decide"
-    return  `You rolled ${dice2_1} for Dice 1 and ${dice2_2} for Dice 2. <br><br>
-    Choose the order of the dice.`
+    if (playerIndex < totalPlayers) {
+      const rollPair = diceRollPair[playerIndex]
+      const playerNumber = playerIndex + 1
+      if (!input) {
+        return `Player ${playerNumber} rolled ${rollPair[0]} for Dice 1 and  ${rollPair[1]} for Dice 2. <br>`
+      } else {
+        let tensIndex
+        let onesIndex
+        if (input === '1') {
+          tensIndex = 0 // first dice is tens
+          onesIndex = 1 // second dice is ones
+        } else {
+          tensIndex = 1 // second dice is tens
+          onesIndex = 0 // first dice is ones
+        }
+        makeTens = rollPair[tensIndex] * 10
+        makeNum = makeTens + rollPair[onesIndex]
+        playersNumbers.push(makeNum)
+    
+        playerIndex += 1
+    
+        return `Player ${playerNumber} Your number is ${makeNum}.<br>`
+      }  
+    } else {
+      // comparison and display players and dice...
+      const rankingArray = playersNumbers.map((value, index) => {
+        return {
+          player: index + 1,
+          chosenNumber: value 
+        }
+      })
+      console.log(rankingArray)
+      rankingArray.sort((a, b) => {
+        if (a.chosenNumber > b.chosenNumber) {
+          return -1;
+        } else if (a.chosenNumber < b.chosenNumber) {
+          return 1;
+        }
+        return 0;
+      })
+      let results = ""
+      rankingArray.forEach((item, index) => {
+        results += `Player ${item.player} created ${item.chosenNumber} ${index === 0 ? '(Winner)' : ''}.<br>`
+      })
+      return results  
+    }
   }
-  if (mode === "player 2 decide" && input === '1') {
-    mode = "make p2 dice 1 big"
-    console.log(`p2 input`, input)
-    console.log(`mode is `, mode)
-    makeTens = dice2_1 * 10
-    console.log(`The dice1 value in tens is,`, makeTens)
-    makeNum = makeTens + dice2_2
-    playersNumbers.push(makeNum)
-    mode = "results"
-    return `Player 2, you chose Dice 1 first. <br><br>
-    Your number is ${makeNum}.<br>`
-  }
-  if (mode === "player 2 decide" && input === '2') {
-    mode = "make p2 dice 2 big"
-    console.log(`p2 input`, input)
-    makeTens = dice2_2 * 10
-    console.log(`The dice2 value in tens is,`, makeTens)
-    makeNum = makeTens + dice2_1
-    playersNumbers.push(makeNum)
-    mode = "results"
-    return `Player 2, you chose Dice 1 first. <br><br>
-    Your number is ${makeNum}.<br>`
-  }
-  if (mode === "results" && (playersNumbers[0]> playersNumbers[1])){
-    return `Player1 created ${playersNumbers[0]} <br><br>
-            Player2 created ${playersNumbers[1]} <br><br>
-            Player1 wins`
-  }else if (mode === "results" && (playersNumbers[0] < playersNumbers[1])){
-            return `Player1 created ${playersNumbers[0]} <br><br>
-                    Player2 created ${playersNumbers[1]} <br><br>
-                    Player2 wins`
-                  }else{`It is a draw!`
-                }
-}
+  
