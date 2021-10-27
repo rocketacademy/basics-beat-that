@@ -240,7 +240,7 @@ var gameReset = function () {
   return `Game reset, please choose game mode to start<br>${gameInstruction1}`;
 };
 // game instruction message
-var gameInstruction1 = `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game<br>Enter '5' for ${variableDiceStandard} Game<br>Enter '6' for ${variableDiceReverse} Game<br>Enter '7' for ${variablePlayerStandard} Game<br>Enter '8' for ${variablePlayerReverse} Game`;
+var gameInstruction1 = `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game<br>Enter '5' for ${variableDiceStandard} Game<br>Enter '6' for ${variableDiceReverse} Game<br>Enter '7' for ${variablePlayerStandard} Game<br>Enter 'x' to reset game mode`;
 
 var gameInstruction2 = `Please enter the number '1' or '2'.`;
 
