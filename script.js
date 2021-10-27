@@ -24,8 +24,11 @@ var auto = `Auto Standard Beat That! Game`;
 var autoReverse = `Auto Reverse Beat That! Game`;
 var variableDiceStandard = `Variable Dice, Auto Standard Beat That! Game`;
 var variableDiceReverse = `Variable Dice, Auto Reverse Beat That! Game`;
+var variablePlayerStandard = `Variable Player, Auto Standard Beat That! Game`;
+var variablePlayerReverse = `Variable Player, Auto Reverse Beat That! Game`;
 var currentGame = ``;
 var numOfDice = 0;
+var numOfPlayer = 1;
 
 // Initial game prompt
 {
@@ -38,7 +41,7 @@ var numOfDice = 0;
 // generate random dice number from 1 to 6
 var generateRandomDiceNumber = function () {
   var randomDiceNumber = Math.floor(Math.random() * 6) + 1;
-  console.log(`randomDiceNumber =${randomDiceNumber}`);
+
   return randomDiceNumber;
 };
 
@@ -183,6 +186,12 @@ var checkGameSelected = function () {
   if (gameMode == 6) {
     currentGame = variableDiceReverse;
   }
+  if (gameMode == 7) {
+    currentGame = variablePlayerStandard;
+  }
+  if (gameMode == 8) {
+    currentGame = variablePlayerReverse;
+  }
   return currentGame;
 };
 
@@ -231,11 +240,13 @@ var gameReset = function () {
   return `Game reset, please choose game mode to start<br>${gameInstruction1}`;
 };
 // game instruction message
-var gameInstruction1 = `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game<br>Enter '5' for ${variableDiceStandard} Game<br>Enter '6' for ${variableDiceReverse} Game`;
+var gameInstruction1 = `Enter '1' for ${standard}<br>Enter '2' for ${reverse} Game<br>Enter '3' for ${auto} Game<br>Enter '4' for ${autoReverse} Game<br>Enter '5' for ${variableDiceStandard} Game<br>Enter '6' for ${variableDiceReverse} Game<br>Enter '7' for ${variablePlayerStandard} Game<br>Enter '8' for ${variablePlayerReverse} Game`;
 
 var gameInstruction2 = `Please enter the number '1' or '2'.`;
 
-var gameInstruction3 = `Please enter the number of dice`;
+var gameInstruction3 = `Please enter the number(>0) of dice`;
+
+var gameInstruction4 = `Please enter the number(>1) of players`;
 
 var main = function (input) {
   var myOutputValue = ``;
@@ -253,7 +264,9 @@ var main = function (input) {
       input != 3 &&
       input != 4 &&
       input != 5 &&
-      input != 6
+      input != 6 &&
+      input != 7 &&
+      input != 8
     ) {
       return gameInstruction1;
     } else if (input == 1 || input == 2 || input == 3 || input == 4) {
@@ -266,6 +279,11 @@ var main = function (input) {
       gameMode = Number(input);
       console.log(gameMode);
       return `${checkGameSelected()} is selected, enter number of dice to start playing`;
+    } else if (input == 7 || input == 8) {
+      // set gamemode
+      gameMode = Number(input);
+      console.log(gameMode);
+      return `${checkGameSelected()} is selected, enter number of player to start playing`;
     }
   } else if (gameMode == 1 || gameMode == 2) {
     if (gameStage == 1) {
@@ -364,7 +382,7 @@ var main = function (input) {
     }
   } else if (gameMode == 5) {
     if (gameStage == 1) {
-      if (Number.isNaN(Number(input)) == true || !input) {
+      if (Number.isNaN(Number(input)) == true || !input || input == 0) {
         // check if input is a number
         return gameInstruction3;
       } else {
@@ -412,7 +430,7 @@ var main = function (input) {
     }
   } else if (gameMode == 6) {
     if (gameStage == 1) {
-      if (Number.isNaN(Number(input)) == true || !input) {
+      if (Number.isNaN(Number(input)) == true || !input || input == 0) {
         // check if input is a number
         return gameInstruction3;
       } else {
@@ -457,6 +475,52 @@ var main = function (input) {
       // Add Player 2 Score
       player2Score += player2Num;
       return `Player 2 rolled ${player2VarDice}<br>Player 2 number is ${player2Num}<br>Player 2 click submit to find the winner.`;
+    }
+  } else if (gameMode == 7) {
+    if (gameStage == 1) {
+      if (Number.isNaN(Number(input)) == true || !input || input == 1) {
+        // check if input is a number
+        return gameInstruction4;
+      } else {
+        numOfPlayer = input;
+        // switch game stage
+        gameStage = 2;
+        return `There will be ${numOfPlayer} players, click submit to start playing`;
+      }
+    }
+    if (gameStage == 2) {
+      var myOutputValue = ``;
+      var playerCounter = 0;
+      var scoreRecord = [];
+      while (playerCounter < numOfPlayer) {
+        var diceResult = [];
+        var diceCounter = 0;
+        numOfDice = 2;
+        while (diceCounter < numOfDice) {
+          diceResult.push(generateRandomDiceNumber());
+          diceCounter += 1;
+        }
+        diceResult.sort((a, b) => b - a);
+        console.log(diceResult);
+        var numberResult = Number(diceResult.join(``));
+        console.log(numberResult);
+        scoreRecord.push(numberResult);
+        console.log(scoreRecord);
+        var currentPlayerNumber = playerCounter + 1;
+        myOutputValue = `Player${currentPlayerNumber} Number is ${numberResult}<br>${myOutputValue}`;
+
+        playerCounter += 1;
+        diceCounter = 0;
+      }
+      var largest = Math.max.apply(Math, scoreRecord);
+      console.log(largest);
+      var indexOfLargest = scoreRecord.indexOf(
+        Math.max.apply(Math, scoreRecord)
+      );
+      console.log(indexOfLargest);
+      var winingPlayer = `Player${indexOfLargest + 1}`;
+      gameStage = 1;
+      return `${myOutputValue}<br>The winner is ${winingPlayer} with the number ${largest}<br><br>Enter the number(>1) of players to play again`;
     }
   }
 
