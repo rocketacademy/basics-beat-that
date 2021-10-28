@@ -24,7 +24,8 @@ var rollDice = function () {
 
 var getDiceRoll = function () {
   diceRoll = [rollDice(), rollDice()];
-  return `Welcome Player ${currPlayer}. <br>You rolled <strong><u>${diceRoll[0]}</u></strong> for Dice 1 and <strong><u>${diceRoll[1]}</u></strong> for Dice 2. <br>Choose the order of the dice by entering 1 or 2 as the first number.`;
+  stageMode = diceSelectMode;
+  return `Welcome Player ${currPlayer}. <br>You rolled <strong><u>${diceRoll[0]}</u></strong> for Dice 1 and <strong><u>${diceRoll[1]}</u></strong> for Dice 2. <br>Click Submit to get the combined number.`;
 };
 
 var validateSelection = function (selectedNum) {
@@ -35,7 +36,7 @@ var arrayToNum = function (num1, num2) {
   return Number(String(num1) + String(num2));
 };
 
-var getPlayersNum = function (selectedDice) {
+/* var getPlayersNum = function (selectedDice) {
   if (currPlayer == 1) {
     if (selectedDice == 1) {
       player1Num = arrayToNum(diceRoll[0], diceRoll[1]);
@@ -55,6 +56,47 @@ var getPlayersNum = function (selectedDice) {
     stageMode = winnerMode;
     currPlayer = 1;
     return `Player 2, you chose Dice ${selectedDice} first.<br>Your number is ${player2Num}.<br><br>Click Submit to view winner!!`;
+  }
+}; */
+
+var getPlayersNumAuto = function (selectedDice) {
+  if (currPlayer == 1) {
+    if (gameMode == highestCombinedNumMode) {
+      if (diceRoll[0] > diceRoll[1]) {
+        player1Num = arrayToNum(diceRoll[0], diceRoll[1]);
+      } else {
+        player1Num = arrayToNum(diceRoll[1], diceRoll[0]);
+      }
+    }
+    if (gameMode == lowestCombinedNumMode) {
+      if (diceRoll[0] > diceRoll[1]) {
+        player1Num = arrayToNum(diceRoll[1], diceRoll[0]);
+      } else {
+        player1Num = arrayToNum(diceRoll[0], diceRoll[1]);
+      }
+    }
+    stageMode = diceRollMode;
+    currPlayer = 2;
+    return `Player 1 <br>Your number is ${player1Num}.<br><br>It is now Player 2's turn. <br>Click Submit to roll dice`;
+  }
+  if (currPlayer == 2) {
+    if (gameMode == highestCombinedNumMode) {
+      if (diceRoll[0] > diceRoll[1]) {
+        player2Num = arrayToNum(diceRoll[0], diceRoll[1]);
+      } else {
+        player2Num = arrayToNum(diceRoll[1], diceRoll[0]);
+      }
+    }
+    if (gameMode == lowestCombinedNumMode) {
+      if (diceRoll[0] > diceRoll[1]) {
+        player2Num = arrayToNum(diceRoll[1], diceRoll[0]);
+      } else {
+        player2Num = arrayToNum(diceRoll[0], diceRoll[1]);
+      }
+    }
+    stageMode = winnerMode;
+    currPlayer = 1;
+    return `Player 2 <br>Your number is ${player2Num}.<br><br>Click Submit to view winner!!`;
   }
 };
 
@@ -114,20 +156,13 @@ var main = function (input) {
 
   if (stageMode == diceRollMode) {
     var newDiceRoll = getDiceRoll();
-    stageMode = diceSelectMode;
     return gameModeMessage + newDiceRoll;
   }
 
   if (stageMode == diceSelectMode) {
     var playersNum;
-    var diceSelection = validateSelection(input);
-    if (diceSelection == false) {
-      return `Choose the order of the dice by entering 1 or 2 as the first number`;
-    }
-    if (diceSelection == true) {
-      playersNum = getPlayersNum(input);
-      return gameModeMessage + playersNum;
-    }
+    playersNum = getPlayersNumAuto();
+    return gameModeMessage + playersNum;
   }
 
   if (stageMode == winnerMode) {
