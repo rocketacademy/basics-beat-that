@@ -12,8 +12,8 @@ var p1num = 0;
 var p2num = 0;
 
 //global states stating scores
-var player1TotalScore = 0;
-var player2TotalScore = 0;
+var p1TotalScore = 0;
+var p2TotalScore = 0;
 
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -86,14 +86,23 @@ var main = function (input) {
   //gamestage 4, where player 2 enters his choice.
   if (gamestage == 4 && input == "1") {
     p2num = player2Dice1;
+    p2TotalScore += Number(p2num);
+    p1TotalScore += Number(p1num);
     if (p2num > p1num) {
       var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 2 wins.<BR><BR>
+      <B>Scoreboard</b><BR><BR>
+      Player 1: ${p1TotalScore}<BR>
+      Player 2: ${p2TotalScore}<BR>
    Please click <B>submit</b> to play again!`;
     } else {
       p2num = player2Dice2;
       var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 1 wins.<BR><BR>
+      <B>Scoreboard</b><BR><BR>
+      Player 1: ${p1TotalScore}<BR>
+      Player 2: ${p2TotalScore}<BR>
    Please click <B>submit</b> to play again!`;
     }
+
     gamestage = 1; //resetting gamestage
     gameRound += 1;
     return myOutputValue;
