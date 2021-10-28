@@ -40,7 +40,7 @@ var getPlayerNum = function (selectedNum) {
     player1Num = playerNum;
     gameMode = diceRollMode;
     currPlayer = 2;
-    return `Player 1, you chose Dice ${selectedNum} first.<br>Your number is ${playerNum}.<br>It is now Player 2's turn. <br><br>Submit to roll dice`;
+    return `Player 1, you chose Dice ${selectedNum} first.<br>Your number is ${playerNum}.<br>It is now Player 2's turn. <br><br>Press Submit to roll dice`;
   }
   if (currPlayer == 2) {
     if (selectedNum == 1) {
@@ -54,6 +54,7 @@ var getPlayerNum = function (selectedNum) {
     return `Player 2, you chose Dice ${selectedNum} first.<br>Your number is ${playerNum}.<br><br>Press Submit to view winner!!`;
   }
 };
+
 var getWinner = function () {
   if (player1Num > player2Num) {
     return `Player 1 has won. <br> Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Press Submit to play again.`;
