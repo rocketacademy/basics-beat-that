@@ -1,7 +1,11 @@
+var highestCombinedNumMode = `Highest Combined Number Mode`;
+var lowestCombinedNumMode = `Lowest Combined Number Mode`;
+var gameMode;
+
 var diceRollMode = `Roll Dice Mode`;
 var diceSelectMode = `Dice Selection Mode`;
 var winnerMode = `Determine Winner Mode`;
-var gameMode = diceRollMode;
+var stageMode = diceRollMode;
 
 var currPlayer = 1;
 
@@ -20,10 +24,10 @@ var rollDice = function () {
 
 var getDiceRoll = function () {
   diceRoll = [rollDice(), rollDice()];
-  return `Welcome Player ${currPlayer}. <br>You rolled ${diceRoll[0]} for Dice 1 and ${diceRoll[1]} for Dice 2. <br>Choose the order of the dice by entering 1 or 2 as the first number.`;
+  return `Welcome Player ${currPlayer}. <br>You rolled <strong><u>${diceRoll[0]}</u></strong> for Dice 1 and <strong><u>${diceRoll[1]}</u></strong> for Dice 2. <br>Choose the order of the dice by entering 1 or 2 as the first number.`;
 };
 
-var validateDiceSelected = function (selectedNum) {
+var validateSelection = function (selectedNum) {
   return selectedNum == 1 || selectedNum == 2;
 };
 
@@ -38,9 +42,9 @@ var getPlayersNum = function (selectedDice) {
     } else {
       player1Num = arrayToNum(diceRoll[1], diceRoll[0]);
     }
-    gameMode = diceRollMode;
+    stageMode = diceRollMode;
     currPlayer = 2;
-    return `Player 1, you chose Dice ${selectedDice} first.<br>Your number is ${player1Num}.<br>It is now Player 2's turn. <br><br>Press Submit to roll dice`;
+    return `Player 1, you chose Dice ${selectedDice} first.<br>Your number is ${player1Num}.<br>It is now Player 2's turn. <br><br>Click Submit to roll dice`;
   }
   if (currPlayer == 2) {
     if (selectedDice == 1) {
@@ -48,52 +52,87 @@ var getPlayersNum = function (selectedDice) {
     } else {
       player2Num = arrayToNum(diceRoll[1], diceRoll[0]);
     }
-    gameMode = winnerMode;
+    stageMode = winnerMode;
     currPlayer = 1;
-    return `Player 2, you chose Dice ${selectedDice} first.<br>Your number is ${player2Num}.<br><br>Press Submit to view winner!!`;
+    return `Player 2, you chose Dice ${selectedDice} first.<br>Your number is ${player2Num}.<br><br>Click Submit to view winner!!`;
   }
 };
 
 var getLeaderBoard = function () {
   player1Score += player1Num;
   player2Score += player2Num;
-  if (player1Score > player2Score) {
+  if (gameMode == highestCombinedNumMode) {
+    if (player1Score > player2Score) {
+      return `Leaderboard: <br>Player 1: ${player1Score} <br>Player 2: ${player2Score}`;
+    }
+    return `Leaderboard: <br>Player 2: ${player2Score} <br>Player 1: ${player1Score}`;
+  }
+  if (gameMode == lowestCombinedNumMode) {
+    if (player1Score > player2Score) {
+      return `Leaderboard: <br>Player 2: ${player2Score} <br>Player 1: ${player1Score}`;
+    }
     return `Leaderboard: <br>Player 1: ${player1Score} <br>Player 2: ${player2Score}`;
   }
-  return `Leaderboard: <br>Player 2: ${player2Score} <br>Player 1: ${player1Score}`;
 };
 
 var getWinner = function () {
-  var genericMessage = `Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Press Submit to play again.`;
+  var genericMessage = `Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Click Submit to play again.`;
   var leaderboard = getLeaderBoard();
-  if (player1Num > player2Num) {
+  if (gameMode == highestCombinedNumMode) {
+    if (player1Num > player2Num) {
+      return `Player 1 has won. <br>${genericMessage} <br><br>${leaderboard}`;
+    }
+    return `Player 2 has won. <br>${genericMessage} <br><br>${leaderboard}`;
+  }
+  if (gameMode == lowestCombinedNumMode) {
+    if (player1Num > player2Num) {
+      return `Player 2 has won. <br>${genericMessage} <br><br>${leaderboard}`;
+    }
     return `Player 1 has won. <br>${genericMessage} <br><br>${leaderboard}`;
   }
-  return `Player 2 has won. <br>${genericMessage} <br><br>${leaderboard}`;
 };
 
 var main = function (input) {
-  if (gameMode == diceRollMode) {
-    var newDiceRoll = getDiceRoll();
-    gameMode = diceSelectMode;
-    return newDiceRoll;
+  if (!gameMode) {
+    var gameModeSelection = validateSelection(input);
+    if (gameModeSelection == false) {
+      return `Incorrect input! <br><br>Please choose a game mode to start playing! <br>1: Highest Combined Number <br>2: Lowest
+        Combined Number`;
+    }
+    if (gameModeSelection == true) {
+      if (input == 1) {
+        gameMode = highestCombinedNumMode;
+        return `You have choose: ${gameMode}. <br>Click submit to start the game.`;
+      } else {
+        gameMode = lowestCombinedNumMode;
+        return `You have choose: ${gameMode}. <br>Click submit to start the game.`;
+      }
+    }
   }
 
-  if (gameMode == diceSelectMode) {
+  var gameModeMessage = `<strong>Game Mode: ${gameMode}</strong> <br><br>`;
+
+  if (stageMode == diceRollMode) {
+    var newDiceRoll = getDiceRoll();
+    stageMode = diceSelectMode;
+    return gameModeMessage + newDiceRoll;
+  }
+
+  if (stageMode == diceSelectMode) {
     var playersNum;
-    var diceSelection = validateDiceSelected(input);
+    var diceSelection = validateSelection(input);
     if (diceSelection == false) {
       return `Choose the order of the dice by entering 1 or 2 as the first number`;
     }
     if (diceSelection == true) {
       playersNum = getPlayersNum(input);
-      return playersNum;
+      return gameModeMessage + playersNum;
     }
   }
 
-  if (gameMode == winnerMode) {
+  if (stageMode == winnerMode) {
     var winner = getWinner();
-    gameMode = diceRollMode;
-    return winner;
+    stageMode = diceRollMode;
+    return gameModeMessage + winner;
   }
 };
