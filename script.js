@@ -214,6 +214,15 @@ var autoGenerateNumber = function (diceRolls, gameMode) {
 };
 
 var addPlayer = function (playerName) {
+  if (nameIsDuplicated(playerName)) {
+    document.getElementById("duplicate-name").style.display = "";
+    setTimeout(function () {
+      document.getElementById("duplicate-name").style.display = "none";
+    }, 3000);
+
+    return;
+  }
+
   playerNames.push(playerName);
   playerScores.push(0);
   playerValuesHistory.push([]);
@@ -238,6 +247,10 @@ var addPlayer = function (playerName) {
     document.getElementById("start-knockout-round-button").disabled = false;
     document.getElementById("start-round-button").disabled = false;
   }
+};
+
+var nameIsDuplicated = function (playerName) {
+  return playerNames.indexOf(playerName) !== -1;
 };
 
 var generatePlayerTable = function () {
