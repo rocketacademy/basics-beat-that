@@ -20,7 +20,7 @@
 
       #container {
         color: teal;
-        font-size: 1.2em;
+        font-size: 1.1em;
         background-color: seashell;
         margin: 40px auto;
         max-width: 800px;
@@ -63,14 +63,18 @@
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
       <p style="font-weight: bold">
-        Create a 2-digit number by rolling two dice and arranging them to make
-        the highest number possible. The one with the higher number wins!
+        Roll dice and create a number combination using the digits rolled.
       </p>
       <p>
-        Player 1, start by hitting Submit to roll your dice. For a lazy mode,
-        type 'auto' to let the computer select the best number combination for
-        both players. Enter 'reset' anytime to go back to the normal mode.
+        The player with the higher number wins. To change this, enter "lowest"
+        so that the player with the lower number wins. (Typing "highest will
+        reset the rules.)
       </p>
+      <p>
+        By default, 2 dice are rolled. At any time, you may change how many dice
+        to roll by entering a number from 1 to 10.
+      </p>
+      <p>Player 1, start by hitting Submit to roll your dice.</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>

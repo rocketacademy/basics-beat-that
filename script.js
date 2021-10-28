@@ -1,45 +1,77 @@
-// ****** How the game works ******
+// ****** How the programme works ******
 //
 // Number of players: 2
+// Number of dice rolled: 2 (default)
+// Game mode: highest combination (default)
+// Players can change how many dice are rolled by keying in number from 1-10 (inclusive)
+// Programme autocombines the numbers according to the game mode
+// Players can change game mode by entering "highest" or "lowest"
 //
-// ---- Player 1 Gameplay ----
-// Player 1 clicks Submit (first input == '')
-// Roll 2 dice (process)
-// Show the numbers rolled (output)
-// Player picks which dice to go first (input == 1 || 2)
-// Concatenate the numbers (process)
-// Show the combined number (output)
-// Change to Player 2 and repeat (process)
-//
-// ---- Player 2 Gameplay ----
-// Player 2 clicks Submit (first input == '')
-// Roll 2 dice (process)
-// Show the numbers rolled (output)
-// Player picks which dice to go first (input == 1 || 2)
-// Concatenate the numbers (process)
-// Show the combined number (output)
-//
-// Compare the two numbers (process)
-// Show the winner with the higher combined number (output)
-//
-// *******************************
+// *************************************
 
-// ******* Global Variables *******
-var gameStatus = "Waiting to roll dice";
+// ///// ******* Global Variables ******* /////
+var gameMode = "highest";
 var player = "Player 1";
 
-var p1dice1 = 0;
-var p1dice2 = 0;
-var p2dice1 = 0;
-var p2dice2 = 0;
+var numDiceToRoll = 2;
+
+var p1diceNums = [];
+var p2diceNums = [];
 var p1CombinedNumber = 0;
 var p2CombinedNumber = 0;
 
 var p1score = 0;
 var p2score = 0;
 
-// ********** Functions **********
+// ///// ********** Functions ********** /////
 
+// ----------- Functions to change global variables -----------
+// Function to change player
+var changePlayer = function () {
+  if (player == "Player 1") {
+    player = "Player 2";
+  } else {
+    player = "Player 1";
+  }
+};
+
+// Function to alternate between game modes
+var changeGameMode = function (input) {
+  if (input == "lowest") {
+    gameMode = "lowest";
+    resetGame();
+    return `
+    Initiating new game rules: the player with the <b>lowest</b> combined number wins! <br><br>
+    The score has been reset.<br><br>
+    Player 1, start by hitting submit.
+    `;
+  } else if (input == "highest") {
+    gameMode = "highest";
+    resetGame();
+    return `
+    Initiating new game rules: the player with the <b>highest</b> combined number wins! <br><br>
+    The score has been reset.<br><br>
+    Player 1, start by hitting submit.
+    `;
+  }
+};
+
+// Function to reset dice number arrays
+var resetRound = function () {
+  p1diceNums = [];
+  p2diceNums = [];
+};
+
+// Function to reset dice number arrays, players' scores and current player
+var resetGame = function () {
+  resetRound();
+  p1score = 0;
+  p2score = 0;
+  player = "Player 1";
+};
+
+// ------------------ Functions for game mechanics ------------------
+// Function to roll random dice number
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
@@ -47,253 +79,224 @@ var rollDice = function () {
   return diceNumber;
 };
 
-// Function to roll numbers and move to part 2 for each player
-var getRolledNums = function (currentPlayer) {
-  var rolledNumsMessage = "";
-
+// Function to roll numbers based on variable number of dice to roll
+var getRolledNums = function (numDice) {
   // For Player 1 ------------------------
-  if (currentPlayer == "Player 1") {
-    p1dice1 = rollDice().toString();
-    p1dice2 = rollDice().toString();
-    console.log("P1 Dice 1: ", p1dice1);
-    console.log("P1 Dice 2: ", p1dice2);
-
-    // If dice roll the same number, auto combine them and move to Player 2
-    if (p1dice1 == p1dice2) {
-      p1CombinedNumber = p1dice1 + p1dice2;
-      rolledNumsMessage = `<b>Player 1</b><br><br>
-      You rolled ${p1dice1} and ${p1dice2}.<br><br>
-      Your combined number is ${p1CombinedNumber}.<br><br>
-      <hr><br>
-      Player 2, it's now your turn. Hit submit to roll your two numbers.
-      `;
-      p1score += Number(p1CombinedNumber);
-      player = "Player 2";
-      gameStatus = "Waiting to roll dice";
+  if (player == "Player 1") {
+    // create a loop to roll number for each dice and push into array
+    for (var i = 0; i < numDice; i++) {
+      var rolledNum = rollDice();
+      p1diceNums.push(rolledNum);
     }
-    // Output the numbers rolled and ask for user's choice of arrangement
-    else {
-      rolledNumsMessage = `<b>Player 1</b><br><br>
-      You rolled ${p1dice1} and ${p1dice2}.<br><br>
-      The next step is to arrange the numbers.<br><br>
-      Enter "1" to get the combined number '${p1dice1 + p1dice2}'<br>
-      Enter "2" to get the combined number '${p1dice2 + p1dice1}'
-      `;
-      gameStatus = "Combined number created";
-    }
+    return p1diceNums;
   }
   // For Player 2 ------------------------
   else {
-    p2dice1 = rollDice().toString();
-    p2dice2 = rollDice().toString();
-    console.log("P2 Dice 1: ", p2dice1);
-    console.log("P2 Dice 2: ", p2dice2);
-
-    // If dice roll the same number, auto combine them and compare nums to determine winner
-    if (p2dice1 == p2dice2) {
-      p2CombinedNumber = p2dice1 + p2dice2;
-      p2score += Number(p2CombinedNumber);
-
-      var gameResult = determineWinner(p1CombinedNumber, p2CombinedNumber);
-      rolledNumsMessage = `<b>Player 2</b><br><br>
-      You rolled ${p2dice1} and ${p2dice2}.<br><br>
-      Your combined number is ${p2CombinedNumber}.<br><br>
-      <hr><br>
-      ${gameResult}
-      `;
-
-      player = "Player 1";
-      gameStatus = "Waiting to roll dice";
+    // create a loop to roll number for each dice and push into array
+    for (var i = 0; i < numDice; i++) {
+      var rolledNum = rollDice();
+      p2diceNums.push(rolledNum);
     }
-    // Output the numbers rolled and ask for user's choice of arrangement
-    else {
-      rolledNumsMessage = `<b>Player 2</b><br><br>
-      You rolled ${p2dice1} and ${p2dice2}.<br><br>
-      The next step is to arrange the numbers.<br><br>
-      Enter "1" to get the combined number '${p2dice1 + p2dice2}'<br>
-      Enter "2" to get the combined number '${p2dice2 + p2dice1}'
-      `;
-      gameStatus = "Combined number created";
-    }
+    return p2diceNums;
   }
-  return rolledNumsMessage;
 };
 
 // Function to combine numbers
-var combineNumbers = function (currentPlayer, input) {
-  var combinedNumsMessage = "";
-
-  // For Player 1
-  if (currentPlayer == "Player 1") {
-    // input validation
-    if (input != 1 && input != 2) {
-      return `Please enter 1 or 2 to arrange your numbers.<br>
-       Enter "1" to get the combined number '${p1dice1 + p1dice2}'<br>
-      Enter "2" to get the combined number '${p1dice2 + p1dice1}'`;
-    } else if (input == "1") {
-      p1CombinedNumber = p1dice1 + p1dice2;
-    } else {
-      p1CombinedNumber = p1dice2 + p1dice1;
+var combineNumbers = function () {
+  // For "highest" game mode -------------
+  if (gameMode == "highest") {
+    // For Player 1 ----------------------
+    if (player == "Player 1") {
+      p1diceNums.sort();
+      p1diceNums.reverse();
+      p1CombinedNumber = p1diceNums.join("");
+      return p1CombinedNumber;
     }
-    combinedNumsMessage = `<b>Player 1</b><br><br>
-        Your combined number is ${p1CombinedNumber}.<br><br>
-        <hr><br>
-        Player 2, it's now your turn. Hit submit to roll your two numbers.
-        `;
-
-    p1score += Number(p1CombinedNumber);
-    player = "Player 2";
-    gameStatus = "Waiting to roll dice";
-    return combinedNumsMessage;
+    // For Player 2 ----------------------
+    else {
+      p2diceNums.sort();
+      p2diceNums.reverse();
+      p2CombinedNumber = p2diceNums.join("");
+      return p2CombinedNumber;
+    }
   }
-  // For Player 2
-  else {
-    // input validation
-    if (input != 1 && input != 2) {
-      return `Please enter 1 or 2 to arrange your numbers.<br>
-       Enter "1" to get the combined number '${p2dice1 + p2dice2}'<br>
-      Enter "2" to get the combined number '${p2dice2 + p2dice1}'`;
-    } else if (input == "1") {
-      p2CombinedNumber = p2dice1 + p2dice2;
-    } else {
-      p2CombinedNumber = p2dice2 + p2dice1;
+  // For "lowest" game mode --------------
+  else if (gameMode == "lowest") {
+    // For Player 1 ----------------------
+    if (player == "Player 1") {
+      p1diceNums.sort();
+      p1CombinedNumber = p1diceNums.join("");
+      return p1CombinedNumber;
     }
-    combinedNumsMessage = `<b>Player 2</b><br><br>
-        Your combined number is ${p2CombinedNumber}. <br><br>
-        <hr><br>
-        `;
-    p2score += Number(p2CombinedNumber);
-    console.log(p2CombinedNumber);
-    player = "Player 1";
-    gameStatus = "Waiting to roll dice";
-    return combinedNumsMessage;
+    // For Player 2 ----------------------
+    else {
+      p2diceNums.sort();
+      p2CombinedNumber = p2diceNums.join("");
+      return p2CombinedNumber;
+    }
   }
 };
 
 // Function to compare numbers and determine the winner
-var determineWinner = function (p1number, p2number) {
-  var winner = "";
-  if (p1number == p2number) {
-    winner = `<b>It's a draw! What are the odds? 🤔</b>`;
-  } else if (p1number > p2number) {
-    winner = `The winner of this round is <b>Player 1! 🥇</b>`;
-  } else {
-    winner = `The winner of this round is <b>Player 2! 🥇</b>`;
+var determineWinner = function () {
+  var result = "";
+  // For "highest" game mode ----------------------
+  if (gameMode == "highest") {
+    if (p1CombinedNumber == p2CombinedNumber) {
+      result = "It's a draw!";
+    } else if (p1CombinedNumber > p2CombinedNumber) {
+      result = "The winner of this round is Player 1!";
+    } else {
+      result = "The winner of this round is Player 2!";
+    }
   }
-
-  var scoreboard = updateLeaderboard();
-
-  var resultsMessage = `
-  Player 1's combined number is ${p1number}.<br>
-  Player 2's combined number is ${p2number}.<br>
-  ${winner}<br><br>
-  ${scoreboard}<br><br>
-  Hit submit to play again!`;
-
-  return resultsMessage;
+  // For "lowest" game mode ----------------------
+  else {
+    if (p1CombinedNumber == p2CombinedNumber) {
+      result = "It's a draw!";
+    } else if (p1CombinedNumber < p2CombinedNumber) {
+      result = "The winner of this round is Player 1!";
+    } else {
+      result = "The winner of this round is Player 2!";
+    }
+  }
+  updateScore();
+  return result;
 };
 
-// Function for auto-combination of numbers
-// This function should roll the dice, compare numbers, and combine them
-var autoCombine = function () {
-  var num1 = rollDice().toString();
-  var num2 = rollDice().toString();
-  console.log(num1);
-  console.log(num2);
-
-  var combinedNum = 0;
-  if (num1 > num2) {
-    combinedNum = num1 + num2;
-  } else {
-    combinedNum = num2 + num1;
-  }
-  console.log(combinedNum);
-  return combinedNum;
+// Function to update score
+var updateScore = function () {
+  p1score += Number(p1CombinedNumber);
+  p2score += Number(p2CombinedNumber);
 };
 
 // Function to update leaderboard
 var updateLeaderboard = function () {
-  var leaderboard = "";
-
-  // Compare running score to see who's leading
+  // Default = Player 1 is in the lead
   var leader = "<b>Player 1 is in the lead! 🥳</b>";
-  if (p1score == p2score) {
-    leader = "<b>Your scores are tied! 🤝</b>";
-  } else if (p1score < p2score) {
-    leader = "<b>Player 2 is in the lead! 🎉</b>";
-  }
-
-  // Arrange scores in descending order
   var scoreList = `
   1. Player 1 - ${p1score}<br>
   2. Player 2 - ${p2score}`;
-  if (p1score < p2score) {
-    scoreList = `
+
+  // For "highest" game mode ----------------------
+  if (gameMode == "highest") {
+    // Compare running score to see who's leading
+    if (p1score == p2score) {
+      leader = "<b>Your scores are tied! 🤝</b>";
+    } else if (p1score < p2score) {
+      leader = "<b>Player 2 is in the lead! 🎉</b>";
+    }
+    // Arrange scores in descending order (default = p1 on top)
+    if (p1score < p2score) {
+      scoreList = `
     1. Player 2 - ${p2score}<br>
     2. Player 1 - ${p1score}`;
+    }
   }
 
-  leaderboard = `${leader}<br>
+  // For "lowest" game mode -----------------------
+  if (gameMode == "lowest") {
+    // Compare running score to see who's leading
+    if (p1score == p2score) {
+      leader = "<b>Your scores are tied! 🤝</b>";
+    } else if (p1score > p2score) {
+      leader = "<b>Player 2 is in the lead! 🎉</b>";
+    }
+    // Arrange scores in ascending order (default = p1 on top)
+    if (p1score > p2score) {
+      scoreList = `
+    1. Player 2 - ${p2score}<br>
+    2. Player 1 - ${p1score}`;
+    }
+  }
+
+  var leaderboard = `${leader}<br>
   ${scoreList}`;
 
   return leaderboard;
 };
 
 var main = function (input) {
-  var myOutputValue = "";
+  var myOutputValue = `
+  Current player: ${player}<br>
+  `;
 
-  if (input == "auto") {
-    gameStatus = "Auto-combine";
-    return `Initiating auto-combine mode!`;
-  } else if (input == "reset") {
-    gameStatus = "Waiting to roll dice";
-    player = "Player 1";
-    return `Resetting the game! Player 1, hit submit to roll your dice.`;
+  // -------------------------------------------------------------------------
+  /////// Check input for changes in game mode or number of dice rolled  /////
+  // Change game mode if input is "lowest" / "highest"
+  if (input == "lowest" || input == "highest") {
+    return changeGameMode(input);
+  }
+  // Input validation: If input is text or NOT a number between 1 and 10
+  else if (isNaN(Number(input)) || (input != "" && input < 1) || input > 10) {
+    return `
+    Sorry, I didn't recognise that.<br><br>
+    If you're trying to change the number of dice rolled, enter a number from 1 to 10.<br><br>
+    If you're trying to change the game mode, enter "lowest" or "highest".<br><br>
+    You can also just hit submit to play the game.
+    `;
+  }
+  // If input is valid: Take in input to change number of dice rolled
+  else if (input != "") {
+    numDiceToRoll = input;
+    resetGame();
+    return `
+    Each player will roll ${numDiceToRoll} dice from now on.<br><br>
+    The score has also been reset.<br><br>
+    Player 1, hit Submit to start.
+    `;
   }
 
-  if (gameStatus == "Auto-combine") {
-    p1CombinedNumber = autoCombine();
-    p1score += Number(p1CombinedNumber);
+  myOutputValue += `Number of dice rolled: ${numDiceToRoll}<br><br>`;
 
-    p2CombinedNumber = autoCombine();
-    p2score += Number(p2CombinedNumber);
-
-    myOutputValue = determineWinner(p1CombinedNumber, p2CombinedNumber);
-    return myOutputValue;
-  }
-
+  // ------------------------------------
+  /////////// Start game play ///////////
   // <<<< ----- Player 1's Turn ----- >>>>
   if (player == "Player 1") {
     // Part 1: roll the dice
-    if (gameStatus == "Waiting to roll dice") {
-      myOutputValue = getRolledNums(player);
-      return myOutputValue;
-    }
+    getRolledNums(numDiceToRoll);
+    myOutputValue += `
+      Your rolled numbers: ${p1diceNums}<br>
+      `;
     // Part 2: combine the numbers
-    else {
-      myOutputValue = combineNumbers(player, input);
-      return myOutputValue;
-    }
+    combineNumbers();
+    myOutputValue += `
+      Your number combination: ${p1CombinedNumber}
+      `;
+    // Change player
+    changePlayer();
+    // Result =
+    return myOutputValue;
   }
-
   // <<<< ----- Player 2's Turn ----- >>>>
-  if (player == "Player 2") {
+  else {
     // Part 1: roll the dice
-    if (gameStatus == "Waiting to roll dice") {
-      myOutputValue = getRolledNums(player);
-      return myOutputValue;
-    }
+    getRolledNums(numDiceToRoll);
+    myOutputValue += `
+      Your rolled numbers: ${p2diceNums}<br>
+      `;
     // Part 2: combine the numbers
-    else {
-      var player2nums = combineNumbers(player, input);
+    combineNumbers();
+    myOutputValue += `
+      Your number combination: ${p2CombinedNumber}
+      `;
 
-      // << -- Game results: compare both combined numbers -- >>
-      var results = determineWinner(p1CombinedNumber, p2CombinedNumber);
+    // Determine results of game ---------
+    gameResult = determineWinner();
+    var scoreboard = updateLeaderboard();
 
-      myOutputValue = `${player2nums}
-      ${results}`;
+    myOutputValue += `<br><br><hr><br>
+    Player 1's number is ${p1CombinedNumber}.<br>
+    Player 2's number is ${p2CombinedNumber}.<br>
+    <b>${gameResult} 🥇</b><br><br>
+    ${scoreboard}<br><br>
+    Hit submit to play again or enter a number to change how many dice are rolled.`;
 
-      return myOutputValue;
-    }
+    // Reset round
+    changePlayer();
+    resetRound();
+
+    // Result =
+    return myOutputValue;
   }
 };
