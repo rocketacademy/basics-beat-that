@@ -6,6 +6,7 @@ var numberOfPlayersLeftHistory = [];
 var knockoutPlayerValues = [];
 var knockoutPlayerValuesHistory = [];
 var currentKnockoutRound = 1;
+var knockoutModeHistory = [];
 
 var generateNumberOfKnockoutRoundsAndIndexes = function () {
   console.log("--- inside generateNumberOfKnockoutRoundsAndIndexes ---");
@@ -68,6 +69,8 @@ var startKnockoutRound = function (noOfDices) {
   console.log("--- inside startKnockoutRound ---");
   // reinitiatlise numberOfPlayersLeft to []
   // add winners to numberOfPlayersLeft
+
+  knockoutModeHistory.push(gameMode);
 
   generateNumberOfKnockoutRoundsAndIndexes();
   generateRandomPairings();
@@ -228,7 +231,15 @@ var checkIfRoundEndOrGoNextLevel = function (noOfDices) {
 };
 
 var generateKnockoutHistoryTable = function () {
-  var table = `<h6 class="text-center">--- Round ${currentKnockoutRound} ---</h6><div class="table-responsive"><table class="table table-bordered border-secondary text-center bg-white" style="border: 1px solid black;"><thead><tr><th scope="col">Level</th><th scope="col" colspan="100%"></th></tr></thead>`;
+  var table = `<h6 class="text-center">--- Round ${currentKnockoutRound} ---</h6><div class="table-responsive"><table class="table table-bordered border-secondary text-center bg-white" style="border: 1px solid black;"><thead><tr><th scope="col">Level</th><th scope="col" colspan="100%" class="text-center">Mode: `;
+
+  if (knockoutModeHistory[currentKnockoutRound - 1] == "Highest") {
+    table += `<span class="text-danger">Highest</span>`;
+  } else {
+    table += `<span class="text-success">Lowest</span>`;
+  }
+
+  table += `</th></tr></thead>`;
 
   table += `<tbody>`;
 
