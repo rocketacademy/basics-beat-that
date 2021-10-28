@@ -11,6 +11,7 @@
         font-family: sans-serif;
         margin-left: 30px;
         margin-right: 30px;
+        background: rgb(255, 218, 150);
       }
 
       #header {
@@ -18,10 +19,13 @@
       }
 
       #container {
-        background-color: pink;
+        color: teal;
+        font-size: 1.1em;
+        background-color: seashell;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+        border: 10px solid teal;
       }
 
       input {
@@ -40,10 +44,17 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        color: white;
+        background: teal;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+      }
+
+      #output-div hr {
+        border: 2px solid white;
+        background-color: white;
+        width: 80%;
       }
     </style>
   </head>
@@ -51,11 +62,22 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
+      <p style="font-weight: bold">
+        Roll dice and create a number combination using the digits rolled.
+      </p>
+      <p>
+        The player with the higher number wins. To change this, enter "lowest"
+        so that the player with the lower number wins. (Typing "highest will
+        reset the rules.)
+      </p>
+      <p>
+        By default, 2 dice are rolled. At any time, you may change how many dice
+        to roll by entering a number from 1 to 10.
+      </p>
+      <p>Player 1, start by hitting Submit to roll your dice.</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
       <div id="output-div"></div>
     </div>
     <!-- Import program logic -->
