@@ -1,16 +1,15 @@
-//global variables
 var gamestage = 1;
 var gameRound = 0;
 
-//global states stating players' individual dices
+//variables stating players' individual dices
 var player1Dice1 = 0;
 var player1Dice2 = 0;
 var player2Dice1 = 0;
 var player2Dice2 = 0;
 
-//arrays to contain players' combined numbers
-var player1FinalNum = [];
-var player2FinalNum = [];
+//variables stating players' final combined numbers
+var p1num = 0;
+var p2num = 0;
 
 //global states stating scores
 var player1TotalScore = 0;
@@ -24,26 +23,28 @@ var rollDice = function () {
 };
 
 var rollPlayer1Dices = function () {
-  var dice1 = rollDice();
-  var dice2 = rollDice();
-  var combinePlayer1DicesOption1 = "" + dice1 + dice2;
-  var combinePlayer1DicesOption2 = "" + dice2 + dice1;
-  myOutputValue = `Your first dice is ${dice1} and your second dice is ${dice2}! Type <B>1</b> to choose ${combinePlayer1DicesOption1} or <B>2</b> to choose ${combinePlayer1DicesOption2} to compete with Player 2.`;
-  player1FinalNum.push(combinePlayer1DicesOption1);
-  player1FinalNum.push(combinePlayer1DicesOption2);
-  console.log(player1FinalNum);
+  var dice1 = rollDice().toString();
+  var dice2 = rollDice().toString();
+  player1Dice1 = dice1 + dice2;
+  player1Dice2 = dice2 + dice1;
+  myOutputValue = `Hi Player 1!<BR><BR>
+  
+  Your first dice is ${dice1} and your second dice is ${dice2}! <BR><BR>
+  
+  Type <B>1</b> to choose ${player1Dice1} or <B>2</b> to choose ${player1Dice2} to compete with Player 2.`;
   return myOutputValue;
 };
 
 var rollPlayer2Dices = function () {
-  var dice1 = rollDice();
-  var dice2 = rollDice();
-  var combinePlayer2DicesOption1 = "" + dice1 + dice2;
-  var combinePlayer2DicesOption2 = "" + dice2 + dice1;
-  myOutputValue = `Your first dice is ${dice1} and your second dice is ${dice2}! Type <B>1</b> to choose ${combinePlayer2DicesOption1} or <B>2</b> to choose ${combinePlayer2DicesOption2} to compete with Player 1.`;
-  player2FinalNum.push(combinePlayer2DicesOption1);
-  player2FinalNum.push(combinePlayer2DicesOption2);
-  console.log(player2FinalNum);
+  var dice1 = rollDice().toString();
+  var dice2 = rollDice().toString();
+  player2Dice1 = dice1 + dice2;
+  player2Dice2 = dice2 + dice1;
+  myOutputValue = `Hi Player 2! <BR><BR>
+  
+  Your first dice is ${dice1} and your second dice is ${dice2}! <BR><BR>
+  
+  Type <B>1</b> to choose ${player2Dice1} or <B>2</b> to choose ${player2Dice2} to compete with Player 1.`;
   return myOutputValue;
 };
 
@@ -59,21 +60,18 @@ var main = function (input) {
 
   //gamestage 2, where player 1 enters his choice.
   if (gamestage == 2 && input == "1") {
-    //pushing player 1's choice into an array, popping out the other unchosen number
-    gameRound = 0;
-    player1FinalNum.pop(player1FinalNum.length - 1);
-    console.log(player1FinalNum);
-    var player1FinalFinalNum = player1FinalNum[gameRound];
-    var myOutputValue = `Player 1 has chosen ${player1FinalFinalNum}. Player 2, please click <b>submit</b> to roll your dices.`;
+    var myOutputValue = `Player 1 has chosen ${player1Dice1}. Player 2, please click <b>submit</b> to roll your dices.`;
+    p1num = player1Dice1;
     gamestage = 3;
+    console.log("player 1", p1num);
     return myOutputValue;
   }
 
   if (gamestage == 2 && input == "2") {
-    gameRound += 1;
-    console.log(player1FinalNum[gameRound]);
-    var myOutputValue = `Player 1 has chosen ${player1FinalNum[gameRound]}. Player 2, please click <b>submit</b> to roll your dices.`;
+    var myOutputValue = `Player 1 has chosen ${player1Dice2}. Player 2, please click <b>submit</b> to roll your dices.`;
+    p1num = player1Dice2;
     gamestage = 3;
+    console.log("player 1", p1num);
     return myOutputValue;
   }
 
@@ -86,21 +84,19 @@ var main = function (input) {
   }
 
   //gamestage 4, where player 2 enters his choice.
-  if (gamestage == 4) {
-    //pushing player 2's choice into an array.
-    player2FinalNum.push(input);
-    console.log(player2FinalNum[gameRound]);
-    if (player2FinalNum[gameRound] > player1FinalNum[gameRound]) {
-      var myOutputValue = `Player 2 has chosen ${player2FinalNum[gameRound]}. Player 1's number was ${player1FinalNum[gameRound]}, therefore Player 2 wins.<BR><BR>
+  if (gamestage == 4 && input == "1") {
+    p2num = player2Dice1;
+    if (p2num > p1num) {
+      var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 2 wins.<BR><BR>
    Please click <B>submit</b> to play again!`;
     } else {
-      var myOutputValue = `Player 2 has chosen ${player2FinalNum[gameRound]}. Player 1's number was ${player1FinalNum[gameRound]}, therefore Player 1 wins.<BR><BR>
+      p2num = player2Dice2;
+      var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 1 wins.<BR><BR>
    Please click <B>submit</b> to play again!`;
     }
-    gamestage = 1;
+    gamestage = 1; //resetting gamestage
     gameRound += 1;
     return myOutputValue;
   }
-
   return myOutputValue;
 };
