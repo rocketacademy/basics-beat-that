@@ -53,7 +53,7 @@ var compareCombinedNumber = function (firstNum, secondNum) {
   if (firstNum > secondNum) {
     numOfPlayer1Wins += 1;
     outcome = `No. of P1 wins: ${numOfPlayer1Wins} <br> No. of P2 wins: ${numOfPlayer2Wins}<br><br> Player 1 wins! His number of ${firstNum} is bigger!`;
-  } else {
+  } else if (firstNum < secondNum) {
     numOfPlayer2Wins += 1;
     outcome = `No. of P1 wins: ${numOfPlayer1Wins} <br> No. of P2 wins: ${numOfPlayer2Wins}<br><br> Player 2 wins! His number of ${secondNum} is bigger!`;
   }
@@ -67,8 +67,6 @@ var playerOneMode = function () {
   console.log(`Roll 1:${player1diceRoll1}`);
   player1diceRoll2 = getDiceRoll();
   console.log(`Roll 2:${player1diceRoll2}`);
-  // switch gamemode to player one RollDice mode after 'submit'
-  currentGameMode = "player 1 choose mode";
   return (myOutputValue = `🎲 WELCOME PLAYER 1 🎲 <br><br> You rolled ${player1diceRoll1} for dice one, ${player1diceRoll2} for dice two. <br><br> Choose the order of the dice by entering "1" or "2"`);
 };
 
@@ -85,7 +83,6 @@ var playerOneChooseMode = function (input) {
 
     return (myOutputValue = `🎲 PLAYER 1 🎲 <br><br> You chose Dice 1 first. Your number is ${typeOneCombinedForPlayer1}. <br><br> It is now Player 2's turn.`);
   } else if (input === "2") {
-    currentGameMode = "player 2 mode";
     typeTwoCombinedForPlayer1 = combineTwoDiceRolls(
       player1diceRoll2,
       player1diceRoll1
@@ -105,7 +102,6 @@ var playerTwoMode = function (input) {
   player2diceRoll2 = getDiceRoll();
   console.log(`Roll 2:${player2diceRoll2}`);
 
-  currentGameMode = "player 2 choose mode";
   return (myOutputValue = `🎲 WELCOME PLAYER 2 🎲 <br><br> You rolled ${player2diceRoll1} for dice one, ${player2diceRoll2} for dice two. <br><br> Choose the order of the dice by entering "1" or "2"`);
 };
 
@@ -118,8 +114,6 @@ var playerTwoChooseMode = function (input) {
     );
     console.log(typeOneCombinedForPlayer2);
 
-    //Switch the game mode to compare mode
-    currentGameMode = "compare mode";
     playerTwoChoice.push(typeOneCombinedForPlayer2);
 
     return (myOutputValue = `🎲 PLAYER 2 🎲 <br><br> You chose Dice 1 first. Your number is ${typeOneCombinedForPlayer2}. <br><br> Let's compare  who has the bigger number!`);
@@ -129,8 +123,6 @@ var playerTwoChooseMode = function (input) {
       player2diceRoll1
     );
     console.log(typeTwoCombinedForPlayer2);
-    //Switch the game mode to compare mode
-    currentGameMode = "compare mode";
     playerTwoChoice.push(typeTwoCombinedForPlayer2);
 
     return (myOutputValue = `🎲 PLAYER 2 🎲 <br><br> You chose Dice 2 first. Your number is ${typeTwoCombinedForPlayer2}. <br><br> Let's compare  who has the bigger number!`);
@@ -144,21 +136,24 @@ var playerTwoChooseMode = function (input) {
 var main = function (input) {
   // Start with player one mode
   if (currentGameMode === "waiting for player 1") {
-    playerOneMode(input);
+    currentGameMode = "player 1 choose mode";
+    myOutputValue = playerOneMode(input);
   } else if (currentGameMode === "player 1 choose mode") {
+    currentGameMode = "player 2 mode";
     return playerOneChooseMode(input);
   }
   // Switch to player two mode
   if (currentGameMode === "player 2 mode") {
-    playerTwoMode(input);
+    currentGameMode = "player 2 choose mode";
+    myOutputValue = playerTwoMode(input);
   } else if (currentGameMode === "player 2 choose mode") {
+    currentGameMode = "compare mode";
     return playerTwoChooseMode(input);
   }
   // Compare the numbers now!
   if (currentGameMode === "compare mode") {
+    currentGameMode = "waiting for player 1";
     myOutputValue = compareCombinedNumber(playerOneChoice, playerTwoChoice);
-  } else if (currentGameMode === "waiting for player 1") {
-    return playerOneMode(input);
   }
   return myOutputValue;
 };
