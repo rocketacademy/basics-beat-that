@@ -13,6 +13,7 @@ var currentRound = 1;
 
 var winnerIndexes = [];
 var gameMode = "Highest";
+var runningKnockoutMode = "Running";
 
 var startRound = function (noOfDices) {
   var output = "";
@@ -151,7 +152,7 @@ var findCurrentLeader = function () {
 };
 
 var generateRoundHistory = function () {
-  var table = `<h3>Round History</h3><div class="table-responsive"><table class="table table-bordered border-secondary text-center bg-white"><thead><tr><th>Round</th><th>Mode</th>`;
+  var table = `<div class="table-responsive"><table class="table table-bordered border-secondary text-center bg-white"><thead><tr><th>Round</th><th>Mode</th>`;
 
   for (var counter2 = 0; counter2 < playerNames.length; counter2++) {
     table += `<th>${playerNames[counter2]}</th>`;
@@ -172,7 +173,7 @@ var generateRoundHistory = function () {
       table += `<td class="text-center">${playerValuesHistory[counter2][counter]}</td>`;
     }
 
-    table += `<td class="text-center">`;
+    table += `<th class="text-center">`;
 
     if (winnerHistory[counter].length == 1) {
       table += `${playerNames[winnerHistory[counter][0]]}`;
@@ -188,14 +189,14 @@ var generateRoundHistory = function () {
 
     table = table.replace(/,\s*$/, "");
 
-    table += `</td></tr>`;
+    table += `</th></tr>`;
   }
 
   table += `</tbody>`;
 
   table += `</table></div><hr/>`;
-  document.getElementById("history-div").style.display = "";
-  document.getElementById("history-table").innerHTML = table;
+  document.getElementById("running-history-div").style.display = "";
+  document.getElementById("running-history-table").innerHTML = table;
 };
 
 var autoGenerateNumber = function (diceRolls, gameMode) {
@@ -232,6 +233,11 @@ var addPlayer = function (playerName) {
   }
 
   generatePlayerTable();
+
+  if (playerNames.length > 1) {
+    document.getElementById("start-knockout-round-button").disabled = false;
+    document.getElementById("start-round-button").disabled = false;
+  }
 };
 
 var generatePlayerTable = function () {
@@ -263,4 +269,32 @@ var generatePlayerTable = function () {
   table += `</tr><tbody></table></div>`;
   document.getElementById("score-div").innerHTML = table;
   document.getElementById("dice-div").style.display = "";
+};
+
+var toggleRunningKnockoutMode = function () {
+  console.log("toggleRunning");
+  if (runningKnockoutMode == "Running") {
+    runningKnockoutMode = "Knockout";
+    document.getElementById("running-history-div").style.display = "none";
+    if (currentKnockoutRound > 1) {
+      document.getElementById("knockout-history-div").style.display = "";
+    }
+    document.getElementById("start-round-button").style.display = "none";
+    document.getElementById("start-knockout-round-button").style.display = "";
+    document.getElementById("running-knockout-mode").innerHTML = "Knockout";
+    document.getElementById("running-knockout-mode").className =
+      "mode text-success";
+  } else {
+    runningKnockoutMode = "Running";
+    document.getElementById("knockout-history-div").style.display = "none";
+    if (currentRound > 1) {
+      document.getElementById("running-history-div").style.display = "";
+    }
+    document.getElementById("start-round-button").style.display = "";
+    document.getElementById("start-knockout-round-button").style.display =
+      "none";
+    document.getElementById("running-knockout-mode").innerHTML = "Running";
+    document.getElementById("running-knockout-mode").className =
+      "mode text-danger";
+  }
 };

@@ -122,8 +122,18 @@
             class="btn btn-dark border border-dark"
             type="button"
             id="start-round-button"
+            disabled
           >
-            Start Round!
+            Start Running Round!
+          </button>
+          <button
+            class="btn btn-dark border border-dark"
+            type="button"
+            id="start-knockout-round-button"
+            style="display: none"
+            disabled
+          >
+            Start Knockout Round!
           </button>
         </div>
         <div class="row">
@@ -145,7 +155,7 @@
             <button
               class="btn btn-secondary btn-light"
               type="button"
-              id="change-mode-button"
+              id="change-running-knockout-mode-button"
               style="width: 100%"
             >
               Toggle <span class="text-danger">Running</span>/<span
@@ -158,9 +168,14 @@
         </div>
         <hr />
       </div>
-      <div id="history-div" style="display: none">
-        <h5 class="text-center">--- History ---</h5>
-        <div id="history-table"></div>
+      <div id="running-history-div" style="display: none">
+        <h5 class="text-center">--- History [Running Mode] ---</h5>
+        <div id="running-history-table"></div>
+      </div>
+      <div id="knockout-history-div" style="display: none">
+        <h5 class="text-center">--- History [Knockout Mode] ---</h5>
+        <div id="knockout-history-table"></div>
+        <hr />
       </div>
     </div>
     <!-- Import program logic -->
@@ -235,18 +250,50 @@
       var checkNoOfDicesNotEmpty = function () {
         if (document.getElementById("no-of-dices").value.length !== 0) {
           if (document.getElementById("no-of-dices").value <= 0) {
-            document.getElementById("start-round-button").disabled = true;
+            if (document.getElementById("start-round-button") !== null) {
+              document.getElementById("start-round-button").disabled = true;
+            } else {
+              document.getElementById(
+                "start-knockout-round-button"
+              ).disabled = true;
+            }
           } else {
-            document.getElementById("start-round-button").disabled = false;
+            if (document.getElementById("start-round-button") !== null) {
+              document.getElementById("start-round-button").disabled = false;
+            } else {
+              document.getElementById(
+                "start-knockout-round-button"
+              ).disabled = false;
+            }
           }
         } else {
-          document.getElementById("start-round-button").disabled = true;
+          if (document.getElementById("start-round-button") !== null) {
+            document.getElementById("start-round-button").disabled = true;
+          } else {
+            document.getElementById(
+              "start-knockout-round-button"
+            ).disabled = true;
+          }
         }
       };
 
       var startRoundButton = document.querySelector("#start-round-button");
       startRoundButton.addEventListener("click", function () {
         startRound(document.getElementById("no-of-dices").value);
+      });
+
+      var startKnockoutRoundButton = document.querySelector(
+        "#start-knockout-round-button"
+      );
+      startKnockoutRoundButton.addEventListener("click", function () {
+        startKnockoutRound(document.getElementById("no-of-dices").value);
+      });
+
+      var changeRunningKnockoutModeButton = document.querySelector(
+        "#change-running-knockout-mode-button"
+      );
+      changeRunningKnockoutModeButton.addEventListener("click", function () {
+        toggleRunningKnockoutMode();
       });
     </script>
   </body>
