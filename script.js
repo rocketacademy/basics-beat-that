@@ -2,3 +2,78 @@ var main = function (input) {
   var myOutputValue = 'hello world';
   return myOutputValue;
 };
+// 2 players in game, and each player takes turn
+
+// Each player roll 2 dice and picks the order of the dice they want. ie Dice 1 = 6, dice 2 = 3, Player 1 choose 63 as number
+// Player 2 does the same thing
+// At the end, player with highest wins
+
+//variables for players
+var playerNumberOne;
+var playerNumberTwo;
+
+//Array variables to store Player One and Player Two
+var diceArrayPlayerOne = [];
+var diceArrayPlayerTwo = [];
+
+//2 modes, Part 1 is Player roll dice, Part 2 is Player select number order from dice rolls
+var gameMode1 = `Player to roll dice`;
+var gameMode2 = `Player to select order of dice number`;
+
+//Global variable to show which player is playing now and which game mode
+var gameCurrentPlayer = 1;
+var gameCurrentMode = gameMode1;
+
+//------Below are the functions that are to be used in the main game function-------//
+
+//Function to merge dice numbers together
+var merge2DiceNumbers = 
+
+//Function of placing number in accordance to player selection
+
+
+//Function of dice rolls for each player and to store into their own arrays
+var playerDiceRolls = function () {
+  var playerNewDiceRolls = [rollDice(), rollDice()];
+  if (gameCurrentPlayer == 1) {
+    diceArrayPlayerOne = playerNewDiceRolls;
+  } else {
+    diceArrayPlayerTwo = playerNewDiceRolls;
+  }
+  return playerNewDiceRolls;
+};
+
+//
+//Function for Dice roll
+var rollDice = function () {
+  var randomDecimal = Math.random() * 6;
+  var randomInteger = Math.floor(randomDecimal);
+  var diceNumber = randomInteger + 1;
+  return diceNumber;
+};
+
+//Function for determining which player wins
+var winningPlayer = function () {
+  if (playerNumberOne > playerNumberTwo) {
+    return 1;
+  } else return 2;
+};
+
+// ~~~~~Main Game Function~~~~~
+var main = function (input) {
+  //var myOutputValue = "hello world";
+  //return myOutputValue;
+
+  //If function for game to start with player 1 or 2 depending on the progress of game
+  if (gameCurrentMode == gameMode1) {
+    var gameDiceRoll = playerDiceRolls();
+    //game to change to part 2 of game mode which is selecting of dice number
+    gameCurrentMode = gameMode2;
+    return `Player ${gameCurrentPlayer}, you have rolled ${diceArrayPlayerOne[0]} and ${diceArrayPlayerOne[1]}. <br>
+    Choose which the order of dice (Enter only 1 or 2 as input) as first dice so as to form the largest number!`
+  }
+  //Now player will input and game is now in gameMode 2 (selection of order of dice numbers)
+  if (gameCurrentMode == gameMode2){
+    var orderOfDice = 
+  }
+};
