@@ -625,19 +625,19 @@ var inputQtyOfDice = function (numberOfDice) {
 var setMultiplayerOrKnockOut = function (playMode) {
   var displayPlayMode = "";
   var message2 = "";
-  var normalMessage = `Game will be played in ${displayPlayMode} style.
-                 <br>Please click "Submit" to proceed.`;
   var errorMessage = `XXX INPUT ERROR XXX
                       <br>Please input 'knock out' or 'multiplayer' only.`;
 
   if (playMode.toLowerCase() == "knock out") {
     gameMode = `arrangeDiceKnockOut`;
     displayPlayMode = "Knock Out";
-    message2 = normalMessage;
+    message2 = `Game will be played in ${displayPlayMode.toUpperCase()} style.
+                 <br>Please click "Submit" to proceed.`;
   } else if (playMode.toLowerCase() == "multiplayer") {
     gameMode = `arrangeDiceMultiplayer`;
     displayPlayMode = "Multiplayer";
-    message2 = normalMessage;
+    message2 = `Game will be played in ${displayPlayMode.toUpperCase()} style.
+                 <br>Please click "Submit" to proceed.`;
   } else {
     gameMode = `setMultiplayerOrKnockOut`;
     message2 = errorMessage;
@@ -901,158 +901,6 @@ var arrangeDiceKnockOut = function (orderSpecified) {
   return gameLogicDisplay + message2;
 };
 
-var arrangeDiceKnockOut = function (orderSpecified) {
-  leaderBoardArray = [];
-
-  //control for highest or lowest mode toggle
-  if (
-    orderSpecified.toLowerCase() == "" ||
-    orderSpecified.toLowerCase() == "highest" ||
-    orderSpecified.toLowerCase() == "lowest"
-  ) {
-    gameCount = gameCount + 1;
-
-    //GAME LOGIC AND GAME LOGIC CONTROL
-    if (
-      (gameLogic == "highest" && orderSpecified.toLowerCase() == "highest") ||
-      (gameLogic == "highest" && orderSpecified.toLowerCase() == "") ||
-      (gameLogic == "lowest" && orderSpecified.toLowerCase() == "highest")
-    ) {
-      gameLogic = "highest";
-      gameLogicDisplay = `Game Logic: ${gameLogic.toUpperCase()} Combined Number<br><br>`;
-    } else if (
-      (gameLogic == "lowest" && orderSpecified.toLowerCase() == "lowest") ||
-      (gameLogic == "lowest" && orderSpecified.toLowerCase() == "") ||
-      (gameLogic == "highest" && orderSpecified.toLowerCase() == "lowest")
-    ) {
-      gameLogic = "lowest";
-      gameLogicDisplay = `Game Logic: ${gameLogic.toUpperCase()} Combined Number<br><br>`;
-    }
-
-    // Local Variables for arrangeDice Function.
-    // To Generate the Combined number based on putting together N number dice rolls.
-
-    var diceRollHistory = [];
-    var diceRollsArraySorted = [];
-    var diceRollsArraySortedString = [];
-    var combinedNumberString = "";
-    var combinedNumber = 0;
-    var incumbentIndex = "";
-    var incumbentCombinedNumber = 0;
-    var winnerThisRound = "";
-    var leaderBoardArray = [];
-    var roundHistoryDisplay = [];
-    var playerAisplay = ""; // just using a "previous winner" or incumbent holder isn't enough, the playerA- playerB needs a whole assignment
-    var playerBdisplay = ""; // on its own.
-
-    // Loop to run through number of players and get their rolls automatically
-    while (playerIndexNmbr < numberOfPlayers) {
-      var diceRollsArray = [];
-      var count = 0;
-
-      diceNumberRolled = 0;
-
-      while (count < qtyOfDice) {
-        diceNumberRolled = diceRoll();
-        diceRollsArray.push(diceNumberRolled);
-        diceRollHistory.push(diceNumberRolled);
-        count = count + 1;
-
-        //sorting the diceRoll Array
-        if (gameLogic == "highest") {
-          diceRollsArraySorted = diceRollsArray.sort((a, b) => b - a);
-          diceRollsArraySortedString = diceRollsArraySorted.map(String);
-        } else if (gameLogic == "lowest") {
-          diceRollsArraySorted = diceRollsArray.sort((a, b) => a - b);
-          diceRollsArraySortedString = diceRollsArraySorted.map(String);
-        }
-      }
-      //combining the diceRoll array to form number
-      combinedNumberString = diceRollsArraySortedString.join("");
-      combinedNumber = Number(combinedNumberString);
-
-      //Current Player Assignment + their scores
-      playerName = "Player " + (playerIndexNmbr + 1);
-      leaderBoardArray.push(
-        "<br>" + "Player " + (playerIndexNmbr + 1) + ": " + combinedNumber
-      );
-      playerIndexNmbr = playerIndexNmbr + 1;
-
-      // nested IF/ELSE for divergent situation rather than sequential IF/ELSE
-      if (incumbentIndex == 0) {
-        incumbentIndex = playerIndexNmbr;
-        incumbentCombinedNumber = combinedNumber; // need to repeat? How to repeat?
-      } else if (incumbentIndex > 0) {
-        if (
-          (gameLogic == "highest" &&
-            combinedNumber < incumbentCombinedNumber) ||
-          (gameLogic == "lowest" && combinedNumber > incumbentCombinedNumber)
-        ) {
-          playerAisplay = incumbentIndex; //always assigning the incumbent first, to player A Display position,
-          playerBdisplay = playerIndexNmbr; //always assigning the next challenger to player B Display position.
-          winnerThisRound = `Player ${incumbentIndex}`; //need more actions here, can't figure out
-        } else if (
-          (gameLogic == "highest" &&
-            combinedNumber > incumbentCombinedNumber) ||
-          (gameLogic == "lowest" && combinedNumber < incumbentCombinedNumber)
-        ) {
-          playerAisplay = incumbentIndex; //always assigning the incumbent first, to player A Display position,
-          playerBdisplay = playerIndexNmbr; //always assigning the next challenger to player B Display position.
-          winnerThisRound = `Player ${playerIndexNmbr}`;
-          incumbentIndex = playerIndexNmbr;
-          incumbentCombinedNumber = combinedNumber; // need more actions here, can't figure out yet.
-        } else if (
-          (gameLogic == "highest" || gameLogic == "lowest") &&
-          combinedNumber == incumbentCombinedNumber
-        ) {
-          playerAisplay = incumbentIndex;
-          playerBdisplay = playerIndexNmbr;
-          winnerThisRound = `Player ${incumbentIndex}`; //incumbent wins incase of TIE/draw
-        }
-      }
-      // for display Round win lose History
-      if (playerIndexNmbr > 1) {
-        roundHistoryDisplay.push(
-          "<br>" +
-            "Round " +
-            (playerIndexNmbr - 1) +
-            " : " +
-            " Player " +
-            playerAisplay +
-            " vs " +
-            "Player " +
-            playerBdisplay +
-            " ----> " +
-            winnerThisRound +
-            " wins"
-        );
-      }
-      console.log("Round: " + (playerIndexNmbr - 1));
-      console.log("Incumbent = Player " + incumbentIndex);
-      console.log("Current Challenger = Player " + playerIndexNmbr);
-      console.log("============================");
-    }
-
-    // For Output template
-    var message2 = `Dear Players, please find your numbers below:
-                    <br><br>Combined Numbers of each player: <br>${leaderBoardArray}
-                    <br><br> Winner of KnockOut: ${winnerThisRound}.
-                    <br><br> Round History: ${roundHistoryDisplay}
-                        <br><i>in event of a draw, previous winner always wins.</i>
-                    <br><br>A new round will begin and all scores will reset on clicking "Submit" 
-                    <br><br>If you wish to change modes, please refresh the page. `;
-  } // else below is for catching error inputs.
-  else {
-    message2 = `${playerName}, please only:<br> 1) click the submit button, or<br> 2) type in "lowest", or, <br>3) type in "highest".`;
-  }
-  //for restarting next game.
-  playerIndexNmbr = 0;
-  incumbentIndex = 0;
-  playerName = "";
-  gameMode = `waiting for input`;
-  return gameLogicDisplay + message2;
-};
-
 //GLOBAL DEFINITIONS for MAIN FUCNTION
 var gameMode = "waiting for input";
 
@@ -1060,7 +908,8 @@ var main = function (input) {
   var myOutputValue = "";
   var waitingForInputMsg = ` HOME OUTPUT SCREEN:
                            <br><br>Game Logic: ${gameLogic.toUpperCase()} combined number wins
-                           <br><br>Please enter the number of players:`;
+                           <br><br>Please enter the number of players, 
+                           <br><br>or type "highest" or "lowest" to set game logic.`;
   if (
     gameMode == `waiting for input` &&
     playerName == "" &&
