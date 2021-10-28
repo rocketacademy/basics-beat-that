@@ -110,11 +110,11 @@ let play2DiceTogether = function(input) {
   let p2total = playersNumbers[1]
   if (mode === "results" && (p1total > p2total)){
     mode = "roll dice"
-    outcome = createdMsg(1,2,p1total,p2total)
+    outcome = createdAllMsg(1,2,p1total,p2total)
     msg = outcome + `Player 1 wins`
   }else if (mode === "results" && (p1total < p2total)){
     mode = "roll dice"        
-    outcome = createdMsg(1,2,p1total,p2total)
+    outcome = createdAllMsg(1,2,p1total,p2total)
     msg = outcome + `Player 2 wins`
   }else{                
             mode = "roll dice"
@@ -148,7 +148,7 @@ let createTotalMsg = function(playerIndex, diceIndex,makeNum) {
 }
 
 
-let createdMsg = function(p1, p2, p1total, p2total){
+let createdAllMsg = function(p1, p2, p1total, p2total){
   return `Player ${p1} created ${p1total} <br><br>
           Player ${p2} created ${p2total} <br><br>`
 }
