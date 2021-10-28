@@ -20,12 +20,14 @@ var player1diceRoll1 = "";
 var player1diceRoll2 = "";
 var player2diceRoll1 = "";
 var player2diceRoll2 = "";
+var playerOneChoice = [];
+var playerTwoChoice = [];
 var typeOneCombinedForPlayer1 = "";
 var typeTwoCombinedForPlayer1 = "";
 var typeOneCombinedForPlayer2 = "";
 var typeTwoCombinedForPlayer2 = "";
-var playerOneChoice = [];
-var playerTwoChoice = [];
+var numOfPlayer1Wins = 0;
+var numOfPlayer2Wins = 0;
 var currentGameMode = "waiting for player 1";
 var myOutputValue = "";
 
@@ -35,10 +37,8 @@ var myOutputValue = "";
 
 // Dice Roll functions
 var getDiceRoll = function () {
-  var randomDecimal = Math.random() * 6;
-  var randomInteger = Math.floor(randomDecimal);
-  var actualNum = randomInteger + 1;
-  return actualNum;
+  var randomNum = Math.floor(Math.random() * 6) + 1;
+  return randomNum;
 };
 
 // Concatenate the two dice roll numbers
@@ -49,17 +49,33 @@ var combineTwoDiceRolls = function (diceRoll1, diceRoll2) {
 
 // Compare functions
 var compareCombinedNumber = function (firstNum, secondNum) {
+  // var outcome = `No. of P1 wins:${numOfPlayer1Wins}; No.of P2 wins: ${numOfPlayer2Wins}.<br><br>`;
   if (firstNum > secondNum) {
-    outcome = `Player 1 wins! His number of ${firstNum} is bigger!`;
+    numOfPlayer1Wins += 1;
+    outcome = `No. of P1 wins: ${numOfPlayer1Wins} <br> No. of P2 wins: ${numOfPlayer2Wins}<br><br> Player 1 wins! His number of ${firstNum} is bigger!`;
   } else {
-    outcome = `Player 2 wins! His number of ${secondNum} is bigger!`;
+    numOfPlayer2Wins += 1;
+    outcome = `No. of P1 wins: ${numOfPlayer1Wins} <br> No. of P2 wins: ${numOfPlayer2Wins}<br><br> Player 2 wins! His number of ${secondNum} is bigger!`;
   }
   return outcome;
 };
 
-var playerOneMode = function (input) {
+// Waiting for Player one mode
+var playerOneMode = function () {
+  // player 1 roll dice
+  player1diceRoll1 = getDiceRoll();
+  console.log(`Roll 1:${player1diceRoll1}`);
+  player1diceRoll2 = getDiceRoll();
+  console.log(`Roll 2:${player1diceRoll2}`);
+  // switch gamemode to player one RollDice mode after 'submit'
+  currentGameMode = "player 1 choose mode";
+  return (myOutputValue = `🎲 WELCOME PLAYER 1 🎲 <br><br> You rolled ${player1diceRoll1} for dice one, ${player1diceRoll2} for dice two. <br><br> Choose the order of the dice by entering "1" or "2"`);
+};
+
+// Player one mode
+var playerOneChooseMode = function (input) {
   if (input === "1") {
-    currentGameMode = "player two mode";
+    currentGameMode = "player 2 mode";
     typeOneCombinedForPlayer1 = combineTwoDiceRolls(
       player1diceRoll1,
       player1diceRoll2
@@ -67,10 +83,9 @@ var playerOneMode = function (input) {
     console.log(typeOneCombinedForPlayer1);
     playerOneChoice.push(typeOneCombinedForPlayer1);
 
-    // only use the return method when encountering problems!!
     return (myOutputValue = `🎲 PLAYER 1 🎲 <br><br> You chose Dice 1 first. Your number is ${typeOneCombinedForPlayer1}. <br><br> It is now Player 2's turn.`);
   } else if (input === "2") {
-    currentGameMode = "player two mode";
+    currentGameMode = "player 2 mode";
     typeTwoCombinedForPlayer1 = combineTwoDiceRolls(
       player1diceRoll2,
       player1diceRoll1
@@ -82,7 +97,20 @@ var playerOneMode = function (input) {
   }
 };
 
-var playTwoMode = function (input) {
+// Player two mode
+var playerTwoMode = function (input) {
+  //  player 2 roll dice
+  player2diceRoll1 = getDiceRoll();
+  console.log(`Roll 1:${player2diceRoll1}`);
+  player2diceRoll2 = getDiceRoll();
+  console.log(`Roll 2:${player2diceRoll2}`);
+
+  currentGameMode = "player 2 choose mode";
+  return (myOutputValue = `🎲 WELCOME PLAYER 2 🎲 <br><br> You rolled ${player2diceRoll1} for dice one, ${player2diceRoll2} for dice two. <br><br> Choose the order of the dice by entering "1" or "2"`);
+};
+
+// Player two choose mode
+var playerTwoChooseMode = function (input) {
   if (input === "1") {
     typeOneCombinedForPlayer2 = combineTwoDiceRolls(
       player2diceRoll1,
@@ -114,36 +142,23 @@ var playTwoMode = function (input) {
 //-----------------------------------
 
 var main = function (input) {
+  // Start with player one mode
   if (currentGameMode === "waiting for player 1") {
-    // player 1 roll dice
-    player1diceRoll1 = getDiceRoll();
-    console.log(`Roll 1:${player1diceRoll1}`);
-    player1diceRoll2 = getDiceRoll();
-    console.log(`Roll 2:${player1diceRoll2}`);
-
-    // switch gamemode to player one RollDice mode after 'submit'
-    currentGameMode = "player one mode";
-    myOutputValue = `🎲 WELCOME PLAYER 1 🎲 <br><br> You rolled ${player1diceRoll1} for dice one, ${player1diceRoll2} for dice two. <br><br> Choose the order of the dice by entering "1" or "2"`;
-  } else if (currentGameMode === "player one mode") {
-    return playerOneMode(input);
+    playerOneMode(input);
+  } else if (currentGameMode === "player 1 choose mode") {
+    return playerOneChooseMode(input);
   }
-
-  // switch gamemode to player two
-  if (currentGameMode === "player two mode") {
-    //  player 2 roll dice
-    player2diceRoll1 = getDiceRoll();
-    console.log(`Roll 1:${player2diceRoll1}`);
-    player2diceRoll2 = getDiceRoll();
-    console.log(`Roll 2:${player2diceRoll2}`);
-
-    currentGameMode = "player 2 choose mode";
-    myOutputValue = `🎲 WELCOME PLAYER 2 🎲 <br><br> You rolled ${player2diceRoll1} for dice one, ${player2diceRoll2} for dice two. <br><br> Choose the order of the dice by entering "1" or "2"`;
+  // Switch to player two mode
+  if (currentGameMode === "player 2 mode") {
+    playerTwoMode(input);
   } else if (currentGameMode === "player 2 choose mode") {
-    return playTwoMode(input);
+    return playerTwoChooseMode(input);
   }
   // Compare the numbers now!
   if (currentGameMode === "compare mode") {
-    return compareCombinedNumber(playerOneChoice, playerTwoChoice);
+    myOutputValue = compareCombinedNumber(playerOneChoice, playerTwoChoice);
+  } else if (currentGameMode === "waiting for player 1") {
+    return playerOneMode(input);
   }
   return myOutputValue;
 };
