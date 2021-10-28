@@ -7,9 +7,10 @@ var currPlayer = 1;
 
 var diceRoll = [];
 
-var playerNum;
 var player1Num;
 var player2Num;
+var player1Score = 0;
+var player2Score = 0;
 
 var rollDice = function () {
   var randomInteger = Math.floor(Math.random() * 6);
@@ -30,36 +31,45 @@ var arrayToNum = function (num1, num2) {
   return Number(String(num1) + String(num2));
 };
 
-var getPlayerNum = function (selectedNum) {
+var getPlayersNum = function (selectedDice) {
   if (currPlayer == 1) {
-    if (selectedNum == 1) {
-      playerNum = arrayToNum(diceRoll[0], diceRoll[1]);
+    if (selectedDice == 1) {
+      player1Num = arrayToNum(diceRoll[0], diceRoll[1]);
     } else {
-      playerNum = arrayToNum(diceRoll[1], diceRoll[0]);
+      player1Num = arrayToNum(diceRoll[1], diceRoll[0]);
     }
-    player1Num = playerNum;
     gameMode = diceRollMode;
     currPlayer = 2;
-    return `Player 1, you chose Dice ${selectedNum} first.<br>Your number is ${playerNum}.<br>It is now Player 2's turn. <br><br>Press Submit to roll dice`;
+    return `Player 1, you chose Dice ${selectedDice} first.<br>Your number is ${player1Num}.<br>It is now Player 2's turn. <br><br>Press Submit to roll dice`;
   }
   if (currPlayer == 2) {
-    if (selectedNum == 1) {
-      playerNum = arrayToNum(diceRoll[0], diceRoll[1]);
+    if (selectedDice == 1) {
+      player2Num = arrayToNum(diceRoll[0], diceRoll[1]);
     } else {
-      playerNum = arrayToNum(diceRoll[1], diceRoll[0]);
+      player2Num = arrayToNum(diceRoll[1], diceRoll[0]);
     }
-    player2Num = playerNum;
     gameMode = winnerMode;
     currPlayer = 1;
-    return `Player 2, you chose Dice ${selectedNum} first.<br>Your number is ${playerNum}.<br><br>Press Submit to view winner!!`;
+    return `Player 2, you chose Dice ${selectedDice} first.<br>Your number is ${player2Num}.<br><br>Press Submit to view winner!!`;
   }
 };
 
-var getWinner = function () {
-  if (player1Num > player2Num) {
-    return `Player 1 has won. <br> Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Press Submit to play again.`;
+var getLeaderBoard = function () {
+  player1Score += player1Num;
+  player2Score += player2Num;
+  if (player1Score > player2Score) {
+    return `Leaderboard: <br>Player 1: ${player1Score} <br>Player 2: ${player2Score}`;
   }
-  return `Player 2 has won. <br> Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Press Submit to play again.`;
+  return `Leaderboard: <br>Player 2: ${player2Score} <br>Player 1: ${player1Score}`;
+};
+
+var getWinner = function () {
+  var genericMessage = `Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Press Submit to play again.`;
+  var leaderboard = getLeaderBoard();
+  if (player1Num > player2Num) {
+    return `Player 1 has won. <br>${genericMessage} <br><br>${leaderboard}`;
+  }
+  return `Player 2 has won. <br>${genericMessage} <br><br>${leaderboard}`;
 };
 
 var main = function (input) {
@@ -70,13 +80,14 @@ var main = function (input) {
   }
 
   if (gameMode == diceSelectMode) {
+    var playersNum;
     var diceSelection = validateDiceSelected(input);
     if (diceSelection == false) {
       return `Choose the order of the dice by entering 1 or 2 as the first number`;
     }
     if (diceSelection == true) {
-      playerNum = getPlayerNum(input);
-      return playerNum;
+      playersNum = getPlayersNum(input);
+      return playersNum;
     }
   }
 
