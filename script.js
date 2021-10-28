@@ -282,7 +282,7 @@ var main = function (input) {
       `;
 
     // Determine results of game ---------
-    gameResult = determineWinner();
+    var gameResult = determineWinner();
     var scoreboard = updateLeaderboard();
 
     myOutputValue += `<br><br><hr><br>
