@@ -8,6 +8,7 @@ var player2Score = 0;
 var guess = "";
 var guess2 = "";
 var userTopGuess = "";
+var output = "";
 
 //Roll dice function
 var rollDice = function () {
@@ -43,14 +44,16 @@ var chooseNumber = function (input) {
 
     if (mode == "choose number") {
       player1Score = userTopGuess;
+      output = `Your guess is  ${userTopGuess}. <br> Player 2: Please press the submit button to roll the dice.`;
     }
     if (mode == "choose number 2") {
       player2Score = userTopGuess;
       mode = "final";
+      output = `Your guess is  ${userTopGuess}. <br> Click the submit button to determine the winner.`;
     }
   }
 
-  return `Your guess is  ${userTopGuess}.`;
+  return output;
 };
 
 // First index will ask the player to press submit
@@ -62,13 +65,18 @@ var main = function (input) {
     guess = userDice();
     console.log(guess);
     // guessNum1 = Number(guess);
-    myOutputValue = `Player 1: <br> You chose ${userNumber1} and  ${userNumber2}. Please press 1 or 2`;
+    myOutputValue = `Player 1: <br> You chose ${userNumber1} and  ${userNumber2}. <br> Please press 1 or 2`;
   }
   // PLayer will choose option 1 or 2
   // Computer will join them
   else if (mode == "choose number") {
-    myOutputValue = chooseNumber(input);
-    mode = "player 2";
+    //Check if the input is a number
+    if (Number.isNaN(Number(input)) == true) {
+      myOutputValue = "Sorry please enter a number.";
+    } else {
+      myOutputValue = chooseNumber(input);
+      mode = "player 2";
+    }
   }
   // Computer will ask player 2 to submit
   // Computer will roll the dice
@@ -77,14 +85,19 @@ var main = function (input) {
     guess2 = userDice();
     console.log(guess2);
     // guessNum2 = Number(guess2);
-    myOutputValue = `Player 2: <br> You chose ${userNumber1} and  ${userNumber2}. Please press 1 or 2`;
+    myOutputValue = `Player 2: <br> You chose ${userNumber1} and  ${userNumber2}. <br> Please press 1 or 2`;
     console.log(guess2);
     mode = "choose number 2";
   }
   // PLayer will choose option 1 or 2
   // Computer will join them
   else if (mode == "choose number 2") {
-    myOutputValue = chooseNumber(input);
+    //Check if the input is a number
+    if (Number.isNaN(Number(input)) == true) {
+      myOutputValue = "Sorry please enter a number.";
+    } else {
+      myOutputValue = chooseNumber(input);
+    }
   }
 
   // Computer will compare
