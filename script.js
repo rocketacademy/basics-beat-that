@@ -34,7 +34,15 @@ instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice t
 
 // lowest number mode
 btnReverse.addEventListener('click', function () {
-  init();
+  activePlayer = 0;
+  currentRoll = [];
+  currentScoreEl0.textContent = 0;
+  currentScoreEl1.textContent = 0;
+  // revert instructions to starter
+  instructionsEl.textContent = `Player 1, Roll dice to start the game! 🎲`;
+  // dice reset
+  imgDice1.src = 'dice-1.png';
+  imgDice2.src = 'dice-1.png';
   document.querySelector('.container').classList.toggle('reverse');
   // change mode to false
   normalMode = normalMode === true ? false : true;
@@ -175,6 +183,7 @@ btnNewGame.addEventListener('click', function () {
 });
 
 const init = function () {
+  // TODO
   dice1,
     dice2,
     (player0Score = 0),
