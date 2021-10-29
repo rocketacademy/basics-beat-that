@@ -10,7 +10,7 @@ var numberOfDice = 2;
 var rollTwoDice = function (playerID) {
   currentNumberOfDiceRolls = 0;
   while (currentNumberOfDiceRolls < numberOfDice) {
-    var currentDiceRollNumber = Math.ceil(Math.random() * 6);
+    var currentDiceRollNumber = Math.floor(Math.random() * 6) + 1;
     playerID[currentNumberOfDiceRolls] = currentDiceRollNumber;
     currentNumberOfDiceRolls = currentNumberOfDiceRolls + 1;
   }
