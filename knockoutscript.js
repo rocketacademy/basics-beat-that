@@ -9,7 +9,6 @@ var currentKnockoutRound = 1;
 var knockoutModeHistory = [];
 
 var generateNumberOfKnockoutRoundsAndIndexes = function () {
-  console.log("--- inside generateNumberOfKnockoutRoundsAndIndexes ---");
   noOfKnockoutLevels = Math.round(playerNames / 2);
 
   // generate numbers [0, 1, 2, 3] if there are 4 players
@@ -17,19 +16,10 @@ var generateNumberOfKnockoutRoundsAndIndexes = function () {
   for (var i = 0; i < playerNames.length; i++) {
     numberOfPlayersLeft.push(i);
   }
-
-  console.log("numberOfPlayersLeft");
-  console.log(numberOfPlayersLeft);
-
-  console.log("--- end generateNumberOfKnockoutRoundsAndIndexes ---");
 };
 
 var generateRandomPairings = function () {
-  console.log("--- inside generateRandomPairings ---");
   var tempArray = [];
-
-  console.log("numberOfPlayersLeft");
-  console.log(numberOfPlayersLeft);
 
   // add nested arrays in playerIndexPairings to pair players together
   while (numberOfPlayersLeft.length !== 0) {
@@ -46,27 +36,15 @@ var generateRandomPairings = function () {
   if (tempArray.length !== 0) {
     playerIndexPairings.push(tempArray);
   }
-
-  console.log("playerIndexPairings");
-  console.log(playerIndexPairings);
-
-  console.log("--- end generateRandomPairings ---");
 };
 
 var pickARandomPerson = function () {
-  console.log("--- inside pickARandomPerson ---");
   var randomDecimal = Math.random() * numberOfPlayersLeft.length;
   var randomPersonIndex = Math.floor(randomDecimal);
-
-  console.log("randomPersonIndex");
-  console.log(randomPersonIndex);
-
-  console.log("--- end pickARandomPerson ---");
   return randomPersonIndex;
 };
 
 var startKnockoutRound = function (noOfDices) {
-  console.log("--- inside startKnockoutRound ---");
   // reinitiatlise numberOfPlayersLeft to []
   // add winners to numberOfPlayersLeft
 
@@ -80,19 +58,11 @@ var startKnockoutRound = function (noOfDices) {
 
   playLevelAndFindWinners(noOfDices);
 
-  console.log("BEFORE addStatsToHistory");
-  console.log("numberOfPlayersLeft");
-  console.log(numberOfPlayersLeft);
-
   addStatsToHistory();
   checkIfRoundEndOrGoNextLevel(noOfDices);
-
-  // resetKnockoutRound();
-  console.log("--- end startKnockoutRound ---");
 };
 
 var findKnockoutWinner = function (valuesToCompare) {
-  console.log("--- inside findKnockoutWinner ---");
   var winners = [];
 
   if (valuesToCompare[0] == valuesToCompare[1]) {
@@ -111,18 +81,10 @@ var findKnockoutWinner = function (valuesToCompare) {
     }
   }
 
-  console.log("winners");
-  console.log(winners);
-
-  console.log("--- end findKnockoutWinner ---");
-
   return winners;
 };
 
 var resetKnockoutRound = function () {
-  console.log("--- inside resetKnockoutRound ---");
-
-  console.log("--- adding history ---");
   playerIndexPairings = [];
   numberOfPlayersLeft = [];
   knockoutPlayerValues = [];
@@ -130,20 +92,11 @@ var resetKnockoutRound = function () {
 };
 
 var goToNextLevel = function (noOfDices) {
-  console.log("--- inside goToNextLevel ---");
-
   resetLevel();
   generateRandomPairings();
   playLevelAndFindWinners(noOfDices);
-
-  console.log("BEFORE addStatsToHistory");
-  console.log("numberOfPlayersLeft");
-  console.log(numberOfPlayersLeft);
-
   addStatsToHistory();
   checkIfRoundEndOrGoNextLevel(noOfDices);
-
-  console.log("--- end goToNextLevel ---");
 };
 
 var resetLevel = function () {
@@ -152,11 +105,6 @@ var resetLevel = function () {
 };
 
 var playLevelAndFindWinners = function (noOfDices) {
-  console.log("--- inside playLevelAndFindWinners ---");
-
-  console.log("playerIndexPairings");
-  console.log(playerIndexPairings);
-
   for (var i = 0; i < playerIndexPairings.length; i++) {
     // check whether pairing has 1 or 2 people
     if (playerIndexPairings[i].length == 2) {
@@ -167,17 +115,9 @@ var playLevelAndFindWinners = function (noOfDices) {
 
       knockoutPlayerValues.push(tempArray);
 
-      console.log("knockoutPlayerValues");
-      console.log(knockoutPlayerValues);
-
       var knockoutWinnerIndex = findKnockoutWinner(tempArray);
 
-      console.log("knockoutWinnerIndex");
-      console.log(knockoutWinnerIndex);
-
       for (var k = 0; k < knockoutWinnerIndex.length; k++) {
-        console.log("to push");
-        console.log(playerIndexPairings[i][knockoutWinnerIndex[k]]);
         numberOfPlayersLeft.push(
           playerIndexPairings[i][knockoutWinnerIndex[k]]
         );
@@ -197,35 +137,26 @@ var initialiseHistoryPlaceholders = function () {
 };
 
 var addStatsToHistory = function () {
-  console.log("--- inside addStatsToHistory ---");
   playerIndexPairingsHistory[currentKnockoutRound - 1].push([
     ...playerIndexPairings,
   ]);
-
   numberOfPlayersLeftHistory[currentKnockoutRound - 1].push([
     ...numberOfPlayersLeft,
   ]);
   knockoutPlayerValuesHistory[currentKnockoutRound - 1].push([
     ...knockoutPlayerValues,
   ]);
-  console.log("--- end addStatsToHistory ---");
 };
 
 var checkIfRoundEndOrGoNextLevel = function (noOfDices) {
   if (numberOfPlayersLeft.length == 1) {
     // winner found
-    console.log("!!! WINNER FOUND !!!");
-
     playerScores[numberOfPlayersLeft[0]]++;
-
     generateKnockoutHistoryTable();
-
     findCurrentLeader();
     generatePlayerTable();
-
     resetKnockoutRound();
   } else {
-    console.log("!!! still have remaining players !!!");
     goToNextLevel(noOfDices);
   }
 };

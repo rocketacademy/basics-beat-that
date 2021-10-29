@@ -285,7 +285,6 @@ var generatePlayerTable = function () {
 };
 
 var toggleRunningKnockoutMode = function () {
-  console.log("toggleRunning");
   if (runningKnockoutMode == "Running") {
     runningKnockoutMode = "Knockout";
     document.getElementById("running-history-div").style.display = "none";
