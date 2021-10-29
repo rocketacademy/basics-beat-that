@@ -28,7 +28,7 @@ var main = function (input) {
     console.log("Current Game Mode:" + gameMode);
     return myOutputValue;
   }
-  //P1 Choose Order of Dice
+  //P1 Choose Order of Dice with input validation
   if (gameMode == "P1ChooseOrder") {
     if (input == 1) {
       console.log("P1 Choose Which Dice First:" + input);
@@ -57,7 +57,7 @@ var main = function (input) {
     console.log("Current Game Mode:" + gameMode);
     return myOutputValue;
   }
-  //P2 Choose Order of Dice
+  //P2 Choose Order of Dice with input validation
   if (gameMode == "P2ChooseOrder") {
     if (input == 1) {
       console.log("P2 Choose Which Dice First:" + input);
@@ -77,7 +77,7 @@ var main = function (input) {
       myOutputValue = input + " is an invalid selection. <br> Please choose the order of the dice by selecting whether 1 (Dice 1) or 2 (Dice 2) should be the first digit.";
     }
   }
-  //Choose Winner Immediately after P2 chooses - if return againt then user needs to click submit again
+  //Choose Winner Immediately after P2 chooses - if return again then user needs to click submit again
   if (gameMode == "Choose Winner") {
     if (P1Choice > P2Choice) {
       myOutputValue = "The winner is Player 1 because " + P1Choice + " is larger than " + P2Choice + "<br> Press Submit to Play Again";
