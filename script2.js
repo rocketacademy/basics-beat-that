@@ -24,7 +24,7 @@ var main = function (input) {
       gameMode = GAME_MODE_HIGHEST_COMBINED_NUMBER;
       return `Highest number game mode selected <br>
               Select Number of Dice to roll`;
-    } else if (input == "Knockedout") {
+    } else if (input == "Knockout") {
       gameMode = GAME_MODE_KNOCKOUT;
       return `Knockedout game mode selected <br> 
               Select Number of Dice to roll`;
@@ -117,6 +117,7 @@ var main = function (input) {
 
   // Knockout Game Mode
   if (gameMode === GAME_MODE_KNOCKOUT) {
+    getReset();
     return "Not Included Yet. Please choose Highest Value";
   }
 
