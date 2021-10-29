@@ -23,11 +23,13 @@ function main(input) {
     } else if (input !== "") {
       player1Name = input;
       currentGameMode = "awaiting player 2 name";
+      // prompt player 2 to enter name after player 1 enters name
       return `Welcome, Player 1 ${player1Name}! <br><br> Please enter your name, Player 2.`;
     }
+  }
 
-    // start the game after both players enter their name
-  } else if (currentGameMode == "awaiting player 2 name") {
+  // start the game after both players enter their name
+  if (currentGameMode == "awaiting player 2 name") {
     player2Name = input;
     currentGameMode = "player 1 dice roll";
     return `Welcome, Player 2 ${player2Name}! <br><br> Player 1 ${player1Name}, please click submit to roll the dice.`;
