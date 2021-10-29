@@ -34,10 +34,14 @@ instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice t
 
 // lowest number mode
 btnReverse.addEventListener('click', function () {
+  // reset to player 1's turn + reset current values
   activePlayer = 0;
   currentRoll = [];
   currentScoreEl0.textContent = 0;
   currentScoreEl1.textContent = 0;
+  (player0Rolls = []), (player1Rolls = []);
+  document.querySelector('.player-0-descending').textContent = [0];
+  document.querySelector('.player-1-descending').textContent = [0];
   // revert instructions to starter
   instructionsEl.textContent = `Player 1, Roll dice to start the game! 🎲`;
   // dice reset
@@ -183,7 +187,6 @@ btnNewGame.addEventListener('click', function () {
 });
 
 const init = function () {
-  // TODO
   dice1,
     dice2,
     (player0Score = 0),
