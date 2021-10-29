@@ -61,7 +61,7 @@ var main = function (input) {
   //gamestage 2, where player 1 enters his choice.
   if (gamestage == 2 && input == "1") {
     var myOutputValue = `Player 1 has chosen ${player1Dice1}. Player 2, please click <b>submit</b> to roll your dices.`;
-    p1num = player1Dice1;
+    p1num = Number(player1Dice1);
     gamestage = 3;
     console.log("player 1", p1num);
     return myOutputValue;
@@ -69,7 +69,7 @@ var main = function (input) {
 
   if (gamestage == 2 && input == "2") {
     var myOutputValue = `Player 1 has chosen ${player1Dice2}. Player 2, please click <b>submit</b> to roll your dices.`;
-    p1num = player1Dice2;
+    p1num = Number(player1Dice2);
     gamestage = 3;
     console.log("player 1", p1num);
     return myOutputValue;
@@ -85,9 +85,9 @@ var main = function (input) {
 
   //gamestage 4, where player 2 enters his choice.
   if (gamestage == 4 && input == "1") {
-    p2num = player2Dice1;
-    p2TotalScore += Number(p2num);
-    p1TotalScore += Number(p1num);
+    p2num = Number(player2Dice1);
+    p1TotalScore += p1num;
+    p2TotalScore += p2num;
     if (p2num > p1num) {
       var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 2 wins.<BR><BR>
       <B>Scoreboard</b><BR><BR>
@@ -95,14 +95,37 @@ var main = function (input) {
       Player 2: ${p2TotalScore}<BR>
    Please click <B>submit</b> to play again!`;
     } else {
-      p2num = player2Dice2;
+      p2num = Number(player2Dice1);
       var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 1 wins.<BR><BR>
       <B>Scoreboard</b><BR><BR>
       Player 1: ${p1TotalScore}<BR>
       Player 2: ${p2TotalScore}<BR>
    Please click <B>submit</b> to play again!`;
     }
+    gamestage = 1; //resetting gamestage
+    gameRound += 1;
+    return myOutputValue;
+  }
 
+  if (gamestage == 4 && input == "2") {
+    p2num = Number(player2Dice2);
+    p1TotalScore += p1num;
+    p2TotalScore += p2num;
+
+    if (p2num > p1num) {
+      var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 2 wins.<BR><BR>
+      <B>Scoreboard</b><BR><BR>
+      Player 1: ${p1TotalScore}<BR>
+      Player 2: ${p2TotalScore}<BR>
+   Please click <B>submit</b> to play again!`;
+    } else {
+      p2num = Number(player2Dice2);
+      var myOutputValue = `Player 2 has chosen ${p2num}. Player 1's number was ${p1num}, therefore Player 1 wins.<BR><BR>
+      <B>Scoreboard</b><BR><BR>
+      Player 1: ${p1TotalScore}<BR>
+      Player 2: ${p2TotalScore}<BR>
+   Please click <B>submit</b> to play again!`;
+    }
     gamestage = 1; //resetting gamestage
     gameRound += 1;
     return myOutputValue;
