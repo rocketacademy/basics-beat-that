@@ -29,7 +29,7 @@ let player0Rolls = []; // for use in leaderboard
 let player1Rolls = []; // for use in leaderboard
 let normalMode = true;
 
-// Main instructions
+// Starting instructions
 instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice to start the game! 🎲`;
 
 // lowest number mode
@@ -113,19 +113,7 @@ btnDice1.addEventListener('click', function () {
   if (currentRoll.length < 2) {
     // console.log(Number('' + dice1 + dice2));
     let concatOfDice = Number('' + dice1 + dice2);
-    // add current roll to active player
-    currentRoll[activePlayer] = concatOfDice;
-    // records active player's rolls
-    activePlayer === 0 && player0Rolls.push(concatOfDice);
-    activePlayer === 1 && player1Rolls.push(concatOfDice);
-    imgDice1.src = `dice-1.png`;
-    imgDice2.src = `dice-1.png`;
-    gameLogic();
-    if (currentRoll.length >= 2) {
-      imgDice1.src = `dice-1.png`;
-      imgDice2.src = `dice-1.png`;
-      determineWinner();
-    }
+    recordActivePlayerRolls(concatOfDice);
   }
 });
 
@@ -134,19 +122,7 @@ btnDice2.addEventListener('click', function () {
   if (currentRoll.length < 2) {
     // console.log(Number('' + dice1 + dice2));
     let concatOfDice = Number('' + dice2 + dice1);
-    // add current roll to active player
-    currentRoll[activePlayer] = concatOfDice;
-    // records active player's rolls
-    activePlayer === 0 && player0Rolls.push(concatOfDice);
-    activePlayer === 1 && player1Rolls.push(concatOfDice);
-    imgDice1.src = `dice-1.png`;
-    imgDice2.src = `dice-1.png`;
-    gameLogic();
-    if (currentRoll.length >= 2) {
-      imgDice1.src = `dice-1.png`;
-      imgDice2.src = `dice-1.png`;
-      determineWinner();
-    }
+    recordActivePlayerRolls(concatOfDice);
   }
 });
 
@@ -216,4 +192,26 @@ btnNewGame.addEventListener('click', function () {
   imgDice2.src = 'dice-1.png';
   // lowest number wins off
   document.querySelector('.container').classList.remove('reverse');
+  // revert back to 'Roll Dice' button
+  btnRollDice.classList.remove('hidden');
+  btnDice1.classList.add('hidden');
+  btnDice2.classList.add('hidden');
+  // revert instructions to starter
+  instructionsEl.textContent = `Player 1, Roll dice to start the game! 🎲`;
 });
+
+const recordActivePlayerRolls = function (concatOfDice) {
+  // add current roll to active player
+  currentRoll[activePlayer] = concatOfDice;
+  // records active player's rolls
+  activePlayer === 0 && player0Rolls.push(concatOfDice);
+  activePlayer === 1 && player1Rolls.push(concatOfDice);
+  imgDice1.src = `dice-1.png`;
+  imgDice2.src = `dice-1.png`;
+  gameLogic();
+  if (currentRoll.length >= 2) {
+    imgDice1.src = `dice-1.png`;
+    imgDice2.src = `dice-1.png`;
+    determineWinner();
+  }
+};
