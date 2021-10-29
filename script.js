@@ -9,7 +9,6 @@ var gameMode = diceRollMode;
 
 var newdDiceRoll = [];
 
-//var diceOrder = Number();
 var player = 1;
 
 var player1DiceRoll = [];
@@ -21,50 +20,38 @@ var player2DiceNum = [];
 var playerNum = [];
 
 var main = function (input) {
-  //var player = 1;
   var myOutput = ``;
   if (gameMode === diceRollMode){
     //generate 2 different dice roll
     var newdDiceRoll = playerDiceRoll();
-    console.log(newdDiceRoll);
     gameMode = chooseDiceMode;
-    //player = 1;
-    console.log('hello');
-    return `dice roll 1: ${newdDiceRoll[0]} and dice roll2 : ${newdDiceRoll[1]} please choose`;
+    return `1st Dice Roll: ${newdDiceRoll[0]}<br>2nd Dice Roll : ${newdDiceRoll[1]}<br><br>Please choose your preferred order`;
   }
 //go into choose dice roll mode
     if (gameMode == chooseDiceMode){
-      //var player = 1;
-      console.log('hi');
       if (input == "1"){
         var firstNum = player1DiceRoll[0];
         var secNum = player1DiceRoll[1];
         var player1DiceNum = String(firstNum) + String(secNum);
-        console.log(playerNum);
         playerNum.push(player1DiceNum);
-        //player = 1;
         if (player == 1){
           player = 2;        
-          gameMode = diceRollMode;
-          console.log("sleep");   
-          return `you have choosen ${firstNum} and ${secNum}, you have got ${playerNum}`;
+          gameMode = diceRollMode;  
+          return `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum}`;
         }
-        myOutput = `you have choosen ${firstNum} and ${secNum}, you have got ${playerNum}`;
+        myOutput = `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br> Your No. is: ${playerNum}`;
   }
       if (input == "2"){
         var firstNum = player1DiceRoll[1];
         var secNum = player1DiceRoll[0];
         var player1DiceNum = String(firstNum) + String(secNum);
-        console.log(playerNum);
         playerNum.push(player1DiceNum);
-        //player = 1;
         if (player == 1){
           player = 2;
           gameMode = diceRollMode;
-          console.log('sleep');
-          return `you have choosen ${firstNum} and ${secNum}, you have got ${playerNum}`;
+          return `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum}`;
         }
-        myOutput = `you have choosen ${firstNum} and ${secNum}, you have got ${playerNum}`;
+        myOutput = `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum}`;
   } 
 
      if (
@@ -73,17 +60,22 @@ var main = function (input) {
        console.log (`plyer 1: ${playerNum}`);
        console.log(`plyer 2: ${playerNum}`);
        gameMode = chooseDiceMode;
-       return `choose 1 or 2`
+       return `choose 1 or 2`;
       }
     }
          if ( playerNum[0]> playerNum[1]){
-           return myOutput + 'Player 1 Win!'
-         } else if ( playerNum[0]<playerNum[1]){
-           return myOutput + 'Player 2 Win!'
+           gameMode = diceRollMode;
+           return `Player 1 No.:${playerNum[0]}<br>Player 2 No.:${playerNum[1]}<br><br>Player 1 Win!`;
+         } 
+         if ( playerNum[0]<playerNum[1]){
+           gameMode = diceRollMode;
+           return `Player 1 No.:${playerNum[0]}<br>Player 2 No.:${playerNum[1]}<br><br>Player 2 Win!`;
          }
-        }
-
-  
+         if (playerNum[0] == playerNum[1]){
+           gameMode = diceRollMode;
+            return `Player 1 No.:${playerNum[0]}<br>Player 2 No.:${playerNum[1]}<br><br>It's a Draw!`;
+         }
+        };
 
 var playerDiceRoll = function(){
   var theDiceRolls = [diceRoll(), diceRoll()];
