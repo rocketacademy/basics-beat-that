@@ -14,6 +14,7 @@ const currentScoreEl1 = document.getElementById('current-1');
 const playerScoreEl0 = document.querySelector('.score-0');
 const playerScoreEl1 = document.querySelector('.score-1');
 const btnReverse = document.querySelector('#btn-reverse');
+const btnNewGame = document.querySelector('#btn-new-game');
 
 // global variables
 let dice1,
@@ -190,3 +191,29 @@ const leaderboard = function () {
     return b - a;
   });
 };
+
+btnNewGame.addEventListener('click', function () {
+  dice1,
+    dice2,
+    (player0Score = 0),
+    (player1Score = 0),
+    (activePlayer = 0),
+    (currentRoll = []),
+    (player0Rolls = []),
+    (player1Rolls = []);
+
+  // leaderboard back to 0
+  document.querySelector('.player-0-descending').textContent = [0];
+  document.querySelector('.player-1-descending').textContent = [0];
+  // player 1 / 2 score back to 0
+  playerScoreEl0.textContent = 0;
+  playerScoreEl1.textContent = 0;
+  // current roll 1 / 2 back to 0
+  currentScoreEl0.textContent = 0;
+  currentScoreEl1.textContent = 0;
+  // dice back to 1 and 1
+  imgDice1.src = 'dice-1.png';
+  imgDice2.src = 'dice-1.png';
+  // lowest number wins off
+  document.querySelector('.container').classList.remove('reverse');
+});
