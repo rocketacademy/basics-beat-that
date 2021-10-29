@@ -1,34 +1,50 @@
 var gameMode = "selectNumPlayers"; //or "playerSelectOrder" "reportResult" "playerRoll";
 var playerNum = 1;
-var totalPlayerNum = 0;
+var totalPlayerNum = 2;
+var totalDiceRolls = 0;
 var playerChoices = [];
 var playerScores = [];
-var diceRolls = [];
 var concat1 = 0;
 var concat2 = 0;
+var highOrLowMode = "high";
 
 var main = function (input) {
   if (gameMode == "selectNumPlayers") {
-    totalPlayerNum = input;
-    if (isNaN(input) || totalPlayerNum == 0) {
+    if (isNaN(input) || !input) {
       return "Please input number of players";
     }
+    totalPlayerNum = input;
 
     for (var counter = 0; counter < totalPlayerNum; counter += 1) {
       playerScores[counter] = 0;
     }
+    gameMode = "selectNumDice";
+    return "Please input number of dice";
+  }
+
+  if (gameMode == "selectNumDice") {
+    if (isNaN(input) || !input) {
+      return "Please input number of dice";
+    }
+    totalDiceRolls = input;
     gameMode = "playerRoll";
     return "Now Player 1 goes first. Click Submit to roll the dice.";
   }
 
   while (playerNum < totalPlayerNum) {
     if (gameMode == "playerRoll") {
-      gameMode = "playerSelectOrder";
-      return rollTwoDice();
+      if (totalDiceRolls != 2) {
+        playerSelectionMessage = diceRollXTimes(totalDiceRolls, "high");
+        playerSelectionMessage += `<br><br>It is now Player ${playerNum}'s turn. Click Submit to roll the dice`;
+        return playerSelectionMessage;
+      } else {
+        gameMode = "playerSelectOrder";
+        return rollTwoDice();
+      }
     }
 
     if (gameMode == "playerSelectOrder") {
-      playerSelectionMessage = storePlayerChoices(input);
+      var playerSelectionMessage = storePlayerChoices(input);
       playerNum += 1;
       gameMode = "playerRoll";
       playerSelectionMessage += `<br>It is now Player ${playerNum}'s turn. Click Submit to roll the dice`;
@@ -37,8 +53,15 @@ var main = function (input) {
   }
 
   if (gameMode == "playerRoll" && playerNum == totalPlayerNum) {
-    gameMode = "playerSelectOrder";
-    return rollTwoDice();
+    if (totalDiceRolls != 2) {
+      playerSelectionMessage = diceRollXTimes(totalDiceRolls, "high");
+      playerSelectionMessage += "<br>Click Submit to see the results";
+      gameMode = "reportResult";
+      return playerSelectionMessage;
+    } else {
+      gameMode = "playerSelectOrder";
+      return rollTwoDice();
+    }
   }
 
   if (gameMode == "playerSelectOrder" && playerNum == totalPlayerNum) {
@@ -49,10 +72,18 @@ var main = function (input) {
   }
 
   if (gameMode == "reportResult") {
-    results = `${playerChoices} ${playerScores}`;
-    // results = `Player 1 has ${playerChoices[0]}, Player 2 has ${playerChoices[1]}, Player 1 has total score ${playerScores[0]}, Player 2 has total score ${playerScores[1]}<br>Click Submit to play another round`;
+    results = "";
+
+    for (var playerCount = 0; playerCount < totalPlayerNum; playerCount += 1) {
+      results += `Player ${playerCount + 1} current score is ${
+        playerChoices[playerCount]
+      }, total score is ${playerScores[playerCount]}<br>`;
+    }
+
     playerNum = 1;
     gameMode = "playerRoll";
+    results +=
+      "<br> Click submit to play another round - Player 1 starts first";
     return results;
   }
 };
@@ -73,8 +104,32 @@ var rollTwoDice = function () {
 };
 
 var diceRollXTimes = function (x, highOrLowMode) {
-  var randomSixInteger = 1 + Math.floor(Math.random() * 6);
-  return randomSixInteger;
+  var diceRollsSort = [];
+  var diceRolls = [];
+  for (var diceCount = 0; diceCount < x; diceCount += 1) {
+    diceRolls[diceCount] = diceRoll();
+    diceRollsSort[diceCount] = diceRolls[diceCount];
+  }
+
+  if (highOrLowMode == "high") {
+    diceRollsSort.sort(function (a, b) {
+      return b - a;
+    });
+  } else {
+    diceRollsSort.sort(function (a, b) {
+      return a - b;
+    });
+  }
+  diceConcat = "";
+  for (var diceCount = 0; diceCount < x; diceCount += 1) {
+    diceConcat += diceRollsSort[diceCount].toString();
+  }
+  playerChoices[playerNum - 1] = Number(diceConcat);
+  playerScores[playerNum - 1] += playerChoices[playerNum - 1];
+  playerNum += 1;
+  return `Your dice rolls are ${diceRolls}, the best combination is ${Number(
+    diceConcat
+  )}`;
 };
 
 var storePlayerChoices = function (input) {
