@@ -34,7 +34,9 @@ instructionsEl.textContent = `${nameOfPlayers[activePlayer]}, please roll dice t
 
 // lowest number mode
 btnReverse.addEventListener('click', function () {
+  init();
   document.querySelector('.container').classList.toggle('reverse');
+  // change mode to false
   normalMode = normalMode === true ? false : true;
   normalMode === true
     ? (document.querySelector(
@@ -47,7 +49,7 @@ btnReverse.addEventListener('click', function () {
 
 // determines winner based on the current scores
 const determineWinner = function () {
-  if (normalMode === true) {
+  if (normalMode) {
     if (currentRoll[0] === currentRoll[1]) {
       player0Score += 0;
       player1Score += 0;
@@ -67,7 +69,7 @@ const determineWinner = function () {
       player0Score += 1;
     } else {
       // console.log(`player 2 won`);
-      player0Score += 1;
+      player1Score += 1;
     }
   }
   currentRoll = [];
@@ -169,6 +171,10 @@ const leaderboard = function () {
 };
 
 btnNewGame.addEventListener('click', function () {
+  init();
+});
+
+const init = function () {
   dice1,
     dice2,
     (player0Score = 0),
@@ -198,7 +204,9 @@ btnNewGame.addEventListener('click', function () {
   btnDice2.classList.add('hidden');
   // revert instructions to starter
   instructionsEl.textContent = `Player 1, Roll dice to start the game! 🎲`;
-});
+  // revert to normal mode
+  normalMode = true;
+};
 
 const recordActivePlayerRolls = function (concatOfDice) {
   // add current roll to active player
