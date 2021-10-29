@@ -1,6 +1,7 @@
 // Global Variables
 var GAME_MODE_ROLL_DICE = "GAME_MODE_ROLL_DICE";
 var GAME_MODE_SELECT_ORDER = "GAME_MODE_SELECT_ORDER";
+var PLAYER_ACTION_KNOCKOUT = "PLAYER_ACTION_KNOCKOUT";
 var GAME_MODE_HIGHEST_COMBINED_NUMBER = "GAME_MODE_HIGHEST_COMBINED_NUMBER";
 var GAME_MODE_KNOCKOUT = "GAME_MODE_KNOCKOUT";
 
@@ -102,21 +103,32 @@ var main = function (input) {
     }
     playersOutputNumbersString = `The players numbers are: <br>
                                   ${myOutputValue}`;
+
+    // Check Winner and reset
+    var winner = getWinner(playersNumber);
+    var leaderboardOutput = getLeaderboard(playersScore);
+    getReset();
+
+    return `${playersOutputNumbersString} <br><br>
+          ${winner} <br><br>
+          Leaderboard: <br>
+          ${leaderboardOutput}`;
   }
 
   // Knockout Game Mode
   if (gameMode === GAME_MODE_KNOCKOUT) {
+    return "Not Included Yet. Please choose Highest Value";
   }
 
-  // Check Winner and reset
-  var winner = getWinner(playersNumber);
-  var leaderboardOutput = getLeaderboard(playersScore);
-  getReset();
+  // // Check Winner and reset
+  // var winner = getWinner(playersNumber);
+  // var leaderboardOutput = getLeaderboard(playersScore);
+  // getReset();
 
-  return `${playersOutputNumbersString} <br><br>
-          ${winner} <br><br>
-          Leaderboard: <br>
-          ${leaderboardOutput}`;
+  // return `${playersOutputNumbersString} <br><br>
+  //         ${winner} <br><br>
+  //         Leaderboard: <br>
+  //         ${leaderboardOutput}`;
 };
 
 // Functions //
