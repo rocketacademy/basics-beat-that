@@ -36,6 +36,7 @@ var main = function (input) {
   }
   // determine the winner after both players have played
   console.log(`determine winner`);
+  playernumber = 1;
   return `${player1vs2()} Thanks for playing!`;
 };
 
