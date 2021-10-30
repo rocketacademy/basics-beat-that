@@ -64,6 +64,7 @@ var main = function (input) {
     myOutputValue =
       "Welcome " +
       currentPlayer +
+      " ,to Two Dice Game" +
       "<br>" +
       "You rolled " +
       dice1 +
@@ -85,7 +86,7 @@ var main = function (input) {
         "Your number is " +
         player1_Number +
         "<br>" +
-        " It's now Player 2's turn.";
+        " It's now Player 2's turn. Player 2, press submit to roll the dice";
     } else if (currentPlayer == "Player2") {
       round_Number = round_Number + 1;
 
