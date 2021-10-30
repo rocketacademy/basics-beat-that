@@ -57,7 +57,7 @@ function winningPlayer() {
   } else return `${userNameTwo} Win;`;
 }
 
-//----------main-----------
+//----------main function-----------
 
 var main = function (input) {
   var rollDice1 = rollDice();
