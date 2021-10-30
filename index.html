@@ -18,10 +18,12 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: #696969;
+        border-radius: 15px;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+        color: whitesmoke;
       }
 
       input {
@@ -29,6 +31,7 @@
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
+
         width: 100%;
       }
 
@@ -36,14 +39,17 @@
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
+
         padding: 0 6px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        border-radius: 10px;
+        background-color: tomato;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+        color: whitesmoke;
       }
     </style>
   </head>
@@ -51,6 +57,12 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
+      <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
+      <p>
+        Create a two-digit number by selecting the order of your dice rolls.
+      </p>
+      <p>The player with the highest total score leads! Good luck!</p>
+
       <p>Input:</p>
       <input id="input-field" />
       <br />
