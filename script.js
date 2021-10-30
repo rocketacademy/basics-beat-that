@@ -105,11 +105,14 @@ var main = function (input) {
   else if (mode == "final") {
     console.log("Is this working?");
     if (player1Score > player2Score) {
-      myOutputValue = "Player 1 wins!";
+      myOutputValue = "Player 1 wins!  Please press submit to play again.";
+      mode = "start game";
     } else if (player2Score > player1Score) {
-      myOutputValue = "Player 2 wins!";
+      myOutputValue = "Player 2 wins! Please press submit to play again.";
+      mode = "start game";
     } else {
-      myOutputValue = "Draw!";
+      myOutputValue = "Draw!  Please press submit to play again.";
+      mode = "start game";
     }
   }
   console.log("mode:", mode);
