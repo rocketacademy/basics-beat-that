@@ -3,9 +3,6 @@ var gameState = "preGame";
 var playerTurn = 1;
 var roundNumber = 0;
 
-var player1Score = 0;
-var player2Score = 0;
-
 var numberOfDice = 0;
 
 var numberOfPlayers = 0;
@@ -161,17 +158,18 @@ var executeNewRoll = function () {
   counter = 0;
   var diceListRollResults = [];
 
+  //loop to create array of strings in order to display the dice inside the array nicely.
   while (counter < numberOfDice) {
     diceListRollResults.push(`Die ${counter + 1}: ${diceArray[counter]}`);
     counter = counter + 1;
   }
 
-  //Create an array with the dice sorted in descending order.
+  //Sorts the dice array in descending order to create the player's optimal dice combo.
   diceComboArray = diceArray.sort(function (a, b) {
     return b - a;
   });
 
-  //converts the sorted array into an integer and place into a variable for retriving later
+  //converts the dice combo number into an integer, then places it into the respective player's variable for retriving later
   if (playerTurn == 1) {
     p1DiceCombo = Number(diceComboArray.join(""));
   } else if (playerTurn == 2) {
@@ -182,11 +180,6 @@ var executeNewRoll = function () {
     p4DiceCombo = Number(diceComboArray.join(""));
   }
 
-  //at the last player's roll, change to display results mode.
-  if (playerTurn == numberOfPlayers) {
-    gameState = "displayResults";
-  }
-
   myOutputValue = `PLAYER ${playerTurn}'S ROLLS <br><br> ${diceListRollResults.join(
     "<br>"
   )} <br><br> Your number is ${diceComboArray.join("")} <br> <br> Player ${
@@ -194,6 +187,9 @@ var executeNewRoll = function () {
   }, click the button to roll.`;
 
   if (playerTurn == numberOfPlayers) {
+    //at the last player's roll, change to display results mode.
+    gameState = "displayResults";
+
     myOutputValue = `PLAYER ${playerTurn}'S ROLLS <br><br> ${diceListRollResults.join(
       "<br>"
     )} <br><br> Your number is ${diceComboArray.join(
