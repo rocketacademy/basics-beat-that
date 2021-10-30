@@ -9,6 +9,8 @@ var guess = "";
 var guess2 = "";
 var userTopGuess = "";
 var output = "";
+var score1 = 0;
+var score2 = 0;
 
 //Roll dice function
 var rollDice = function () {
@@ -105,10 +107,12 @@ var main = function (input) {
   else if (mode == "final") {
     console.log("Is this working?");
     if (player1Score > player2Score) {
-      myOutputValue = "Player 1 wins!  Please press submit to play again.";
+      score1++;
+      myOutputValue = `Player 1 wins! <br><br> Player 1 scored: ${score1}<br> Player 2 scored: ${score2} <br><br> Please press submit to play again.`;
       mode = "start game";
     } else if (player2Score > player1Score) {
-      myOutputValue = "Player 2 wins! Please press submit to play again.";
+      score2++;
+      myOutputValue = `Player 2 wins! <br><br> Player 1 scored: ${score1} <br> Player 2 scored: ${score2} <br><br> Please press submit to play again.`;
       mode = "start game";
     } else {
       myOutputValue = "Draw!  Please press submit to play again.";
