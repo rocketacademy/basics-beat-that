@@ -14,12 +14,15 @@ var player2DiceRolls = [];
 // Each player's combined number
 var player1num;
 var player2num;
+// store players' score in array
+var score = [0, 0];
 
 // Start with Player 1
 var currPlayer = 1;
 
 var numDice = 2;
 
+// game modes
 var GAME_MODE_ROLL_DICE = "ROLL_DICE";
 var GAME_MODE_ENTER_ORDER = "ENTER_ORDER";
 // game mode for roll dice mode
@@ -59,10 +62,19 @@ var playerChosenNum = function (userChoice) {
   }
   return combinedNumOfCurrPlayer;
 };
+// add playerNum to get each player's score
+var addNumToScore = function (playerNum) {
+  if (currPlayer == 1) {
+    score[0] += playerNum;
+  } //if currPlayer is 2
+  if (currPlayer == 2) {
+    score[1] += playerNum;
+  }
+};
 
-// check which player won
+// check which player won -to check which player is leading
 var checkWhoWon = function () {
-  if (player1num > player2num) {
+  if (score[0] > score[1]) {
     return 1;
   }
   return 2;
@@ -70,7 +82,7 @@ var checkWhoWon = function () {
 
 // Output which player won
 var generateOutputMessage = function (playerWon) {
-  return `Player ${playerWon} has won! <br> Player 1's number: ${player1num} and Player 2's number: ${player2num}. <br><br> Click submit to play again.`;
+  return `Player ${playerWon} is leading! <br> Player 1's score: ${score[0]} and Player 2's score: ${score[1]}. <br><br> Click submit to play again.`;
 };
 
 var main = function (input) {
@@ -104,6 +116,7 @@ var main = function (input) {
   // following code for ENTER_ORDER game mode
   if (gameMode == GAME_MODE_ENTER_ORDER) {
     var userChoice = Number(input);
+    var myOutputValue = "";
 
     // validate input
     if (userChoice != 1 && userChoice != 2) {
@@ -118,21 +131,27 @@ var main = function (input) {
 
     //if currPlayer is 1, change to player 2 and game mode to roll dice
     if (currPlayer == 1) {
+      addNumToScore(playerNum);
+      console.log(`player 1 score: ${score[0]}`);
       currPlayer += 1;
       gameMode = GAME_MODE_ROLL_DICE;
-      return `${playerNumMsg} <br><br> It is Player ${currPlayer}'s turn. Click submit to roll dice.`;
+      myOutputValue = `${playerNumMsg} <br> Your score: ${score[0]} <br><br> It is Player ${currPlayer}'s turn. Click submit to roll dice.`;
+      return myOutputValue;
     }
-    //if currPlayer is player 2, check winner and announce
+    //if currPlayer is player 2, add number to score
+    addNumToScore(playerNum);
+    console.log(`player 2 score: ${player2num}`);
+    // check winner and announce
     var playerWon = checkWhoWon();
 
     // reset mode to enter num dice for next player's turn
     gameMode = GAME_MODE_ROLL_DICE;
     // Next player is the current player + 1, or 1 if current player is the last player.
     var nextPlayer = (currPlayer % numPlayers) + 1;
-    // Generate output message based on current game state
-    var myOutputValue = `${playerNumMsg} <br><br> ${generateOutputMessage(
-      playerWon
-    )}`;
+    // Generate output message for player 2 and overall current game state
+    myOutputValue = `${playerNumMsg} <br> Your score: ${
+      score[1]
+    } <br><br> ${generateOutputMessage(playerWon)}`;
     // Update currPlayer to nextPlayer before next turn
     currPlayer = nextPlayer;
     return myOutputValue;
