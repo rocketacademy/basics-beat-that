@@ -5,6 +5,7 @@ var rollDiceMode = "roll dice";
 var dice1 = "";
 var dice2 = "";
 var winner = [];
+var cumulativeScore = [0, 0];
 
 //if input==1, dice1 then dice2
 //if input==2, dice2 then dice1
@@ -19,7 +20,10 @@ var main = function (input) {
         winner[0] +
         ", Player 2 got " +
         winner[1] +
-        ", Player 1 Wins"
+        ", Player 1 Wins this round. <br><br> CUMULATIVE SCORES<br>Player 1 - " +
+        cumulativeScore[0] +
+        "<br>Player 2 - " +
+        cumulativeScore[1]
       );
     }
     if (winner[1] > winner[0]) {
@@ -28,7 +32,10 @@ var main = function (input) {
         winner[0] +
         ", Player 2 got " +
         winner[1] +
-        ", Player 2 Wins"
+        ", Player 2 Wins this round. <br><br> CUMULATIVE SCORES<br>Player 1 - " +
+        cumulativeScore[0] +
+        "<br>Player 2 - " +
+        cumulativeScore[1]
       );
     }
     if (winner[0] == winner[1]) {
@@ -66,11 +73,13 @@ var main = function (input) {
         var str = String(dice1) + String(dice2);
         var num = Number(str);
         winner.push(num);
+        cumulativeScore[0] = cumulativeScore[0] + num;
         return "Your number is " + num + ".";
       } else if (input == "2") {
         var str = String(dice2) + String(dice1);
         var num = Number(str);
         winner.push(num);
+        cumulativeScore[0] = cumulativeScore[0] + num;
         return "Your number is " + num + ".";
       }
     }
@@ -96,11 +105,13 @@ var main = function (input) {
         var str = String(dice1) + String(dice2);
         var num = Number(str);
         winner.push(num);
+        cumulativeScore[1] = cumulativeScore[1] + num;
         return "Your number is " + num + ".";
       } else if (input == "2") {
         var str = String(dice2) + String(dice1);
         var num = Number(str);
         winner.push(num);
+        cumulativeScore[1] = cumulativeScore[1] + num;
         return "Your number is " + num + ".";
       }
     }
@@ -119,3 +130,5 @@ var rollDice = function () {
   var diceNumber = randomInteger + 1;
   return diceNumber;
 };
+
+//Add the string for cumulative score later
