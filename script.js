@@ -36,6 +36,7 @@ var main = function (input) {
     if (gameMode == "playerRoll") {
       if (totalDiceRolls != 2) {
         var diceResult = diceRollXTimes(totalDiceRolls, "high");
+        playerNum += 1;
         return (diceResult += `<br><br>It is now Player ${playerNum}'s turn. Click Submit to roll the dice`);
       } else {
         gameMode = "playerSelectOrder";
@@ -143,7 +144,7 @@ var diceRollXTimes = function (x, highOrLowMode) {
   //convert the resulting string back to number and store the player score
   playerChoices[playerNum - 1] = Number(diceConcat);
   playerScores[playerNum - 1] += playerChoices[playerNum - 1];
-  playerNum += 1;
+
   return `Your dice rolls are ${diceRolls}, the best combination is ${Number(
     diceConcat
   )}`;
