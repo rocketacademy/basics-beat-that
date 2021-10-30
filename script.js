@@ -135,7 +135,7 @@ var diceRollXTimes = function (x, highOrLowMode) {
       return a - b;
     });
   }
-  diceConcat = "";
+  var diceConcat = "";
   //concatenate the sorted elements of the array as strings
   for (var diceCount = 0; diceCount < x; diceCount += 1) {
     diceConcat += diceRollsSort[diceCount].toString();
