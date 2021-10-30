@@ -39,7 +39,7 @@ var main = function (input) {
   else {
     //End game - If User inputs "End"
     if (input == ENDMODE) {
-      myOutputValue = "END";
+      myOutputValue = listAllRolls(numberOfPlayers, diceRollOverallArray);
       return myOutputValue;
 
       // Roll, Order, Compare
@@ -69,25 +69,13 @@ var main = function (input) {
             gameMode = COMPAREMODE;
           }
         } else if (gameMode == COMPAREMODE) {
-          //Find winner for this round
-          i = 0;
-          var winningPlayerID = "";
-          var max = diceRollCurrentArray[0];
-          while (i < numberOfPlayers) {
-            i = i + 1;
-            diceRollOverallArray[i].push(diceRollCurrentArray[i]);
-            console.log("diceRollOverallArray: ", diceRollOverallArray);
-            // Find max number from array
-            if (max <= diceRollCurrentArray[i]) {
-              max = diceRollCurrentArray[i];
-              winningPlayerID = i;
-              console.log("max: ", max);
-              console.log("winningPlayerID: ", winningPlayerID);
-            }
-          }
-          playerScore[winningPlayerID] = playerScore[winningPlayerID] + 1;
-          console.log("playerScore:", playerScore);
-          myOutputValue = `Player ${winningPlayerID} wins this round with ${max}!<br >Press Submit to continue playing. Or, type "End" to end the game and tabulate scores.`;
+          myOutputValue =
+            computeCurrentWinner(
+              numberOfPlayers,
+              diceRollCurrentArray,
+              diceRollOverallArray,
+              playerScore
+            ) + computeLeaderboard(numberOfPlayers, diceRollOverallArray);
           resetGame();
           return myOutputValue;
         }
@@ -114,4 +102,67 @@ var resetGame = function () {
   max = "";
   winningPlayerID = "";
   diceRollCurrentArray = [0];
+};
+var computeCurrentWinner = function (
+  totalNumber,
+  currentArray,
+  overallArray,
+  scoreArray
+) {
+  var indexNumber = 0;
+  var winningPlayerID = "";
+  var max = currentArray[0];
+  while (indexNumber < totalNumber) {
+    indexNumber = indexNumber + 1;
+    overallArray[indexNumber].push(currentArray[indexNumber]);
+    console.log("OverallArray: ", overallArray);
+    // Find max number from array
+    if (max <= currentArray[indexNumber]) {
+      max = currentArray[indexNumber];
+      winningPlayerID = indexNumber;
+      console.log("max: ", max);
+      console.log("winningPlayerID: ", winningPlayerID);
+    }
+  }
+  scoreArray[winningPlayerID] = scoreArray[winningPlayerID] + 1;
+  console.log("playerScore:", playerScore);
+  myOutputValue = `Player ${winningPlayerID} wins this round with ${max}!<br >Press Submit to continue playing. Or, type "End" to end the game and review dice roll history.`;
+  return myOutputValue;
+};
+var computeLeaderboard = function (totalNumber, overallArray) {
+  myOutputValue = "";
+  var indexNumber = 0;
+  var innerArrayIndexNumber = 0;
+  var sumNumber = 0;
+  var previousSumNumber = 0;
+  var leaderBoard = [];
+  while (indexNumber < totalNumber) {
+    indexNumber = indexNumber + 1;
+    sumNumber = 0;
+    while (innerArrayIndexNumber < overallArray[indexNumber].length) {
+      sumNumber = sumNumber + overallArray[indexNumber][innerArrayIndexNumber];
+      innerArrayIndexNumber = innerArrayIndexNumber + 1;
+    }
+    innerArrayIndexNumber = 0;
+    myOutputValue = `<br>Player ${indexNumber}: ${sumNumber}`;
+    console.log("sumNumber: ", sumNumber);
+    console.log("previousSumNumber", previousSumNumber);
+    console.log("myOutputValue: ", myOutputValue);
+    if (sumNumber > previousSumNumber) {
+      leaderBoard.unshift(myOutputValue);
+    } else {
+      leaderBoard.push(myOutputValue);
+    }
+    previousSumNumber = sumNumber;
+  }
+  return `<br><br>Leaderboard:<br>${leaderBoard.join("<br >")}`;
+};
+var listAllRolls = function (totalNumber, overallArray) {
+  var indexNumber = 0;
+  myOutputValue = "Dice Roll History:<br >";
+  while (indexNumber < totalNumber) {
+    indexNumber = indexNumber + 1;
+    myOutputValue += `Player ${indexNumber}: ${overallArray[indexNumber]}<br >`;
+  }
+  return myOutputValue;
 };
