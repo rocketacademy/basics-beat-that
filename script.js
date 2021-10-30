@@ -4,6 +4,9 @@
 // You can choose how the player specifies dice order.
 // After both players have rolled and chosen dice order, the player with the higher combined number wins.
 
+// Score
+// Keep score for each player. The score is the running sum of all numbers that player has generated so far. This means there is no permanent winner, only a temporary leader.
+
 // global variables
 var playerOneDiceOne = "";
 var playerOneDiceTwo = "";
@@ -14,6 +17,44 @@ var playerTwoNumber = "";
 var playerOneScore = [];
 var playerTwoScore = [];
 var gameMode = "player 1";
+
+// calc total player 1 score indefinitely
+var totalPlayerScore = function () {
+  var playerOneTotalScore = 0;
+  var playerTwoTotalScore = 0;
+
+  for (i = 0; i < playerOneScore.length; i++) {
+    playerOneTotalScore = playerOneScore[i];
+
+    console.log(
+      playerOneScore
+        .map(function (elt) {
+          // assure the value can be converted into an integer
+          return /^\d+$/.test(elt) ? parseInt(elt) : 0;
+        })
+        .reduce(function (a, b) {
+          // sum all resulting numbers
+          return a + b;
+        })
+    );
+  }
+  for (j = 0; j < playerTwoScore.length; j++) {
+    playerTwoTotalScore = playerTwoScore[j];
+
+    console.log(
+      playerTwoScore
+        .map(function (elt) {
+          // assure the value can be converted into an integer
+          return /^\d+$/.test(elt) ? parseInt(elt) : 0;
+        })
+        .reduce(function (a, b) {
+          // sum all resulting numbers
+          return a + b;
+        })
+    );
+  }
+  return `Player 1 total score is ${playerOneTotalScore} and Player 2 total score is ${playerTwoTotalScore}.`;
+};
 
 // roll dice to string
 var rollDice = function () {
@@ -86,19 +127,29 @@ var combineDiceRolls = function (input) {
 // player scoring
 var finalScore = function () {
   if (playerOneScore > playerTwoScore) {
-    return `Player 1 🐶 wins 🏆 with ${playerOneScore} and Player 2 🐹 loses 😭 with ${playerTwoScore}`;
+    return `Player 1 🐶 wins 🏆 with ${
+      playerOneScore[playerOneScore.length - 1]
+    } and Player 2 🐹 loses 😭 with ${
+      playerTwoScore[playerTwoScore.length - 1]
+    }`;
   } else if (playerOneScore < playerTwoScore) {
-    return `Player 1 🐶 loses 😭 with ${playerOneScore} and Player 2 🐹 wins 🏆 with ${playerTwoScore}`;
+    return `Player 1 🐶 loses 😭 with ${
+      playerOneScore[playerOneScore.length - 1]
+    } and Player 2 🐹 wins 🏆 with ${
+      playerTwoScore[playerTwoScore.length - 1]
+    }`;
   } else if (playerOneScore == playerTwoScore) {
-    return `It is a draw as Player 1 🐶 number is ${playerOneScore} and Player 2 🐹 number is also ${playerTwoScore}`;
+    return `It is a draw as Player 1 🐶 number is ${
+      playerOneScore[playerOneScore.length - 1]
+    } and Player 2 🐹 number is also ${
+      playerTwoScore[playerTwoScore.length - 1]
+    }`;
   }
 };
 
-// play again
+// continue playing
 var playAgain = function () {
   gameMode = "player 1";
-  playerOneScore = [];
-  playerTwoScore = [];
 };
 
 var main = function (input) {
@@ -121,14 +172,18 @@ var main = function (input) {
     // player 2 choose dice position
   } else if (gameMode == "player 2 position") {
     myOutputValue = playerTwoChoice(input);
-    console.log(`player 1 number is ${playerTwoNumber}`);
+    console.log(`player 2 number is ${playerTwoNumber}`);
     // who has the bigger number
   } else if (gameMode == "score time") {
-    myOutputValue = finalScore() + "<br><br>Press submit to play again!";
+    myOutputValue =
+      finalScore() +
+      "<br><br>Press submit to play again!" +
+      "<br><br>" +
+      totalPlayerScore();
     console.log(
       `player 1 score in array is ${playerOneScore} and player 2 is ${playerTwoScore}`
     );
-    // play again
+    // continue playing
     playAgain();
   }
   return myOutputValue;
