@@ -1,57 +1,65 @@
 //Press submit player 1 will go into dice roll mode
 //then player will get to choose the dice sequence
 
+//Keep Score for each player
+//
 
 var diceRollMode = 'game mode dice roll';
 var chooseDiceMode = 'game mode choose dice'
 
 var gameMode = diceRollMode;
 
-var newdDiceRoll = [];
+var newDiceRoll = [];
+
+var playerDiceRoll = [];
 
 var player = 1;
 
 var player1DiceRoll = [];
 var player2DiceRoll = [];
 
-var player1DiceNum = [];
-var player2DiceNum = []; 
+var firstOrderDiceNum = String();
+var secOrderDiceNum = String(); 
 
 var playerNum = [];
+
+var player1Win = false;
+var player2Win = false;
 
 var main = function (input) {
   var myOutput = ``;
   if (gameMode === diceRollMode){
     //generate 2 different dice roll
-    var newdDiceRoll = playerDiceRoll();
+    var newDiceRoll = genDiceRoll();
+    console.log(playerDiceRoll);
     gameMode = chooseDiceMode;
-    return `1st Dice Roll: ${newdDiceRoll[0]}<br>2nd Dice Roll : ${newdDiceRoll[1]}<br><br>Please choose your preferred order`;
+    return `1st Dice Roll: ${newDiceRoll[0]}<br>2nd Dice Roll : ${newDiceRoll[1]}<br><br>Please choose your preferred order`;
   }
 //go into choose dice roll mode
     if (gameMode == chooseDiceMode){
       if (input == "1"){
-        var firstNum = player1DiceRoll[0];
-        var secNum = player1DiceRoll[1];
-        var player1DiceNum = String(firstNum) + String(secNum);
-        playerNum.push(player1DiceNum);
+        var firstNum = playerDiceRoll[0];
+        var secNum = playerDiceRoll[1];
+        var firstOrderDiceNum = String(firstNum) + String(secNum);
+        playerNum.push(firstOrderDiceNum);
         if (player == 1){
           player = 2;        
           gameMode = diceRollMode;  
-          return `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum}`;
+          return `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum[0]}`;
         }
-        myOutput = `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br> Your No. is: ${playerNum}`;
+        myOutput = `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br> Your No. is: ${playerNum[0]}`;
   }
       if (input == "2"){
-        var firstNum = player1DiceRoll[1];
-        var secNum = player1DiceRoll[0];
-        var player1DiceNum = String(firstNum) + String(secNum);
-        playerNum.push(player1DiceNum);
+        var firstNum = playerDiceRoll[1];
+        var secNum = playerDiceRoll[0];
+        var secOrderDiceNum = String(firstNum) + String(secNum);
+        playerNum.push(secOrderDiceNum);
         if (player == 1){
           player = 2;
           gameMode = diceRollMode;
-          return `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum}`;
+          return `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum[1]}`;
         }
-        myOutput = `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum}`;
+        myOutput = `1st choosen No.: ${firstNum}<br>2nd choosen No.: ${secNum}<br><br>Your No. is: ${playerNum[1]}`;
   } 
 
      if (
@@ -65,26 +73,29 @@ var main = function (input) {
     }
          if ( playerNum[0]> playerNum[1]){
            gameMode = diceRollMode;
+           player1Win = true;
            return `Player 1 No.:${playerNum[0]}<br>Player 2 No.:${playerNum[1]}<br><br>Player 1 Win!`;
          } 
          if ( playerNum[0]<playerNum[1]){
            gameMode = diceRollMode;
+           player2Win = true;
            return `Player 1 No.:${playerNum[0]}<br>Player 2 No.:${playerNum[1]}<br><br>Player 2 Win!`;
          }
          if (playerNum[0] == playerNum[1]){
            gameMode = diceRollMode;
+           player1Win = true;
+           player2Win = true;
             return `Player 1 No.:${playerNum[0]}<br>Player 2 No.:${playerNum[1]}<br><br>It's a Draw!`;
+         }
+         if (player1Win == true){
+          totalPlayer1Count = playerNum 
          }
         };
 
-var playerDiceRoll = function(){
+var genDiceRoll = function(){
   var theDiceRolls = [diceRoll(), diceRoll()];
-  if (player == 1){
-    player1DiceRoll = theDiceRolls;
-  }else{
-    player2DiceRoll = theDiceRolls;
-  }
-  return theDiceRolls;
+  playerDiceRoll = theDiceRolls;
+  return playerDiceRoll;
 }
 
 var diceRoll = function () {
