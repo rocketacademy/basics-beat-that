@@ -11,7 +11,7 @@ var highOrLowMode = "high";
 var main = function (input) {
   //ask user to choose how many players will play
   if (gameMode == "selectNumPlayers") {
-    if (isNaN(input) || !input) {
+    if (Number.isNaN(Number(input)) || !input) {
       return "Please input number of players";
     }
     totalPlayerNum = input;
@@ -24,7 +24,7 @@ var main = function (input) {
   }
   //ask user to choose how many dice to be rolled
   if (gameMode == "selectNumDice") {
-    if (isNaN(input) || !input) {
+    if (Number.isNaN(Number(input)) || !input) {
       return "Please input number of dice";
     }
     totalDiceRolls = input;
