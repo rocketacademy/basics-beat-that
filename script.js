@@ -84,9 +84,9 @@ var main = function (input) {
   }
 
   if ((currentGameMode = "Player 2 has chosen dice order")) {
-    var playerOneNumber = [playerOneDiceRoll[0], playerOneDiceRoll[1]];
+    var playerOneNumber = (playerOneDiceRoll[0], playerOneDiceRoll[1]);
     console.log("player one number is this", playerOneNumber);
-    var playerTwoNumber = [playerTwoDiceRoll[0], playerTwoDiceRoll[1]];
+    var playerTwoNumber = (playerTwoDiceRoll[0], playerTwoDiceRoll[1]);
     console.log("player two number is this", playerTwoNumber);
     currentGameMode = "Both players have rolled the dice and we have a winner!";
     console.log(currentGameMode);
@@ -100,40 +100,3 @@ var main = function (input) {
   }
   return myOutputValue;
 };
-//   var getPlayerNumber = function (firstNumeralIndex) {
-//     // Get the current player's dice array.
-//     // var diceArray;
-//     // if (currPlayer === 1) { diceArray = player1Dice; } else { diceArray = player2Dice; }
-//     var diceArray = currPlayer === 1 ? player1Dice : player2Dice;
-//     var playerNum;
-//     // If the chosen first numeral index is 1, create player number starting with 1st dice
-//     if (firstNumeralIndex === 1) {
-//       playerNum = concatenate2Numbers(diceArray[0], diceArray[1]);
-//     }
-//     // Otherwise, create player number starting with 2nd dice
-//     else {
-//       playerNum = concatenate2Numbers(diceArray[1], diceArray[0]);
-//     }
-
-//     // Store player num in the relevant global player num variable
-//     if (currPlayer === 1) {
-//       playerOneNumber = playerNum;
-//     } else {
-//       playerTwoNumber = playerNum;
-//     }
-
-//     // Return generated player num to parent function
-//     return playerNum;
-//   };
-
-//   /**
-//    * Compute the winner between Player 1 and Player 2.
-//    * Return either 1 or 2 to represent the winning player.
-//    * In the event of a tie, Player 2 wins.
-//    */
-//   var determineWinner = function () {
-//     if (playerOneNumber > playerTwoNumber) {
-//       return 1;
-//     }
-//     return 2;
-//   };
