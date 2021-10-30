@@ -50,14 +50,14 @@ var main = function (input) {
     );
   }
   // player 1 select the order of their dice
-  if (playerTurn == "#1" && (player1 !== "") & (input == 1)) {
+  if (playerTurn == "#1" && player1 !== "" && input == 1) {
     player1Number = player1[0] + "" + player1[1];
     return (
       "Player 1 has chosen the number " +
       player1Number +
       "<br><br>If Player 2 has not selected their number, please submit #2 in the input box. <br><br> If both players have selected their numbers, press Submit to see the results!"
     );
-  } else if (playerTurn == "#1" && (player1 !== "") & (input == 2)) {
+  } else if (playerTurn == "#1" && player1 !== "" && input == 2) {
     player1Number = player1[1] + "" + player1[0];
     return (
       "Player 1 has chosen the number " +
