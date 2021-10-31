@@ -105,7 +105,7 @@ var diceRoll2 = diceRollGenerator();
 
 var orderOfDice = function (input) {
   var choice = "";
-  switch (input) {
+  switch (Number(input)) {
     case 1:
       choice = `${diceRoll1}${diceRoll2}`;
       break;
