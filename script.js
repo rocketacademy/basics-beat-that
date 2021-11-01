@@ -1,12 +1,12 @@
-var highestCombinedNumMode = `Highest Combined Number Mode`;
-var lowestCombinedNumMode = `Lowest Combined Number Mode`;
+var highestCombinedNumMode = 1;
+var lowestCombinedNumMode = 2;
 var gameMode;
 
 var numDices;
 
-var diceRollMode = `Roll Dice Mode`;
-var diceSelectMode = `Dice Selection Mode`;
-var winnerMode = `Determine Winner Mode`;
+var diceRollMode = 3;
+var diceSelectMode = 4;
+var winnerMode = 5;
 var stageMode = diceRollMode;
 
 var currPlayer = 1;
@@ -14,22 +14,18 @@ var currPlayer = 1;
 var diceRoll = [];
 
 var playerNum;
-var player1Num = 0;
-var player2Num = 0;
+var player1Num;
+var player2Num;
 var player1Score = 0;
 var player2Score = 0;
 
 var resetGame = function () {
   currPlayer = 1;
   stageMode = diceRollMode;
-  player1Num = 0;
-  player2Num = 0;
 };
 
 var rollDice = function () {
-  var randomInteger = Math.floor(Math.random() * 6);
-  var diceNumber = randomInteger + 1;
-  return diceNumber;
+  return Math.ceil(Math.random() * 6);
 };
 
 var getDiceRoll = function () {
@@ -73,6 +69,7 @@ var sortArray = function () {
 var getPlayersNumAuto = function () {
   diceRoll = sortArray();
   if (currPlayer == 1) {
+    player1Num = 0;
     while (diceRoll.length > 0) {
       player1Num = arrayToNum(player1Num, diceRoll.shift());
     }
@@ -81,6 +78,7 @@ var getPlayersNumAuto = function () {
     return `Player 1 <br>Your number is ${player1Num}.<br><br>It is now Player 2's turn. <br>Click Submit to roll dice`;
   }
   if (currPlayer == 2) {
+    player2Num = 0;
     while (diceRoll.length > 0) {
       player2Num = arrayToNum(player2Num, diceRoll.shift());
     }
@@ -110,12 +108,18 @@ var getWinner = function () {
   var genericMessage = `Player 1's number: ${player1Num} | Player 2's number: ${player2Num} <br><br>Click Submit to play again.`;
   var leaderboard = getLeaderBoard();
   if (gameMode == highestCombinedNumMode) {
+    if (player1Num == player2Num) {
+      return `It is a draw. <br>${genericMessage} <br><br>${leaderboard}`;
+    }
     if (player1Num > player2Num) {
       return `Player 1 has won. <br>${genericMessage} <br><br>${leaderboard}`;
     }
     return `Player 2 has won. <br>${genericMessage} <br><br>${leaderboard}`;
   }
   if (gameMode == lowestCombinedNumMode) {
+    if (player1Num == player2Num) {
+      return `It is a draw. <br>${genericMessage} <br><br>${leaderboard}`;
+    }
     if (player1Num > player2Num) {
       return `Player 2 has won. <br>${genericMessage} <br><br>${leaderboard}`;
     }
