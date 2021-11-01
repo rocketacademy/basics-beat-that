@@ -13,43 +13,48 @@ var main = function (input) {
     if (gameMode == `Player 1`) {
       gameMode = `p1Choice`;
       console.log(`current game mode is ${gameMode}`);
+      spinTwoDice();
     } else if (gameMode == `Player 2`) {
       gameMode = `p2Choice`;
       console.log(`current game mode is ${gameMode}`);
+      spinTwoDice();
     }
     return playerDiceRoll();
   }
 
   if (gameMode == `p1Choice`) {
-    if (input == dice1) {
+    // input is the dice number i.e D1 or D2
+    if (input == 1) {
       console.log(`choose order block code here`);
-      player1Dice = `${dice1}${dice2}`;
+      createdNumber = `${dice1}${dice2}`;
       gameMode = `Player 2`;
-      return (msg = `Player 1, you chose Dice 1 first.<br>Your number is ${player1Dice}.<br>It is now Player 2's turn.`);
-    } else if (input == dice2) {
-      player1Dice = `${dice2}${dice1}`;
+      return message(1,1,createdNumber);
+    } else if (input == 2) {
+      createdNumber = `${dice2}${dice1}`;
       gameMode = `Player 2`;
-      return (msg = `Player 1, you chose Dice 2 first.<br>Your number is ${player1Dice}.<br>It is now Player 2's turn.`);
+     return message(1,2,createdNumber);
     } else {
       msg = `Please input a valid dice number`;
       return msg;
     }
   } else if (gameMode == `p2Choice`) {
     console.log(gameMode);
-    if (input == dice1) {
+    if (input == 1) {
       console.log(`choose order block code for player 2 here`);
-      player2Dice = `${dice1}${dice2}`;
+      createdNumber2 = `${dice1}${dice2}`;
       gameMode = `Compare results`;
-      return (msg = `Player 2, you chose Dice 1 first.<br>Your number is ${player2Dice}.`);
-    } else if (input == dice2) {
-      player2Dice = `${dice2}${dice1}`;
+     return message(2,1,createdNumber2);
+    } else if (input == 2) {
+      createdNumber2 = `${dice2}${dice1}`;
       gameMode = `Compare results`;
-      return (msg = `Player 2, you chose Dice 2 first.<br>Your number is ${player2Dice}.`);
+return message(2,2,createdNumber2);
     } else {
       msg = `Please input a valid dice number`;
       return msg;
     }
   }
+
+
   // add players scores to arrays
   p1Array.push(player1Dice);
   p2Array.push(player2Dice);
@@ -57,20 +62,20 @@ var main = function (input) {
   // compare the result of the rolls from both players
   if (gameMode == `Compare results`) {
     console.log(gameMode);
-    if (Number(player1Dice) > Number(player2Dice)) {
+   
+    if (Number(createdNumber) > Number(createdNumber2)) {
       msg = `Player 1 won this round. `;
-      return msg;
-    } else if (Number(player1Dice) < Number(player2Dice)) {
+      
+    } else if (Number(createdNumber) < Number(createdNumber2)) {
       msg = `Player 2 won this round.`;
-      return msg;
-    } else if (Number(player1Dice) < Number(player2Dice)) {
+      
+    } else if (Number(createdNumber) = Number(createdNumber2)) {
       msg = `It's a draw!`;
-      return msg;
+      
     }
-
+     gameMode = `Player 1`;
     return msg;
   }
-  gameMode = `Player 1`;
 };
 
 var playerDiceRoll = function () {
@@ -92,3 +97,13 @@ var rollDice = function () {
 
   return diceNumber;
 };
+
+var spinTwoDice = function () {
+  var dice1 = rollDice();
+  var dice2 = rollDice();
+  return `${dice1} and ${dice2}`;
+};
+
+var message = function(playerIndex,diceNumber,createdNumber){
+return `Player ${playerIndex}, you chose dice ${diceNumber} first.<br>Your number is ${createdNumber}.`
+}
