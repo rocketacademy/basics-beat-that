@@ -1,8 +1,8 @@
 //fixed variables
-NORMAL = "normal";
-LOWESTWINS = "lowest wins";
-ROLLDICE = "roll dice";
-GENERATE = "generate";
+var NORMAL = "normal";
+var LOWESTWINS = "lowest wins";
+var ROLLDICE = "roll dice";
+var GENERATE = "generate";
 
 //variables
 var section = ROLLDICE;
