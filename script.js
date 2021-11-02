@@ -1,20 +1,8 @@
-var main = function (input) {
-  var myOutputValue = "";
-  // first player rolls
-  if (input == "1") userName = input;
-  myOutputValue = `Welcome player ${userName}, click to start the game!`;
-  console.log(`player: ${userName}`);
+var player1Roll = [];
+var player2Roll = [];
 
-  // HOW TO SEPARATE BOTH PLAYERS TURNS?
-
-  //second player rolls
-  userName = input;
-  if ((input = "2"))
-    myOutputValue = `Welcome player ${userName}, you are the second player, click to start the game!`;
-  console.log(`player: ${userName}`);
-
-  // Part 4, choosing who wins
-};
+// player chooses dice order
+//
 
 //rolls 2 dice
 var twoRolls = function () {
@@ -38,4 +26,16 @@ var diceRoll = function () {
   var randomInteger = Math.floor(randomDecimal);
   var diceNumber = randomInteger + 1;
   return diceNumber;
+};
+
+var main = function (input) {
+  var myOutputValue = "";
+  // first player rolls
+  var playerDice1 = [diceRoll(), diceRoll()];
+  var playerDice2 = [diceRoll(), diceRoll()];
+  myOutputValue = "Player 1 rolls " + playerDice1;
+  console.log(`rolling dice`);
+  return myOutputValue;
+
+  
 };
