@@ -6,10 +6,10 @@
 */
 
 /*===== Problem breakdown and planning =======
-1) First we will build a simple version that rolls 2 dice and returns the output for one player
-2) Then we will implement choosing dice order, for one player, and return the output
-3) Then we will try to re-factor the code to work for 2 players, and allow both players to choose the order and return the output
-4) Then we will try to implement comparing and deciding on the winner
+1) First we will build a simple version that rolls 2 dice and returns the output for one player. Then we will implement choosing dice order, for one player, and return the output
+2) Then we will try to re-factor the code to work for 2 players, and allow both players to choose the order and return the output
+3) Then we will try to implement comparing and deciding on the winner
+4) We will try to reset the game so that the players can play continually without refreshing the browser page
 Tentative structure (open to changing during implementation):
 GLOBAL VARIABLES:
 1) Players dice roll
@@ -59,13 +59,28 @@ var main = function (input) {
   var outputMessage;
 
   if ( gameState == GAME_STATE_DICE_ROLL ) {
-    console.log('if gameState == dice_roll...');
+    console.log('if gameState == GAME_STATE_DICE_ROLL...');
     // roll dice for player
     rollDiceForPlayer();
     
     // display dice as output message
     outputMessage = "Welcome,<br><br>You rolled " + playerRolls[0] + " and " + playerRolls[1] + ".<br><br>"
+
+    // change the game state
+    gameState = GAME_STATE_CHOOSE_DICE_ORDER;
     return outputMessage;
   }
+  
+  if ( gameState == GAME_STATE_CHOOSE_DICE_ORDER ) {
+    console.log('if gameState == GAME_STATE_CHOOSE_DICE_ORDER...');
+    // player input of '1' or '2' only - input validation
+    if ( input != 1 && input != 2 ) {
+      outputMessage = "Please only input '1' or '2'<br><br>" + "Your dice rolls are " + playerRolls[0] + " and " + playerRolls[1] + ".<br><br>";
+      return outputMessage;
+    }
 
+    // '1' uses the first dice as first digit
+    
+    // '2' uses the second dice as first digit.
+  }
 };
