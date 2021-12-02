@@ -96,6 +96,14 @@ var comparePlayersScores = function() {
   return compareMessage;
 };
 
+var restartGame = function () {
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  currentPlayerRolls = [];
+  allPlayersScores = [];
+};
+
+
 var main = function (input) {
   console.log('Checking game state on submit press: ', gameState);
   console.log('Current player: ', currentPlayer);
@@ -137,6 +145,13 @@ var main = function (input) {
     console.log('if gameState == GAME_STATE_COMPARE_SCORES...');
     
     outputMessage = comparePlayersScores();
+
+    restartGame();
+    console.log('current player after restart: ', currentPlayer);
+    console.log('game state after restart: ', gameState);
+    console.log('currentPlayerRolls array: ', currentPlayerRolls);
+    console.log('allPlayersScores array: ', allPlayersScores);
+
     return outputMessage;
   }
 };
