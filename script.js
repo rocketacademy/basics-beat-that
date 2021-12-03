@@ -13,6 +13,10 @@
 
 // ver 3. implement comparing dice scores and declare winner
 // ver 4. reset the game so that the players can play continually without refreshing the browser page
+//    - helper function
+//    - current player = 1
+//    - gameState == GAME_MODE_DICE_ROLL;
+//    - allPlayerScores = [];  
 
 // Global Variables
 var GAME_STATE_DICE_ROLL = 'GAME_STATE_DICE_ROLL';
@@ -48,7 +52,7 @@ var rollDiceForPlayer = function() {
   return "Welcome, Player " + currentPlayer + "<br><br>You rolled:<br>Dice 1: " + currentPlayerRolls[0] + " | Dice 2: " + currentPlayerRolls[1] + ".<br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value."
 };
 
-var getPlayerScore = function(playerInput){
+var getPlayerScore = function(playerInput) {
   var playerScore;
   // input validation
   if ( playerInput != 1 && playerInput != 2){
@@ -94,6 +98,12 @@ var comparePlayersScores = function() {
     return compareMessage;
 };
 
+var resetGame = function() {
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  allPlayersScore = [];
+};
+
 var main = function(input) {
   console.log('Checking game state on submit click: ', gameState);
   console.log('Checking currentPlayer on submit click: ', currentPlayer);
@@ -136,6 +146,12 @@ var main = function(input) {
     console.log('Control flow: gameState == GAME_STATE_COMPARE_SCORES');
 
     outputMessage = comparePlayersScores();
+
+    resetGame();
+    console.log("Current player after reset: ", currentPlayer);
+    console.log("Game state after reset: ", gameState);
+    console.log("allPlayersScore array: ", allPlayersScore);
+    
     return outputMessage;
   }
 }
