@@ -1,43 +1,17 @@
-/*======= REQUIREMENTS ========
-1) There are 2 players and players take turns.
-2) When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
-3) The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first.
-4) After both players have rolled and chosen dice order, the player with the higher combined number wins.
-*/
+// Version 4: Implemented game restart
 
-/*===== Problem breakdown and planning =======
-1) build a simple version that rolls 2 dice and returns the output for one player. Then the player can choose the dice order and get the correct return output
-2) Then we will try to re-factor the code to work for 2 players, and allow both players to choose the order and return the output
-3) Then we will try to implement comparing and deciding on the winner
-4) We will try to reset the game so that the players can play continually without refreshing the browser page
-
-Tentative structure (open to changing during implementation):
-GLOBAL VARIABLES:
-1) Players dice roll
-2) Game State
-HELPER FUNCTIONS:
-1) rollDice
-2) playTurn(playerNumber) where playerNumber is either 1 or 2
-2) Checking for winner
-*/
-
-// ===== Global Variables ===== //
-
-// Game States
+// Global Variables
 var GAME_STATE_DICE_ROLL = 'GAME_STATE_DICE_ROLL';
 var GAME_STATE_CHOOSE_DICE_ORDER = 'GAME_STATE_CHOOSE_DICE_ORDER';
 var GAME_STATE_COMPARE_SCORES = 'GAME_STAE_COMPARE_SCORES';
 var gameState = GAME_STATE_DICE_ROLL;
 
-// Players
 var currentPlayer = 1;
 var currentPlayerRolls = [];
 var allPlayersScores = [];
 
 
-// ===== Helper Functions ===== //
-
-//* Function to simulate a dice roll, returns a number from 1 to 6 *//
+// Function to simulate a dice roll, returns a number from 1 to 6
 var rollDice = function() {
   console.log('Start of rollDice();');
 
@@ -47,63 +21,49 @@ var rollDice = function() {
   var randomInteger = Math.floor(randomDecimal) + 1;
 
   console.log('Returning randomInteger: ', randomInteger);
-
-  // Returning randomInteger
   return randomInteger;
 };
 
-//* Function to roll dice and adds to the currentPlayerRolls array *//
-var rollDiceForPlayer = function() { // No input parameter because currentPlayerRolls is global
-  
+// Function to roll dice and adds to the currentPlayerRolls array
+var rollDiceForPlayer = function() {
   // roll two dice and store in an array
-  currentPlayerRolls.push(rollDice());
-  currentPlayerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
 
-  
+  // don't need to return because dice values are stored in a global array
   console.log(currentPlayerRolls);
-
-  // Returning string to outputMessage
   return "Welcome, Player " + currentPlayer + "!<br><br>You rolled:<br>Dice 1: " + currentPlayerRolls[0] + " | Dice 2: " + currentPlayerRolls[1] + ".<br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value."
-};
+}
 
-//* Function to get player score based on player input of '1' or '2' *//
 var getPlayerScore = function (playerInput) {
   var playerScore;
 
-  // Input Validation: playerInput of '1' or '2' only - everything else is invalid
+  // player input of '1' or '2' only - input validation
     if ( playerInput != 1 && playerInput != 2 ) {
       console.log( 'if input != 1 AND != 2... ');
-
-      // Returning string to outputMessage
       return "Error! Please only input '1' or '2' to choose which dice to use as the first digit.<br><br>" + "Your dice rolls are:<br>Dice 1: " + currentPlayerRolls[0] + " | Dice 2: " + currentPlayerRolls[1] + ".";
     }
 
-    // '1' uses the first dice, currentPlayerRolls[0], as first digit
+    // '1' uses the first dice as first digit
     if ( playerInput == 1 ) {
       console.log(' if input == 1...');
       playerScore = Number(String(currentPlayerRolls[0]) + String(currentPlayerRolls[1]));
     }
-    // '2' uses the second dice, currentPlayerRolls[1], as first digit.
+    // '2' uses the second dice as first digit.
     if ( playerInput == 2 ) {
       console.log(' if input == 2...');
       playerScore = Number(String(currentPlayerRolls[1]) + String(currentPlayerRolls[0]));   
     }
-    
-    // Push playerScore into allPlayerScores array to store both scores for comparison
+  
     allPlayersScores.push(playerScore);
-    
-    // Clear currentPlayerRolls array for next player's turn
+    console.log( 'clear player rolls!');
     currentPlayerRolls = [];
-
-    // Returning string to outputMessage
     return 'Player ' + currentPlayer + ', your chosen value is: ' + playerScore;
 };
 
 var comparePlayersScores = function() {
-  // Initialize as string to show both players' scores regardless of outcome
   var compareMessage = "Player 1 score: " + allPlayersScores[0] + "<br> Player 2 score: " + allPlayersScores[1];
 
-    // if-statements adds on the final outcome based on comparison logic
     if ( allPlayersScores[0] > allPlayersScores[1] ) {
       compareMessage = compareMessage + '<br><br>Player 1 wins!';
     }
@@ -113,13 +73,10 @@ var comparePlayersScores = function() {
     if ( allPlayersScores[0] == allPlayersScores[1] ) {
       compareMessage = compareMessage + "<br><br>It's a tie!";
     }
-
-    // Retunring compareMessage as string for outputMessage
   return compareMessage;
 };
 
 var restartGame = function () {
-  // Resetting key parameters for game to start properly
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
   currentPlayerRolls = [];
@@ -136,8 +93,8 @@ var main = function (input) {
   if ( gameState == GAME_STATE_DICE_ROLL ) {
     console.log('if gameState == GAME_STATE_DICE_ROLL...');
     
-    // roll 2 dice for currentPlayer
-    // display dice as outputMessage
+    // roll dice for player
+    // display dice as output message
     outputMessage = rollDiceForPlayer();
 
     // change the game state
@@ -148,26 +105,18 @@ var main = function (input) {
   if ( gameState == GAME_STATE_CHOOSE_DICE_ORDER ) {
     console.log('if gameState == GAME_STATE_CHOOSE_DICE_ORDER...');
 
-    // Displays currentPlayer score based on playerInput of '1' or '2'
     outputMessage = getPlayerScore(input);
 
     if ( currentPlayer == 1 ) {
       console.log("End of player 1's turn. Player 2's turn to roll dice")
-      // Change player
       currentPlayer = 2;
-      // Change game state
       gameState = GAME_STATE_DICE_ROLL;
-
-      // Append string to inform that it is player 2's turn
-      return outputMessage + '<br><br> Now, it is time for player 2 to roll the dice!';
+      return outputMessage;
     }
 
     if ( currentPlayer == 2 ) {
       console.log("End of player 2's turn. Next submit click will calculate score")
-      // Change game state
       gameState = GAME_STATE_COMPARE_SCORES;
-
-      // Append string to inform that game will next compare both players' scores
       return outputMessage + '<br><br> Press submit to calculate scores!';
     }
   }
@@ -175,12 +124,9 @@ var main = function (input) {
   if ( gameState == GAME_STATE_COMPARE_SCORES) {
     console.log('if gameState == GAME_STATE_COMPARE_SCORES...');
     
-    // Outputs final winning message after comparing players' scores
     outputMessage = comparePlayersScores();
 
-    // Call function to reset game parameters
     restartGame();
-    
     console.log('current player after restart: ', currentPlayer);
     console.log('game state after restart: ', gameState);
     console.log('currentPlayerRolls array: ', currentPlayerRolls);
