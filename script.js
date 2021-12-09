@@ -17,14 +17,14 @@ var enterPlayerName = function (inputUserName) {
   console.log(playerNames);
   if (gameMode == ENTERPLAYERNAME && isPlayer1turn == true) {
     message =
-      `Hello ${playerNames[0]}, let's play Beat That!` +
-      "<br><br>The player with the higher number wins.<br><br>Press the <b>Submit</b> button to roll the two dice.";
+      `Hello <b>${playerNames[0]}</b>, let's play Beat That!` +
+      "<br><br>Press the <b>Submit</b> button to roll the two dice.";
     gameMode = ROLLDICE;
     console.log("after player 1 name :" + gameMode);
     return message;
   } else if (gameMode == ENTERPLAYERNAME && isPlayer1turn == false) {
     message =
-      `Hello ${playerNames[1]}, let's see if you can beat ${playerNames[0]}!` +
+      `Hello <b>${playerNames[1]}</b>, let's see if you can beat ${playerNames[0]}!` +
       "<br><br>Press the <b>Submit</b> button to roll the two dice.";
     gameMode = ROLLDICE;
     console.log("after player 2 name :" + gameMode);
@@ -48,8 +48,8 @@ var getTwoDiceNum = function () {
     var diceNum2 = rollDice();
     console.log(`dice num1: ${diceNum1}, dice num2: ${diceNum2}`);
     message =
-      `${playerNames[0]}, you rolled a ${diceNum1} for Dice 1 and a ${diceNum2} for Dice 2.` +
-      "<br><br>Choose the order of the dice: <br>Enter <b>1</b> to put dice 1 first. <br>Enter <b>2</b> to put dice 2 first.";
+      `${playerNames[0]}, you rolled a <b>${diceNum1}</b> for Dice 1 and a <b>${diceNum2} </b>for Dice 2.` +
+      "<br><br><u>Choose the order of the dice: </u><br>Enter <b>1</b> to put dice 1 first. <br>Enter <b>2</b> to put dice 2 first.";
     gameMode = DICEORDER;
     playerDiceNum.push(diceNum1);
     playerDiceNum.push(diceNum2);
@@ -60,8 +60,8 @@ var getTwoDiceNum = function () {
     var diceNum2 = rollDice();
     console.log(`dice num1: ${diceNum1}, dice num2: ${diceNum2}`);
     message =
-      `${playerNames[1]}, you rolled a ${diceNum1} for Dice 1 and a ${diceNum2} for Dice 2.` +
-      "<br><br>Choose the order of the dice: <br>Enter <b>1</b> to put dice 1 first. <br>Enter <b>2</b> to put dice 2 first.";
+      `${playerNames[1]}, you rolled a <b>${diceNum1}</b> for Dice 1 and a <b>${diceNum2} </b>for Dice 2.` +
+      "<br><br><u>Choose the order of the dice: </u><br>Enter <b>1</b> to put dice 1 first. <br>Enter <b>2</b> to put dice 2 first.";
     gameMode = DICEORDER;
     playerDiceNum.push(diceNum1);
     playerDiceNum.push(diceNum2);
@@ -79,7 +79,7 @@ var orderDice = function (userChoice) {
       message =
         `Please enter <b>1</b> or <b>2</b>.` +
         "<br><br>" +
-        `In case you forgot, you rolled a ${playerDiceNum[0]} for dice 1 and a ${playerDiceNum[1]} for dice 2. `;
+        `In case you forgot, you rolled a <b>${playerDiceNum[0]}</b> for dice 1 and a <b>${playerDiceNum[1]} </b>for dice 2. `;
       return message;
     } else {
       if (userChoice == `1`) {
@@ -89,7 +89,7 @@ var orderDice = function (userChoice) {
       }
       playerFinalNum.push(playerChoice);
       message =
-        `${playerNames[0]}, your number is ${playerFinalNum[0]}. ` +
+        `<b>${playerNames[0]}</b>, your number is <b>${playerFinalNum[0]}</b>. ` +
         "<br><br>It's the next player's turn now! <br><br>Player 2, please enter your <b>name</b>.";
       console.log(`player 1 num: ` + playerFinalNum[0]);
       gameMode = ENTERPLAYERNAME;
@@ -102,7 +102,7 @@ var orderDice = function (userChoice) {
       message =
         `Please enter <b>1</b> or <b>2</b>.` +
         "<br><br>" +
-        `In case you forgot, you rolled a ${playerDiceNum[2]} for dice 1 and a ${playerDiceNum[3]} for dice 2. `;
+        `In case you forgot, you rolled a <b>${playerDiceNum[2]}</b> for dice 1 and a <b>${playerDiceNum[3]} </b>for dice 2. `;
       return message;
     } else {
       if (userChoice == `1`) {
@@ -112,7 +112,7 @@ var orderDice = function (userChoice) {
       }
       playerFinalNum.push(playerChoice);
       message =
-        `${playerNames[1]}, your number is ${playerFinalNum[1]}. ` +
+        `<b>${playerNames[1]}</b>, your number is <b>${playerFinalNum[1]}</b>.` +
         "<br><br>Press <b>submit</b> to see who has won!";
       console.log(`player 2 num: ` + playerFinalNum[1]);
       gameMode = COMPARENUMBERS;
@@ -127,12 +127,12 @@ var compareFinalNum = function () {
   var message = ``;
   if (gameMode == COMPARENUMBERS) {
     if (playerFinalNum[0] > playerFinalNum[1]) {
-      message = `Congrats ${playerNames[0]}, you won!`;
+      message = `Congrats <b>${playerNames[0]}</b>, you won!`;
     } else if (playerFinalNum[1] > playerFinalNum[0]) {
-      message = `Congrats ${playerNames[1]}, you won!`;
+      message = `Congrats <b>${playerNames[1]}</b>, you won!`;
     }
     result =
-      "RESULTS: <br><br>" +
+      "<b>RESULTS:</b> <br><br>" +
       `${playerNames[0]}'s number: ${playerFinalNum[0]} ` +
       "<br>" +
       `${playerNames[1]}'s number: ${playerFinalNum[1]}` +
