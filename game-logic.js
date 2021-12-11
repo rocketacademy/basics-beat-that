@@ -72,12 +72,16 @@ const rollDice = function () {
   return Math.floor(Math.random() * face) + 1;
 };
 
-const generateOrderings = function (PLAYER, twoDiceValue) {
+const generateOrderings = function (player, twoDiceValue) {
   const [val1, val2] = twoDiceValue;
-  playerRollsOrderings[PLAYER].push([val1, val2]);
+  playerRollsOrderings[player].push([val1, val2]);
   if (val2 !== val1) {
-    playerRollsOrderings[PLAYER].push([val2, val1]);
+    playerRollsOrderings[player].push([val2, val1]);
   }
+};
+
+const getOrderingChoiceCount = function (player) {
+  return playerRollsOrderings[player].length;
 };
 
 // Check if index is in the orderings array of current player
@@ -258,6 +262,7 @@ var nextRender = function (result) {
       HTML_G_OUTPUT_DESCRIPTION
     );
   } else if (CURRENT_ACTION == ACTION_ORDER) {
+    const orderingChoiceCount = getOrderingChoiceCount(CURRENT_PLAYER);
     setInputDescription(
       displayCurrentPlayer(CURRENT_PLAYER) +
         "<br />" +
@@ -266,13 +271,22 @@ var nextRender = function (result) {
         "<br /> Choose order <br />" +
         getDisplayOrderingsOfPlayer(CURRENT_PLAYER)
     );
-    appendToParagraph(
-      HTML_G_INPUT_DESC,
-      HTML_G_INPUT_FIELD,
-      HTML_G_BUTTON,
-      HTML_G_OUTPUT_DESCRIPTION
-    );
-    setButtonValue("SELECT ORDER");
+    if (orderingChoiceCount === 1) {
+      appendToParagraph(
+        HTML_G_INPUT_DESC,
+        HTML_G_BUTTON,
+        HTML_G_OUTPUT_DESCRIPTION
+      );
+      setButtonValue("SELECT ORDER [0]");
+    } else {
+      appendToParagraph(
+        HTML_G_INPUT_DESC,
+        HTML_G_INPUT_FIELD,
+        HTML_G_BUTTON,
+        HTML_G_OUTPUT_DESCRIPTION
+      );
+      setButtonValue("SELECT ORDER");
+    }
   } else if (CURRENT_ACTION == ACTION_GAME_SET) {
     setInputDescription(getDisplayPrevRoundResult());
     appendToParagraph(
