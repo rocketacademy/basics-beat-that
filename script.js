@@ -1,5 +1,9 @@
-var main = function (input) {
-  var myOutputValue = "hello world2";
-  console.log("hello world");
-  return myOutputValue;
+var helloWorld = function (input) {
+  console.log("this is a conflict");
+  console.log("this is a conflict");
+  console.log("this is a conflict");
+  console.log("this is a conflict");
+  console.log("this is a conflict");
+  console.log("this is a conflict");
+  console.log("this is a conflict");
 };
