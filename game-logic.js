@@ -92,7 +92,7 @@ const isValidRollOrdering = function (PLAYER, index) {
   if (
     index === undefined ||
     index === null ||
-    playersRollsOrderings[index] == undefined
+    playersRollsOrderings[index] === undefined
   ) {
     return false;
   }
@@ -131,7 +131,7 @@ const decideRoundWinner = function () {
       PLAYER_WINNER = [];
       max = val;
       PLAYER_WINNER.push(playerIndex);
-    } else if (val == max) {
+    } else if (val === max) {
       PLAYER_WINNER.push(playerIndex);
     }
   }
@@ -165,9 +165,9 @@ const getDisplayOrderingsOfPlayer = function (playerIndex) {
 };
 
 const displayCurrentPlayer = function (PLAYER) {
-  if (PLAYER_ONE == PLAYER) {
+  if (PLAYER_ONE === PLAYER) {
     return "PLAYER 1";
-  } else if (PLAYER_TWO == PLAYER) {
+  } else if (PLAYER_TWO === PLAYER) {
     return "PLAYER 2";
   }
 };
@@ -242,7 +242,7 @@ var actionOrder = function (index) {
     CURRENT_PLAYER
   )} chose ${getDisplayOrdering(playerOrderingChoice[CURRENT_PLAYER])}. `;
 
-  if (CURRENT_PLAYER == LAST_PLAYER) {
+  if (CURRENT_PLAYER === LAST_PLAYER) {
     // A round decision can be made. Decide the winner, reset game and change the next action to RESET
     var PLAYER_WINNER = decideRoundWinner();
     var currentDisplayWinner = displayCurrentPlayer(PLAYER_WINNER);
@@ -278,15 +278,15 @@ const actionGameSet = function () {
  * */
 var main = function () {
   var result = ``;
-  if (CURRENT_ACTION == ACTION_ROLL) {
+  if (CURRENT_ACTION === ACTION_ROLL) {
     result += `Previous activity: ${actionRoll()}`;
-  } else if (CURRENT_ACTION == ACTION_ORDER) {
+  } else if (CURRENT_ACTION === ACTION_ORDER) {
     var orderingChoiceCount = getOrderingChoiceCount(CURRENT_PLAYER);
     var firstElementIndex = 0;
     var value =
       orderingChoiceCount === 1 ? firstElementIndex : HTML_G_INPUT_FIELD.value; // if there isn't a real choice, ignore user input and set value to first index
     result += `Previous activity: ${actionOrder(value)}`;
-  } else if (CURRENT_ACTION == ACTION_GAME_SET) {
+  } else if (CURRENT_ACTION === ACTION_GAME_SET) {
     result += actionGameSet();
   }
   nextRenderParagraphMain(result);
@@ -299,7 +299,7 @@ var nextRenderParagraphMain = function (result) {
   HTML_G_INPUT_FIELD.value = "";
   HTML_G_OUTPUT_DESCRIPTION.innerHTML = result;
 
-  if (CURRENT_ACTION == ACTION_ROLL) {
+  if (CURRENT_ACTION === ACTION_ROLL) {
     setInputDescription(
       displayCurrentPlayer(CURRENT_PLAYER) + "<br />" + "Roll your dice!"
     );
@@ -309,7 +309,7 @@ var nextRenderParagraphMain = function (result) {
       HTML_G_BUTTON,
       HTML_G_OUTPUT_DESCRIPTION
     );
-  } else if (CURRENT_ACTION == ACTION_ORDER) {
+  } else if (CURRENT_ACTION === ACTION_ORDER) {
     const orderingChoiceCount = getOrderingChoiceCount(CURRENT_PLAYER);
     setInputDescription(
       displayCurrentPlayer(CURRENT_PLAYER) +
@@ -335,7 +335,7 @@ var nextRenderParagraphMain = function (result) {
         HTML_G_OUTPUT_DESCRIPTION
       );
     }
-  } else if (CURRENT_ACTION == ACTION_GAME_SET) {
+  } else if (CURRENT_ACTION === ACTION_GAME_SET) {
     setInputDescription(getDisplayPrevRoundResult());
     setButtonValue("PLAY AGAIN");
     appendToParagraph(
