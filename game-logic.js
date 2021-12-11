@@ -73,6 +73,7 @@ const rollDice = function () {
   return Math.floor(Math.random() * face) + 1;
 };
 
+// Permutations
 const generateOrderings = function (player, twoDiceValue) {
   const [val1, val2] = twoDiceValue;
   playersRollsOrderings[player].push([val1, val2]);
@@ -81,6 +82,7 @@ const generateOrderings = function (player, twoDiceValue) {
   }
 };
 
+// How many choices does the player have?
 const getOrderingChoiceCount = function (player) {
   return playersRollsOrderings[player].length;
 };
@@ -170,6 +172,39 @@ const displayCurrentPlayer = function (PLAYER) {
   }
 };
 
+/**
+ *          Player 1    Player 2
+ *  Roll     3            2
+ *  Choice    1           1
+ */
+
+const generateRoundStatisticsTable = function () {
+  var table = document.createElement("table");
+  table.className += ` flex-table`;
+  var headerRow = table.insertRow();
+  headerRow.insertCell().innerHTML = "#(Total Wins W): ";
+  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
+    headerRow.insertCell().innerHTML = `${displayCurrentPlayer(
+      playerIndex
+    )}  (${PLAYER_WIN_COUNT[playerIndex]})`;
+  }
+
+  var rollRow = table.insertRow();
+  rollRow.insertCell().innerHTML = "Roll: ";
+  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
+    rollRow.insertCell().innerHTML = playerRolls[playerIndex];
+  }
+
+  var choiceOfOrderingRow = table.insertRow();
+  choiceOfOrderingRow.insertCell().innerHTML = "Choice: ";
+  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
+    choiceOfOrderingRow.insertCell().innerHTML =
+      playerOrderingChoice[playerIndex];
+  }
+
+  return table;
+};
+
 /* Helpers to set innerHTML */
 const setInputDescription = function (text) {
   HTML_G_INPUT_DESC.innerHTML = text;
@@ -177,6 +212,8 @@ const setInputDescription = function (text) {
 const setButtonValue = function (text) {
   HTML_G_BUTTON.innerHTML = text;
 };
+
+/* Main Action */
 
 var actionRoll = function () {
   playerRoll = [rollDice(), rollDice()]; // roll two dice
@@ -192,7 +229,7 @@ var actionRoll = function () {
   );
 };
 
-// user to supply index to the ordering of player roll
+// user to supply index to the orderings of player roll
 var actionOrder = function (index) {
   if (!isValidRollOrdering(CURRENT_PLAYER, index)) {
     return `Invalid choice "${index}". Please re-enter`;
@@ -283,6 +320,7 @@ var nextRenderParagraphMain = function (result) {
         getDisplayOrderingsOfPlayer(CURRENT_PLAYER)
     );
     if (orderingChoiceCount === 1) {
+      // one choice only
       setButtonValue("ORDER [0]");
       appendToParagraph(
         HTML_G_INPUT_DESC,
@@ -307,39 +345,6 @@ var nextRenderParagraphMain = function (result) {
     );
   }
   console.groupEnd();
-};
-
-/**
- *          Player 1    Player 2
- *  Roll     3            2
- *  Choice    1           1
- */
-
-const generateRoundStatisticsTable = function () {
-  var table = document.createElement("table");
-  table.className += ` flex-table`;
-  var headerRow = table.insertRow();
-  headerRow.insertCell().innerHTML = "#(Total Wins W): ";
-  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
-    headerRow.insertCell().innerHTML = `${displayCurrentPlayer(
-      playerIndex
-    )}  (${PLAYER_WIN_COUNT[playerIndex]})`;
-  }
-
-  var rollRow = table.insertRow();
-  rollRow.insertCell().innerHTML = "Roll: ";
-  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
-    rollRow.insertCell().innerHTML = playerRolls[playerIndex];
-  }
-
-  var choiceOfOrderingRow = table.insertRow();
-  choiceOfOrderingRow.insertCell().innerHTML = "Choice: ";
-  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
-    choiceOfOrderingRow.insertCell().innerHTML =
-      playerOrderingChoice[playerIndex];
-  }
-
-  return table;
 };
 
 const nextRenderParagraphRound = function () {
