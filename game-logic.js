@@ -1,4 +1,4 @@
-// https://basics.rocketacademy.co/6-arrays-and-iteration/9.3-loops-with-arrays
+// https://github.com/rocketacademy/basics-beat-that
 
 // 1. There are TWO players and players take turns.
 // 2. Each player roll TWO dice
