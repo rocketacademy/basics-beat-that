@@ -25,7 +25,7 @@ var main = function(input) {
       playerOneScore = combineScore(input);
       return `Player One score: ${playerOneScore}`;
       }
-    }
+  }
   if (gameMode == "playerTwoRoll") {
     var rollPlayerTwo = rollPlayer();
     gameMode = "playerTwoChooses";
@@ -39,7 +39,7 @@ var main = function(input) {
       playerTwoScore = combineScore(input);
       return `Player Two score: ${playerTwoScore}`;
       }
-    }
+  }
   if (gameMode == "compare") {
     return compareScore()
   }
