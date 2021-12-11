@@ -54,16 +54,19 @@ var playGame = function (gameMode, input) {
     console.log(input);
     // input validation
     if (!(input == 1 || input == 2)) {
-      myOutputValue = "Only choose order 1 or 2.";
+      myOutputValue = "You chose " + input + ". Only choose order 1 or 2.";
+      gameMode = "Player1 choose order";
       return myOutputValue;
     }
     // if player1 chooses 1, roll1 is first
     else if (input == 1) {
       orderOfDice = 1;
+      gameMode = "Player2 Start"; //Player1 is done, Player2 is next
     }
     // if player1 chooses 2, roll2 is first
     else if (input == 2) {
       orderOfDice = 2;
+      gameMode = "Player2 Start"; //Player1 is done, Player2 is next
     }
     player1Value = combineDiceNumber(orderOfDice, roll1, roll2);
     myOutputValue =
@@ -72,8 +75,6 @@ var playGame = function (gameMode, input) {
       ". Player 2, it's your turn! Click submit to start~";
     console.log(gameMode);
     console.log(player1Value);
-    //Player1 is done, Player2 is next, need to change mode in main function?
-    //gameMode = "Player2 Start";
 
     return myOutputValue;
   }
@@ -81,7 +82,8 @@ var playGame = function (gameMode, input) {
   if (gameMode == "Player2 choose order") {
     // input validation
     if (!(input == 1 || input == 2)) {
-      myOutputValue = "Only choose order 1 or 2.";
+      myOutputValue = "You chose " + input + ". Only choose order 1 or 2.";
+      gameMode = "Player2 choose order";
       return myOutputValue;
     }
     // if player1 chooses 1, roll1 is first
@@ -100,6 +102,10 @@ var playGame = function (gameMode, input) {
   }
 };
 
+var resetGame = function () {
+  gameMode = "Player1 Start";
+};
+
 var roll1;
 var roll2;
 var player1Value;
@@ -109,7 +115,6 @@ var gameMode = "Player1 Start";
 
 var main = function (input) {
   var myOutputValue;
-
   //Player 1 roll 2 dice first
   if (gameMode == "Player1 Start") {
     roll1 = rollDice();
@@ -127,7 +132,10 @@ var main = function (input) {
   } //Choose order and save numbers for each player
   else if (gameMode == "Player1 choose order") {
     myOutputValue = playGame(gameMode, input);
-    gameMode = "Player2 Start";
+    console.log(gameMode);
+    if (input == 1 || input == 2) {
+      gameMode = "Player2 Start";
+    }
     console.log(gameMode);
     return myOutputValue;
   } else if (gameMode == "Player2 Start") {
@@ -147,12 +155,14 @@ var main = function (input) {
   //Choose order and save numbers for each player
   else if (gameMode == "Player2 choose order") {
     myOutputValue = playGame(gameMode, input);
-    gameMode = "Compare values";
+    if (input == 1 || input == 2) {
+      gameMode = "Compare values";
+    }
     console.log(gameMode);
     return myOutputValue;
   } else if (gameMode == "Compare values") {
     myOutputValue = compareNumber(player1Value, player2Value);
-    gameMode = "Player1 Start";
+    resetGame();
     return myOutputValue;
   }
 };
