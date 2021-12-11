@@ -68,7 +68,7 @@ const changePlayer = function () {
 
 /* Dice motions */
 
-const rollDice = function () {
+const rollDie = function () {
   var face = 6;
   return Math.floor(Math.random() * face) + 1;
 };
@@ -216,7 +216,7 @@ const setButtonValue = function (text) {
 /* Main Action */
 
 var actionRoll = function () {
-  playerRoll = [rollDice(), rollDice()]; // roll two dice
+  playerRoll = [rollDie(), rollDie()]; // roll two dice
   playerRolls[CURRENT_PLAYER] = playerRoll; // record playerRoll in playerRolls
   generateOrderings(CURRENT_PLAYER, playerRoll); // record permutations
 
