@@ -137,6 +137,6 @@ const changeGameMode = (userInput) => {
   //to restart the game again back to player 1
 };
 var main = function (input) {
-  var myOutputValue = "hello world";
-  return myOutputValue;
+  var result = changeGameMode(input);
+  return result;
 };
