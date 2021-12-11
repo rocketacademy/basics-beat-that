@@ -1,4 +1,5 @@
 /*Base
+clg clg 
 Requirements
 There are 2 players and players take turns.
 When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
