@@ -21,6 +21,8 @@ HELPER FUNCTIONS:
 2) Checking for winner
 */
 
+// Changes happened
+
 // ===== Global Variables ===== //
 
 // Game States
