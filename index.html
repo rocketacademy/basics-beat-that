@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Basics</title>
     <style>
       * {
         box-sizing: border-box;
@@ -17,7 +18,7 @@
         text-align: center;
       }
 
-      #container {
+      #root-container {
         background-color: pink;
         margin: 40px auto;
         max-width: 800px;
@@ -49,31 +50,17 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
-    <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
-    </div>
-    <!-- Import program logic -->
-    <script src="script.js"></script>
+    <h1 id="header">Rockets!!</h1>
+
+    <!--Entry Point-->
+    <div id="root-container"></div>
+
+    <script src="paragraph.js"></script>
+    <script src="game-logic.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
-
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
+      HTML_G_BUTTON.addEventListener("click", function () {
+        main();
       });
     </script>
   </body>
