@@ -8,7 +8,8 @@
       }
 
       body {
-        font-family: sans-serif;
+        color: #483d8b;
+        font-family: "Courier New", Courier, monospace;
         margin-left: 30px;
         margin-right: 30px;
       }
@@ -18,13 +19,23 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: #add8e6;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+      }
+
+      #topcontainer {
+        font-family: "monaco", monospace;
+        background-color: #e6e6fa;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
       }
 
       input {
+        color: #cd5c5c;
+        font-family: "monaco", monospace;
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
@@ -33,14 +44,16 @@
       }
 
       button {
-        font-size: 21px;
+        font-family: "monaco", monospace;
+        background-color: #ffebcd;
+        font-size: 18px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: #e6e6fa;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -50,14 +63,24 @@
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
+    <div id="topcontainer">
+      <p>Hello! Welcome to Beat That! This is a 2 player game.</p>
+      <p>
+        Each of you will roll 2 dice, then you will get a two-digit number by
+        selecting the order of your dice rolls. The player with the highest
+        number wins! Good luck!
+      </p>
+      <p>Ready? Enter the name of the first player to start!</p>
+    </div>
     <div id="container">
-      <p>Input:</p>
+      <p><b>Input:</b></p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <p><b>Message:</b></p>
       <div id="output-div"></div>
     </div>
+
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
