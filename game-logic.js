@@ -268,7 +268,7 @@ var nextRender = function (result) {
         "<br />" +
         "You've rolled: " +
         playerRolls[CURRENT_PLAYER] +
-        "<br /> Choose order <br />" +
+        "<br /> Choose order [index] <br />" +
         getDisplayOrderingsOfPlayer(CURRENT_PLAYER)
     );
     if (orderingChoiceCount === 1) {
