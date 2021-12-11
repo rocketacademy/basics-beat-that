@@ -101,7 +101,7 @@ var main = function (input) {
     }
   }
 };
-
+// roll
 var diceRoll = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
