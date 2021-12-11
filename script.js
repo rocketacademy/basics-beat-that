@@ -167,7 +167,7 @@ var compareFinalNum = function () {
     } else if (playerFinalNum[1] > playerFinalNum[0]) {
       winCount[1] += 1;
       message = `Congrats <b>${playerNames[1]}</b>, you won!`;
-    } else if ((playerFinalNum[1] = playerFinalNum[0])) {
+    } else if (playerFinalNum[1] == playerFinalNum[0]) {
       message = `Unbelievable! It's a draw!`;
     }
 
