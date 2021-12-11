@@ -191,7 +191,7 @@ var actionOrder = function (index) {
   if (!isValidRollOrdering(CURRENT_PLAYER, index)) {
     return `Invalid choice "${index}". Please re-enter`;
   }
-
+  index = Number(index);
   playerOrderingChoice[CURRENT_PLAYER] =
     playersRollsOrderings[CURRENT_PLAYER][index]; // record the player choice of ordering
 
