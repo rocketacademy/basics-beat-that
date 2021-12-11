@@ -1,3 +1,6 @@
+// Main: child paragraph of root container
+// Provides a function to replace content in paragraph (see appendToParagraphXX)
+
 const ID_HTML_ROOT = "root-container";
 const GLOBAL_CONTAINER = document.querySelector(`#${ID_HTML_ROOT}`);
 

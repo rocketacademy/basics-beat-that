@@ -1,3 +1,5 @@
+// Stats: child paragraph of root container
+// Provides a function to replace content in paragraph (see appendToParagraphXX)
 const ID_HTML_PARAGRAPH_STATS = "paragraph-stats-round";
 
 const HTML_G_PARAGRAPH_MAIN_STATS_ROUND = document.createElement("paragraph");
