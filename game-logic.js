@@ -9,6 +9,7 @@ const LAST_PLAYER = PLAYER_TWO;
 const PLAYERS = 2;
 var CURRENT_PLAYER = 0;
 
+const PLAYER_WIN_COUNT = [0, 0];
 /**
  * playerRolls
  * An example outcome when both players throw dice
@@ -132,6 +133,7 @@ const decideRoundWinner = function () {
       PLAYER_WINNER.push(playerIndex);
     }
   }
+  PLAYER_WIN_COUNT[PLAYER_WINNER] += 1;
   return PLAYER_WINNER;
 };
 
@@ -250,12 +252,12 @@ var main = function () {
   } else if (CURRENT_ACTION == ACTION_GAME_SET) {
     result += actionGameSet();
   }
-  nextRenderParagraph(result);
+  nextRenderParagraphMain(result);
   nextRenderParagraphRound();
 };
 
-// nextRenderParagraph should be called AFTER the next action state has been updated.
-var nextRenderParagraph = function (result) {
+// nextRenderParagraphMain should be called AFTER the next action state has been updated.
+var nextRenderParagraphMain = function (result) {
   console.group();
   HTML_G_INPUT_FIELD.value = "";
   HTML_G_OUTPUT_DESCRIPTION.innerHTML = result;
@@ -317,9 +319,11 @@ const generateRoundStatisticsTable = function () {
   var table = document.createElement("table");
   table.className += ` flex-table`;
   var headerRow = table.insertRow();
-  headerRow.insertCell().innerHTML = "#: ";
+  headerRow.insertCell().innerHTML = "#(Total Wins W): ";
   for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
-    headerRow.insertCell().innerHTML = displayCurrentPlayer(playerIndex);
+    headerRow.insertCell().innerHTML = `${displayCurrentPlayer(
+      playerIndex
+    )}  (${PLAYER_WIN_COUNT[playerIndex]})`;
   }
 
   var rollRow = table.insertRow();
@@ -339,10 +343,10 @@ const generateRoundStatisticsTable = function () {
 };
 
 const nextRenderParagraphRound = function () {
-  appendToParagraphStatisticsRound(generateRoundStatisticsTable());
+  appendToParagraphStatisticsRound(wrapInDiv(generateRoundStatisticsTable()));
 };
 var initializeDisplay = function () {
-  nextRenderParagraph("");
+  nextRenderParagraphMain("");
   nextRenderParagraphRound();
 };
 initializeDisplay();
