@@ -74,8 +74,10 @@ var main = function (input) {
             "<br><br>The winner is Player 1.<br><br>Press 'Submit' to play again"
           );
         } else {
-          endMessageForPlayerTwo +
-            "<br><br>The winner is Player 2.<br><br>Press 'Submit' to play again";
+          return (
+            endMessageForPlayerTwo +
+            "<br><br>The winner is Player 2.<br><br>Press 'Submit' to play again"
+          );
         }
       }
     } else {
