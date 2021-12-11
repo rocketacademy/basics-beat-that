@@ -86,7 +86,11 @@ const getOrderingChoiceCount = function (player) {
 
 // Check if index is in the orderings array of current player
 const isValidRollOrdering = function (PLAYER, index) {
-  if (index === undefined || index === null || index === "") {
+  if (
+    index === undefined ||
+    index === null ||
+    playersRollsOrderings[index] == undefined
+  ) {
     return false;
   }
   index = Number(index);
