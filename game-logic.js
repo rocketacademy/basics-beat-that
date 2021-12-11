@@ -20,14 +20,14 @@ var CURRENT_PLAYER = 0;
 var playerRolls = [[], []];
 
 /**
- * playerRollsOrderings
+ * playersRollsOrderings
  * An example outcome when both players throw dice
- * playerRollsOrderings =   [
+ * playersRollsOrderings =   [
  *                            [[1, 3],[3, 1]],
  *                            [[6, 6]]
  *                          ];
  */
-var playerRollsOrderings = [[], []];
+var playersRollsOrderings = [[], []];
 
 /**
  * playerOrderingChoice
@@ -51,7 +51,7 @@ var PREV_ROUND_RESULT_DESCRIPTION = "";
 const resetGame = function () {
   CURRENT_PLAYER = PLAYER_ONE;
   playerRolls = [[], []];
-  playerRollsOrderings = [[], []];
+  playersRollsOrderings = [[], []];
   playerOrderingChoice = [[], []];
   PREV_ROUND_RESULT_DESCRIPTION = "";
   return "Game reset";
@@ -74,19 +74,19 @@ const rollDice = function () {
 
 const generateOrderings = function (player, twoDiceValue) {
   const [val1, val2] = twoDiceValue;
-  playerRollsOrderings[player].push([val1, val2]);
+  playersRollsOrderings[player].push([val1, val2]);
   if (val2 !== val1) {
-    playerRollsOrderings[player].push([val2, val1]);
+    playersRollsOrderings[player].push([val2, val1]);
   }
 };
 
 const getOrderingChoiceCount = function (player) {
-  return playerRollsOrderings[player].length;
+  return playersRollsOrderings[player].length;
 };
 
 // Check if index is in the orderings array of current player
 const isValidRollOrdering = function (PLAYER, index) {
-  if (!index || index == " ") {
+  if (index === null || index === " ") {
     return false;
   }
   index = Number(index);
@@ -94,7 +94,8 @@ const isValidRollOrdering = function (PLAYER, index) {
     return false;
   }
 
-  let maxIndex = playerRollsOrderings[PLAYER].length;
+  let maxIndex = playersRollsOrderings[PLAYER].length;
+  console.log(0 <= index && index < maxIndex);
   return 0 <= index && index < maxIndex;
 };
 
@@ -145,7 +146,7 @@ const getDisplayOrdering = function (ordering) {
 };
 
 const getDisplayOrderingsOfPlayer = function (playerIndex) {
-  var orderings = playerRollsOrderings[playerIndex];
+  var orderings = playersRollsOrderings[playerIndex];
   var lines = "";
   for (let i = 0; i < orderings.length; i += 1) {
     var line = `[${i}]: `;
@@ -189,11 +190,11 @@ var actionRoll = function () {
 // user to supply index to the ordering of player roll
 var actionOrder = function (index) {
   if (!isValidRollOrdering(CURRENT_PLAYER, index)) {
-    return "Invalid choice. Please re enter";
+    return `Invalid choice "${index}". Please re-enter`;
   }
 
   playerOrderingChoice[CURRENT_PLAYER] =
-    playerRollsOrderings[CURRENT_PLAYER][index]; // record the player choice of ordering
+    playersRollsOrderings[CURRENT_PLAYER][index]; // record the player choice of ordering
 
   var desc = `${displayCurrentPlayer(
     CURRENT_PLAYER
@@ -236,11 +237,13 @@ const actionGameSet = function () {
 var main = function () {
   var result = ``;
   if (CURRENT_ACTION == ACTION_ROLL) {
-    result += "Previous activity: ";
-    result += actionRoll();
+    result += `Previous activity: ${actionRoll()}`;
   } else if (CURRENT_ACTION == ACTION_ORDER) {
-    result += "Previous activity: ";
-    result += actionOrder(HTML_G_INPUT_FIELD.value);
+    var orderingChoiceCount = getOrderingChoiceCount(CURRENT_PLAYER);
+    var firstElementIndex = 0;
+    var value =
+      orderingChoiceCount === 1 ? firstElementIndex : HTML_G_INPUT_FIELD.value; // if there isn't a real choice, ignore user input and set value to first index
+    result += `Previous activity: ${actionOrder(value)}`;
   } else if (CURRENT_ACTION == ACTION_GAME_SET) {
     result += actionGameSet();
   }
