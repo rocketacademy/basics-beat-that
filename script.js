@@ -9,7 +9,7 @@
 
 // 4. After both players have rolled and chosen dice order, the player with the higher combined number wins. -> to compare the 2 dice value
 
-// 6. The game will reset and will go back to Player 1
+// 5. The game will reset and will go back to Player 1
 
 //To define Global Variable
 var gameModeRollDice = "game mode roll dice";
