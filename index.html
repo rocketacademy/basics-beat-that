@@ -45,6 +45,15 @@
         padding: 20px;
         width: 100%;
       }
+      #tips {
+        font-size: 21px;
+        text-align: center;
+      }
+      #tipsBody {
+        font-size: 15px;
+        text-align: center;
+        font-style: italic;
+      }
     </style>
   </head>
 
@@ -56,7 +65,21 @@
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+      <div id="output-div">ENTER THE NUMBER OF PLAYERS PLAYING TO START!</div>
+    </div>
+    <div id="tips">
+      <p>~TIPS~</p>
+    </div>
+    <div id="tipsBody">
+      <p>
+        You can change game settings as well as username if you like halfway
+        through the game! Use the commands below -
+      </p>
+      <p>change number of players in play: "change player count"</p>
+      <p>change number of dice in play: "change dice count"</p>
+      <p>change username: "change username"</p>
+      <p>change game mode: "change game mode"</p>
+      <p>change game type: "change game type"</p>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
