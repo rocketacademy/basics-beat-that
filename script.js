@@ -191,3 +191,5 @@ var normalGame = function () {
     playerDice[playerTurnCounter - 2]
   } <br>${playerCallMessage()}`;
 };
+
+// comment
