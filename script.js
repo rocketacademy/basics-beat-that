@@ -22,6 +22,8 @@ var player2Rolls = [];
 // store players' initial and final number if change was made
 var player1Number;
 var player2Number;
+var player1Total = 0;
+var player2Total = 0;
 
 // helper function: roll dice
 var diceRoll = function () {
@@ -117,6 +119,7 @@ var main = function (input) {
     } else {
       var player1 = turn1Select(input); // returns final player1Number
       myOutputValue = `Player 1's number is ${player1}`;
+      player1Total = player1Total + player1;
     }
   }
   // c) player 2 rolls dices - "player 2 roll"
@@ -137,19 +140,29 @@ var main = function (input) {
     } else {
       var player2 = turn2Select(input); // returns final player2Number
       myOutputValue = `Player 2's number is ${player2}`;
+
+      player2Total = player2Total + player2;
     }
   }
   // e) final result - "results"
   else if (state == "results") {
     if (player1Number > player2Number) {
-      myOutputValue = `Player 1: ${player1Number} <br>
+      myOutputValue =
+        `Player 1: ${player1Number} <br>
       Player 2: ${player2Number} <br>
-      Player 1 wins !`;
+      Player 1 wins this round! <br><br>
+      Player 1's total: ${player1Total}<br>
+      Player 2's total: ${player2Total}<br>
+      ` + compareTotal(player1Total, player2Total);
     }
     if (player2Number > player1Number) {
-      myOutputValue = `Player 1: ${player1Number} <br>
+      myOutputValue =
+        `Player 1: ${player1Number} <br>
       Player 2: ${player2Number} <br>
-      Player 2 wins !`;
+      Player 2 wins this round! <br><br>
+      Player 1's total: ${player1Total}<br>
+      Player 2's total: ${player2Total}<br>
+      ` + compareTotal(player1Total, player2Total);
     }
     // back to a) player 1 roll dices, remove all prev rolls
     player1Rolls = [];
@@ -157,4 +170,29 @@ var main = function (input) {
     state = "player 1 roll";
   }
   return myOutputValue;
+};
+
+// 1. Keep score for each player.
+// arrays to store scores for each player, create a variable, to keep track of TOTAL SCORE for each player
+
+// 2. The score is the running sum of all numbers that player has generated so far.
+// while loop OR (player1Total = player1Total + currentScore)
+
+// 3. This means there is no permanent winner, only a temporary leader.
+// Display total scores for each player by RETURNING myOutputValue
+// Compare total scores of each player
+// compare using IF statements
+// myOutputValue = `Message to show who has the higher score`
+
+// write logic in main function, then create the helper functions
+var compareTotal = function (player1Sum, player2Sum) {
+  if (player1Sum > player2Sum) {
+    return "Player 1 is in the lead!";
+  }
+  if (player1Sum < player2Sum) {
+    return "Player 2 is in the lead!";
+  }
+  if (player1Sum == player2Sum) {
+    return "You both are in a tie!";
+  }
 };
