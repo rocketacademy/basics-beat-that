@@ -3,10 +3,11 @@ const ID_HTML_SUBMIT_BUTTION = "submit-button";
 const ID_HTML_INPUT_DESCRIPTION = "input-description";
 const ID_HTML_INPUT_FIELD = "input-field";
 const ID_HTML_OUTPUT_DESCRIPTION = "output-description";
+const ID_HTML_PARAGRAPH_MAIN = "paragraph-main";
 const CLASS_NAME_HTML_FLEX_DIV = "flex-div";
 
 const HTML_G_PARAGRAPH = document.createElement("paragraph");
-
+HTML_G_PARAGRAPH.setAttribute("id", ID_HTML_PARAGRAPH_MAIN);
 const HTML_G_BUTTON = document.createElement("button");
 HTML_G_BUTTON.setAttribute("id", ID_HTML_SUBMIT_BUTTION);
 HTML_G_BUTTON.innerHTML = "Submit";

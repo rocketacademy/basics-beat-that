@@ -17,12 +17,26 @@
       #header {
         text-align: center;
       }
-
-      #root-container {
+      #paragraph-stats-round {
+        background-color: lightgrey;
+        height: fit-content;
+        width: 800px;
+        display: flex;
+        padding: 10px;
+        margin-top: 30px;
+      }
+      #paragraph-main {
         background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
+        height: 200px;
+        width: 800px;
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+      }
+      #root-container {
+        flex-direction: column;
+        display: flex;
+        align-items: center;
       }
 
       input {
@@ -42,8 +56,13 @@
       }
       .flex-div {
         display: flex;
-        background-color: turquoise;
-        width: 300px;
+        background-color: white;
+        width: 100%;
+        flex-direction: row;
+      }
+      .flex-table {
+        padding: 10px;
+        display: flex;
       }
       #output-div {
         background-color: lightgrey;
@@ -59,8 +78,16 @@
 
     <!--Entry Point-->
     <div id="root-container"></div>
-
+    <script>
+      const wrapInDiv = function (...children) {
+        const div = document.createElement("div");
+        div.className += ` ${CLASS_NAME_HTML_FLEX_DIV}`;
+        div.replaceChildren(...children);
+        return div;
+      };
+    </script>
     <script src="paragraph.js"></script>
+    <script src="playingStatsParagraph.js"></script>
     <script src="game-logic.js"></script>
     <!-- Define button click functionality -->
     <script>

@@ -86,7 +86,7 @@ const getOrderingChoiceCount = function (player) {
 
 // Check if index is in the orderings array of current player
 const isValidRollOrdering = function (PLAYER, index) {
-  if (index === null || index === " ") {
+  if (index === undefined || index === null || index === "") {
     return false;
   }
   index = Number(index);
@@ -95,7 +95,6 @@ const isValidRollOrdering = function (PLAYER, index) {
   }
 
   let maxIndex = playersRollsOrderings[PLAYER].length;
-  console.log(0 <= index && index < maxIndex);
   return 0 <= index && index < maxIndex;
 };
 
@@ -210,7 +209,6 @@ var actionOrder = function (index) {
     var activityDescription = `Winner decided: ${currentDisplayWinner}`;
 
     desc += activityDescription;
-    resetGame();
     changeAction(ACTION_GAME_SET);
   } else {
     // A round decision cannot be made. Change the next action state to ROLL and player to next player
@@ -222,6 +220,7 @@ var actionOrder = function (index) {
 
 const actionGameSet = function () {
   // game is set (winner decided) and button clicked
+  resetGame();
   CURRENT_ACTION = ACTION_ROLL; // change the next action to ROLL.
   return "";
 };
@@ -231,7 +230,7 @@ const actionGameSet = function () {
  *  Does some action based on current action state. actionXX(...) will execute
  *  its logic and determine the next action state (remain or change, if any).
  *
- *  nextRender(...) render the output elements to the webpage for the next action state (waiting for next click)
+ *  nextRenderParagraphXX(...) render output elements of paragraph to the webpage for the next action state (waiting for next click)
  *
  * */
 var main = function () {
@@ -247,17 +246,12 @@ var main = function () {
   } else if (CURRENT_ACTION == ACTION_GAME_SET) {
     result += actionGameSet();
   }
-  nextRender(result);
+  nextRenderParagraph(result);
+  nextRenderParagraphRound();
 };
 
-const wrapInDiv = function (...children) {
-  const div = document.createElement("div");
-  div.className += ` ${CLASS_NAME_HTML_FLEX_DIV}`;
-  div.replaceChildren(...children);
-  return div;
-};
-// nextRender should be called AFTER the next action state has been updated.
-var nextRender = function (result) {
+// nextRenderParagraph should be called AFTER the next action state has been updated.
+var nextRenderParagraph = function (result) {
   console.group();
   HTML_G_INPUT_FIELD.value = "";
   HTML_G_OUTPUT_DESCRIPTION.innerHTML = result;
@@ -309,7 +303,42 @@ var nextRender = function (result) {
   console.groupEnd();
 };
 
+/**
+ *          Player 1    Player 2
+ *  Roll     3            2
+ *  Choice    1           1
+ */
+
+const generateRoundStatisticsTable = function () {
+  var table = document.createElement("table");
+  table.className += ` flex-table`;
+  var headerRow = table.insertRow();
+  headerRow.insertCell().innerHTML = "#: ";
+  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
+    headerRow.insertCell().innerHTML = displayCurrentPlayer(playerIndex);
+  }
+
+  var rollRow = table.insertRow();
+  rollRow.insertCell().innerHTML = "Roll: ";
+  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
+    rollRow.insertCell().innerHTML = playerRolls[playerIndex];
+  }
+
+  var choiceOfOrderingRow = table.insertRow();
+  choiceOfOrderingRow.insertCell().innerHTML = "Choice: ";
+  for (let playerIndex = 0; playerIndex < PLAYERS; playerIndex++) {
+    choiceOfOrderingRow.insertCell().innerHTML =
+      playerOrderingChoice[playerIndex];
+  }
+
+  return table;
+};
+
+const nextRenderParagraphRound = function () {
+  appendToParagraphStatisticsRound(generateRoundStatisticsTable());
+};
 var initializeDisplay = function () {
-  nextRender("");
+  nextRenderParagraph("");
+  nextRenderParagraphRound();
 };
 initializeDisplay();
