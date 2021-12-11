@@ -234,10 +234,12 @@ const actionGameSet = function () {
  *
  * */
 var main = function () {
-  var result = "";
+  var result = ``;
   if (CURRENT_ACTION == ACTION_ROLL) {
+    result += "Previous activity: ";
     result += actionRoll();
   } else if (CURRENT_ACTION == ACTION_ORDER) {
+    result += "Previous activity: ";
     result += actionOrder(HTML_G_INPUT_FIELD.value);
   } else if (CURRENT_ACTION == ACTION_GAME_SET) {
     result += actionGameSet();
@@ -245,6 +247,12 @@ var main = function () {
   nextRender(result);
 };
 
+const wrapInDiv = function (...children) {
+  const div = document.createElement("div");
+  div.className += ` ${CLASS_NAME_HTML_FLEX_DIV}`;
+  div.replaceChildren(...children);
+  return div;
+};
 // nextRender should be called AFTER the next action state has been updated.
 var nextRender = function (result) {
   console.group();
@@ -268,33 +276,32 @@ var nextRender = function (result) {
         "<br />" +
         "You've rolled: " +
         playerRolls[CURRENT_PLAYER] +
-        "<br /> Choose order [index] <br />" +
+        "<br /> Choose ORDER [index] <br />" +
         getDisplayOrderingsOfPlayer(CURRENT_PLAYER)
     );
     if (orderingChoiceCount === 1) {
+      setButtonValue("ORDER [0]");
       appendToParagraph(
         HTML_G_INPUT_DESC,
         HTML_G_BUTTON,
         HTML_G_OUTPUT_DESCRIPTION
       );
-      setButtonValue("SELECT ORDER [0]");
     } else {
+      setButtonValue("ORDER");
       appendToParagraph(
         HTML_G_INPUT_DESC,
-        HTML_G_INPUT_FIELD,
-        HTML_G_BUTTON,
+        wrapInDiv(HTML_G_BUTTON, HTML_G_INPUT_FIELD),
         HTML_G_OUTPUT_DESCRIPTION
       );
-      setButtonValue("SELECT ORDER");
     }
   } else if (CURRENT_ACTION == ACTION_GAME_SET) {
     setInputDescription(getDisplayPrevRoundResult());
+    setButtonValue("PLAY AGAIN");
     appendToParagraph(
       HTML_G_INPUT_DESC,
       HTML_G_BUTTON,
       HTML_G_OUTPUT_DESCRIPTION
     );
-    setButtonValue("PLAY AGAIN");
   }
   console.groupEnd();
 };
