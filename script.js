@@ -7,8 +7,6 @@
 var player1Choice = [];
 var player2Choice = [];
 
-console.log(player1Choice);
-
 //store dice values
 var diceValues = [];
 
@@ -107,11 +105,15 @@ var main = function (input) {
   } else if (currentGameMode == "comparing dice numbers") {
     if (Number(player1Choice) > Number(player2Choice)) {
       diceValues = [];
+      player1Choice = [];
+      player2Choice = [];
       console.log(`diceValues: ${diceValues}`);
       currentGameMode = "waiting for player 1 input";
       return "Player 1 won! <br> Click 'submit' to play the game again!";
     } else if (Number(player1Choice) < Number(player2Choice)) {
       diceValues = [];
+      player1Choice = [];
+      player2Choice = [];
       console.log(`diceValues: ${diceValues}`);
       currentGameMode = "waiting for player 1 input";
       return "Player 2 won! <br> Click 'submit' to play the game again!";
