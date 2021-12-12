@@ -1,8 +1,9 @@
 // Global States
 var playerTurn = 1; // 1 = Player 1; 2 = Player 2
 var gamePhase = 1; // 1 = Dice Roll; 2 = Choose Order; 3 = Conclusion
-var player1Rolls = [];
-var player2Rolls = [];
+var playerRolls = [];
+// var player1Rolls = [];
+// var player2Rolls = [];
 var playerChoice = 0; // If 1, choose 1st numerical; If 2, choose 2nd numerical
 var finalNumber1 = 0; // Stores final number for Player 1
 var finalNumber2 = 0; // Stores final number for Player 2
@@ -27,8 +28,9 @@ var chosenOrderNum = function (choice, playerRolls) {
 
 // Function: Takes player number input, to return message on what numbers were rolled
 var playerXRolls = function (playerNum) {
-  dice1Roll = eval("player" + playerNum + "Rolls[0]");
-  dice2Roll = eval("player" + playerNum + "Rolls[1]");
+  var index = playerNum - 1;
+  dice1Roll = playerRolls[index][0];
+  dice2Roll = playerRolls[index][1];
   var message = `You rolled <b>${dice1Roll}</b> for Dice 1 and <b>${dice2Roll}</b> for Dice 2.`;
   return message;
 };
@@ -51,13 +53,13 @@ var main = function (input) {
     }
     myOutputValue += `<br>Press 'Submit' to play again!`;
     gamePhase = 1;
-    player1Rolls = [];
-    player2Rolls = [];
+    playerRolls = [];
+    //player2Rolls = [];
   }
   // 2nd IF: If game is in 1st Player's Turn (Phase 1 or 2)
   else if (playerTurn == 1) {
     if (gamePhase == 1) {
-      player1Rolls.push(rollDice(), rollDice());
+      playerRolls.push([rollDice(), rollDice()]);
       myOutputValue = `Welcome Player 1.<br>${playerXRolls(
         playerTurn
       )}<br>Choose the order of the dice (1 or 2).`;
@@ -72,7 +74,7 @@ var main = function (input) {
         );
       }
       playerChoice = input;
-      finalNumber1 = chosenOrderNum(playerChoice, player1Rolls);
+      finalNumber1 = chosenOrderNum(playerChoice, playerRolls[0]);
       myOutputValue = `Player 1, you chose Dice ${playerChoice} first.<br>Your number is <b>${finalNumber1}</b>.<br>It is now Player 2's turn. Press 'Submit' to continue...`;
       playerTurn = 2;
       gamePhase = 1;
@@ -81,7 +83,7 @@ var main = function (input) {
   // 3rd IF: If game is in 2nd Player's Turn (Phase 1 or 2)
   else if (playerTurn == 2) {
     if (gamePhase == 1) {
-      player2Rolls.push(rollDice(), rollDice());
+      playerRolls.push([rollDice(), rollDice()]);
       myOutputValue = `Welcome Player 2.<br>${playerXRolls(
         playerTurn
       )}<br>Choose the order of the dice (1 or 2).`;
@@ -96,7 +98,7 @@ var main = function (input) {
         );
       }
       playerChoice = input;
-      finalNumber2 = chosenOrderNum(playerChoice, player2Rolls);
+      finalNumber2 = chosenOrderNum(playerChoice, playerRolls[1]);
       myOutputValue = `Player 2, you chose Dice ${playerChoice} first.<br>Your number is <b>${finalNumber2}</b>.<br>Press 'Submit' to see Final Score.`;
       playerTurn = 1;
       gamePhase = 3;
