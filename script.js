@@ -7,9 +7,12 @@
 // set global variables
 var rollDiceState = "rollDiceState";
 var chooseDiceState = "chooseDiceState";
+var compareScoresState = "compareScoresState";
 var gameState = rollDiceState;
 
-var playerRolls = [];
+var currentPlayerRolls = [];
+var currentPlayer = 1;
+var bothPlayersScore = [];
 
 //Dice roll function
 var rollDice = function () {
@@ -23,35 +26,52 @@ var rollDice = function () {
 var rollBothDice = function () {
   var counter = 0;
   while (counter < 2) {
-    playerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
     counter = counter + 1;
   }
-  return `Welcome<br><br> You rolled: <br>${playerRolls[0]} for Dice One and<br>${playerRolls[1]} for Dice Two. Next, please input '1' if you would like to choose Dice One and '2' if you would like to choose Dice Two as the first digit of your final value.`;
+  return (
+    `Welcome, Player ` +
+    currentPlayer +
+    `.` +
+    `<br><br>You rolled: <br>${currentPlayerRolls[0]} for Dice One and<br>${currentPlayerRolls[1]} for Dice Two. Next, please input '1' if you would like to choose Dice One and '2' if you would like to choose Dice Two as the first digit of your final value.`
+  );
 };
 
 //Helper function to get player's score
 var getPlayerScore = function (playerInput) {
+  var playerScore;
   //input validation
   if (playerInput != 1 && playerInput != 2) {
     console.log(`Control flow: input !== 1 && input !== 2`);
-    return `Error! Please input:<br>'1' if you want to use Dice One as the first digit of your final value or<br> '2' if you want to use Dice Two as the first digit of your final value.<br><br>You rolled: <br>${playerRolls[0]} for Dice One and <br>${playerRolls[1]}for Dice Two.`;
+    return `Error! Please input:<br>'1' if you want to use Dice One as the first digit of your final value or<br> '2' if you want to use Dice Two as the first digit of your final value.<br><br>You rolled: <br>${currentPlayerRolls[0]} for Dice One and <br>${currentPlayerRolls[1]}for Dice Two.`;
   }
 
   //input == 1
   if (playerInput == "1") {
-    var playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
-    return `Your chosen value is: ` + playerScore;
+    playerScore = Number(
+      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
+    );
   }
 
   //input == 2
   if (playerInput == "2") {
-    var playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
-    return `Your chosen value is: ` + playerScore;
+    playerScore = Number(
+      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
+    );
   }
+
+  //Store player's score in array
+  bothPlayersScore.push(playerScore);
+  //clear current player's rolls array
+  currentPlayerRolls = [];
+  return (
+    `Player ` + currentPlayer + ` Your chosen value is: ` + playerScore + `.`
+  );
 };
 
 var main = function (input) {
-  console.log(`Checking game state on submit`, gameState);
+  console.log(`Checking gameState on submit`, gameState);
+  console.log(`Checking currentPlayer on submit`, currentPlayer);
   var outputMessage = "";
 
   if (gameState == rollDiceState) {
@@ -69,6 +89,17 @@ var main = function (input) {
 
     // Call playerScore function
     outputMessage = getPlayerScore(input);
+
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameState = rollDiceState;
+      return outputMessage + `<br><br>Player 2, it is your turn now.`;
+    }
+    if (currentPlayer == 2) {
+      gameState = compareScoresState;
+
+      return outputMessage + ` Click on submit to calculate scores.`;
+    }
     return outputMessage;
   }
 };
