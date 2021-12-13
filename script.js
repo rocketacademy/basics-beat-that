@@ -76,8 +76,9 @@ var main = function (input) {
       playerOneFinalDice = `${playerOneSecondDice}${playerOneFirstDice}`;
       console.log(playerOneFinalDice);
       outputValue = `Player 1, you chose Dice ${input} first. <br><br> Your number is ${playerOneFinalDice}. <br><br> It is now Player 2's turn. <br><br> Please press "Submit" to continue!`;
+    } else {
+      return `Please input 1 or 2 only.`;
     }
-    // What if the player key in other than 1 & 2? Ignore user input other than 1 & 2.
 
     currentGameMode = "playerTwoMode1";
     // Loop 3
@@ -109,6 +110,8 @@ var main = function (input) {
       playerTwoFinalDice = `${playerTwoSecondDice}${playerTwoFirstDice}`;
       console.log(playerTwoFinalDice);
       outputValue = `Player 2, you chose Dice ${input} first. <br><br> Your number is ${playerTwoFinalDice}. <br><br> Press "Submit" to see who win!`;
+    } else {
+      return `Please input 1 or 2 only.`;
     }
     currentGameMode = "winnerMode";
     // Loop 5
