@@ -1,7 +1,15 @@
+<!--  All HTML files begin with the following line: -->
 <!DOCTYPE html>
+<!-- This indicates that the rest of the lines that follow are to be interpreted as HTML. It tells the browser about what document type to expect. -->
+
+<!-- All text enclosed in angled brackets are known as HTML element tags. There are usually, but not always, starting and closing element "tags", each representing a HTML element.
+The <html> element is known as the root element of a HTML page. All other elements are encased within it. -->
 <html>
+  <!-- The <head> element contains meta information about the HTML page, information that is not rendered or displayed by the browser -->
   <head>
-    <title>Coding Basics</title>
+    <!-- The <title> element specifies a title for the HTML page (which is shown in the browser's title bar or in the page's tab) and is the default name given to a bookmark of a webpage. -->
+    <title>Beat That</title>
+    <!-- The <style> element contains information relating to the layout and style of the webpage. The syntax within a <style> tag is referred to as CSS - Cascading Style Sheets. -->
     <style>
       * {
         box-sizing: border-box;
@@ -17,26 +25,74 @@
         text-align: center;
       }
 
+      #instructions {
+        text-align: center;
+        color: darkgrey;
+        margin: 0 auto;
+        max-width: 800px;
+        padding: 0 31px;
+      }
+
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
-        padding: 38px 31px;
+        padding: 25px 31px 38px 31px;
+        justify-content: space-between;
+      }
+
+      #leaderboard {
+        border: 1px solid black;
+        border-radius: 10px;
+        margin: 40px auto;
+        max-width: 30%;
+        padding: 25px 31px 38px 31px;
+        justify-content: space-between;
+        text-align: center;
+      }
+
+      label {
+        display: inline-block;
       }
 
       input {
         font-size: 21px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 80%;
+        display: inline-block;
+      }
+
+      select {
+        font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
-        width: 100%;
+        width: 80%;
+        display: inline-block;
       }
 
       button {
         font-size: 21px;
-        line-height: 33px;
+        height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
+      }
+
+      #inputs {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #buttons {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        width: 30%;
+      }
+
+      .parameter {
+        width: 25%;
       }
 
       #output-div {
@@ -48,32 +104,109 @@
     </style>
   </head>
 
+  <!-- The <body> element defines the document's body, and is a container for all the visible contents that will be rendered by the browser.  -->
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <!-- The <h1> element defines a large heading. There are 6 pre-set header elements, <h1> to <h6> -->
+    <h1 id="header">Beat That! 🚀</h1>
+    <!-- The <div> tag defines a division or a section in an HTML document, and is commonly use as a "container" for nested HTML elements. -->
+    <div id="instructions">
+      <p>
+        Hello! Welcome to Beat That! Select your preferred settings and click
+        "Begin".
+      </p>
+      <p>
+        Rolls will auto-generate the best numbers, the highest/lowest number is
+        the winner!
+      </p>
+      <p>Test your luck and get the highest score! Good luck!</p>
+    </div>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <!-- The <p> tag defines a paragraph element. -->
+      <div id="inputs">
+        <div class="parameter">
+          <label>Number of Players:</label>
+          <!-- The self-closing <input /> tag represents a field for a user to enter input. -->
+          <input id="number-of-players" type="number" value="2" min="2" />
+        </div>
+        <div class="parameter">
+          <label>Dice Rolls:</label>
+          <!-- The self-closing <input /> tag represents a field for a user to enter input. -->
+          <input id="number-of-rolls" type="number" value="2" min="2" />
+        </div>
+        <div class="parameter">
+          <label for="game-mode">Game Mode:</label>
+          <select id="game-mode">
+            <option value="highest">Highest</option>
+            <option value="lowest">Lowest</option>
+          </select>
+        </div>
+        <div id="buttons">
+          <button id="begin-button">Begin</button>
+          <button id="remake-button">Remake</button>
+        </div>
+      </div>
+      <!-- The self-closing <br /> tag represents a line break - a line's worth of spacing before dispalying the next element. -->
       <br />
-      <button id="submit-button">Submit</button>
+      <!-- The <button> tag represents.. you guessed it! a button. -->
+      <button id="proceed-button">Proceed</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
-    <!-- Import program logic -->
+    <div id="leaderboard">
+      <p>========== 🏆 <b>Leaderboard</b> 🏆 ==========</p>
+      <div id="leaderboard-scores"></div>
+    </div>
+    <!-- Everything below this is incorporating JavaScript programming logic into the webpage. -->
+    <!-- The script tag encloses JavaScript syntax for the browser to interpret programtically -->
+    <!-- The following line imports all code written in the script.js file -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+      // Declare and define the 3 parameter inputs.
+      var numPlayers = document.querySelector("#number-of-players");
+      var numRolls = document.querySelector("#number-of-rolls");
+      var mode = document.querySelector("#game-mode");
+
+      // Declare and define the buttons.
+      var btnProceed = document.querySelector("#proceed-button");
+      // "Proceed" is disabled unable player clicks "Begin".
+      btnProceed.disabled = true;
+      var btnBegin = document.querySelector("#begin-button");
+      var btnRemake = document.querySelector("#remake-button");
+
+      var output = document.querySelector("#output-div");
+      var leaderboard = document.querySelector("#leaderboard-scores");
+
+      btnProceed.addEventListener("click", function () {
+        // Store the output of main() in a new variable
+        var result = main();
 
         // Display result in output element
-        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+      });
+
+      btnBegin.addEventListener("click", function () {
+        var result = beginGame(numPlayers.value, numRolls.value, mode.value);
+        console.log(mode.value);
+        // Display result in output element
         output.innerHTML = result;
 
-        // Reset input value
-        input.value = "";
+        numPlayers.disabled = true;
+        numRolls.disabled = true;
+        mode.disabled = true;
+        btnBegin.disabled = true;
+        btnProceed.disabled = false;
+      });
+
+      btnRemake.addEventListener("click", function () {
+        remakeGame();
+        output.innerHTML = "";
+        leaderboard.innerHTML = "";
+        numPlayers.disabled = false;
+        numRolls.disabled = false;
+        mode.disabled = false;
+        btnBegin.disabled = false;
+        btnProceed.disabled = true;
       });
     </script>
   </body>
