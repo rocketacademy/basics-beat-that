@@ -92,12 +92,12 @@ var main = function (input) {
   // if game mode = normal, player gets to select dice1 or dice 2, highest wins
   // if game mode = auto, player number is auto generated, lowest wins
 
-  if (input == "normal") {
+  if (input.toLowerCase() == "normal") {
     gameMode = "player 1";
     return `You are now in normal mode, click submit to continue!`;
   }
 
-  if (input == "auto") {
+  if (input.toLowerCase() == "auto") {
     gameMode = "auto";
     return `You are now in auto mode, click submit to continue!`;
   }
@@ -175,7 +175,6 @@ var main = function (input) {
 
   // create a new game mode = auto
   // if player gameMode = auto
-
   // output player's auto generated low numbers
   // push the numbers into player's num array
   // add the numbers as the rounds continue
