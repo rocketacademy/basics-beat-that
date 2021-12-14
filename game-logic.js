@@ -135,7 +135,11 @@ const decideRoundWinner = function () {
       playerWinners.push(playerIndex);
     }
   }
-  PLAYER_WIN_COUNT[playerWinners] += 1;
+
+  for (const winner of playerWinners) {
+    PLAYER_WIN_COUNT[winner] += 1;
+  }
+
   return playerWinners;
 };
 
