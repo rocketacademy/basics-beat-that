@@ -120,7 +120,7 @@ const concatenatedVal = function (ordering) {
 // This function should be called when all player had chosen their ordering.
 const decideRoundWinner = function () {
   var max = 0;
-  var PLAYER_WINNER = [];
+  var playerWinners = [];
   for (
     let playerIndex = 0;
     playerIndex < playerOrderingChoice.length;
@@ -128,15 +128,15 @@ const decideRoundWinner = function () {
   ) {
     var val = concatenatedVal(playerOrderingChoice[playerIndex]);
     if (val > max) {
-      PLAYER_WINNER = [];
+      playerWinners = [];
       max = val;
-      PLAYER_WINNER.push(playerIndex);
+      playerWinners.push(playerIndex);
     } else if (val === max) {
-      PLAYER_WINNER.push(playerIndex);
+      playerWinners.push(playerIndex);
     }
   }
-  PLAYER_WIN_COUNT[PLAYER_WINNER] += 1;
-  return PLAYER_WINNER;
+  PLAYER_WIN_COUNT[playerWinners] += 1;
+  return playerWinners;
 };
 
 /* Helpers to get display */
@@ -169,6 +169,8 @@ const displayCurrentPlayer = function (PLAYER) {
     return "PLAYER 1";
   } else if (PLAYER_TWO === PLAYER) {
     return "PLAYER 2";
+  } else {
+    console.log(PLAYER + "not " + PLAYER_ONE + PLAYER_TWO);
   }
 };
 
@@ -244,12 +246,16 @@ var actionOrder = function (index) {
 
   if (CURRENT_PLAYER === LAST_PLAYER) {
     // A round decision can be made. Decide the winner, reset game and change the next action to RESET
-    var PLAYER_WINNER = decideRoundWinner();
-    var currentDisplayWinner = displayCurrentPlayer(PLAYER_WINNER);
-    var resultDescription = `Winner: ${currentDisplayWinner}`;
+    var playerWinners = decideRoundWinner();
+    console.log("winner" + playerWinners);
+    var currentDisplayWinners = playerWinners.map((playerWinner) =>
+      displayCurrentPlayer(playerWinner)
+    );
+
+    var resultDescription = `Winner: ${currentDisplayWinners}`;
     PREV_ROUND_RESULT_DESCRIPTION = resultDescription;
 
-    var activityDescription = `Winner decided: ${currentDisplayWinner}`;
+    var activityDescription = `Winner decided: ${currentDisplayWinners}`;
 
     desc += activityDescription;
     changeAction(ACTION_GAME_SET);
