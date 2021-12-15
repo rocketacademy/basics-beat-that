@@ -20,14 +20,6 @@
 // 'round': a set of matches
 // 'game': a set of rounds
 
-// Extra features:
-// Leaderboard formatting
-// Game state for players to enter their names
-// Tab for results from previous rounds
-// Bold / color red the winning player of each round
-// Select view by rank / player / running vs. raw score
-// Possible to insert an editor for table manipulation?
-
 // Outstanding issues:
 // 'lowest' mode for knockout
 
