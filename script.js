@@ -95,7 +95,7 @@ var leaderboardRanked = function (leaderboard, gameMode) {
 var main = function (input) {
   if (input == "highest" || input == "lowest") {
     gameMode = input;
-    return `Game mode has been set to ${gameMode} combined number. Scores have been reset.`;
+    return `Game mode has been set to ${gameMode} combined number.`;
   }
 
   if (input == "normal" || input == "knockout") {
