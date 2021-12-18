@@ -24,7 +24,8 @@ var rollDiceForPlayer = function () {
     index = index + 1;
   }
   console.log("player rolls completed and it is: " + currentPlayerRolls);
-  return (
+
+  var outputMessage =
     "welcome, player " +
     currentPlayer +
     "<br> you have rolled, <br> Dice 1: " +
@@ -32,8 +33,10 @@ var rollDiceForPlayer = function () {
     "<br> Dice 2: " +
     currentPlayerRolls[1] +
     "." +
-    " <br> Now, please input 1 or 2 to select the number combination for the 2 dice chosen. "
-  );
+    " <br> Now, please input 1 or 2 to select the number combination for the 2 dice chosen. ";
+
+  // currentPlayerRolls = [];
+  return outputMessage;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -55,6 +58,8 @@ var getPlayerScore = function (playerInput) {
     var playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
+
+    allPlayerScores.push(playerScore);
     return " Your chosen value is: " + playerScore;
   }
 
@@ -72,6 +77,13 @@ var getPlayerScore = function (playerInput) {
       " Hi, player " + currentPlayer + "Your chosen value is: " + playerScore
     );
   }
+};
+
+var resetGame = function () {
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  allPlayerScores = [];
+  currentPlayerRolls = [];
 };
 
 var comparePlayerScores = function () {
@@ -125,6 +137,8 @@ var main = function (input) {
       console.log("player 1 ends here");
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
+      currentPlayerRolls = [];
+
       return outputMessage + "It is now player 2's turn! ";
     }
 
@@ -140,6 +154,13 @@ var main = function (input) {
     console.log("current gamestate is " + gameState);
 
     outputMessage = comparePlayerScores();
+
+    resetGame();
+    console.log("current player: " + currentPlayer);
+    console.log("current gamestate: " + gameState);
+    console.log("current player scores: " + allPlayerScores);
+    console.log("current player roll is: " + currentPlayerRolls);
+
     return outputMessage;
   }
 };
