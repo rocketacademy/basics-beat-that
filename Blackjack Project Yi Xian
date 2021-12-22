@@ -1,0 +1,218 @@
+// Get a random index ranging from 0 (inclusive) to max (exclusive).
+var getRandomIndex = function (max) {
+  return Math.floor(Math.random() * max);
+};
+
+// Shuffle the elements in the cardDeck array
+var shuffleCards = function (cardDeck) {
+  // Loop over the card deck array once
+  var currentIndex = 0;
+  while (currentIndex < cardDeck.length) {
+    // Select a random index in the deck
+    var randomIndex = getRandomIndex(cardDeck.length);
+    // Select the card that corresponds to randomIndex
+    var randomCard = cardDeck[randomIndex];
+    // Select the card that corresponds to currentIndex
+    var currentCard = cardDeck[currentIndex];
+    // Swap positions of randomCard and currentCard in the deck
+    cardDeck[currentIndex] = randomCard;
+    cardDeck[randomIndex] = currentCard;
+    // Increment currentIndex
+    currentIndex = currentIndex + 1;
+  }
+  // Return the shuffled deck
+  return cardDeck;
+};
+var makeDeck = function () {
+  // Initialise an empty deck array
+  var cardDeck = [];
+  // Initialise an array of the 4 suits in our deck. We will loop over this array.
+  var suits = ["hearts❤", "diamonds💎", "clubs♣", "spades♠"];
+  // Loop over the suits array
+  var suitIndex = 0;
+  while (suitIndex < suits.length) {
+    // Store the current suit in a variable
+    var currentSuit = suits[suitIndex];
+
+    // Loop from 1 to 13 to create all cards for a given suit
+    // Notice rankCounter starts at 1 and not 0, and ends at 13 and not 12.
+    // This is an example of a loop without an array.
+    var rankCounter = 1;
+    while (rankCounter <= 13) {
+      // By default, the card name is the same as rankCounter
+      var cardName = rankCounter;
+
+      // If rank is 1, 11, 12, or 13, set cardName to the ace or face card's name
+      if (cardName == 1) {
+        cardName = "ace";
+      } else if (cardName == 11) {
+        cardName = "jack";
+      } else if (cardName == 12) {
+        cardName = "queen";
+      } else if (cardName == 13) {
+        cardName = "king";
+      }
+
+      // Create a new card with the current name, suit, and rank
+      var card = {
+        name: cardName,
+        suit: currentSuit,
+        rank: rankCounter,
+      };
+
+      // Add the new card to the deck
+      cardDeck.push(card);
+
+      // Increment rankCounter to iterate over the next rank
+      rankCounter += 1;
+    }
+    // Increment the suit index to iterate over the next suit
+    suitIndex += 1;
+  }
+
+  // Return the completed card deck
+  return cardDeck;
+};
+// Reassigning rank values of jack,queen and king to 10.
+var createBlackJackDeck = function () {
+  var cardDeck = makeDeck();
+  var blackJackDeck = [];
+  var index = 0;
+  while (index < cardDeck.length) {
+    if (
+      cardDeck[index].name == "jack" ||
+      cardDeck[index].name == "queen" ||
+      cardDeck[index].name == "king"
+    ) {
+      cardDeck[index].rank = 10;
+      blackJackDeck.push(cardDeck[index]);
+      index = index + 1;
+    } else {
+      blackJackDeck.push(cardDeck[index]);
+      index = index + 1;
+    }
+  }
+  return blackJackDeck;
+};
+
+//global variables
+var createDeck = createBlackJackDeck();
+var shuffledDeck = shuffleCards(createDeck);
+var player1cardDrawn = "";
+var player2cardDrawn = "";
+var player1Cards = [];
+var player2Cards = [];
+var gameMode = "begin";
+
+var main = function (input) {
+  //Game starts with each player drawing a card each
+  var drawPlayer1RandomCard = shuffledDeck.pop();
+  var drawPlayer2RandomCard = shuffledDeck.pop();
+  var myOutputValue = "";
+
+  if (gameMode == "begin") {
+    gameMode = "player1";
+    myOutputValue =
+      "<br> This is Player 1's card: " +
+      drawPlayer1RandomCard.name +
+      " of " +
+      drawPlayer1RandomCard.suit +
+      " and <br> this is Player 2's card:  " +
+      drawPlayer2RandomCard.name +
+      " of " +
+      drawPlayer2RandomCard.suit +
+      "." +
+      "<br>" +
+      "<br>" +
+      "<br>Player 1, you may choose to draw another card by entering '1'🃏, else you may enter 2 to exit.";
+    // pushing drawn cards into its respectively arrays.
+    player1Cards.push(drawPlayer1RandomCard.rank);
+    player2Cards.push(drawPlayer2RandomCard.rank);
+    return myOutputValue;
+  }
+  // player 1 decides to hit(draw a card) or stand
+  if (gameMode == "player1" && input == 1) {
+    drawPlayer1RandomCard;
+    player1Cards.push(drawPlayer1RandomCard.rank);
+    if ((input = 1)) {
+      myOutputValue =
+        "<br> This is Player 1's current cards' rank: " +
+        player1Cards +
+        "<br> This is Player 2's current cards' rank: " +
+        player2Cards +
+        "." +
+        "<br>" +
+        "<br>Player 1, you may choose to draw another card by entering '1', else you may enter '2'🃏 to exit and let Player 2 play!";
+      return myOutputValue;
+    }
+    if (input != 1) {
+      myOutputValue = `Player 1, please enter 1 if you would like to draw a card, else you may enter '2'🃏 to exit for Player 2 to play.`;
+      return myOutputValue;
+    }
+  }
+  if (gameMode == "player1" && input == "2") {
+    gameMode = "player2";
+    myOutputValue =
+      "Player 2, you may choose to draw another card by entering '3'🃏, else you may enter '4' to exit.";
+    return myOutputValue;
+  }
+  // player 1 decides to hit(draw a card) or stand
+  if (gameMode == "player2" && input == "3") {
+    drawPlayer2RandomCard;
+    player2Cards.push(drawPlayer2RandomCard.rank);
+
+    myOutputValue =
+      "<br> This is Player 1's current cards' rank: " +
+      player1Cards +
+      "<br> This is Player 2's current cards' rank:" +
+      player2Cards +
+      "." +
+      "<br>" +
+      "<br>Player 2, you may choose to draw another card by entering '3'🃏, else you may enter '4' to exit.";
+    return myOutputValue;
+  }
+  if (gameMode == "player2" && input == "4") {
+    gameMode = "compute winlose";
+    return (myOutputValue = `Let's see who is the winner!`);
+  }
+  if (gameMode == "compute winlose") {
+    var player1cardIndex = 0;
+    var player2cardIndex = 0;
+    var sumOfPlayer1Cards = 0;
+    var sumOfPlayer2Cards = 0;
+    while (player1cardIndex < player1Cards.length) {
+      sumOfPlayer1Cards = sumOfPlayer1Cards + player1Cards[player1cardIndex];
+      player1cardIndex = player1cardIndex + 1;
+    }
+    while (player2cardIndex < player2Cards.length) {
+      sumOfPlayer2Cards = sumOfPlayer2Cards + player2Cards[player2cardIndex];
+      player2cardIndex = player2cardIndex + 1;
+    }
+    if (sumOfPlayer1Cards > sumOfPlayer2Cards) {
+      myOutputValue = `Player 1 wins🎊, with a hand of ${sumOfPlayer1Cards} against player 2's hand of ${sumOfPlayer2Cards}.
+      <br> 🖱 Refresh the browser to restart the game.`;
+      return myOutputValue;
+    }
+    if (sumOfPlayer1Cards < sumOfPlayer2Cards) {
+      myOutputValue = `Player 2 wins🎊, with a hand of ${sumOfPlayer2Cards} against player 1's hand of ${sumOfPlayer1Cards}.
+      <br> 🖱 Refresh the browser to restart the game.`;
+      return myOutputValue;
+    }
+    if (sumOfPlayer1Cards == sumOfPlayer2Cards) {
+      myOutputValue = `Player 2 and Player 1 draws🤜🤛,<br> Player 1 has a hand of ${sumOfPlayer1Cards} and player 2 has the same hand of ${sumOfPlayer2Cards} too!
+      <br> 🖱 Refresh the browser to restart the game.`;
+      return myOutputValue;
+    }
+    if (sumOfPlayer1Cards >= number(22) && sumOfPlayer2Cards < number(22)) {
+      myOutputValue = `Player 2 wins🎊, with a hand of ${sumOfPlayer2Cards} against player 1's hand of ${sumOfPlayer1Cards}, 💥💥.
+      <br> 🖱 Refresh the browser to restart the game.`;
+      return myOutputValue;
+    }
+    if (sumOfPlayer2Cards >= number(22) && sumOfPlayer1Cards < number(22)) {
+      myOutputValue = `Player 1 wins🎊, with a hand of ${sumOfPlayer1Cards} against player 2's hand of ${sumOfPlayer2Cards}, 💥💥.
+      <br> 🖱 Refresh the browser to restart the game.`;
+      return myOutputValue;
+    }
+  }
+  return myOutputValue;
+};
