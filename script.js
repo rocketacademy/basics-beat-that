@@ -30,33 +30,30 @@ var player1Score = 0;
 var player2Score = 0;
 
 // Return random number from 1 to 6
-var randomDice = function (){
-  return Math.ceil(Math.random(6));
-}
+var randomDice = function () {
+  return Math.ceil(Math.random() * 6);
+};
 
 // Check, if player responded with allowed input for dice order
-var validatePlayerInput = function (input){
-  if (input == 1 || input == 2){
+var validatePlayerInput = function (input) {
+  if (input == 1 || input == 2) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
-}
+};
 
 // Calculate score
-var calculateScore = function (dice1, dice2, order){
+var calculateScore = function (dice1, dice2, order) {
   if (order == 1) {
     return dice1 * 10 + dice2;
-  }
-  else if (order == 2) {
+  } else if (order == 2) {
     return dice2 * 10 + dice1;
   }
   return 0;
-}
+};
 
 var main = function (input) {
-
   if (gameState == 0) {
     message = `Welcome to Beat That game! <br><br>`;
     message += `Press button to roll dice for player 1`;
@@ -64,23 +61,30 @@ var main = function (input) {
     return message;
   }
 
-  if (gameState == 1) 
+  if (gameState == 1) {
     player1Dice[0] = randomDice();
     player1Dice[1] = randomDice();
     message = `Welcome Player 1.<br>`;
     message += `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
-    message += `Choose the order for the dice.`
+    message += `Choose the order for the dice.`;
     gameState += 1;
     return message;
   }
 
   if (gameState == 2) {
     input = parseInt(input);
-    if (!validatePlayerInput(input)){
-      return `Please respond only with numer 1 or 2`;
+    if (!validatePlayerInput(input)) {
+      message = `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
+      message += `Choose the order for the dice.<br><br>`;
+      message += `Please respond only with numer 1 or 2`;
+      return message;
     }
     player1DiceOrder = parseInt(input);
-    player1Score = calculateScore(player1Dice[0], player1Dice[1], player1DiceOrder);
+    player1Score = calculateScore(
+      player1Dice[0],
+      player1Dice[1],
+      player1DiceOrder
+    );
     message = `Player 1, you chose Dice ${player1DiceOrder} first.<br>`;
     message += `Your number is ${player1Score}.<br>`;
     message += `It is now Player 2's turn.`;
@@ -93,36 +97,54 @@ var main = function (input) {
     player2Dice[1] = randomDice();
     message = `Welcome Player 2.<br>`;
     message += `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
-    message += `Choose the order for the dice.`
+    message += `Choose the order for the dice.`;
     gameState += 1;
     return message;
   }
 
   if (gameState == 4) {
     input = parseInt(input);
-    if (!validatePlayerInput(input)){
-      return `Please respond only with numer 1 or 2`;
+    if (!validatePlayerInput(input)) {
+      message = `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
+      message += `Choose the order for the dice.<br><br>`;
+      message += `Please respond only with numer 1 or 2`;
+      return message;
     }
     player2DiceOrder = input;
-    player2Score = calculateScore(player2Dice[0], player2Dice[1], player2DiceOrder);
+    player2Score = calculateScore(
+      player2Dice[0],
+      player2Dice[1],
+      player2DiceOrder
+    );
     message = `Player 2, you chose Dice ${player2DiceOrder} first.<br>`;
     message += `Your number is ${player2Score}.<br><br>`;
-
-    if (player1Score == player2Score) {
-      message += `It's a tie.`;
-    } else if (player1Score > player2Score) {
-      player1Won += 1;
-      message += `Player 1 won this round with ${player1Score} vs ${player2Score}!<br><br>`;
-      message += `Player 1 won ${player1Won} times.<br>`;
-      message += `Player 2 won ${player2Won} times.<br>`;
-      message += `Total`
-    }
-    totalGames += 1;
-
+    message += `Press button to see results.`;
     gameState += 1;
+    return message;
   }
 
   if (gameState == 5) {
+    message = "";
+    if (player1Score == player2Score) {
+      message += `It's a tie.<br><br>`;
+    } else if (player1Score > player2Score) {
+      player1Won += 1;
+      message += `Player 1 won this round with ${player1Score} vs ${player2Score}!<br><br>`;
+    } else {
+      player2Won += 1;
+      message += `Player 2 won this round with ${player2Score} vs ${player1Score}!<br><br>`;
+    }
+    totalGames += 1;
+    message += `Player 1 won ${player1Won} times.<br>`;
+    message += `Player 2 won ${player2Won} times.<br>`;
+    message += `You've played total of ${totalGames} rounds of game.`;
+    gameState += 1;
+    return message;
+  }
+
+  if (gameState == 6) {
+    message = `Press button for another round of game.<br>`;
     gameState = 1;
+    return message;
   }
 };
