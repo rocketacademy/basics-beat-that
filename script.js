@@ -1,15 +1,15 @@
 //global constant initialisation
-const HIGHEST_MODE = `highest mode`;
-const LOWEST_MODE = `lowest mode`;
-const STANDARD_MODE = `Standard`;
-const KNOCKOUT_MODE = `Knockout`;
+const HIGHEST_MODE = `highest`;
+const LOWEST_MODE = `lowest`;
+const STANDARD_MODE = `standard`;
+const KNOCKOUT_MODE = `knockout`;
 
 //global variable initialisation
 var playerRolls = [];
-var playerNumber = 0;
-var diceNumber = 2;
-var diceMode = ``;
-var gameMode = ``;
+var playerNumber;
+var diceNumber;
+var diceMode;
+var gameMode;
 var currentPlayers = [];
 
 //helper function initialisation
