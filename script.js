@@ -135,8 +135,15 @@ var main = function (input) {
       message += `Player 2 won this round with ${player2Score} vs ${player1Score}!<br><br>`;
     }
     totalGames += 1;
-    message += `Player 1 won ${player1Won} times.<br>`;
-    message += `Player 2 won ${player2Won} times.<br>`;
+    var leaderBoard = [
+      `Player 1 won ${player1Won} times.<br>`,
+      `Player 2 won ${player2Won} times.<br>`,
+    ];
+    if (player1Won >= player2Won) {
+      message += leaderBoard[0] + leaderBoard[1];
+    } else {
+      message += leaderBoard[1] + leaderBoard[0];
+    }
     message += `You've played total of ${totalGames} rounds of game.`;
     gameState += 1;
     return message;
