@@ -27,13 +27,26 @@ var randomizeDiceRoll = function () {
  * @param {number} diceAmt the number of dice for the game
  * @param {string} diceSetting the string value of the dice mode (highest/lowest)
  * @param {string} gameSetting the string value of the game mode (standard/knockout)
+ * @returns {string} game initialised display
  */
-var initialize = function (playerAmt, diceAmt, diceSetting, gameSetting) {
+var gameInitialize = function (playerAmt, diceAmt, diceSetting, gameSetting) {
   playerNum = playerAmt;
   diceNum = diceAmt;
   diceMode = diceSetting;
   gameMode = gameSetting;
   return `Game is set: <br> Total Players ${playerNum} <br> Total Dice: ${diceNum} <br> Dice Mode: ${diceMode} <br> Game Mode: ${gameMode}`;
+};
+
+/***
+ * resets game and erases the values of the global variables
+ * @returns {string} game reset display
+ */
+var gameReset = function () {
+  playerNum = "";
+  diceNum = "";
+  diceMode = "";
+  gameMode = "";
+  return `Game is reset! <br> If you want to play again, press start!`;
 };
 
 var main = function (input) {

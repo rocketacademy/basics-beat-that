@@ -16,8 +16,12 @@
           <th>Game Mode:</th>
         </tr>
         <tr>
-          <td><input id="input-player" min="2" max="8" type="number" /></td>
-          <td><input id="input-dice" min="2" max="8" type="number" /></td>
+          <td>
+            <input id="input-player" min="2" max="8" type="number" value="2" />
+          </td>
+          <td>
+            <input id="input-dice" min="2" max="8" type="number" value="2" />
+          </td>
           <td>
             <input
               type="radio"
@@ -94,7 +98,7 @@
         ).value;
 
         //initialise game, set all the js variables
-        var gameInitialisation = initialize(
+        var gameInitialisation = gameInitialize(
           playerAmt.value,
           diceAmt.value,
           diceMode,
@@ -116,7 +120,6 @@
 
       reset.addEventListener("click", function () {
         //reenable all previous buttons, disable reset game and roll buttons
-        var gameReset = reset();
         Array.from(radioButtons).forEach(
           (radioButton) => (radioButton.disabled = false)
         );
@@ -129,7 +132,7 @@
         playerAmt.value = 2;
         diceAmt.value = 2;
 
-        output.innerHTML = gameReset;
+        output.innerHTML = gameReset();
       });
     </script>
   </body>
