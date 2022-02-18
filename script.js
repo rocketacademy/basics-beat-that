@@ -1,10 +1,7 @@
+// Game type - choose which game to play
+var gameType = 0;
+
 // Varible gameState is used to organize steps through game
-// 0 - initial state
-// 1 - roll dice for player 1 and ask for dice order
-// 2 - validate input for player 1 and calculate score
-// 3 - roll dice for player 2 and ask for dice order
-// 4 - validate input for player 2 and calculate score, also print out who won and statistics
-// 5 - invite for another round
 var gameState = 0;
 
 // Variable for responding to user
@@ -53,7 +50,15 @@ var calculateScore = function (dice1, dice2, order) {
   return 0;
 };
 
-var main = function (input) {
+// Varible gameState for gameBasic
+// 0 - initial state
+// 1 - roll dice for player 1 and ask for dice order
+// 2 - validate input for player 1 and calculate score
+// 3 - roll dice for player 2 and ask for dice order
+// 4 - validate input for player 2 and calculate score, also print out who won and statistics
+// 5 - invite for another round
+
+var gameBasic = function (input) {
   if (gameState == 0) {
     message = `Welcome to Beat That game! <br><br>`;
     message += `Press button to roll dice for player 1`;
@@ -153,5 +158,24 @@ var main = function (input) {
     message = `Press button for another round of game.<br>`;
     gameState = 1;
     return message;
+  }
+};
+
+var main = function (input) {
+  if (gameType == 0) {
+    input = parseInt(input);
+    if (input > 0 && input < 2) {
+      gameType = input;
+    }
+    switch (gameType) {
+      case 1:
+        return "You have chosen basic Beat That! game";
+      default:
+        message = "Please enter number for game:<br><br>";
+        message += "1 - Basic Beat That! game";
+        return message;
+    }
+  } else if (gameType == 1) {
+    return gameBasic(input);
   }
 };
