@@ -22,7 +22,7 @@
             <input
               type="radio"
               id="highest-mode"
-              name="numberMode"
+              name="diceMode"
               value="highest"
               checked
             />
@@ -30,7 +30,7 @@
             <input
               type="radio"
               id="lowest-mode"
-              name="numberMode"
+              name="diceMode"
               value="lowest"
             />
             <label for="lowest-mode">Lowest</label>
@@ -59,10 +59,10 @@
             <button id="start-button">Start!</button>
           </td>
           <td>
-            <button id="roll-button" hidden>Roll dice!</button>
+            <button id="roll-button" disabled>Roll dice!</button>
           </td>
           <td>
-            <button id="reset-game" hidden>Reset game</button>
+            <button id="reset-game" disabled>Reset game</button>
           </td>
         </tr>
       </table>
@@ -79,15 +79,57 @@
       var start = document.querySelector("#start-button");
       var roll = document.querySelector("#roll-button");
       var reset = document.querySelector("#reset-game");
+      var output = document.querySelector("#output-div");
+      var playerAmt = document.querySelector("#input-player");
+      var diceAmt = document.querySelector("#input-dice");
+      var radioButtons = document.querySelectorAll('[type="radio"]');
 
       start.addEventListener("click", function () {
-        var input = document.querySelector("#input-player");
-        var result = main(input.value);
+        //choose selected game mode
+        var diceMode = Array.from(document.getElementsByName("diceMode")).find(
+          (radio) => radio.checked
+        ).value;
+        var gameMode = Array.from(document.getElementsByName("gameMode")).find(
+          (radio) => radio.checked
+        ).value;
 
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
+        //initialise game, set all the js variables
+        var gameInitialisation = initialize(
+          playerAmt.value,
+          diceAmt.value,
+          diceMode,
+          gameMode
+        );
 
-        input.value = "";
+        //disable all current buttons, enable roll and reset game buttons
+        Array.from(radioButtons).forEach(
+          (radioButton) => (radioButton.disabled = true)
+        );
+        playerAmt.disabled = true;
+        diceAmt.disabled = true;
+        start.disabled = true;
+        reset.disabled = false;
+        roll.disabled = false;
+
+        output.innerHTML = gameInitialisation;
+      });
+
+      reset.addEventListener("click", function () {
+        //reenable all previous buttons, disable reset game and roll buttons
+        var gameReset = reset();
+        Array.from(radioButtons).forEach(
+          (radioButton) => (radioButton.disabled = false)
+        );
+        playerAmt.disabled = false;
+        diceAmt.disabled = false;
+        start.disabled = false;
+        reset.disabled = true;
+        roll.disabled = true;
+
+        playerAmt.value = 2;
+        diceAmt.value = 2;
+
+        output.innerHTML = gameReset;
       });
     </script>
   </body>

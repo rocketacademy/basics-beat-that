@@ -5,9 +5,8 @@ const STANDARD_MODE = `standard`;
 const KNOCKOUT_MODE = `knockout`;
 
 //global variable initialisation
-var playerRolls = [];
-var playerNumber;
-var diceNumber;
+var playerNum;
+var diceNum;
 var diceMode;
 var gameMode;
 var currentPlayers = [];
@@ -22,8 +21,22 @@ var randomizeDiceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
 
+/***
+ * initializes game and sets global variables
+ * @param {number} playerAmt the amount of players playing the game
+ * @param {number} diceAmt the number of dice for the game
+ * @param {string} diceSetting the string value of the dice mode (highest/lowest)
+ * @param {string} gameSetting the string value of the game mode (standard/knockout)
+ */
+var initialize = function (playerAmt, diceAmt, diceSetting, gameSetting) {
+  playerNum = playerAmt;
+  diceNum = diceAmt;
+  diceMode = diceSetting;
+  gameMode = gameSetting;
+  return `Game is set: <br> Total Players ${playerNum} <br> Total Dice: ${diceNum} <br> Dice Mode: ${diceMode} <br> Game Mode: ${gameMode}`;
+};
+
 var main = function (input) {
-  var blorp = "";
   var myOutputValue = "hello world";
   return myOutputValue;
 };

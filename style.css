@@ -49,7 +49,7 @@ th {
   width: 85%;
   position: relative;
   padding: 5px 3px;
-  background-color: grey;
+  background-color: lightgrey;
   cursor: pointer;
   display: inline-block;
   color: white;
@@ -67,7 +67,17 @@ th {
 
 [type="radio"]:focus + label {
   border: 2px dashed;
-  border-color: aquamarine;
+  background-color: salmon;
+}
+
+[type="radio"][disabled] + label {
+  color: darkblue;
+  background-color: grey;
+}
+
+[type="radio"][disabled]:checked + label {
+  color: darkblue;
+  background-color: green;
 }
 
 button {
