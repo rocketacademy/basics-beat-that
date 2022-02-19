@@ -1,4 +1,5 @@
 //global constant initialisation
+//mode values
 const HIGHEST_MODE = `highest`;
 const LOWEST_MODE = `lowest`;
 const STANDARD_MODE = `standard`;
