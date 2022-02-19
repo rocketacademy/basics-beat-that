@@ -1,3 +1,34 @@
+/*
+pseudocode
+
+dice rolls:
+loop for how many dice rolls are available
+for every rolls, push value into an array
+return that array, use returned array to format output
+
+score rolls:
+take dice roll array as parameter
+sort that array, it's fine to use default sort as of now (values are single digits only), highest or lowest
+put that and stringify numbers, and add it as a string
+change string to number 
+push number onto score array
+
+scorechecking:
+use max or min function, depending on what dice mode
+find index which is max or min
+return the index of the winner
+
+knockout game:
+at init, randomize 2 players from player array to come out and play
+next click is when first player rolls
+next click is when the second player rolls
+scorecheck the two rolls
+
+
+standard game:
+
+*/
+
 //global constant initialisation
 
 //mode values
@@ -15,6 +46,12 @@ var playerNum = "";
 var diceNum = "";
 var diceMode = "";
 var gameMode = "";
+
+//game array initialisation
+var playerArray = [];
+var rollArray = [];
+var resultArray = [];
+var highscoreArray = [];
 
 //helper function initialisation
 
@@ -39,6 +76,14 @@ var gameInitialize = function (playerAmt, diceAmt, diceSetting, gameSetting) {
   diceNum = diceAmt;
   diceMode = diceSetting;
   gameMode = gameSetting;
+
+  //added a number in the player array to signify player counter
+  //added a 0 in the highscore array to signify highscore
+  for (i = 0; i < playerNum; i += 1) {
+    playerArray.push(i + 1);
+    highscoreArray.push(0);
+  }
+
   return `Game is set: <br> Total Players ${playerNum} <br> Total Dice: ${diceNum} <br> Dice Mode: ${diceMode} <br> Game Mode: ${gameMode}`;
 };
 
@@ -51,7 +96,26 @@ var gameReset = function () {
   diceNum = "";
   diceMode = "";
   gameMode = "";
-  return;
+
+  //changes array length to 0, effectively emptying the array
+  playerArray.length = 0;
+  rollArray.length = 0;
+  resultArray.length = 0;
+  highscoreArray.length = 0;
+
+  return RESET_MSG;
+};
+
+/***
+ * Play a single round of the game, rolls dice according to how much dice are in the game
+ * @returns {Array} an array of all the rolls of the round
+ */
+var playDice = function () {
+  var diceRolls = [];
+  for (i = 0; i < diceNum; i += 1) {
+    diceRolls.push(randomizeDiceRoll());
+  }
+  return diceRolls;
 };
 
 var main = function (input) {
