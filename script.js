@@ -5,8 +5,9 @@
 - reset the game
 */
 
-var gameState = "playerRoll";
-var playerRollRecords = [];
+var gameState = "player1Roll";
+var player1RollRecords = [];
+var player2RollRecords = [];
 
 // roll dice function
 var rollDice = function () {
@@ -15,22 +16,42 @@ var rollDice = function () {
   return randomDiceNum;
 };
 
-// player choose value function
-var chooseNumberFunction = function (input) {
+// player1 choose value function
+var chooseNumberFunction1 = function (input) {
   if (input != 1 && input != 2) {
-    outputMessage = `Invalid option. 
+    outputMessage = `Player 1, invalid option. 
       For option 1, please key 1.
       For option 2, please key 2.`;
   }
   if (input == 1) {
-    var playerPoints =
-      String(playerRollRecords[0]) + String(playerRollRecords[1]);
-    outputMessage = `Your value is ${playerPoints}`;
+    var player1Points =
+      String(player1RollRecords[0]) + String(player1RollRecords[1]);
+    outputMessage = `Player 1, your value is ${player1Points}`;
   }
   if (input == 2) {
-    var playerPoints =
-      String(playerRollRecords[1]) + String(playerRollRecords[0]);
-    outputMessage = `Your value is ${playerPoints}`;
+    var player1Points =
+      String(player1RollRecords[1]) + String(player1RollRecords[0]);
+    outputMessage = `Player 1, your value is ${player1Points}`;
+  }
+  return outputMessage;
+};
+
+// player2 choose value function
+var chooseNumberFunction2 = function (input) {
+  if (input != 1 && input != 2) {
+    outputMessage = `Player 2, invalid option. 
+      For option 1, please key 1.
+      For option 2, please key 2.`;
+  }
+  if (input == 1) {
+    var player2Points =
+      String(player2RollRecords[0]) + String(player2RollRecords[1]);
+    outputMessage = `Player 2, your value is ${player2Points}`;
+  }
+  if (input == 2) {
+    var player2Points =
+      String(player2RollRecords[1]) + String(player2RollRecords[0]);
+    outputMessage = `Player 2, your value is ${player2Points}`;
   }
   return outputMessage;
 };
@@ -38,17 +59,33 @@ var chooseNumberFunction = function (input) {
 // MAIN FUNCTION!
 var main = function (input) {
   //console.log(gameState);
-  if (gameState == "playerRoll") {
-    while (playerRollRecords.length < 2) {
-      playerRollRecords.push(rollDice());
+  if (gameState == "player1Roll") {
+    while (player1RollRecords.length < 2) {
+      player1RollRecords.push(rollDice());
     }
-    console.log(playerRollRecords);
-    gameState = "playerChooseNumber";
-    outputMessage = `You have rolled ${playerRollRecords}. Please choose option 1 or option 2`;
+    console.log(player1RollRecords);
+    gameState = "player1ChooseNumber";
+    outputMessage = `Player 1, you have rolled ${player1RollRecords}. Please choose option 1 or option 2`;
     return outputMessage;
   }
-  if (gameState == "playerChooseNumber") {
-    outputMessage = chooseNumberFunction(input);
+  if (gameState == "player1ChooseNumber") {
+    outputMessage = chooseNumberFunction1(input);
+    gameState = "player2Roll";
+    return outputMessage;
   }
-  return outputMessage;
+
+  //console.log(gameState);
+  if (gameState == "player2Roll") {
+    while (player2RollRecords.length < 2) {
+      player2RollRecords.push(rollDice());
+    }
+    console.log(player2RollRecords);
+    gameState = "player2ChooseNumber";
+    outputMessage = `Player 2, you have rolled ${player2RollRecords}. Please choose option 1 or option 2`;
+    return outputMessage;
+  }
+  if (gameState == "player2ChooseNumber") {
+    outputMessage = chooseNumberFunction2(input);
+    return outputMessage;
+  }
 };
