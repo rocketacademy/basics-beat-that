@@ -1,6 +1,6 @@
 // Base  (v1 9:20am - 10:20am)
 
-let mode = "Player one";
+let mode = "preGame";
 let diceNum1 = "";
 let diceNum2 = "";
 let num_p1, num_p2;
@@ -21,6 +21,11 @@ function getOrder(order, num1, num2) {
 
 // Get the winner and display
 let main = function (input) {
+  if (input != "" && mode == "preGame") {
+    mode = "Player one";
+    return `Please click "Submit" to roll the dice.`;
+  }
+
   // get two dice number
   if (input == "" && diceNum1 == "" && diceNum2 == "") {
     diceNum1 = rollDice();
