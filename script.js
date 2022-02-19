@@ -1,3 +1,6 @@
+// CODE COMPLETED
+
+
 var REVERSE = "reverse";
 var NORMAL = "normal";
 var REVERSE_MODE = "reverse mode";
@@ -27,6 +30,8 @@ var placeDiceRollsInArray = function (numOfDice) {
       playerTwoDiceRollList.push(diceRoll());
       loopOutputValue = playerTwoDiceRollList;
     }
+
+    \
     counter += 1;
   }
   return loopOutputValue;
