@@ -23,9 +23,15 @@ at init, randomize 2 players from player array to come out and play
 next click is when first player rolls
 next click is when the second player rolls
 scorecheck the two rolls
-
+kick losing player off the player list
+randomize another pair of players to play
 
 standard game:
+at init, default to player 1 to play the next round
+next click is when first player rolls
+following clicks after that is when the other players roll
+scorecheck all rolls
+highest number wins, add into highscore array
 
 */
 
@@ -47,9 +53,11 @@ var diceNum = "";
 var diceMode = "";
 var gameMode = "";
 
+//game variable initialisation
+var currentPlayer = 1;
+
 //game array initialisation
 var playerArray = [];
-var rollArray = [];
 var resultArray = [];
 var highscoreArray = [];
 
@@ -99,7 +107,6 @@ var gameReset = function () {
 
   //changes array length to 0, effectively emptying the array
   playerArray.length = 0;
-  rollArray.length = 0;
   resultArray.length = 0;
   highscoreArray.length = 0;
 
@@ -107,8 +114,8 @@ var gameReset = function () {
 };
 
 /***
- * Play a single round of the game, rolls dice according to how much dice are in the game
- * @returns {Array} an array of all the rolls of the round
+ * Playe a roll of the game, rolls dice according to how much dice are in the game
+ * @returns {Array} an array of all the rolls of the player
  */
 var playDice = function () {
   var diceRolls = [];
@@ -117,6 +124,14 @@ var playDice = function () {
   }
   return diceRolls;
 };
+
+/***
+ * Plays game
+ * @param {*} input
+ * @returns
+ */
+
+var playGame = function () {};
 
 var main = function (input) {
   var myOutputValue = "hello world";
