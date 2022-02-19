@@ -103,14 +103,18 @@ var main = function (input) {
     if (Number(player1PointsRecord[0]) > Number(player2PointsRecord[0])) {
       outputMessage = `Player 1, you have won. <br>
     Player 1 value: ${player1PointsRecord[0]} <br> 
-    Player 2 value: ${player2PointsRecord[0]}.`;
-      return outputMessage;
+    Player 2 value: ${player2PointsRecord[0]}`;
     }
     if (Number(player1PointsRecord[0]) < Number(player2PointsRecord[0])) {
       outputMessage = `Player 2, you have won. <br>
     Player 1 value: ${player1PointsRecord[0]} <br> 
-    Player 2 value: ${player2PointsRecord[0]}.`;
-      return outputMessage;
+    Player 2 value: ${player2PointsRecord[0]}`;
     }
+    gameState = "player1Roll";
+    player1RollRecords = [];
+    player2RollRecords = [];
+    player1PointsRecord = [];
+    player2PointsRecord = [];
+    return outputMessage;
   }
 };
