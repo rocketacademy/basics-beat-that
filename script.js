@@ -1,16 +1,20 @@
 //global constant initialisation
+
 //mode values
-const HIGHEST_MODE = `highest`;
-const LOWEST_MODE = `lowest`;
-const STANDARD_MODE = `standard`;
-const KNOCKOUT_MODE = `knockout`;
+const HIGHEST_MODE = "highest";
+const LOWEST_MODE = "lowest";
+const STANDARD_MODE = "standard";
+const KNOCKOUT_MODE = "knockout";
+
+//return messages
+const RESET_MSG = "Game is reset! <br> If you want to play again, press start!";
 
 //global variable initialisation
-var playerNum;
-var diceNum;
-var diceMode;
-var gameMode;
-var currentPlayers = [];
+//values to take from the html
+var playerNum = "";
+var diceNum = "";
+var diceMode = "";
+var gameMode = "";
 
 //helper function initialisation
 
@@ -47,7 +51,7 @@ var gameReset = function () {
   diceNum = "";
   diceMode = "";
   gameMode = "";
-  return `Game is reset! <br> If you want to play again, press start!`;
+  return;
 };
 
 var main = function (input) {
