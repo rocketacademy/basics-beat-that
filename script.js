@@ -30,12 +30,14 @@ var chooseNumberFunction1 = function (input) {
       String(player1RollRecords[0]) + String(player1RollRecords[1]);
     player1PointsRecord.push(Number(player1Points));
     outputMessage = `Player 1, your value is ${player1Points}`;
+    gameState = "player2Roll";
   }
   if (input == 2) {
     var player1Points =
       String(player1RollRecords[1]) + String(player1RollRecords[0]);
     player1PointsRecord.push(Number(player1Points));
     outputMessage = `Player 1, your value is ${player1Points}`;
+    gameState = "player2Roll";
   }
   return outputMessage;
 };
@@ -52,12 +54,14 @@ var chooseNumberFunction2 = function (input) {
       String(player2RollRecords[0]) + String(player2RollRecords[1]);
     player2PointsRecord.push(Number(player2Points));
     outputMessage = `Player 2, your value is ${player2Points}`;
+    gameState = "compareValues";
   }
   if (input == 2) {
     var player2Points =
       String(player2RollRecords[1]) + String(player2RollRecords[0]);
     player2PointsRecord.push(Number(player2Points));
     outputMessage = `Player 2, your value is ${player2Points}`;
+    gameState = "compareValues";
   }
   return outputMessage;
 };
@@ -76,7 +80,6 @@ var main = function (input) {
   }
   if (gameState == "player1ChooseNumber") {
     outputMessage = chooseNumberFunction1(input);
-    gameState = "player2Roll";
     return outputMessage;
   }
 
@@ -92,7 +95,6 @@ var main = function (input) {
   }
   if (gameState == "player2ChooseNumber") {
     outputMessage = chooseNumberFunction2(input);
-    gameState = "compareValues";
     return outputMessage;
   }
   console.log(player1PointsRecord);
