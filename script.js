@@ -76,8 +76,6 @@ function getDiceCombo(num_of_dice, mode) {
   }
   numsArr = arr.toString();
   let sortedArr = sortDiceNumArr(arr, mode);
-  console.log(sortedArr);
-
   let numStr = "";
   for (let i = 0; i < sortedArr.length; i++) {
     numStr += String(sortedArr[i]);
@@ -145,13 +143,13 @@ function checkWinner(numOfDice, numOfPlayer, gameMode) {
           ? Math.max(...gameRecordArr)
           : Math.min(...gameRecordArr);
       let duplicatedNumIndexArr = findDuplicates(gameRecordArr, dulNum);
-      let topPlayers = "";
+      let dulTopPlayers = "";
       if (duplicatedNumIndexArr.length >= 2) {
         for (let i = 0; i < duplicatedNumIndexArr.length; i++) {
-          topPlayers += `Player ${duplicatedNumIndexArr[i] + 1}, `;
+          dulTopPlayers += `Player ${duplicatedNumIndexArr[i] + 1}, `;
         }
         toggleBtn();
-        return `Congrats! ${topPlayers}<br>you have the same number: ${dulNum}. `;
+        return `It's a tie! ${dulTopPlayers}<br>you have the same number: ${dulNum}. `;
       }
       if (gameMode == "big" && maxNum != minNum) {
         winner = gameRecordArr.indexOf(maxNum) + 1;
