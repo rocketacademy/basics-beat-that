@@ -21,13 +21,13 @@ function getOrder(order, num1, num2) {
 
 // Get the winner and display
 let main = function (input) {
-  if (input != "" && mode == "preGame") {
+  if (mode == "preGame") {
     mode = "Player one";
     return `Please click "Submit" to roll the dice.`;
   }
 
   // get two dice number
-  if (input == "" && diceNum1 == "" && diceNum2 == "") {
+  if (diceNum1 == "" && diceNum2 == "") {
     diceNum1 = rollDice();
     diceNum2 = rollDice();
     return `Hello ${mode}! Your dice 1 is: ${diceNum1}, dice 2 is: ${diceNum2}. 
@@ -56,6 +56,7 @@ let main = function (input) {
     num_p2 = getOrder(input, diceNum1, diceNum2);
 
     // Check winner
+    if (num_p1 == num_p2) return `Hey! It's a tie!`;
     if (num_p1 > num_p2) {
       let displayMessage = `Hey Player 2, <br> Your Dice 1 is: ${diceNum1}, Dice 2 is: ${diceNum2} 
       <br>Your number is ${num_p2}, player 1's number is ${num_p1}
