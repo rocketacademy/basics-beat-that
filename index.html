@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Coding Basics</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: sans-serif;
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+
+      #header {
+        text-align: center;
+      }
+
+      #container {
+        background-color: rgb(123, 225, 233);
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+        text-align: center;
+      }
+
+      input {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 100%;
+      }
+
+      button {
+        font-size: 21px;
+        line-height: 33px;
+        width: 133px;
+        margin: 0 0 23px 0;
+        border: 1px solid gray;
+        border-radius: 20px;
+        padding: 0 6px;
+        text-align: center;
+      }
+
+      button:hover {
+        color: red;
+        background-color: black;
+      }
+
+      #output-div {
+        background-color: lightgrey;
+        margin: 20px auto;
+        padding: 20px;
+        width: 100%;
+      }
+
+      #dice-number,
+      #player-number,
+      #game-mode {
+        width: 60%;
+      }
+
+      #game-mode {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 100%;
+        width: 150px;
+        height: 37px;
+        text-align: center;
+        font-size: medium;
+      }
+
+      #gameRules {
+        width: 100%;
+        text-align: center;
+      }
+
+      #user-input {
+        display: flex;
+        flex-direction: row;
+        flex: auto;
+      }
+
+      .inputInfo {
+        text-align: center;
+        width: 250px;
+      }
+
+      #game-output {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: auto;
+      }
+
+      #output-div {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <div id="container">
+      <div id="gameRules">
+        <p>Hello! Welcome to Beat That! Click <b>start</b> to play the game.</p>
+        <p>
+          Select the number of dice, the number of player, then choose
+          the game mode: </p>
+        <p><b>Beat big</b> or <b>Beat small</b>.</p> 
+        </p>
+        <p>The player with the highest/Lowest number wins! Good luck!</p>
+      </div>
+      <hr />
+      <div id="user-input">
+        <div class="inputInfo">
+          <p>Number of Dice</p>
+          <input
+            type="number"
+            name=""
+            id="dice-number"
+            min="2"
+            value="2"
+            required
+          />
+        </div>
+        <div class="inputInfo">
+          <p>Number of Player</p>
+          <input
+            type="number"
+            name=""
+            id="player-number"
+            min="2"
+            value="2"
+            required
+          />
+        </div>
+        <div class="inputInfo">
+          <p>Game mode</p>
+          <select name="" id="game-mode">
+            <option value="big">Beat big</option>
+            <option value="small">Beat small</option>
+          </select>
+        </div>
+      </div>
+      <br />
+      <div id="game-output">
+        <button id="submit-button">Start</button>
+        <button id="reset-button" display="none">Play again</button>
+        <p>Output</p>
+        <div id="output-div"></div>
+      </div>
+      <iframe src="https://giphy.com/embed/w9QevI4IGRIOvR8RmE" width="20%" height="20%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
+    <!-- Import program logic -->
+    <script src="script.js"></script>
+    <!-- Define button click functionality -->
+    <!-- <script>
+      var button = document.querySelector("#submit-button");
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var numOfDice = document.querySelector("#dice-number").value;
+        var numOfPlayer = document.querySelector("#player-number").value;
+        var mode = document.querySelector("#game-mode").value;
+
+        console.log(numOfDice, numOfPlayer, mode);
+
+        var result = main(numOfDice, numOfPlayer, mode);
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+
+        // Reset input value
+        mode.value = "";
+      });
+    </script> -->
+  </body>
+</html>
