@@ -55,18 +55,65 @@ Reset step
 */
 
 //global variables
-var diceRollGameMode = "Initiate dice roll";
-var diceOrderGameMode = "Choose dice order";
+var diceRollGameModePlayer1 = "Initiate dice roll for player 1";
+var diceOrderGameModePlayer1 = "Choose dice order for player 1";
+var diceRollGameModePlayer2 = "Initiate dice roll for player 2";
+var diceOrderGameModePlayer2 = "Choose dice order for player 2";
+var gameMode = diceRollGameModePlayer1;
 var diceRollArray = [];
 var chooseNumberArray = [];
+var counter = 0;
 
 var main = function (input) {
-  var randomRollDice = rollDice();
-  var myOutputValue = "hello world" + randomRollDice;
-  return myOutputValue;
+  if (gameMode == diceRollGameModePlayer1) {
+    // define variable for PLayer 1's roll dice array
+    var myOutputValue = rollAndStoreDice();
+
+    //change game mode to dice order game mode
+    gameMode = diceOrderGameModePlayer1;
+    console.log(gameMode);
+    return myOutputValue;
+  }
+
+  if (gameMode == diceOrderGameModePlayer1) {
+    if (input == 1) {
+      var doubleDigitNumber = Number(`${diceRollArray[0]}${diceRollArray[1]}`);
+      chooseNumberArray = chooseNumberArray.push(doubleDigitNumber);
+      console.log(chooseNumberArray);
+
+      gameMode = diceRollGameModePlayer2;
+      console.log(gameMode);
+      return `Hi Player 1, you have chosen ${doubleDigitNumber}. Now it is Player 2's turn to play.`;
+    }
+    if (input == 2) {
+      var doubleDigitNumber = Number(`${diceRollArray[1]}${diceRollArray[0]}`);
+      chooseNumberArray = chooseNumberArray.push(doubleDigitNumber);
+      console.log(chooseNumberArray);
+
+      gameMode = diceRollGameModePlayer2;
+      console.log(gameMode);
+      return `Hi Player 1, you have chosen ${doubleDigitNumber}. Now it is Player 2's turn to play.`;
+    }
+    if (input != 1 || input != 2) {
+      return `Hi Player 1, you have not typed in 1 or 2, please type in 1 or 2 <br> <br>
+      You have rolled Dice 1 as ${diceRollArray[0]} and Dice 2 as ${diceRollArray[1]}. <br> <br>`;
+    }
+  }
 };
 
 // Helper functions below
+
+// roll 2 dice for each player and store the numbers in array function
+var rollAndStoreDice = function () {
+  while (counter < 2) {
+    // push rolled dice into array
+    diceRollArray.push(rollDice());
+    // increase counter by 1
+    counter = counter + 1;
+  }
+  console.log(diceRollArray);
+  return `Hi Player 1, you have rolled Dice 1 as ${diceRollArray[0]} and Dice 2 as ${diceRollArray[1]}. <br> <br> Please enter 1 or 2 to select the order of the first digit`;
+};
 
 // roll dice function
 var rollDice = function () {
