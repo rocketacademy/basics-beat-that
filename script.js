@@ -13,6 +13,13 @@ put that and stringify numbers, and add it as a string
 change string to number 
 push number onto score array
 
+standard game:
+at init, default to player 1 to play the next round
+next click is when first player rolls
+following clicks after that is when the other players roll
+scorecheck all rolls
+highest/lowest number wins, add into highscore array
+
 scorechecking:
 use max or min function, depending on what dice mode
 find index which is max or min
@@ -25,13 +32,6 @@ next click is when the second player rolls
 scorecheck the two rolls
 kick losing player off the player list
 randomize another pair of players to play
-
-standard game:
-at init, default to player 1 to play the next round
-next click is when first player rolls
-following clicks after that is when the other players roll
-scorecheck all rolls
-highest number wins, add into highscore array
 
 */
 
@@ -54,12 +54,12 @@ var diceMode = "";
 var gameMode = "";
 
 //game variable initialisation
-var currentPlayer = 1;
+var currentPlayer;
 
 //game array initialisation
 var playerArray = [];
 var resultArray = [];
-var highscoreArray = [];
+var highScoreArray = [];
 
 //helper function initialisation
 
@@ -87,10 +87,15 @@ var gameInitialize = function (playerAmt, diceAmt, diceSetting, gameSetting) {
 
   //added a number in the player array to signify player counter
   //added a 0 in the highscore array to signify highscore
+  //added a 0 in the result array to symbolise the current roll score
   for (i = 0; i < playerNum; i += 1) {
     playerArray.push(i + 1);
-    highscoreArray.push(0);
+    highScoreArray.push(0);
+    resultArray.push(0);
   }
+
+  //sets the current player
+  if (gameMode == STANDARD_MODE) currentPlayer = playerArray[0];
 
   return `Game is set: <br> Total Players ${playerNum} <br> Total Dice: ${diceNum} <br> Dice Mode: ${diceMode} <br> Game Mode: ${gameMode}`;
 };
@@ -104,11 +109,12 @@ var gameReset = function () {
   diceNum = "";
   diceMode = "";
   gameMode = "";
+  currentPlayer = "";
 
   //changes array length to 0, effectively emptying the array
   playerArray.length = 0;
   resultArray.length = 0;
-  highscoreArray.length = 0;
+  highScoreArray.length = 0;
 
   return RESET_MSG;
 };
@@ -117,7 +123,7 @@ var gameReset = function () {
  * Playe a roll of the game, rolls dice according to how much dice are in the game
  * @returns {Array} an array of all the rolls of the player
  */
-var playDice = function () {
+var rollDice = function () {
   var diceRolls = [];
   for (i = 0; i < diceNum; i += 1) {
     diceRolls.push(randomizeDiceRoll());
@@ -126,14 +132,77 @@ var playDice = function () {
 };
 
 /***
- * Plays game
- * @param {*} input
- * @returns
+ * Plays standard game and it goes on every single time the function is triggered
+ * @returns {string} Result of the current roll for output
  */
+var playStandardGame = function () {
+  var outputMsg = `Player ${currentPlayer} has thrown the dice! <br><br>`;
+  var currentPlayerRoll = rollDice();
+  for (var i = 0; i < currentPlayerRoll.length; i += 1) {
+    outputMsg += `Dice ${i + 1}: ${currentPlayerRoll[i]}<br>`;
+  }
 
-var playGame = function () {};
+  //sorting the array, normal string sort can be applied because values are only single digit
+  //if playing with a dice of more than 2 digits, need to update this code with a compare function
+  //this will sort smallest to biggest number
+  currentPlayerRoll.sort();
+  //reverses the array if it's playing the highest mode, hence biggest to smallest
+  if (diceMode == HIGHEST_MODE) currentPlayerRoll.reverse();
 
-var main = function (input) {
-  var myOutputValue = "hello world";
+  var playerScore = "";
+
+  //string variable does not add the numbers, it concactenates the string
+  for (var i = 0; i < currentPlayerRoll.length; i += 1) {
+    playerScore += String(currentPlayerRoll[i]);
+  }
+
+  //assigns the current player's score to the resultArray
+  currentPlayerIndex = playerArray.indexOf(currentPlayer);
+  resultArray[currentPlayerIndex] = Number(playerScore);
+
+  outputMsg += `<br> The ${diceMode} possible score is ${playerScore}`;
+
+  //initialize next Player's index
+  var nextPlayerIndex = playerArray.indexOf(currentPlayer) + 1;
+
+  //if next player's index is still within the array range, assign the next player as the current player
+  if (nextPlayerIndex < playerArray.length) {
+    currentPlayer = playerArray[nextPlayerIndex];
+    outputMsg += `<br><br> It's Player ${currentPlayer}'s Turn now!`;
+    return outputMsg;
+  }
+
+  //if it's not within the array range, means all player has taken a turn, output will reflect who win
+  var winningPlayerScore;
+
+  if (diceMode == HIGHEST_MODE) winningPlayerScore = Math.max(...resultArray);
+  else if (diceMode == LOWEST_MODE)
+    winningPlayerScore = Math.min(...resultArray);
+
+  var winningPlayerIndex = resultArray.indexOf(winningPlayerScore);
+
+  outputMsg += `<br><br>With a score of ${resultArray[winningPlayerIndex]}, Player ${playerArray[winningPlayerIndex]} Wins this round!`;
+
+  //win state, add the highscore of the winning player
+  highScoreArray[winningPlayerIndex] += 1;
+
+  var currentHighScore = Math.max(...highScoreArray);
+  var highScoreIndex = highScoreArray.indexOf(currentHighScore);
+  outputMsg += `<br><br>With ${currentHighScore} win, Player ${playerArray[highScoreIndex]} is currently leading the pack!`;
+
+  //TO ADD: leaderboard sort function here
+  outputMsg += `<br>add the leaderboard`;
+
+  //reset resultArray to have 0 values all around
+  for (var i = 0; i < resultArray.length; i += 1) resultArray[i] = 0;
+  //also resets current player to be index 0
+  currentPlayer = playerArray[0];
+
+  return outputMsg;
+};
+
+var main = function () {
+  var myOutputValue;
+  if (gameMode == STANDARD_MODE) myOutputValue = playStandardGame();
   return myOutputValue;
 };
