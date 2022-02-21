@@ -11,18 +11,21 @@ var playerRolls = [];
 var numOfDices = 0;
 var currentPlayer = 1;
 var playersScore = [];
-var orderSelection = 0;
-var player1Numbers = 0; // list of numbers
-var player2Numbers = 0; // list of numbers
+var orderSelection = 0; // 1 - random sort, 2 - highest number sort
+var originalPlayer1Numbers = [];
+var originalPlayer2Numbers = [];
+var player1Numbers = []; // list of numbers
+var player2Numbers = []; // list of numbers
 var player1SortedList = 0; // bubble/random sorted list of numbers
 var player2SortedList = 0; // bubble/random sorted list of numbers
 var player1combinednumber = 0; // only 1 number
 var player2combinednumber = 0; // only 1 number
 
 // STEPS //
-// 1. Choose no. of players and no. of dices to be rolled
-// 2. Player 1 chooses order of numbers
-// 3. Returns the combined number
+// 1. Choose no. of dices to be rolled
+// 2. Player 1 chooses whether numbers are random sorted or sorted descending order
+// 3. Compares the 2 players' number
+// 4. Player with higher number wins
 
 // Roll dice function //
 var rollDice = function () {
@@ -40,7 +43,25 @@ var rollForPlayer = function (numOfDices) {
   return playerRolls;
 };
 
-// auto sort using bubble sort code
+// 1 = random sort
+var randomSort = function (list) {
+  var newList = [];
+  newList = shuffle(list);
+  return newList;
+};
+
+// shuffles, used in random sort
+function shuffle(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
+
+// 2 = bubble sort
 var bubbleSort = function (list) {
   for (var i = 0; i < list.length; i++) {
     // Last i elements are already in place
@@ -58,36 +79,25 @@ var bubbleSort = function (list) {
   return list;
 };
 
-// random shuffle sort
-var randomSort = function (list) {
-  var newList = [];
-  newList = shuffle(list);
-  return newList;
-};
-
 // concatenate elements in list
 var concatIntoNumber = function (list) {
   return Number(list.join(""));
 };
 
-// shuffles
-function shuffle(array) {
-  console.log(array);
-  for (var i = array.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
-  return array;
-}
-
-// compare winners
+// compare players, output winner
 var compareWinner = function (player1combinednumber, player2combinednumber) {
   if (player1combinednumber > player2combinednumber) {
-    return true;
+    scoreBoard[0] += 1;
+    myOutputValue =
+      "Congratulations! Player 1 have won! Your score is " + scoreBoard[0];
   }
-  return false;
+
+  if (player2combinednumber > player1combinednumber) {
+    scoreBoard[1] += 1;
+    myOutputValue =
+      "Congratulations! Player 2 have won! Your score is " + scoreBoard[1];
+  }
+  return myOutputValue;
 };
 
 // main function //
@@ -115,7 +125,7 @@ var main = function (input) {
     player1Numbers = rollForPlayer(numOfDices);
     player2Numbers = rollForPlayer(numOfDices);
     gameState = CHOOSE_ORDER;
-    return `The list of numbers are <br>${player1Numbers}<br>${player2Numbers}`;
+    return `The list of numbers are <br>${player1Numbers}<br>${player2Numbers}<br> <br>Please enter 1 for random number or 2 for highest number`;
   }
 
   if (gameState == CHOOSE_ORDER) {
@@ -124,25 +134,33 @@ var main = function (input) {
     }
     orderSelection = Number(input);
     gameState = SORT;
-    return "You have chosen " + input;
+    return (
+      "You have chosen " + input + "<br><br> Press submit again to confirm"
+    );
   }
 
   // random sort
   if ((gameState == SORT) & (orderSelection == 1)) {
     // player 1's number
+    originalPlayer1Numbers = [...player1Numbers]; // creates value copy rather than reference copy. reference copy would output the sorted array but we want the original array
+
     player1SortedList = randomSort(player1Numbers);
     player1combinednumber = concatIntoNumber(player1SortedList);
 
     // player 2's number
+    originalPlayer2Numbers = [...player2Numbers]; // creates value copy rather than reference copy. reference copy would output the sorted array but we want the original array
+
     player2SortedList = randomSort(player2Numbers);
     player2combinednumber = concatIntoNumber(player2SortedList);
+    console.log(player1Numbers);
+    console.log(player2Numbers);
 
     gameState = COMPARE_WINNER;
     return (
       "Player 1's initial list is: " +
-      player1Numbers +
+      originalPlayer1Numbers +
       "<br> Player 2's initial list is: " +
-      player2Numbers +
+      originalPlayer2Numbers +
       "<br><br>" +
       "Player 1's random sorted list is: " +
       player1SortedList +
@@ -156,21 +174,25 @@ var main = function (input) {
     );
   }
 
-  // highest number sort
+  // bubble sort
   if ((gameState == SORT) & (orderSelection == 2)) {
-    // player 1's number
+    // player 1's number\
+    originalPlayer1Numbers = [...player1Numbers]; // creates value copy rather than reference copy. reference copy would output the sorted array but we want the original array
+
     player1SortedList = bubbleSort(player1Numbers);
     player1combinednumber = concatIntoNumber(player1SortedList);
     //player 2's number
+    originalPlayer2Numbers = [...player2Numbers]; // creates value copy rather than reference copy. reference copy would output the sorted array but we want the original array
+
     player2SortedList = bubbleSort(player2Numbers);
     player2combinednumber = concatIntoNumber(player2SortedList);
 
     gameState = COMPARE_WINNER;
     return (
       "Player 1's initial list is: " +
-      player1Numbers +
+      originalPlayer1Numbers +
       "<br> Player 2's initial list is: " +
-      player2Numbers +
+      originalPlayer2Numbers +
       "<br><br>" +
       "Player 1's descending list is: " +
       player1SortedList +
@@ -186,12 +208,8 @@ var main = function (input) {
 
   // compare numbers + announce winner
   if (gameState == COMPARE_WINNER) {
-    if (compareWinner(player1combinednumber, player2combinednumber)) {
-      scoreBoard[0] += 1;
-      myOutputValue = "Congratulations! You as player 1 have won!";
-    }
-    scoreBoard[1] += 1;
-    myOutputValue = "Congratulations! You as player 2 have won!";
+    myOutputValue = compareWinner(player1combinednumber, player2combinednumber);
+    gameState = CHOOSE_DICE_NUMBER; // restarts the game
   }
 
   return myOutputValue;
