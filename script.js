@@ -168,7 +168,7 @@ var playStandardGame = function () {
   //if next player's index is still within the array range, assign the next player as the current player
   if (nextPlayerIndex < playerArray.length) {
     currentPlayer = playerArray[nextPlayerIndex];
-    outputMsg += `<br><br> It's Player ${currentPlayer}'s Turn now!`;
+    outputMsg += `<br><br> It's Player ${currentPlayer}'s turn now!`;
     return outputMsg;
   }
 
@@ -181,24 +181,49 @@ var playStandardGame = function () {
 
   var winningPlayerIndex = resultArray.indexOf(winningPlayerScore);
 
-  outputMsg += `<br><br>With a score of ${resultArray[winningPlayerIndex]}, Player ${playerArray[winningPlayerIndex]} Wins this round!`;
+  outputMsg += `<br><br>With a score of ${resultArray[winningPlayerIndex]}, Player ${playerArray[winningPlayerIndex]} Wins this round!<br><br>`;
 
   //win state, add the highscore of the winning player
   highScoreArray[winningPlayerIndex] += 1;
 
-  var currentHighScore = Math.max(...highScoreArray);
-  var highScoreIndex = highScoreArray.indexOf(currentHighScore);
-  outputMsg += `<br><br>With ${currentHighScore} win, Player ${playerArray[highScoreIndex]} is currently leading the pack!`;
-
-  //TO ADD: leaderboard sort function here
-  outputMsg += `<br>add the leaderboard`;
+  outputMsg += leaderboardDisplay();
 
   //reset resultArray to have 0 values all around
   for (var i = 0; i < resultArray.length; i += 1) resultArray[i] = 0;
+
   //also resets current player to be index 0
   currentPlayer = playerArray[0];
 
+  outputMsg += `<br><br> Press roll dice to start a new round! It's Player ${currentPlayer}'s turn now!`;
+
   return outputMsg;
+};
+
+/***
+ * Outputs the current leaderboard string.
+ * @returns {string} the leaderboard win string for display
+ */
+var leaderboardDisplay = function () {
+  //initialise leaderboard string
+  var leaderboardString = "Current Leaderboard:<br><br>";
+
+  //copying highscore array to manipulate stuff slice is used to make new objects in the array
+  var leaderboardArray = highScoreArray.slice();
+
+  var highestScore = 0;
+
+  for (var i = 0; i < leaderboardArray.length; i += 1) {
+    var highestScore = Math.max(...leaderboardArray);
+    var highestScoreIndex = leaderboardArray.indexOf(highestScore);
+    leaderboardString += `Player ${playerArray[highestScoreIndex]}: ${leaderboardArray[highestScoreIndex]} wins<br>`;
+
+    //-1 will ensure the score is not called again
+    leaderboardArray[highestScoreIndex] = -1;
+  }
+  //deletes the leaderboardArray,
+  leaderboardArray.length = 0;
+
+  return leaderboardString;
 };
 
 var main = function () {
