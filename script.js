@@ -26,6 +26,9 @@ var player2Dice = [0, 0];
 var player1Score = 0;
 var player2Score = 0;
 
+var selectGameMessage =
+  "Please enter game type to play:<br><br>basic - Basic Beat That! game";
+
 // Return random number from 1 to 6
 var randomDice = function () {
   return Math.ceil(Math.random() * 6);
@@ -150,20 +153,27 @@ var gameBasic = function (input) {
     } else {
       message += leaderBoard[1] + leaderBoard[0];
     }
-    message += `You've played total of ${totalGames} rounds of game.`;
+    message += `You've played total of ${totalGames} rounds of game.<br><br>`;
+    message += `Press button for another round of game<br><br>`;
+    message += `or "exit" to select different game mode:`;
     gameState = "nextGame";
     return message;
   }
 
   if (gameState == "nextGame") {
-    message = `Press button for another round of game.<br>`;
-    gameState = "p1roll";
-    return message;
+    if (input == "") {
+      message = `Press button to roll dice for player 1`;
+      gameState = "p1roll";
+    } else if (input == "exit") {
+      gameState = "start";
+      gameType = "";
+      return selectGameMessage;
+    }
+    return 'Please just press button for new game or write "exit" to choose different game!';
   }
 };
 
 var main = function (input) {
-  console.log(gameType);
   if (gameType == "") {
     input = input.toLowerCase();
     if (input == "basic") {
@@ -173,9 +183,7 @@ var main = function (input) {
       case "basic":
         return "You have chosen basic Beat That! game";
       default:
-        message = "Please enter game type to play:<br><br>";
-        message += "basic - Basic Beat That! game";
-        return message;
+        return selectGameMessage;
     }
   } else if (gameType == "basic") {
     return gameBasic(input);
