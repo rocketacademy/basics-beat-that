@@ -1,6 +1,5 @@
 // Version 2 Comfortable - (Mon - Thu: 2h - 3h)
 /*
-Features:
 - Player input number of dice, number of player and then select game mode
 - Press start button to display the player and the player's optimal combination
 - The highest / Lowest combination wins
