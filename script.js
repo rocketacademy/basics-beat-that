@@ -18,18 +18,20 @@
 //Game modes: instructions, play the game, player 1 generate dice rolls, player 1 choose dice order, player 2 generate dice rolls, player 2 choose dice order
 //Functions: generate dice rolls, choose dice order
 
-var gameMode = "instructions";
-var INSTRUCTIONS = "instructions";
+var gameMode = "player 1 dice roll";
 var PLAYER1DICEROLL = "player 1 dice roll";
 var PLAYER1CHOOSEDICEORDER = "player 1 choose order of dice number";
 var PLAYER2DICEROLL = "player 2 dice roll";
 var PLAYER2CHOOSEDICEORDER = "player 2 choose order of dice number";
 var CHOOSEWINNER = "choose winner";
+var SUMMARY = "summary";
 var diceRoll1 = 0;
 var diceRoll2 = 0;
 var gameRound = 0;
 var player1CombiArray = [];
 var player2CombiArray = [];
+var player1Score = 0;
+var player2Score = 0;
 
 var generateDiceRoll = function () {
   var randomDecimal = Math.random() * 6;
@@ -56,12 +58,14 @@ var determineWinner = function () {
   if (
     Number(player1CombiArray[gameRound]) > Number(player2CombiArray[gameRound])
   ) {
+    player1Score = player1Score + 1;
     myOutputValue = "Player 1 wins this round!";
     return myOutputValue;
   }
   if (
     Number(player2CombiArray[gameRound]) > Number(player1CombiArray[gameRound])
   ) {
+    player2Score = player2Score + 1;
     myOutputValue = "Player 2 wins this round!";
     return myOutputValue;
   }
@@ -70,12 +74,7 @@ var determineWinner = function () {
 var main = function (input) {
   var myOutputValue = "";
 
-  if (gameMode == INSTRUCTIONS) {
-    gameMode = PLAYER1DICEROLL;
-    myOutputValue =
-      "Welcome to the game of Beat That!" +
-      " Please click submit to begin rolling the dice!";
-  } else if (gameMode == PLAYER1DICEROLL) {
+  if (gameMode == PLAYER1DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
     console.log("diceRoll1", diceRoll1);
@@ -119,8 +118,7 @@ var main = function (input) {
     var diceOrder = generateDiceOrder(input);
     player2CombiArray.push(diceOrder);
     var winner = determineWinner(gameRound);
-    gameRound = gameRound + 1;
-    gameMode = PLAYER1DICEROLL;
+    gameMode = SUMMARY;
     myOutputValue =
       "You have chosen " +
       input +
@@ -134,6 +132,19 @@ var main = function (input) {
       player2CombiArray +
       "<br><br>" +
       winner;
+  } else if (gameMode == SUMMARY) {
+    gameRound = gameRound + 1;
+    gameMode = PLAYER1DICEROLL;
+    myOutputValue =
+      "Scores" +
+      "<br>" +
+      "Player 1: " +
+      player1Score +
+      "<br>" +
+      "Player 2: " +
+      player2Score +
+      "<br><br>" +
+      "Please click Submit again to continue playing.";
   }
   return myOutputValue;
 };
