@@ -82,7 +82,7 @@ var main = function (input) {
       diceRoll1 +
       " and " +
       diceRoll2 +
-      ". <br>" +
+      ". <br><br>" +
       "Please choose 'Dice 1' or 'Dice 2' to be the first numeral of your combined number";
   } else if (gameMode == PLAYER1CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
@@ -91,15 +91,13 @@ var main = function (input) {
     myOutputValue =
       "You have chosen " +
       input +
-      "to be the first numeral. <br>" +
-      "Your combined number is " +
+      " to be the first numeral. Your combined number is " +
       diceOrder +
-      "<br>" +
-      "<br>" +
+      ". <br><br>" +
       "Player 1: " +
       player1CombiArray +
-      "<br>" +
-      "Please click submit again for player 2 to roll the dice";
+      "<br><br>" +
+      "Please click submit again for player 2 to roll the dice.";
   } else if (gameMode == PLAYER2DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
@@ -111,7 +109,7 @@ var main = function (input) {
       diceRoll1 +
       " and " +
       diceRoll2 +
-      ". <br>" +
+      ". <br><br>" +
       "Please choose 'Dice 1' or 'Dice 2' to be the first numeral of your combined number";
   } else if (gameMode == PLAYER2CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
@@ -121,16 +119,15 @@ var main = function (input) {
     myOutputValue =
       "You have chosen " +
       input +
-      "to be the first numeral. <br>" +
-      "Your combined number is " +
+      " to be the first numeral. Your combined number is " +
       diceOrder +
-      "<br>" +
-      "<br>" +
+      ". <br><br>" +
       "Player 1: " +
       player1CombiArray +
+      "<br>" +
       "Player 2: " +
       player2CombiArray +
-      "<br>" +
+      "<br><br>" +
       winner;
   }
   return myOutputValue;
