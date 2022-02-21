@@ -26,8 +26,9 @@ var player2Dice = [0, 0];
 var player1Score = 0;
 var player2Score = 0;
 
-var selectGameMessage =
-  "Please enter game type to play:<br><br>basic - Basic Beat That! game";
+var selectGameMessage = `Please enter game type to play:<br><br>
+  basic - Basic Beat That! game<br>
+  lowest - Lowest combined number`;
 
 // Return random number from 1 to 6
 var randomDice = function () {
@@ -136,7 +137,7 @@ var gameBasic = function (input) {
     message = "";
     if (player1Score == player2Score) {
       message += `It's a tie.<br><br>`;
-    } else if (player1Score > player2Score) {
+    } else if (player1Score > player2Score && gameType == "basic") {
       player1Won += 1;
       message += `Player 1 won this round with ${player1Score} vs ${player2Score}!<br><br>`;
     } else {
@@ -178,14 +179,19 @@ var main = function (input) {
     input = input.toLowerCase();
     if (input == "basic") {
       gameType = input;
+    } else if (input == "lowest") {
+      gameType = input;
     }
+
     switch (gameType) {
       case "basic":
         return "You have chosen basic Beat That! game";
+      case "lowest":
+        return "You have chosen lowest combined number game";
       default:
         return selectGameMessage;
     }
-  } else if (gameType == "basic") {
+  } else if (gameType == "basic" || gameType == "lowest") {
     return gameBasic(input);
   }
 };
