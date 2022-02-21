@@ -30,14 +30,14 @@ function toggleBtn() {
   }
 }
 
-// Add Button Event Listener
+// Submit button click event
 submitBtn.addEventListener("click", function () {
   let result = main();
   submitBtn.disable = true;
   outputDiv.innerHTML = result;
 });
 
-// Add reset button
+// Reset button click event
 resetBtn.addEventListener("click", function () {
   location.reload();
 });
@@ -48,7 +48,7 @@ function rollDice() {
   return diceNum;
 }
 
-// Sort Array low --> high or high --> low
+// Bubble Sort: Array low --> high or high --> low
 function sortDiceNumArr(arr, mode) {
   const swap = (arr, index1, index2) => {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
@@ -83,7 +83,7 @@ function getDiceCombo(num_of_dice, mode) {
   return combination;
 }
 
-// Generate a leaderboard to show each player's optimal number
+// Generate a sorted leaderboard to show each player's optimal number
 function generateLeaderboard(arr, mode) {
   let record;
   let showRecord = "";
@@ -125,6 +125,7 @@ function checkWinner(numOfDice, numOfPlayer, gameMode) {
       for (let j = 0; j < numsArr.length; j++) {
         diceNumsStr += " " + numsArr[j] + " ";
       }
+      // Display each player's dice number and optimal number combo
       diceRollMsg = `Player ${playerCounter}, you roll "${diceNumsStr}", your number is ${gameRecordArr[i]}<hr>`;
     }
 
