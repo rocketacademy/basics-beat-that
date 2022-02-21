@@ -106,7 +106,7 @@ function generateLeaderboard(arr, mode) {
 }
 
 // Find the index of duplicated number in game board array
-function findDuplicates(arr, num) {
+function findDuplicatesIndex(arr, num) {
   let duplicatesIndex = [];
   let idx = arr.indexOf(num);
   while (idx != -1) {
@@ -142,8 +142,10 @@ function checkWinner(numOfDice, numOfPlayer, gameMode) {
         gameMode == "big"
           ? Math.max(...gameRecordArr)
           : Math.min(...gameRecordArr);
-      let duplicatedNumIndexArr = findDuplicates(gameRecordArr, dulNum);
+      let duplicatedNumIndexArr = findDuplicatesIndex(gameRecordArr, dulNum);
       let dulTopPlayers = "";
+
+      // Display duplicated players which have the highest number
       if (duplicatedNumIndexArr.length >= 2) {
         for (let i = 0; i < duplicatedNumIndexArr.length; i++) {
           dulTopPlayers += `Player ${duplicatedNumIndexArr[i] + 1}, `;
@@ -151,11 +153,14 @@ function checkWinner(numOfDice, numOfPlayer, gameMode) {
         toggleBtn();
         return `It's a tie! ${dulTopPlayers}<br>you have the same number: ${dulNum}. `;
       }
+
+      // Display winner
       if (gameMode == "big" && maxNum != minNum) {
         winner = gameRecordArr.indexOf(maxNum) + 1;
       } else {
         winner = gameRecordArr.indexOf(minNum) + 1;
       }
+
       winnerMsg = `Congrats! Player ${winner}, you won!!!🎊🎊🎊`;
       displayMsg = `${diceRollMsg}<br>${winnerMsg}<br><br>`;
       toggleBtn();
