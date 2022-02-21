@@ -4,13 +4,17 @@
 //Functions: generate dice rolls, choose dice order, determine winner
 
 //Storing game modes in variables to minimize typo
-var gameMode = "player 1 dice roll";
+var gameMode = "choose winning condition";
+var CHOOSEWINNINGCONDITION = "choose winning condition";
 var PLAYER1DICEROLL = "player 1 dice roll";
 var PLAYER1CHOOSEDICEORDER = "player 1 choose order of dice number";
 var PLAYER2DICEROLL = "player 2 dice roll";
 var PLAYER2CHOOSEDICEORDER = "player 2 choose order of dice number";
 var CHOOSEWINNER = "choose winner";
 var SUMMARY = "summary";
+var winningCondition = "";
+var HIGHERCOMBIWINS = "higher combi wins";
+var LOWERCOMBIWINS = "lower combi wins";
 var diceRoll1 = 0;
 var diceRoll2 = 0;
 var gameRound = 0;
@@ -44,7 +48,7 @@ var generateDiceOrder = function (input) {
 
 //If Player 1 > Player 2, Player 1 wins. score +1
 //If Player 2 > Player 1, Player 2 wins. score +1
-var determineWinner = function () {
+var determineHigherCombiWinner = function () {
   if (
     Number(player1CombiArray[gameRound]) > Number(player2CombiArray[gameRound])
   ) {
@@ -61,12 +65,41 @@ var determineWinner = function () {
   }
 };
 
+var determineLowerCombiWinner = function () {
+  if (
+    Number(player1CombiArray[gameRound]) < Number(player2CombiArray[gameRound])
+  ) {
+    player1Score = player1Score + 1;
+    myOutputValue = "Player 1 wins this round!";
+    return myOutputValue;
+  }
+  if (
+    Number(player2CombiArray[gameRound]) < Number(player1CombiArray[gameRound])
+  ) {
+    player2Score = player2Score + 1;
+    myOutputValue = "Player 2 wins this round!";
+    return myOutputValue;
+  }
+};
+
 //Run all game modes in main function.
+//Index shows "Please enter Higher combi or lower combi game mode"
 var main = function (input) {
   var myOutputValue = "";
+  if (gameMode == CHOOSEWINNINGCONDITION) {
+    if (input == HIGHERCOMBIWINS) {
+      winningCondition = HIGHERCOMBIWINS;
+      myOutputValue =
+        "You have chosen for the player with the higher number to win. Click submit to begin rolling the dice.";
+    } else if (input == LOWERCOMBIWINS) {
+      winningCondition = LOWERCOMBIWINS;
+      myOutputValue =
+        "You have chosen for the player with the lower number to win. Click submit to begin rolling the dice.";
+    }
+    gameMode = PLAYER1DICEROLL;
 
-  //Player 1 rolls dice first. Roll the dices, and change game mode. No input. Output the dice roll numbers and ask player to choose order.
-  if (gameMode == PLAYER1DICEROLL) {
+    //Player 1 rolls dice first. Roll the dices, and change game mode. No input. Output the dice roll numbers and ask player to choose order.
+  } else if (gameMode == PLAYER1DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
     console.log("diceRoll1", diceRoll1);
@@ -115,21 +148,38 @@ var main = function (input) {
   } else if (gameMode == PLAYER2CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
     player2CombiArray.push(diceOrder);
-    var winner = determineWinner(gameRound);
+    if (winningCondition == HIGHERCOMBIWINS) {
+      var winner = determineHigherCombiWinner(gameRound);
+      myOutputValue =
+        "You have chosen " +
+        input +
+        " to be the first numeral. Your combined number is " +
+        diceOrder +
+        ". <br><br>" +
+        "Player 1: " +
+        player1CombiArray +
+        "<br>" +
+        "Player 2: " +
+        player2CombiArray +
+        "<br><br>" +
+        winner;
+    } else if (winningCondition == LOWERCOMBIWINS) {
+      var winner = determineLowerCombiWinner(gameRound);
+      myOutputValue =
+        "You have chosen " +
+        input +
+        " to be the first numeral. Your combined number is " +
+        diceOrder +
+        ". <br><br>" +
+        "Player 1: " +
+        player1CombiArray +
+        "<br>" +
+        "Player 2: " +
+        player2CombiArray +
+        "<br><br>" +
+        winner;
+    }
     gameMode = SUMMARY;
-    myOutputValue =
-      "You have chosen " +
-      input +
-      " to be the first numeral. Your combined number is " +
-      diceOrder +
-      ". <br><br>" +
-      "Player 1: " +
-      player1CombiArray +
-      "<br>" +
-      "Player 2: " +
-      player2CombiArray +
-      "<br><br>" +
-      winner;
 
     //Summarize the game score and add 1 to game round. Change game mode back to player 1 to keep playing
   } else if (gameMode == SUMMARY) {
