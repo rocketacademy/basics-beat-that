@@ -27,7 +27,7 @@ var PLAYER2CHOOSEDICEORDER = "player 2 choose order of dice number";
 var CHOOSEWINNER = "choose winner";
 var diceRoll1 = 0;
 var diceRoll2 = 0;
-var counter = 0;
+var gameRound = 0;
 var player1CombiArray = [];
 var player2CombiArray = [];
 
@@ -53,11 +53,15 @@ var generateDiceOrder = function (input) {
 };
 
 var determineWinner = function () {
-  if (Number(player1CombiArray[0]) > Number(player2CombiArray[0])) {
+  if (
+    Number(player1CombiArray[gameRound]) > Number(player2CombiArray[gameRound])
+  ) {
     myOutputValue = "Player 1 wins this round!";
     return myOutputValue;
   }
-  if (Number(player2CombiArray[0]) > Number(player1CombiArray[0])) {
+  if (
+    Number(player2CombiArray[gameRound]) > Number(player1CombiArray[gameRound])
+  ) {
     myOutputValue = "Player 2 wins this round!";
     return myOutputValue;
   }
@@ -114,7 +118,8 @@ var main = function (input) {
   } else if (gameMode == PLAYER2CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
     player2CombiArray.push(diceOrder);
-    var winner = determineWinner();
+    var winner = determineWinner(gameRound);
+    gameRound = gameRound + 1;
     gameMode = PLAYER1DICEROLL;
     myOutputValue =
       "You have chosen " +
