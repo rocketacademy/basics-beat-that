@@ -20,8 +20,11 @@
 
 var gameMode = "instructions";
 var INSTRUCTIONS = "instructions";
-var DICEROLL = "dice roll";
-var CHOOSEDICEORDER = "choose order of dice number";
+var PLAYER1DICEROLL = "player 1 dice roll";
+var PLAYER1CHOOSEDICEORDER = "player 1 choose order of dice number";
+var PLAYER2DICEROLL = "player 2 dice roll";
+var PLAYER2CHOOSEDICEORDER = "player 2 choose order of dice number";
+var CHOOSEWINNER = "choose winner";
 var diceRoll1 = 0;
 var diceRoll2 = 0;
 var counter = 0;
@@ -40,46 +43,40 @@ var generateDiceOrder = function (input) {
     console.log("diceRoll2", diceRoll2);
     var combinedNum = diceRoll1 + "" + diceRoll2;
     console.log("combined num", combinedNum);
-    player1CombiArray.push(combinedNum);
     return combinedNum;
   }
   if (input == "Dice 2") {
-    var combinedNum = toString(diceRoll2) + toString(diceRoll1);
+    var combinedNum = diceRoll2 + "" + diceRoll1;
     console.log("combined num", combinedNum);
-    player1CombiArray.push(combinedNum);
     return combinedNum;
   }
 };
 
-// var playTheGame = function (input) {
-//   var myOutputValue = "hello...";
-//   console.log(gameMode);
-//   gameMode = "choose winner";
-// } else if (gameMode == "choose winner") {
-//   if (Number(player1CombiArray[0]) > Number(player2CombiArray[0])) {
-//     myOutputValue = "Player 1 wins this round!";
-//   }
-//   if (Number(player2CombiArray[0]) > Number(player1CombiArray[0])) {
-//     myOutputValue = "Player 2 wins this round!";
-//   }
-//   }
-//   return myOutputValue;
-// };
+var determineWinner = function () {
+  if (Number(player1CombiArray[0]) > Number(player2CombiArray[0])) {
+    myOutputValue = "Player 1 wins this round!";
+    return myOutputValue;
+  }
+  if (Number(player2CombiArray[0]) > Number(player1CombiArray[0])) {
+    myOutputValue = "Player 2 wins this round!";
+    return myOutputValue;
+  }
+};
 
 var main = function (input) {
   var myOutputValue = "";
 
   if (gameMode == INSTRUCTIONS) {
-    gameMode = DICEROLL;
+    gameMode = PLAYER1DICEROLL;
     myOutputValue =
       "Welcome to the game of Beat That!" +
       " Please click submit to begin rolling the dice!";
-  } else if (gameMode == DICEROLL) {
+  } else if (gameMode == PLAYER1DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
     console.log("diceRoll1", diceRoll1);
     console.log("diceRoll2", diceRoll2);
-    gameMode = CHOOSEDICEORDER;
+    gameMode = PLAYER1CHOOSEDICEORDER;
     myOutputValue =
       "You have rolled " +
       diceRoll1 +
@@ -87,8 +84,10 @@ var main = function (input) {
       diceRoll2 +
       ". <br>" +
       "Please choose 'Dice 1' or 'Dice 2' to be the first numeral of your combined number";
-  } else if (gameMode == CHOOSEDICEORDER) {
+  } else if (gameMode == PLAYER1CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
+    player1CombiArray.push(diceOrder);
+    gameMode = PLAYER2DICEROLL;
     myOutputValue =
       "You have chosen " +
       input +
@@ -97,9 +96,42 @@ var main = function (input) {
       diceOrder +
       "<br>" +
       "<br>" +
-      "Player 1 - " +
-      player1CombiArray[0];
+      "Player 1: " +
+      player1CombiArray +
+      "<br>" +
+      "Please click submit again for player 2 to roll the dice";
+  } else if (gameMode == PLAYER2DICEROLL) {
+    diceRoll1 = generateDiceRoll();
+    diceRoll2 = generateDiceRoll();
+    console.log("diceRoll1", diceRoll1);
+    console.log("diceRoll2", diceRoll2);
+    gameMode = PLAYER2CHOOSEDICEORDER;
+    myOutputValue =
+      "You have rolled " +
+      diceRoll1 +
+      " and " +
+      diceRoll2 +
+      ". <br>" +
+      "Please choose 'Dice 1' or 'Dice 2' to be the first numeral of your combined number";
+  } else if (gameMode == PLAYER2CHOOSEDICEORDER) {
+    var diceOrder = generateDiceOrder(input);
+    player2CombiArray.push(diceOrder);
+    var winner = determineWinner();
+    gameMode = PLAYER1DICEROLL;
+    myOutputValue =
+      "You have chosen " +
+      input +
+      "to be the first numeral. <br>" +
+      "Your combined number is " +
+      diceOrder +
+      "<br>" +
+      "<br>" +
+      "Player 1: " +
+      player1CombiArray +
+      "Player 2: " +
+      player2CombiArray +
+      "<br>" +
+      winner;
   }
-
   return myOutputValue;
 };
