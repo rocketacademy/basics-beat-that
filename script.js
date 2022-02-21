@@ -1,23 +1,9 @@
-// Player 1 rolls 2 dice =>
-// - game mode in dice roll
-// - create 2 random dice roll numbers
-// - game mode changes to choose order of dice number
-// - output = Dice 1 rolled A and Dice 2 rolled B, please indicate "Dice 1" or "Dice 2" to be the first numeral of the combined number
+// Game logic: Player 1 roll dice -> Player 1 choose dice order -> Player 2 roll dice -> Player 2 choose dice order. Store choices and compare to determine winner.
 
-// Player 1 chooses order of dice number =>
-// - game mode is in choose order of dice number
-// - input to be "Dice 1" or "Dice 2"
-// - output = You have chosen Dice X to be the first numeral of the combined number. Your combined number is XX
+//Game modes: instructions, player 1 generate dice rolls, player 1 choose dice order, player 2 generate dice rolls, player 2 choose dice order, choose winner
+//Functions: generate dice rolls, choose dice order, determine winner
 
-// Player 2 repeat steps. Put game logic into a loop
-
-// If Player 1 combined > Player 2 combined, Player 1 wins. If Player 1 combined < Player 2 combined, Player 2 wins. If Player 1 combined = Player 2 combined, they draw. Restart game.
-
-// Player 1 roll dice -> Player 1 choose dice order -> Player 2 roll dice -> Player 2 choose dice order. Store choices and compare to determine winner.
-
-//Game modes: instructions, play the game, player 1 generate dice rolls, player 1 choose dice order, player 2 generate dice rolls, player 2 choose dice order
-//Functions: generate dice rolls, choose dice order
-
+//Storing game modes in variables to minimize typo
 var gameMode = "player 1 dice roll";
 var PLAYER1DICEROLL = "player 1 dice roll";
 var PLAYER1CHOOSEDICEORDER = "player 1 choose order of dice number";
@@ -39,6 +25,8 @@ var generateDiceRoll = function () {
   return randomInteger;
 };
 
+//If input = Dice 1, output = Dice 1 + Dice 2 (string)
+//If input = Dice 2, output = Dice 2 + Dice 1 (string)
 var generateDiceOrder = function (input) {
   if (input == "Dice 1") {
     console.log("diceRoll1", diceRoll1);
@@ -54,6 +42,8 @@ var generateDiceOrder = function (input) {
   }
 };
 
+//If Player 1 > Player 2, Player 1 wins. score +1
+//If Player 2 > Player 1, Player 2 wins. score +1
 var determineWinner = function () {
   if (
     Number(player1CombiArray[gameRound]) > Number(player2CombiArray[gameRound])
@@ -71,9 +61,11 @@ var determineWinner = function () {
   }
 };
 
+//Run all game modes in main function.
 var main = function (input) {
   var myOutputValue = "";
 
+  //Player 1 rolls dice first. Roll the dices, and change game mode. No input. Output the dice roll numbers and ask player to choose order.
   if (gameMode == PLAYER1DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
@@ -87,6 +79,8 @@ var main = function (input) {
       diceRoll2 +
       ". <br><br>" +
       "Please choose 'Dice 1' or 'Dice 2' to be the first numeral of your combined number";
+
+    //Player 1 choose order. Input = Dice 1 / Dice 2, put in array, change game mode. Output the choice and the array.
   } else if (gameMode == PLAYER1CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
     player1CombiArray.push(diceOrder);
@@ -101,6 +95,8 @@ var main = function (input) {
       player1CombiArray +
       "<br><br>" +
       "Please click submit again for player 2 to roll the dice.";
+
+    //Repeat for Player 2 roll dices
   } else if (gameMode == PLAYER2DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
@@ -114,6 +110,8 @@ var main = function (input) {
       diceRoll2 +
       ". <br><br>" +
       "Please choose 'Dice 1' or 'Dice 2' to be the first numeral of your combined number";
+
+    //Repeat for Player 2 choose order. But determine the winner here!
   } else if (gameMode == PLAYER2CHOOSEDICEORDER) {
     var diceOrder = generateDiceOrder(input);
     player2CombiArray.push(diceOrder);
@@ -132,6 +130,8 @@ var main = function (input) {
       player2CombiArray +
       "<br><br>" +
       winner;
+
+    //Summarize the game score and add 1 to game round. Change game mode back to player 1 to keep playing
   } else if (gameMode == SUMMARY) {
     gameRound = gameRound + 1;
     gameMode = PLAYER1DICEROLL;
