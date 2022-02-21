@@ -2,7 +2,7 @@ var currentGameMode = "Waiting for next player";
 var playerScores = [];
 var round = 0;
 var maxNum = 0;
-var noOfRounds = 3;
+var noOfPlayers = 3;
 var diceRoll1 = 0;
 var diceRoll2 = 0;
 var scoreBoard = [];
@@ -44,7 +44,7 @@ var findSortedArray = function (arr) {
 var main = function (input) {
   var myOutputValue = "Press 'Submit' to start rolling the dice!";
 
-  while (round < noOfRounds) {
+  while (round < noOfPlayers) {
     console.log(round);
     if (currentGameMode == "Waiting for next player") {
       if (input != "") {
@@ -62,7 +62,7 @@ var main = function (input) {
 
       input = parseInt(input);
 
-      if (input != 1 || input != 2) {
+      if (input != 1 && input != 2) {
         myOutputValue = `Valid options are only 1 and 2 🤦🏻`;
       }
 
