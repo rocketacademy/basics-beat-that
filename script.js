@@ -1,8 +1,8 @@
 // Game type - choose which game to play
-var gameType = 0;
+var gameType = "";
 
 // Varible gameState is used to organize steps through game
-var gameState = 0;
+var gameState = "start";
 
 // Variable for responding to user
 var message = "";
@@ -51,32 +51,33 @@ var calculateScore = function (dice1, dice2, order) {
 };
 
 // Varible gameState for gameBasic
-// 0 - initial state
-// 1 - roll dice for player 1 and ask for dice order
-// 2 - validate input for player 1 and calculate score
-// 3 - roll dice for player 2 and ask for dice order
-// 4 - validate input for player 2 and calculate score, also print out who won and statistics
-// 5 - invite for another round
+// start  - initial state
+// p1roll - roll dice for player 1 and ask for dice order
+// p1val  - validate input for player 1 and calculate score
+// p2roll - roll dice for player 2 and ask for dice order
+// p2val  - validate input for player 2 and calculate score, also print out who won and statistics
+// score  - show score
+// nextGame - invite for another round
 
 var gameBasic = function (input) {
-  if (gameState == 0) {
+  if (gameState == "start") {
     message = `Welcome to Beat That game! <br><br>`;
     message += `Press button to roll dice for player 1`;
-    gameState += 1;
+    gameState = "p1roll";
     return message;
   }
 
-  if (gameState == 1) {
+  if (gameState == "p1roll") {
     player1Dice[0] = randomDice();
     player1Dice[1] = randomDice();
     message = `Welcome Player 1.<br>`;
     message += `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
     message += `Choose the order for the dice.`;
-    gameState += 1;
+    gameState = "p1val";
     return message;
   }
 
-  if (gameState == 2) {
+  if (gameState == "p1val") {
     input = parseInt(input);
     if (!validatePlayerInput(input)) {
       message = `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
@@ -93,21 +94,21 @@ var gameBasic = function (input) {
     message = `Player 1, you chose Dice ${player1DiceOrder} first.<br>`;
     message += `Your number is ${player1Score}.<br>`;
     message += `It is now Player 2's turn.`;
-    gameState += 1;
+    gameState = "p2roll";
     return message;
   }
 
-  if (gameState == 3) {
+  if (gameState == "p2roll") {
     player2Dice[0] = randomDice();
     player2Dice[1] = randomDice();
     message = `Welcome Player 2.<br>`;
     message += `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
     message += `Choose the order for the dice.`;
-    gameState += 1;
+    gameState = "p2val";
     return message;
   }
 
-  if (gameState == 4) {
+  if (gameState == "p2val") {
     input = parseInt(input);
     if (!validatePlayerInput(input)) {
       message = `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
@@ -124,11 +125,11 @@ var gameBasic = function (input) {
     message = `Player 2, you chose Dice ${player2DiceOrder} first.<br>`;
     message += `Your number is ${player2Score}.<br><br>`;
     message += `Press button to see results.`;
-    gameState += 1;
+    gameState = "score";
     return message;
   }
 
-  if (gameState == 5) {
+  if (gameState == "score") {
     message = "";
     if (player1Score == player2Score) {
       message += `It's a tie.<br><br>`;
@@ -150,32 +151,33 @@ var gameBasic = function (input) {
       message += leaderBoard[1] + leaderBoard[0];
     }
     message += `You've played total of ${totalGames} rounds of game.`;
-    gameState += 1;
+    gameState = "nextGame";
     return message;
   }
 
-  if (gameState == 6) {
+  if (gameState == "nextGame") {
     message = `Press button for another round of game.<br>`;
-    gameState = 1;
+    gameState = "p1roll";
     return message;
   }
 };
 
 var main = function (input) {
-  if (gameType == 0) {
-    input = parseInt(input);
-    if (input > 0 && input < 2) {
+  console.log(gameType);
+  if (gameType == "") {
+    input = input.toLowerCase();
+    if (input == "basic") {
       gameType = input;
     }
     switch (gameType) {
-      case 1:
+      case "basic":
         return "You have chosen basic Beat That! game";
       default:
-        message = "Please enter number for game:<br><br>";
-        message += "1 - Basic Beat That! game";
+        message = "Please enter game type to play:<br><br>";
+        message += "basic - Basic Beat That! game";
         return message;
     }
-  } else if (gameType == 1) {
+  } else if (gameType == "basic") {
     return gameBasic(input);
   }
 };
