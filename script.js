@@ -32,11 +32,9 @@ var generateDiceRoll = function () {
 var generateHigherDiceOrder = function () {
   if (diceRoll1 >= diceRoll2) {
     var combinedNum = diceRoll1 + "" + diceRoll2;
-    console.log("combined num", combinedNum);
   }
   if (diceRoll2 >= diceRoll1) {
     var combinedNum = diceRoll2 + "" + diceRoll1;
-    console.log("combined num", combinedNum);
   }
   return combinedNum;
 };
@@ -46,13 +44,9 @@ var generateHigherDiceOrder = function () {
 var generateLowerDiceOrder = function () {
   if (diceRoll1 <= diceRoll2) {
     var combinedNum = diceRoll1 + "" + diceRoll2;
-    console.log("diceRoll1", diceRoll1);
-    console.log("diceRoll2", diceRoll2);
-    console.log("combined num", combinedNum);
   }
   if (diceRoll2 <= diceRoll1) {
     var combinedNum = diceRoll2 + "" + diceRoll1;
-    console.log("combined num", combinedNum);
   }
   return combinedNum;
 };
@@ -99,6 +93,9 @@ var determineLowerCombiWinner = function () {
 //Index shows "Please enter Higher combi or lower combi game mode"
 var main = function (input) {
   var myOutputValue = "";
+
+  //Begin with game mode = choose winning condition.
+  //No input, Output to inform user of what they chose.
   if (gameMode == CHOOSEWINNINGCONDITION) {
     if (input == HIGHERCOMBIWINS) {
       winningCondition = HIGHERCOMBIWINS;
@@ -111,12 +108,11 @@ var main = function (input) {
     }
     gameMode = PLAYER1DICEROLL;
 
-    //Player 1 rolls dice first. Roll the dices, and change game mode. No input. Output the dice roll numbers and ask player to choose order.
+    //Player 1 plays the game (rolls dice, computer auto-generates number according to winning conditions and add to array)
+    //No input. Output the dice roll numbers and auto-generated order. CHANGE GAME MODE.
   } else if (gameMode == PLAYER1DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
-    console.log("diceRoll1", diceRoll1);
-    console.log("diceRoll2", diceRoll2);
     if (winningCondition == HIGHERCOMBIWINS) {
       var diceOrder = generateHigherDiceOrder();
     } else if (winningCondition == LOWERCOMBIWINS) {
@@ -141,12 +137,12 @@ var main = function (input) {
       "<br><br>" +
       "Please click submit again for player 2 to roll the dice.";
 
-    //Repeat for Player 2 roll dices
+    //Player 2 plays the game (rolls dice, computer generates number according to winning condition, add to array)
+    //Compare Player 1 and Player 2 numbers, determine the winner.
+    //No input. Output Player 2 dice roll numbers, auto-generated order and the winner. Change game mode.
   } else if (gameMode == PLAYER2DICEROLL) {
     diceRoll1 = generateDiceRoll();
     diceRoll2 = generateDiceRoll();
-    console.log("diceRoll1", diceRoll1);
-    console.log("diceRoll2", diceRoll2);
     if (winningCondition == HIGHERCOMBIWINS) {
       var diceOrder = generateHigherDiceOrder();
       player2CombiArray.push(diceOrder);
