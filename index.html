@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+<meta charset="UTF-8" />
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Beat That!</title>
     <style>
       * {
         box-sizing: border-box;
@@ -18,7 +19,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -45,12 +46,23 @@
         padding: 20px;
         width: 100%;
       }
+
+      #instruction {
+        text-align: center;
+      }
     </style>
   </head>
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
+      <div id="instruction">
+        <p>
+          <b>Hello!</b> Welcome to <b>Beat That!</b> Click <i>submit</i> to
+          start the game.
+        </p>
+        <p>The player with the highest number wins! Good luck!</p>
+      </div>
       <p>Input:</p>
       <input id="input-field" />
       <br />
