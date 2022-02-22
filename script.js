@@ -4,7 +4,7 @@ var gameCompareScore = "game_compare_score";
 var currentGameMode = gameModeDiceRoll;
 
 var currentPlayer = 1;
-var userName = "";
+// var userName = "";
 var allPlayerSCore = [];
 
 //create an array to store the values of the 2 dices for both players
@@ -28,7 +28,7 @@ var rollDiceForPlayer = function () {
   //after this step, ask player to choose the order
   console.log(currentPlayerRolls[0]);
   console.log(currentPlayerRolls[1]);
-  return `Welcome ${userName}! <br> You rolled ${currentPlayerRolls[0]} for Dice 1 and ${currentPlayerRolls[1]} for Dice 2. <br> Please choose the dice number (either 1 or 2) to be your first digit of your final value.`;
+  return `Welcome Player ${currentPlayer}! <br> You rolled ${currentPlayerRolls[0]} for Dice 1 and ${currentPlayerRolls[1]} for Dice 2. <br> Please choose the dice number (either 1 or 2) to be your first digit of your final value.`;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -55,7 +55,26 @@ var getPlayerScore = function (playerInput) {
   console.log(playerFinalValue);
   // clear current player rolls array
   currentPlayerRolls = [];
-  return `${userName}, your final value is ${playerFinalValue}.`;
+  return `Player ${currentPlayer}, your final value is ${playerFinalValue}.`;
+};
+
+var comparePlayersScores = function () {
+  // have to use another outputvalue
+  var compareOutputValue = `Player 1 score: ${allPlayerSCore[0]} <br> Player 2 score: ${allPlayerSCore[1]}`;
+
+  // player 1 wins
+  if (allPlayerSCore[0] > allPlayerSCore[1]) {
+    compareOutputValue = `${compareOutputValue} <br><br> Player 1 wins!`;
+  }
+  //player 2 wins
+  if (allPlayerSCore[0] < allPlayerSCore[1]) {
+    compareOutputValue = `${compareOutputValue} <br><br> Player 2 wins!`;
+  }
+  //tie
+  if (allPlayerSCore[0] == allPlayerSCore[1]) {
+    compareOutputValue = `${compareOutputValue} <br><br> It's a tie!`;
+  }
+  return compareOutputValue;
 };
 
 var main = function (input) {
@@ -64,7 +83,7 @@ var main = function (input) {
 
   if (currentGameMode == gameModeDiceRoll) {
     // set the name
-    userName = input;
+    // userName = input;
     // now that we have the name for player 1 and rolled 2 dices, switch the mode
     currentGameMode = gameStateChooseDiceOrder;
     console.log(currentGameMode);
@@ -79,7 +98,7 @@ var main = function (input) {
       currentPlayer = 2;
       currentGameMode = gameModeDiceRoll;
       console.log(currentPlayer);
-      return `${myOutputValue} <br> It is now player 2's turn. Please input your name!`;
+      return `${myOutputValue} <br> It is now player 2's turn. Click submit when ready!`;
     }
 
     if (currentPlayer == 2) {
@@ -88,11 +107,8 @@ var main = function (input) {
     }
   }
 
-  // if (currentGameMode == gameCompareScore){
-  //   myOutputValue = ``
-  //   // player 1 wins
-
-  //   //player 2 wins
-
-  //   //tie
+  if (currentGameMode == gameCompareScore) {
+    myOutputValue = comparePlayersScores();
+    return myOutputValue;
+  }
 };
