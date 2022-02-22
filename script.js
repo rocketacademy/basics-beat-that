@@ -2,28 +2,28 @@
 pseudocode
 
 dice rolls:
-loop for how many dice rolls are available
-for every rolls, push value into an array
-return that array, use returned array to format output
+loop for how many dice rolls are available - done
+for every rolls, push value into an array - done
+return that array, use returned array to format output - done
 
 score rolls:
-take dice roll array as parameter
-sort that array, it's fine to use default sort as of now (values are single digits only), highest or lowest
-put that and stringify numbers, and add it as a string
-change string to number 
-push number onto score array
+take dice roll array as parameter - done
+sort that array, it's fine to use default sort as of now (values are single digits only), highest or lowest - done
+put that and stringify numbers, and add it as a string - done
+change string to number - done
+push number onto score array - done
 
 standard game:
-at init, default to player 1 to play the next round
-next click is when first player rolls
-following clicks after that is when the other players roll
-scorecheck all rolls
-highest/lowest number wins, add into highscore array
+at init, default to player 1 to play the next round - done
+next click is when first player rolls - done
+following clicks after that is when the other players roll - done
+scorecheck all rolls - done
+highest/lowest number wins, add into highscore array - done
 
 scorechecking:
-use max or min function, depending on what dice mode
-find index which is max or min
-return the index of the winner
+use max or min function, depending on what dice mode - done
+find index which is max or min - done
+return the index of the winner - done
 
 knockout game:
 at init, randomize 2 players from player array to come out and play
@@ -120,7 +120,7 @@ var gameReset = function () {
 };
 
 /***
- * Playe a roll of the game, rolls dice according to how much dice are in the game
+ * Play a roll of the game, rolls dice according to how much dice are in the game
  * @returns {Array} an array of all the rolls of the player
  */
 var rollDice = function () {
@@ -132,35 +132,49 @@ var rollDice = function () {
 };
 
 /***
+ * displays all rolls the player has made and format it
+ * @param {Array} diceRollArray the dice rolled for the player
+ * @returns {string} player roll display
+ *
+ */
+var scoreRolls = function (diceRollArray) {
+  var rollDisplay = "";
+  for (var i = 0; i < diceRollArray.length; i += 1) {
+    rollDisplay += `Dice ${i + 1}: ${diceRollArray[i]}<br>`;
+  }
+
+  //sorting the array, normal string sort can be applied because values are only single digit
+  //if playing with a dice of more than 2 digits, need to update this code with a compare function
+  //this will sort smallest to biggest number
+  diceRollArray.sort();
+  //reverses the array if it's playing the highest mode, hence biggest to smallest
+  if (diceMode == HIGHEST_MODE) diceRollArray.reverse();
+
+  var playerScore = "";
+
+  //string variable does not add the numbers, it concactenates the string
+  for (var i = 0; i < diceRollArray.length; i += 1) {
+    playerScore += String(diceRollArray[i]);
+  }
+
+  //assigns the current player's score to the resultArray, storing them as numbers
+  currentPlayerIndex = playerArray.indexOf(currentPlayer);
+  resultArray[currentPlayerIndex] = Number(playerScore);
+
+  rollDisplay += `<br> The ${diceMode} possible score is ${playerScore}`;
+
+  return rollDisplay;
+};
+
+/***
  * Plays standard game and it goes on every single time the function is triggered
  * @returns {string} Result of the current roll for output
  */
 var playStandardGame = function () {
   var outputMsg = `Player ${currentPlayer} has thrown the dice! <br><br>`;
   var currentPlayerRoll = rollDice();
-  for (var i = 0; i < currentPlayerRoll.length; i += 1) {
-    outputMsg += `Dice ${i + 1}: ${currentPlayerRoll[i]}<br>`;
-  }
 
-  //sorting the array, normal string sort can be applied because values are only single digit
-  //if playing with a dice of more than 2 digits, need to update this code with a compare function
-  //this will sort smallest to biggest number
-  currentPlayerRoll.sort();
-  //reverses the array if it's playing the highest mode, hence biggest to smallest
-  if (diceMode == HIGHEST_MODE) currentPlayerRoll.reverse();
-
-  var playerScore = "";
-
-  //string variable does not add the numbers, it concactenates the string
-  for (var i = 0; i < currentPlayerRoll.length; i += 1) {
-    playerScore += String(currentPlayerRoll[i]);
-  }
-
-  //assigns the current player's score to the resultArray
-  currentPlayerIndex = playerArray.indexOf(currentPlayer);
-  resultArray[currentPlayerIndex] = Number(playerScore);
-
-  outputMsg += `<br> The ${diceMode} possible score is ${playerScore}`;
+  outputMsg += scoreRolls(currentPlayerRoll);
 
   //initialize next Player's index
   var nextPlayerIndex = playerArray.indexOf(currentPlayer) + 1;
@@ -173,11 +187,9 @@ var playStandardGame = function () {
   }
 
   //if it's not within the array range, means all player has taken a turn, output will reflect who win
-  var winningPlayerScore;
+  var winningPlayerScore = Math.max(...resultArray);
 
-  if (diceMode == HIGHEST_MODE) winningPlayerScore = Math.max(...resultArray);
-  else if (diceMode == LOWEST_MODE)
-    winningPlayerScore = Math.min(...resultArray);
+  if (diceMode == LOWEST_MODE) winningPlayerScore = Math.min(...resultArray);
 
   var winningPlayerIndex = resultArray.indexOf(winningPlayerScore);
 
