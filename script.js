@@ -26,7 +26,7 @@ var rollDiceForPlayer1 = function(){
   while( counter < 2){
     player1Rolls.push(rollDice());
     counter = counter + 1}
-    return `you have thrown 2 dice and the dice number is ${player1Rolls[0]} and ${player1Rolls[1]}, choose "1" or "2" to proceed`
+    return `Player 1, you have thrown 2 dice and the dice number is ${player1Rolls[0]} and ${player1Rolls[1]}, <br> choose "1" or "2" to proceed`
 };
 
 var rollDiceForPlayer2 = function(){
@@ -34,7 +34,7 @@ var rollDiceForPlayer2 = function(){
   while(counter < 2){
     player2Rolls.push(rollDice());
     counter = counter +1}
-    return `you have thrown 2 dice and the dice number is ${player2Rolls[0]} and ${player2Rolls[1]}, choose "1" or "2" to proceed`
+    return `Player 2, you have thrown 2 dice and the dice number is ${player2Rolls[0]} and ${player2Rolls[1]}, <br> choose "1" or "2" to proceed`
   };
 
   var chooseWinner = function(){
