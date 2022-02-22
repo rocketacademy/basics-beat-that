@@ -36,6 +36,10 @@ let numOfPlayers = 2;
 let playerTurn = 1;
 // can increment player turn one by one?
 // so that I don't have to write the same function numOfPlayers times to change the number of players in the game.
+// so instead of P1/P2_ROLL and P1/P2_CHOOSE,
+// it'll just become ROLL and CHOOSE modes,
+// with the player number / counter increasing for each turn.
+// until playerTurn == numOfPlayers, then switch to RESULT.
 
 // game states for picking number order.
 let P1_CHOOSE = "P1 CHOOSE";
@@ -44,15 +48,21 @@ let P2_CHOOSE = "P2 CHOOSE";
 // game state to return result and winner.
 let GAME_RESULT = "RESULT";
 
+let RESTART = "RESTART";
+
 // initialised game state.
 var gameState = P1_ROLL;
 
-// variables to store player numbers
+// variables to store player numbers.
 let p1Dice = [];
 let p2Dice = [];
 
 let p1Number = "";
 let p2Number = "";
+
+// variables to store total player score.
+let p1Score = 0;
+let p2Score = 0;
 
 // dice rolling function. rounds up to the nearest integer.
 var rollDice = function () {
@@ -64,6 +74,7 @@ var rollDice = function () {
 // function to convert two separate numbers into single number.
 var joinNumber = function (array, index) {
   var output = "";
+
   if (index == 1) {
     // convert each number in the array to a string
     // then concatenate them and turn the resulting
@@ -83,7 +94,7 @@ var compareNumbers = function (number1, number2) {
   return number1 > number2;
 };
 
-// main function for game to play
+// main function for game to play.
 var main = function (input) {
   let output = "";
 
@@ -92,17 +103,16 @@ var main = function (input) {
     // roll two dice, and push them to the p1Dice array.
     let firstDie = rollDice();
     p1Dice.push(firstDie);
-    console.log(firstDie);
     let secondDie = rollDice();
     p1Dice.push(secondDie);
-    console.log(secondDie);
 
     // switch modes for player 1 choose the order.
     gameState = P1_CHOOSE;
 
     // inform player of the two numbers, and ask for order.
-    output = `Player 1, you rolled ${firstDie} and ${secondDie}. Please type in '1' or '2' to indicate which number you want to be the first.`;
-
+    output = `Player 1, you rolled <b>${firstDie}</b> and <b>${secondDie}</b>. 
+    </br> </br> 
+    Please type in '1' or '2' to indicate which number you want to be the first.`;
     return output;
   }
 
@@ -116,8 +126,9 @@ var main = function (input) {
 
     gameState = P2_CHOOSE;
 
-    output = `Player 2, you rolled ${firstDie} and ${secondDie}. Please type in '1' or '2' to indicate which number you want to be the first.`;
-
+    output = `Player 2, you rolled <b>${firstDie}</b> and <b>${secondDie}</b>. 
+    </br> </br> 
+    Please type in '1' or '2' to indicate which number you want to be the first.`;
     return output;
   }
 
@@ -131,13 +142,17 @@ var main = function (input) {
 
     // convert the two numbers into a single number.
     p1Number = joinNumber(p1Dice, input);
+    p1Score += p1Number;
 
     // switch over to player 2.
     gameState = P2_ROLL;
 
     // ask second player to roll his dice.
-    output = `Player 1, you have indicated ${input} as your choice. Your final number is: ${p1Number}. It's Player 2's turn now. Please click submit to roll the dice. `;
-
+    output = `Player 1, you have indicated ${input} as your choice. 
+    </br> </br> 
+    Your final number is: <b>${p1Number}</b>. 
+    </br> </br> 
+    It's Player 2's turn now. Please click submit to roll the dice. `;
     return output;
   }
 
@@ -148,13 +163,17 @@ var main = function (input) {
     }
 
     p2Number = joinNumber(p2Dice, input);
+    p2Score += p2Number;
 
     // switch over to final result.
     gameState = GAME_RESULT;
 
     // ask second player to roll his dice.
-    output = `Player 2, you have indicated ${input} as your choice. Your final number is: ${p2Number}. It's time to reveal the winner. Click submit to find out who had the bigger number. `;
-
+    output = `Player 2, you have indicated ${input} as your choice. 
+    </br> </br> 
+    Your final number is: <b>${p2Number}</b>. 
+    </br> </br> 
+    It's time to reveal the winner. Click submit to find out who had the bigger number. `;
     return output;
   }
 
@@ -165,17 +184,58 @@ var main = function (input) {
 
     // if p1Win is true, this code runs.
     if (p1Win) {
-      output = `Player 1 rolled ${p1Number}, which is bigger than ${p2Number}. Player 1 won! `;
+      output = `Player 1 rolled <b>${p1Number}</b>, which is bigger than <b>${p2Number}</b>. Player 1 won!
+      </br> </br> 
+      SCORES: 
+      </br> 
+      Player 1: <b>${p1Score}</b> 
+      </br> 
+      Player 2: <b>${p2Score}</b> 
+      </br> </br> 
+      Please type "RESTART" to play again. `;
+
+      gameState = RESTART;
 
       return output;
     }
 
     // if p1Win is false, then !false = true, so this code runs.
     if (!p1Win) {
-      output = `Player 2 rolled ${p2Number}, which is bigger than ${p1Number}. Player 2 won! `;
+      output = `Player 2 rolled <b>${p2Number}</b>, which is bigger than <b>${p1Number}</b>. Player 2 won! 
+      </br> </br> 
+      SCORES: 
+      </br> 
+      Player 1: <b>${p1Score}</b> 
+      </br> 
+      Player 2: <b>${p2Score}</b> 
+      </br> </br> 
+      Please type "RESTART" to play again. `;
+
+      gameState = RESTART;
 
       return output;
     }
+  }
+
+  // state for restarting the game.
+  if (gameState == RESTART) {
+    // tell user to what to type in, if they did not type it in.
+    output = `Please type in "RESTART" to play again!`;
+
+    // if user types in "RESTART", game begins again, starts at P1.
+    if (input == "RESTART" || input == "restart" || input == "Restart") {
+      output = `Let's play again! </br> </br> Player 1, press submit to start rolling the dice. `;
+
+      gameState = P1_ROLL;
+
+      // re-initialise the dice storage variables.
+      p1Dice = [];
+      p2Dice = [];
+
+      return output;
+    }
+
+    return output;
   }
 
   return output;
