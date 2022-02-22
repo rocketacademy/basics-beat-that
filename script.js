@@ -31,6 +31,7 @@ var player1Win = 0;
 var player2Win = 0;
 var playersTie = 0;
 var roundsPlayed = 0;
+var leaderBoard = [];
 
 // Helper Function
 var rollDice = function () {
@@ -53,7 +54,7 @@ var rollDiceForPlayer = function () {
   }
 
   console.log("rollDiceForPlayer changes, playerRolls: ", currentPlayerRolls);
-  return `Welcome, Player ${currentPlayer} <br><br>You rolled:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}. <br><br>Now, please input either '1' or '2' to choose the corresponding dice 🎲 to be used as the first digit of your final value.`;
+  return `Player ${currentPlayer}, <br><br>You rolled:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}. <br><br>Now, please input either '1' or '2' to choose the corresponding dice 🎲 to be used as the first digit of your final value.`;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -95,12 +96,25 @@ var comparePlayerScores = function () {
   if (allPlayersScore[0] > allPlayersScore[1]) {
     player1Win++;
     roundsPlayed++;
-    compareMessage = `${compareMessage} <br><br>Player 1 wins!
-    <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}`;
-    if (player1Win > player2Win && roundsPlayed > 2) {
-      compareMessage = `${compareMessage} <br><br>Leaderboard: Player 1 is leading the game!!`;
-    } else if (player1Win < player2Win && roundsPlayed > 2) {
-      compareMessage = `${compareMessage} <br><br> Leaderboard: Player 2 still leads the game!`;
+    leaderBoard = [player1Win, player2Win, playersTie];
+    leaderBoard.sort(function (a, b) {
+      return b - a;
+    });
+    compareMessage = `${compareMessage} <br><br>Player 1 wins!`;
+    if (leaderBoard[0] === leaderBoard[1]) {
+      compareMessage = `${compareMessage}<br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}<br><br>Leaderboard: Both players' scores are now tied!`;
+    } else if (
+      leaderBoard[0] == player1Win &&
+      roundsPlayed > 1 &&
+      player1Win > player2Win
+    ) {
+      compareMessage = `${compareMessage} <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}<br><br>Leaderboard: Player 1 is leading the game!!`;
+    } else if (
+      leaderBoard[0] == player2Win &&
+      roundsPlayed > 1 &&
+      player1Win < player2Win
+    ) {
+      compareMessage = `${compareMessage}<br><br>Score: Player 2: ${player2Win} | Player 1: ${player1Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}<br><br>Leaderboard: Player 2 still leads the game!!`;
     }
   }
 
@@ -108,12 +122,25 @@ var comparePlayerScores = function () {
   if (allPlayersScore[0] < allPlayersScore[1]) {
     player2Win++;
     roundsPlayed++;
-    compareMessage = `${compareMessage} <br><br>Player 2 wins!
-    <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}`;
-    if (player1Win < player2Win && roundsPlayed > 2) {
-      compareMessage = `${compareMessage} <br><br>Leaderboard: Player 2 is on winning streak!!`;
-    } else if (player1Win > player2Win && roundsPlayed > 2) {
-      compareMessage = `${compareMessage} <br><br> Leaderboard: Player 1 still leads the game!`;
+    leaderBoard = [player1Win, player2Win, playersTie];
+    leaderBoard.sort(function (a, b) {
+      return b - a;
+    });
+    compareMessage = `${compareMessage} <br><br>Player 2 wins!`;
+    if (leaderBoard[0] === leaderBoard[1]) {
+      compareMessage = `${compareMessage}<br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}<br><br>Leaderboard: Both players' scores are now tied!`;
+    } else if (
+      leaderBoard[0] == player2Win &&
+      roundsPlayed > 1 &&
+      player1Win < player2Win
+    ) {
+      compareMessage = `${compareMessage} <br><br>Score: Player 2: ${player2Win} | Player 1: ${player1Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}<br><br>Leaderboard: Player 2 is on a winning streak!!`;
+    } else if (
+      leaderBoard[0] == player1Win &&
+      roundsPlayed > 1 &&
+      player1Win > player2Win
+    ) {
+      compareMessage = `${compareMessage}<br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}<br><br>Leaderboard: Player 1 still leads the game!!`;
     }
   }
 
@@ -123,9 +150,6 @@ var comparePlayerScores = function () {
     roundsPlayed++;
     compareMessage = `${compareMessage} <br><br>It's a tie!
     <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}`;
-    if (player1Win === player2Win) {
-      compareMessage = `${compareMessage} <br><br>Leaderboard: Both players are now tied!`;
-    }
   }
 
   return compareMessage;
