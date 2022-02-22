@@ -4,6 +4,12 @@ var gameType = "";
 // Dice number per player
 var diceNumber = 0;
 
+// Number of players
+var playersNum = 0;
+
+// Current player playing
+var currentPlayer = 1;
+
 // Varible gameState is used to organize steps through game
 var gameState = "start";
 
@@ -14,16 +20,13 @@ var message = "";
 var totalGames = 0;
 
 // Number of players wins
-var player1Won = 0;
-var player2Won = 0;
+var playersWon = [];
 
 // Dices values
-var player1Dice = [0, 0];
-var player2Dice = [0, 0];
+var playersDice = [];
 
 // Score after deciding dice order
-var player1Score = 0;
-var player2Score = 0;
+var playersScore = 0;
 
 // Game choosing message
 var selectGameMessage = `Please enter game type to play:<br><br>
@@ -72,51 +75,30 @@ var calculateScore = function (dice) {
   return score;
 };
 
-// Varible gameState for gameBasic
-// start  - initial state
-// p1roll - roll dice for player 1 and ask for dice order
-// p1val  - validate input for player 1 and calculate score
-// p2roll - roll dice for player 2 and ask for dice order
-// p2val  - validate input for player 2 and calculate score, also print out who won and statistics
-// score  - show score
-// nextGame - invite for another round
-
 var gameBasic = function (input) {
   if (gameState == "start") {
     message = `Welcome to Beat That game! <br><br>`;
-    message += `Press button to roll dice for player 1`;
-    gameState = "p1roll";
+    message += `Press button to roll dice for player ${currentPlayer}`;
+    gameState = "playerRoll";
     return message;
   }
 
-  if (gameState == "p1roll") {
-    player1Dice = randomDice();
-    message = `Welcome Player 1.<br>`;
-    message += `You rolled ${player1Dice}.<br>`;
-    gameState = "p1val";
+  if (gameState == "playerRoll") {
+    playersDice[currentPlayer] = randomDice();
+    message = `Welcome Player ${currentPlayer}.<br>`;
+    message += `You rolled ${playersDice[currentPlayer]}.<br>`;
+    gameState = "playerVal";
     return message;
   }
 
-  if (gameState == "p1val") {
-    player1Score = calculateScore(player1Dice);
-    message += `Your number is ${player1Score}.<br>`;
-    message += `It is now Player 2's turn.`;
-    gameState = "p2roll";
-    return message;
-  }
-
-  if (gameState == "p2roll") {
-    player2Dice = randomDice();
-    message = `Welcome Player 2.<br>`;
-    message += `You rolled ${player2Dice}.<br>`;
-    gameState = "p2val";
-    return message;
-  }
-
-  if (gameState == "p2val") {
-    player2Score = calculateScore(player2Dice);
-    message += `Your number is ${player2Score}.<br><br>`;
-    message += `Press button to see results.`;
+  if (gameState == "playerVal") {
+    playersScore[currentPlayer] = calculateScore(playersDice[currentPlayer]);
+    message += `Your number is ${playersScore[currentPlayer]}.<br>`;
+    if (currentPlayer < playersNum) {
+      message += `It is now Player ${currentPlayer + 1}'s turn.`;
+      currentPlayer += 1;
+      gameState = "playerRoll";
+    }
     gameState = "score";
     return message;
   }
@@ -174,9 +156,18 @@ var main = function (input) {
     input = parseInt(input);
     if (input > 0) {
       diceNumber = input;
-      return `You have chosen ${diceNumber} dice to play with!`;
+      return `You have chosen ${diceNumber} dice to play with!<br><br>Please enter numer of players!`;
     }
     return "Please enter number of dice to play with!";
+  }
+
+  if (diceNumber != 0 && playersNum == 0) {
+    input = parseInt(input);
+    if (input > 0) {
+      playersNum = input;
+      return `You have chosen ${playersNum} players to play with!<br><br>`;
+    }
+    return "Please enter number of players!";
   }
 
   if (gameType == "") {
