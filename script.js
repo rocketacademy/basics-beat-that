@@ -18,6 +18,7 @@ var combinedNum = '';
 var player1CombiArray = [];
 var player2CombiArray = [];
 var diceRoll = function () {
+  console.log("hello world!")
 	var randomDecimal = Math.random() * 6;
 	var randomInteger = Math.floor(randomDecimal) + 1;
 	return randomInteger;
