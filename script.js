@@ -1,12 +1,8 @@
 /*
 Game beat-that: simple dual game comparing dice throws
-1. There are 2 players and players take turns.
-
-2. When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
-
-3. The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
-
-4. After both players have rolled and chosen dice order, the player with the higher combined number wins.
+1. There are 2 players and both dice are rolled.
+2. The computer picks the order of the dice to maximise their score. For example, if they wanted the number 63, the computer would specify that the 2nd dice goes first.
+3. The player with the higher combined number wins.
 */
 var gameState = "";
 var playerOneRolls = [];
@@ -25,17 +21,7 @@ var rollDice = function () {
   return diceNumber;
 };
 
-var rollDiceForPlayerOne = function () {
-  console.log("Check two dice rolled for player one");
-  var counter = 0;
-  while (counter < 2) {
-    playerOneRolls.push(rollDice());
-    counter += 1;
-  }
-  return playerOneRolls;
-};
-
-var rollDiceForPlayerTwo = function () {
+var rollDiceForPlayer = function () {
   console.log("Check two dice rolled for player two");
   var counter = 0;
   while (counter < 2) {
@@ -63,8 +49,8 @@ var maximiseDigitOutputs = function (numberArray) {
 
 var main = function (input) {
   var myOutputValue = "";
-  var playerOneScore = maximiseDigitOutputs(rollDiceForPlayerOne());
-  var playerTwoScore = maximiseDigitOutputs(rollDiceForPlayerTwo());
+  var playerOneScore = maximiseDigitOutputs(rollDiceForPlayer());
+  var playerTwoScore = maximiseDigitOutputs(rollDiceForPlayer());
   if (playerOneScore == playerTwoScore) {
     myOutputValue = "Draw! Roll again!";
   }
