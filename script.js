@@ -4,15 +4,8 @@ var gameType = "";
 // Varible gameState is used to organize steps through game
 var gameState = "start";
 
-// Automatically compute and combine dice order and score
-var autoCombine = true;
-
 // Variable for responding to user
 var message = "";
-
-// Dice order 1 - first dice is left number, 2 - second dice is left number
-var player1DiceOrder = 0;
-var player2DiceOrder = 0;
 
 // Number of games played
 var totalGames = 0;
@@ -32,7 +25,8 @@ var player2Score = 0;
 // Game choosing message
 var selectGameMessage = `Please enter game type to play:<br><br>
   basic - Basic Beat That! game<br>
-  lowest - Lowest combined number`;
+  lowest - Lowest combined number<br>
+  variable - Variable number of Dice and Players`;
 
 // Return random number from 1 to 6
 var randomDice = function () {
@@ -49,31 +43,26 @@ var validatePlayerInput = function (input) {
 };
 
 // Calculate score
-var calculateScore = function (dice1, dice2, order) {
-  if (order == 1) {
-    return dice1 * 10 + dice2;
-  } else if (order == 2) {
-    return dice2 * 10 + dice1;
-  }
-  return 0;
-};
+var calculateScore = function (dice) {
+  var score = 0;
+  var diceNum = dice.length;
 
-// Calculate best dice order in regard to game type
-var getBestDiceOrder = function (dice1, dice2) {
-  if (gameType == "basic") {
-    if (dice1 >= dice2) {
-      return 1;
-    } else {
-      return 2;
-    }
+  // Sort numbers in array
+  if (gameType != "lowest") {
+    dice.sort(function (a, b) {
+      return a - b;
+    });
+  } else {
+    dice.sort(function (a, b) {
+      return b - a;
+    });
   }
-  if (gameType == "lowest") {
-    if (dice1 <= dice2) {
-      return 1;
-    } else {
-      return 2;
-    }
+
+  for (var i = 0; i < diceNum; i += 1) {
+    score *= 10;
+    score += dice.pop();
   }
+  return score;
 };
 
 // Varible gameState for gameBasic
@@ -98,36 +87,12 @@ var gameBasic = function (input) {
     player1Dice[1] = randomDice();
     message = `Welcome Player 1.<br>`;
     message += `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
-    if (!autoCombine) {
-      message += `Choose the order for the dice.`;
-    }
     gameState = "p1val";
     return message;
   }
 
   if (gameState == "p1val") {
-    if (!autoCombine) {
-      input = parseInt(input);
-      if (!validatePlayerInput(input)) {
-        message = `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
-        message += `Choose the order for the dice.<br><br>`;
-        message += `Please respond only with numer 1 or 2`;
-        return message;
-      } else {
-        player1DiceOrder = input;
-      }
-      // autoCombine
-    } else {
-      player1DiceOrder = getBestDiceOrder(player1Dice[0], player1Dice[1]);
-    }
-    player1Score = calculateScore(
-      player1Dice[0],
-      player1Dice[1],
-      player1DiceOrder
-    );
-    if (!autoCombine) {
-      message = `Player 1, you chose Dice ${player1DiceOrder} first.<br>`;
-    }
+    player1Score = calculateScore(player1Dice);
     message += `Your number is ${player1Score}.<br>`;
     message += `It is now Player 2's turn.`;
     gameState = "p2roll";
@@ -139,36 +104,12 @@ var gameBasic = function (input) {
     player2Dice[1] = randomDice();
     message = `Welcome Player 2.<br>`;
     message += `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
-    if (!autoCombine) {
-      message += `Choose the order for the dice.`;
-    }
     gameState = "p2val";
     return message;
   }
 
   if (gameState == "p2val") {
-    if (!autoCombine) {
-      input = parseInt(input);
-      if (!validatePlayerInput(input)) {
-        message = `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
-        message += `Choose the order for the dice.<br><br>`;
-        message += `Please respond only with numer 1 or 2`;
-        return message;
-      } else {
-        player2DiceOrder = input;
-      }
-      // autoCombine
-    } else {
-      player2DiceOrder = getBestDiceOrder(player2Dice[0], player2Dice[1]);
-    }
-    player2Score = calculateScore(
-      player2Dice[0],
-      player2Dice[1],
-      player2DiceOrder
-    );
-    if (!autoCombine) {
-      message = `Player 2, you chose Dice ${player2DiceOrder} first.<br>`;
-    }
+    player2Score = calculateScore(player2Dice);
     message += `Your number is ${player2Score}.<br><br>`;
     message += `Press button to see results.`;
     gameState = "score";
