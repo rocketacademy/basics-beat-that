@@ -61,6 +61,10 @@ var playerArray = [];
 var resultArray = [];
 var highScoreArray = [];
 
+//knockout mode array initialisation
+var knockoutPlayers = [];
+var currentKnockoutRound = [];
+
 //helper function initialisation
 
 /***
@@ -85,19 +89,47 @@ var gameInitialize = function (playerAmt, diceAmt, diceSetting, gameSetting) {
   diceMode = diceSetting;
   gameMode = gameSetting;
 
+  var initializeOutput = `It's time to play ${gameMode} Beat That!<br><br> 
+  We have ${playerNum} Players, and ${diceNum} Dice!<br>
+  We determine that ${diceMode} Wins!<br>`;
+
   //added a number in the player array to signify player counter
   //added a 0 in the highscore array to signify highscore
-  //added a 0 in the result array to symbolise the current roll score
+  //added a 0/Infinity in the result array to symbolise the current roll score, for sorting purposes when playing knockout mode
   for (i = 0; i < playerNum; i += 1) {
     playerArray.push(i + 1);
     highScoreArray.push(0);
-    resultArray.push(0);
+    if (gameMode == KNOCKOUT_MODE && diceMode == HIGHEST_MODE)
+      resultArray.push(Infinity);
+    else resultArray.push(0);
   }
 
   //sets the current player
   if (gameMode == STANDARD_MODE) currentPlayer = playerArray[0];
+  // a little bit more setup required for knockout round
+  else {
+    knockoutPlayers = playerArray.slice();
+    currentKnockoutRound = randomizeCurrentKnockoutRound();
+    currentPlayer = currentKnockoutRound[0];
+    initializeOutput += `It's ${currentKnockoutRound[0]} and ${currentKnockoutRound[1]}'s time to battle!<br>`;
+  }
 
-  return `Game is set: <br> Total Players ${playerNum} <br> Total Dice: ${diceNum} <br> Dice Mode: ${diceMode} <br> Game Mode: ${gameMode}`;
+  initializeOutput += `It's now Player ${currentPlayer}'s Turn!`;
+
+  return initializeOutput;
+};
+
+/***
+ * resets Result array to their default values (0 or Infinity) all round
+ * @returns {null}
+ */
+var resetResultArray = function () {
+  for (var i = 0; i < resultArray.length; i += 1) {
+    if (diceMode == HIGHEST_MODE && gameMode == KNOCKOUT_MODE)
+      resultArray[i] = Infinity;
+    else resultArray[i] = 0;
+  }
+  return;
 };
 
 /***
@@ -188,7 +220,6 @@ var playStandardGame = function () {
 
   //if it's not within the array range, means all player has taken a turn, output will reflect who win
   var winningPlayerScore = Math.max(...resultArray);
-
   if (diceMode == LOWEST_MODE) winningPlayerScore = Math.min(...resultArray);
 
   var winningPlayerIndex = resultArray.indexOf(winningPlayerScore);
@@ -200,8 +231,8 @@ var playStandardGame = function () {
 
   outputMsg += leaderboardDisplay();
 
-  //reset resultArray to have 0 values all around
-  for (var i = 0; i < resultArray.length; i += 1) resultArray[i] = 0;
+  //reset resultArray
+  resetResultArray();
 
   //also resets current player to be index 0
   currentPlayer = playerArray[0];
@@ -238,8 +269,81 @@ var leaderboardDisplay = function () {
   return leaderboardString;
 };
 
+var playKnockoutGame = function () {
+  var outputMsg = `Player ${currentPlayer} has thrown the dice! <br><br>`;
+  var currentPlayerRoll = rollDice();
+  outputMsg += scoreRolls(currentPlayerRoll);
+
+  //if the next player is still available
+  var nextPlayerIndex = currentKnockoutRound.indexOf(currentPlayer) + 1;
+  if (nextPlayerIndex < currentKnockoutRound.length) {
+    currentPlayer = currentKnockoutRound[nextPlayerIndex];
+    outputMsg += `<br><br> It's Player ${currentPlayer}'s turn now!`;
+    return outputMsg;
+  }
+
+  //else it's deliberation mode, which player will be knocked out
+  var losingPlayerScore = Math.min(...resultArray);
+  if (diceMode == LOWEST_MODE) losingPlayerScore = Math.max(...resultArray);
+
+  //this takes the index from the playerarray
+  var losingPlayerIndexFromPlayerArray = resultArray.indexOf(losingPlayerScore);
+
+  //what we need is to take the index from knockoutPlayers array
+  var losingPlayerIndexFromKnockoutArray = knockoutPlayers.indexOf(
+    playerArray[losingPlayerIndexFromPlayerArray]
+  );
+
+  //now we remove the player from the knockoutPlayers array, and update the output msg
+  outputMsg += `<br><br>With a score of ${resultArray[losingPlayerIndexFromPlayerArray]}, Player ${playerArray[losingPlayerIndexFromPlayerArray]} is Eliminated!<br><br>`;
+
+  knockoutPlayers.splice(losingPlayerIndexFromKnockoutArray, 1);
+
+  //meaning there's only 1 player left from the knockoutplayers array, i.e. we've found a winner!
+  if (knockoutPlayers.length == 1) {
+    outputMsg += `Congratulations, Player ${knockoutPlayers[0]}! You win this knockout round!<br><br>`;
+    var winningPlayerIndex = playerArray.indexOf(knockoutPlayers[0]);
+
+    //add leaderboard score
+    highScoreArray[winningPlayerIndex] += 1;
+    outputMsg += leaderboardDisplay();
+
+    //resets the arrays
+    knockoutPlayers = playerArray.slice();
+    outputMsg += `Press roll dice to start a new knockout round!<br><br>`;
+  }
+
+  //resets result array every time someone won
+  resetResultArray();
+  currentKnockoutRound = randomizeCurrentKnockoutRound();
+  currentPlayer = currentKnockoutRound[0];
+  outputMsg += `It's ${currentKnockoutRound[0]} and ${currentKnockoutRound[1]}'s time to battle!<br>`;
+  outputMsg += `It's Player ${currentPlayer}'s turn now!`;
+  return outputMsg;
+};
+
+/***
+ * randomizes the two players selected for knockout game
+ * @returns {Array} 2 players that are in the knockout game, in an array
+ */
+var randomizeCurrentKnockoutRound = function () {
+  if (knockoutPlayers.length > 1) {
+    var randomizedP1Index = Math.floor(Math.random() * knockoutPlayers.length);
+    var randomizedP2Index = Math.floor(Math.random() * knockoutPlayers.length);
+    while (randomizedP1Index == randomizedP2Index) {
+      randomizedP2Index = Math.floor(Math.random() * knockoutPlayers.length);
+    }
+    var player1 = knockoutPlayers[randomizedP1Index];
+    var player2 = knockoutPlayers[randomizedP2Index];
+    return [player1, player2];
+  }
+  //this shouldn't really happen
+  return [0, 0];
+};
+
 var main = function () {
   var myOutputValue;
   if (gameMode == STANDARD_MODE) myOutputValue = playStandardGame();
+  else myOutputValue = playKnockoutGame();
   return myOutputValue;
 };
