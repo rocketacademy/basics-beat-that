@@ -27,6 +27,11 @@ var currentPlayerRolls = [];
 var currentPlayer = 1;
 var allPlayersScore = [];
 
+var player1Win = 0;
+var player2Win = 0;
+var playersTie = 0;
+var roundsPlayed = 0;
+
 // Helper Function
 var rollDice = function () {
   console.log("Control flow: start of rollDice()");
@@ -48,7 +53,7 @@ var rollDiceForPlayer = function () {
   }
 
   console.log("rollDiceForPlayer changes, playerRolls: ", currentPlayerRolls);
-  return `Welcome, Player ${currentPlayer} <br><br>You rolled:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}. <br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value.`;
+  return `Welcome, Player ${currentPlayer} <br><br>You rolled:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}. <br><br>Now, please input either '1' or '2' to choose the corresponding dice 🎲 to be used as the first digit of your final value.`;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -58,7 +63,7 @@ var getPlayerScore = function (playerInput) {
     console.log(
       "Control flow: input validation, invalid input... NOT 1 and NOT 2"
     );
-    return `Error! Please only input '1' or '2' to choose which dice to use as the first digit.<br><br>Your dice rolls are:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}.`;
+    return `Error! Please only input '1' or '2' to choose which dice 🎲 to use as the first digit.<br><br>Your dice rolls are:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}.`;
   }
   // input == 1
   if (playerInput == 1) {
@@ -88,17 +93,39 @@ var comparePlayerScores = function () {
 
   // player 1 wins
   if (allPlayersScore[0] > allPlayersScore[1]) {
-    compareMessage = `${compareMessage} <br><br>Player 1 wins!`;
+    player1Win++;
+    roundsPlayed++;
+    compareMessage = `${compareMessage} <br><br>Player 1 wins!
+    <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}`;
+    if (player1Win > player2Win && roundsPlayed > 2) {
+      compareMessage = `${compareMessage} <br><br>Leaderboard: Player 1 is leading the game!!`;
+    } else if (player1Win < player2Win && roundsPlayed > 2) {
+      compareMessage = `${compareMessage} <br><br> Leaderboard: Player 2 still leads the game!`;
+    }
   }
 
   // player 2 wins
   if (allPlayersScore[0] < allPlayersScore[1]) {
-    compareMessage = `${compareMessage} <br><br>Player 2 wins!`;
+    player2Win++;
+    roundsPlayed++;
+    compareMessage = `${compareMessage} <br><br>Player 2 wins!
+    <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}`;
+    if (player1Win < player2Win && roundsPlayed > 2) {
+      compareMessage = `${compareMessage} <br><br>Leaderboard: Player 2 is on winning streak!!`;
+    } else if (player1Win > player2Win && roundsPlayed > 2) {
+      compareMessage = `${compareMessage} <br><br> Leaderboard: Player 1 still leads the game!`;
+    }
   }
 
   // tie
-  if (allPlayersScore[0] == allPlayersScore[1]) {
-    compareMessage = `${compareMessage} <br><br>It's a tie!`;
+  if (allPlayersScore[0] === allPlayersScore[1]) {
+    playersTie++;
+    roundsPlayed++;
+    compareMessage = `${compareMessage} <br><br>It's a tie!
+    <br><br>Score: Player 1: ${player1Win} | Player 2: ${player2Win} | Tie: ${playersTie} | Round(s) played: ${roundsPlayed}`;
+    if (player1Win === player2Win) {
+      compareMessage = `${compareMessage} <br><br>Leaderboard: Both players are now tied!`;
+    }
   }
 
   return compareMessage;
