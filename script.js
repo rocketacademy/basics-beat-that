@@ -37,14 +37,8 @@ var gameMode = "P1 name";
 var p1options = [];
 var p2options = [];
 var p1choice = [];
-//var p2option1array = [];
-//var p2option2array = [];
 var p2choice = [];
-
-var main = function (input) {
-  var displayMsg = "";
-  //console.log("Should be P1 Name");
-  //console.log(gameMode);
+function main(input) {
   // When mode : waiting for player 1 name,  player 1 does not enter name
   if (gameMode == "P1 name" && input == "") {
     return "Player 1 please enter your name leh.";
@@ -172,4 +166,4 @@ var main = function (input) {
     gameMode = "gameStart";
     return `Lets go for another round! ${player1} your turn to roll the dice!`;
   }
-};
+}
