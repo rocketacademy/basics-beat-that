@@ -30,9 +30,14 @@ var selectGameMessage = `Please enter game type to play:<br><br>
   basic - Basic Beat That! game<br>
   lowest - Lowest combined number<br>`;
 
-// Return random number from 1 to 6
+// Return array of random numbers from 1 to 6. Array length = number of dice being played with.
 var randomDice = function () {
-  return Math.ceil(Math.random() * 6);
+  var currentRoll = [];
+
+  for (var i = 0; i < diceNumber; i += 1) {
+    currentRoll[i] = Math.ceil(Math.random() * 6);
+  }
+  return currentRoll;
 };
 
 // Check, if player responded with allowed input for dice order
@@ -85,10 +90,9 @@ var gameBasic = function (input) {
   }
 
   if (gameState == "p1roll") {
-    player1Dice[0] = randomDice();
-    player1Dice[1] = randomDice();
+    player1Dice = randomDice();
     message = `Welcome Player 1.<br>`;
-    message += `You rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2.<br>`;
+    message += `You rolled ${player1Dice}.<br>`;
     gameState = "p1val";
     return message;
   }
@@ -102,10 +106,9 @@ var gameBasic = function (input) {
   }
 
   if (gameState == "p2roll") {
-    player2Dice[0] = randomDice();
-    player2Dice[1] = randomDice();
+    player2Dice = randomDice();
     message = `Welcome Player 2.<br>`;
-    message += `You rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2.<br>`;
+    message += `You rolled ${player2Dice}.<br>`;
     gameState = "p2val";
     return message;
   }
