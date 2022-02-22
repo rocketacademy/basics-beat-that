@@ -28,7 +28,7 @@ var rollDiceForPlayer = function () {
   //after this step, ask player to choose the order
   console.log(currentPlayerRolls[0]);
   console.log(currentPlayerRolls[1]);
-  return `Welcome Player ${currentPlayer}! <br> You rolled ${currentPlayerRolls[0]} for Dice 1 and ${currentPlayerRolls[1]} for Dice 2. <br> Please choose the dice number (either 1 or 2) to be your first digit of your final value.`;
+  return `Welcome Player ${currentPlayer}! <br><br> You rolled ${currentPlayerRolls[0]} for Dice 1 and ${currentPlayerRolls[1]} for Dice 2. <br><br> Please choose the dice number (either 1 or 2) to be your first digit of your final value.`;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -77,6 +77,13 @@ var comparePlayersScores = function () {
   return compareOutputValue;
 };
 
+//reset game helper function
+var resetGame = function () {
+  currentPlayer = 1;
+  currentGameMode = gameModeDiceRoll;
+  allPlayerSCore = [];
+};
+
 var main = function (input) {
   console.log(currentPlayer);
   var myOutputValue = "";
@@ -109,6 +116,8 @@ var main = function (input) {
 
   if (currentGameMode == gameCompareScore) {
     myOutputValue = comparePlayersScores();
+    // have to put after the output and before return
+    resetGame();
     return myOutputValue;
   }
 };
