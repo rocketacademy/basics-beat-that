@@ -228,7 +228,8 @@ var main = function (input) {
 
       gameState = P1_ROLL;
 
-      // re-initialise the dice storage variables.
+      // re-initialise the dice storage variables
+      // so that it doesn't still read the previous round's values.
       p1Dice = [];
       p2Dice = [];
 
