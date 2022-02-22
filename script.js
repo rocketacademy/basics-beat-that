@@ -1,10 +1,14 @@
 var gameModeDiceRoll = "game_state_dice_roll";
 var gameStateChooseDiceOrder = "game_state_choose_dice";
+var gameCompareScore = "game_compare_score";
 var currentGameMode = gameModeDiceRoll;
-var userName = "";
 
-//create an array to store the values of the 2 dices
-var playerRolls = [];
+var currentPlayer = 1;
+var userName = "";
+var allPlayerSCore = [];
+
+//create an array to store the values of the 2 dices for both players
+var currentPlayerRolls = [];
 
 //creating helper function for dice roll
 var rollDice = function () {
@@ -18,41 +22,47 @@ var rollDice = function () {
 var rollDiceForPlayer = function () {
   var counter = 0;
   while (counter < 2) {
-    playerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
     counter = counter + 1;
   }
   //after this step, ask player to choose the order
-  console.log(playerRolls[0]);
-  console.log(playerRolls[1]);
-  return `Welcome ${userName}! <br> You rolled ${playerRolls[0]} for Dice 1 and ${playerRolls[1]} for Dice 2. <br> Please choose the dice number (either 1 or 2) to be your first digit of your final value.`;
+  console.log(currentPlayerRolls[0]);
+  console.log(currentPlayerRolls[1]);
+  return `Welcome ${userName}! <br> You rolled ${currentPlayerRolls[0]} for Dice 1 and ${currentPlayerRolls[1]} for Dice 2. <br> Please choose the dice number (either 1 or 2) to be your first digit of your final value.`;
 };
 
 var getPlayerScore = function (playerInput) {
   // input validation
   if (playerInput != 1 && input != 2) {
-    return `Error! Please only input "1" or "2" to choose your first digit of your final value. <br> Dice 1: ${playerRolls[0]} | Dice 2: ${playerRolls[1]}`;
+    return `Error! Please only input "1" or "2" to choose your first digit of your final value. <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}`;
   }
 
   // input == 1
   if (playerInput == 1) {
     var playerFinalValue = Number(
-      String(playerRolls[0]) + String(playerRolls[1])
+      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
-    return `${userName}, your final value is ${playerFinalValue}.`;
   }
 
   // input == 2
   if (playerInput == 2) {
     var playerFinalValue = Number(
-      String(playerRolls[1]) + String(playerRolls[0])
+      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
-    return `${userName}, your final value is ${playerFinalValue}.`;
   }
+  // store current player score
+  allPlayerSCore.push(playerFinalValue);
+
+  // clear current player rolls array
+  currentPlayerRolls = [];
+  return `${userName}, your final value is ${playerFinalValue}.`;
 };
 
 var main = function (input) {
+  console.log(currentPlayer);
+  var myOutputValue = "";
+
   if (currentGameMode == gameModeDiceRoll) {
-    var myOutputValue = "";
     // set the name
     userName = input;
     // now that we have the name for player 1 and rolled 2 dices, switch the mode
@@ -63,6 +73,17 @@ var main = function (input) {
 
   if (currentGameMode == gameStateChooseDiceOrder) {
     // call getPlayerScore helper function
-    return (myOutputValue = getPlayerScore(input));
-  }
+    myOutputValue = getPlayerScore(input);
+
+    if (currentPlayer == 1){
+      currentPlayer = 2;
+      currentGameMode = gameModeDiceRoll;
+      return `${myOutputValue} <br> It is now player 2's turn. Please input your name!`;
+    }
+
+    if (currentPlayer == 2){
+      currentGameMode = gameCompareScore
+      
+      return `${myOutputValue} <br><br> Please click submit to calculate score`
+    }
 };
