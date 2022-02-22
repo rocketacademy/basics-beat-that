@@ -4,8 +4,9 @@
 //Output shows player_2's two roll numbers, prompt player 2 to choose 1st or 2nd dice
 //Output shows player_2's final number, shows who win, prompt to click submit to reset the game
 
-//CODE1: this is the basic codes
 /*
+//CODE1: this is the basic codes
+
 var gameMode = "p1_rolldice"; //Five Modes: p1_rolldice, p1_sequence, p2_rolldice, p2_sequence, compare
 var p1_dice_array = [];
 var p2_dice_array = [];
@@ -23,13 +24,11 @@ var main = function (input) {
     p1_dice_array.push(p1_d1);
     p1_dice_array.push(p1_d2);
     myOutputValue =
-      "Welcome, Player 1 <br>" +
-      "You rolled " +
+      "Welcome, Player 1 <br> You rolled " +
       p1_dice_array[0] +
       " for DICE ONE and " +
       p1_dice_array[1] +
-      " for DICE TWO. <br>" +
-      "Choose the order of the dice by entering 1 or 2.";
+      " for DICE TWO. <br> Choose the order of the dice by entering 1 or 2.";
     console.log(
       "p1 numbers:",
       p1_dice_array[0],
@@ -46,8 +45,7 @@ var main = function (input) {
       myOutputValue =
         "You chose DICE ONE. Your number is " +
         p1_total +
-        ".<br>" +
-        "It is now Player 2's turn.";
+        ".<br> It is now Player 2's turn.";
       gameMode = "p2_rolldice";
     }
     if (input == "2") {
@@ -55,8 +53,7 @@ var main = function (input) {
       myOutputValue =
         "You chose DICE TWO. Your number is " +
         p1_total +
-        ".<br>" +
-        "It is now Player 2's turn.";
+        ".<br> It is now Player 2's turn.";
       gameMode = "p2_rolldice";
     }
     return myOutputValue;
@@ -77,7 +74,7 @@ var main = function (input) {
     console.log(
       "p2 numbers:",
       p2_dice_array[0],
-      p2_dice_array[1],
+      p2_dice_array[1],/*
       p2_d1,
       p2_d2
     );
@@ -135,7 +132,130 @@ var main = function (input) {
 };
 */
 
-// CODE 2: this is the simplified code
+/* CODE2 : this is Bryan's refactored code.
+ 
+// ====================== //
+// == GLOBAL VARIABLES == //
+// ====================== //
+var MODE_SEQUENCE = 'sequence';
+var MODE_ROLLDICE = 'rolldice';
+var MODE_COMPARE = 'compare';
+var gameMode = MODE_ROLLDICE; 
+
+var currentPlayer = 1;
+
+var diceArray = [];
+var scoreArray = [];
+
+// ====================== //
+// == HELPER FUNCTIONS == //
+// ====================== //
+
+var rollDice = function () {
+  var dice_num = Math.floor(Math.random() * 5 + 1);
+  return dice_num;
+};
+
+var rollDiceForPlayer = function () {
+  console.log('current game mode is... ', gameMode);
+  console.log('current player is... ', currentPlayer);
+
+  diceArray.push(rollDice());
+  diceArray.push(rollDice());
+
+  console.log('dice array: ', diceArray);
+
+  gameMode = MODE_SEQUENCE;
+  console.log('GAME MODE CHANGED');
+  console.log(gameMode);
+
+  return `Welcome, Player ${currentPlayer}<br>You rolled ${diceArray[0]} for DICE ONE and ${diceArray[1]} for DICE TWO.<br>Choose the order of the dice by entering 1 or 2`;
+}
+
+var sequenceScore = function (input) {
+  console.log('current game mode is... ', gameMode);
+  console.log('current player is... ', currentPlayer);
+
+  if (input != '1' && input != '2') return 'please enter 1 or 2!' + 
+  "<br>You rolled " +
+    diceArray[0] +
+    " for DICE ONE and " +
+    diceArray[1] +
+    " for DICE TWO. <br>" +
+    "Choose the order of the dice by entering 1 or 2.";
+
+  var finalScore
+
+  if (input == "1") finalScore = diceArray[0] * 10 + diceArray[1]; 
+  if (input == "2") finalScore = diceArray[1] * 10 + diceArray[0];
+    
+  scoreArray.push(finalScore);
+  diceArray = [];
+  console.log(currentPlayer);
+  currentPlayer++;
+  gameMode = MODE_ROLLDICE;
+
+  if (currentPlayer == 3) gameMode = MODE_COMPARE;
+
+  return "You chose DICE ONE. Your number is " +
+    finalScore +
+    ".<br>" +
+    "It is now Player 2's turn.";
+
+}
+
+var resetGame = function () {
+  currentPlayer = 1;
+  gameMode = MODE_ROLLDICE;
+  diceArray = [];
+  scoreArray = [];
+};
+
+var compareScore = function () {
+  var p1_total = scoreArray[0];
+  var p2_total = scoreArray[1];
+  resetGame();
+
+  if (p2_total > p1_total) {
+    return "Player 1 has " +
+      p1_total +
+      ", Player 2 has " +
+      p2_total +
+      ". Player 2 wins. Player 1 click submit to start over.";
+  } else if (p1_total > p2_total) {
+    return "Player 1 has " +
+      p1_total +
+      ", Player 2 has " +
+      p2_total +
+      ". Player 1 wins. Player 1 click submit to start over.";
+  } else {
+    return "Player 1 has " +
+      p1_total +
+      ", Player 2 has " +
+      p2_total +
+      ". It's a draw. Player 1 click submit to start over.";
+  }
+}
+
+// ====================== //
+// === MAIN FUNCTIONS === //
+// ====================== //
+var main = function (input) {
+  console.log('top of main function');
+  if (currentPlayer == 1 && gameMode == MODE_ROLLDICE) return rollDiceForPlayer();
+  if (currentPlayer == 1 && gameMode == MODE_SEQUENCE) return sequenceScore(input);
+  if (currentPlayer == 2 && gameMode == MODE_ROLLDICE) return rollDiceForPlayer();
+  if (currentPlayer == 2 && gameMode == MODE_SEQUENCE) return sequenceScore(input);
+  if (gameMode == MODE_COMPARE) return compareScore();
+};
+white_check_mark
+eyes
+raised_hands
+
+*/
+
+/*
+// CODE 2: this is the simplified code - Not complete
 var gameMode = "rolldice"; // rolldice, choose_order
 var currentPlayer = 1;
 var p1_dice_array = [];
@@ -320,3 +440,4 @@ var main = function (input) {
     return myOutputValue;
   }
 };
+*/
