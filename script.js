@@ -20,13 +20,13 @@ var message = "";
 var totalGames = 0;
 
 // Number of players wins
-var playersWon = [];
+var playersWins = [];
 
 // Dices values
 var playersDice = [];
 
 // Score after deciding dice order
-var playersScore = 0;
+var playersScore = [];
 
 // Game choosing message
 var selectGameMessage = `Please enter game type to play:<br><br>
@@ -86,18 +86,20 @@ var gameBasic = function (input) {
   if (gameState == "playerRoll") {
     playersDice[currentPlayer] = randomDice();
     message = `Welcome Player ${currentPlayer}.<br>`;
-    message += `You rolled ${playersDice[currentPlayer]}.<br>`;
+    message += `You rolled ${playersDice[currentPlayer]}.<br><br>`;
     gameState = "playerVal";
     return message;
   }
 
   if (gameState == "playerVal") {
     playersScore[currentPlayer] = calculateScore(playersDice[currentPlayer]);
+    message = `Player ${currentPlayer}:<br>`;
     message += `Your number is ${playersScore[currentPlayer]}.<br>`;
     if (currentPlayer < playersNum) {
       message += `It is now Player ${currentPlayer + 1}'s turn.`;
       currentPlayer += 1;
       gameState = "playerRoll";
+      return message;
     }
     gameState = "score";
     return message;
@@ -105,29 +107,34 @@ var gameBasic = function (input) {
 
   if (gameState == "score") {
     message = "";
-    if (player1Score == player2Score) {
+    var bestPlayerIndex = 1;
+    var bestPlayerScore = playersScore[1];
+    var tieGame = false;
+    for (var i = 1; i < playersNum + 1; i += 1) {
+      if (playersScore[i] == bestPlayerScore && i > 1) {
+        tieGame = true;
+      }
+      if (
+        (playersScore[i] > bestPlayerScore && gameType == "basic") ||
+        (playersScore[i] < bestPlayerScore && gameType == "lowest")
+      ) {
+        bestPlayerScore = playersScore[i];
+        bestPlayerIndex = i;
+      }
+    }
+
+    if (tieGame) {
       message += `It's a tie.<br><br>`;
-    } else if (
-      (player1Score > player2Score && gameType == "basic") ||
-      (player1Score < player2Score && gameType == "lowest")
-    ) {
-      player1Won += 1;
-      message += `Player 1 won this round with ${player1Score} vs ${player2Score}!<br><br>`;
     } else {
-      player2Won += 1;
-      message += `Player 2 won this round with ${player2Score} vs ${player1Score}!<br><br>`;
+      playersWins[bestPlayerIndex] += 1;
+      message += `Player ${bestPlayerIndex} won this round with ${playersScore[bestPlayerIndex]}!<br><br>`;
     }
     totalGames += 1;
-    var leaderBoard = [
-      `Player 1 won ${player1Won} times.<br>`,
-      `Player 2 won ${player2Won} times.<br>`,
-    ];
-    if (player1Won >= player2Won) {
-      message += leaderBoard[0] + leaderBoard[1];
-    } else {
-      message += leaderBoard[1] + leaderBoard[0];
+    currentPlayer = 1;
+    for (var i = 1; i < playersNum + 1; i += 1) {
+      message += `Player${i} got ${playersScore[i]} number and ${playersWins[i]} wins.<br>`;
     }
-    message += `You've played total of ${totalGames} rounds of game.<br><br>`;
+    message += `<br>You've played total of ${totalGames} rounds of game.<br><br>`;
     message += `Press button for another round of game<br><br>`;
     message += `or "exit" to select different game mode:`;
     gameState = "nextGame";
@@ -137,7 +144,7 @@ var gameBasic = function (input) {
   if (gameState == "nextGame") {
     if (input == "") {
       message = `Press button to roll dice for player 1`;
-      gameState = "p1roll";
+      gameState = "playerRoll";
     } else if (input == "exit") {
       gameState = "start";
       gameType = "";
@@ -165,6 +172,7 @@ var main = function (input) {
     input = parseInt(input);
     if (input > 0) {
       playersNum = input;
+      playersWins = Array(playersNum + 1).fill(0);
       return `You have chosen ${playersNum} players to play with!<br><br>`;
     }
     return "Please enter number of players!";
