@@ -77,13 +77,13 @@ var rollDiceForPlayer2 = function(){
     else if(currentGameMode == 'waiting for player2 to decide which dice goes first' && input == 1){
     var Player2Score = player2Rolls[0] + "" + player2Rolls[1];
     playerAnswers.push(Player2Score)
-    return chooseWinner() + ` your score is ${Player2Score}, and player 1 score is ${playerAnswers[0]}`
+    return chooseWinner() + ` player2 score is ${Player2Score}, and player 1 score is ${playerAnswers[0]}`
     console.log(playerAnswers)
   }
      if(currentGameMode == 'waiting for player2 to decide which dice goes first' && input == 2){
     var Player2Score = player2Rolls[1] + "" + player2Rolls[0];
     playerAnswers.push(Player2Score)
-    return chooseWinner() + ` your score is ${Player2Score}, and player 1 score is ${playerAnswers[0]}`
+    return chooseWinner() + ` player2 score is ${Player2Score}, and player 1 score is ${playerAnswers[0]}`
     console.log(playerAnswers)
 
      };
