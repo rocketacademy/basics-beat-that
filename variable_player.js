@@ -1,12 +1,3 @@
-//how to play: 
-// players indicate number of players to play and indicate number of dices
-// player X will roll the dice and choose the order of dice, followed by player 2, etc. 
-
-//ideas: 
-//1) get 1 array to store the players and another array to store the optimum values of each player (playerdice)
-//2) play as per normal for each player
-//3) create 2 columns for player list and playerdice ordered by playerdice descending
-
 //game states start with choosing number of players
 game_state = 'choose_player_number'
 
@@ -24,6 +15,7 @@ var leaderboard = '0' //leaderboard content variable
 var main = function(input){
   //game start and players choose number of players
   if(game_state == 'choose_player_number'){
+    current_player = 0
     add_player(input)
     game_state = 'choose_dice_number' //change state
   return myOutputValue
@@ -56,8 +48,10 @@ var main = function(input){
       Highest score is ${highest_score} <br> 
       <br>
       Leaderboard <br>
-      ${leaderboard}`
+      ${leaderboard} <br> <br> 
       
+      Input the player number to play again!`
+      game_state = 'choose_player_number'
       
       console.log(dice_summarized_content)
     return myOutputValue
@@ -90,8 +84,6 @@ var generate_dice_results = function(current_player, total_dice){
   var dice_index = 1 //create index for the loop
   var dice_array = [[]] //create local variable to run the loop; no global variable is necessary since the optimum dice numbers are calculated on this function
   
-  // var number_of_dice = input 
-
   //loop to get the number of dice rolls based on the total dice numbers that were selected before
   while((dice_index-1) < total_dice){
     dice_roll = rolling_dice()
