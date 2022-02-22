@@ -1,6 +1,9 @@
 // Game type - choose which game to play
 var gameType = "";
 
+// Dice number per player
+var diceNumber = 0;
+
 // Varible gameState is used to organize steps through game
 var gameState = "start";
 
@@ -25,8 +28,7 @@ var player2Score = 0;
 // Game choosing message
 var selectGameMessage = `Please enter game type to play:<br><br>
   basic - Basic Beat That! game<br>
-  lowest - Lowest combined number<br>
-  variable - Variable number of Dice and Players`;
+  lowest - Lowest combined number<br>`;
 
 // Return random number from 1 to 6
 var randomDice = function () {
@@ -161,6 +163,19 @@ var gameBasic = function (input) {
 };
 
 var main = function (input) {
+  if (diceNumber == 0 && gameType == "" && input == "") {
+    return "Please enter number of dice to play with!";
+  }
+
+  if (diceNumber == 0 && gameType == "") {
+    input = parseInt(input);
+    if (input > 0) {
+      diceNumber = input;
+      return `You have chosen ${diceNumber} dice to play with!`;
+    }
+    return "Please enter number of dice to play with!";
+  }
+
   if (gameType == "") {
     input = input.toLowerCase();
     if (input == "basic") {
