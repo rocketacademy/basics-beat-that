@@ -26,24 +26,20 @@ var rollDice = function () {
 var playerRoll = function () {
   playerRolls.push(rollDice());
   playerRolls.push(rollDice());
-  console.log(`playerRolls: ${playerRolls}`);
   myOutputValue = `Welcome Player ${playerTurn}. <br> Dice 1: ${playerRolls[0]} <br> Dice 2: ${playerRolls[1]} <br> Please choose the order of the dice.`;
   return myOutputValue;
 };
 
 var main = function (input) {
   while (playerTurn < 3) {
-    console.log("Checking game mode on submit click: " + gameMode);
     // if gameMode == dice roll, call playerRoll function to roll dice
     if (gameMode == "dice roll") {
-      console.log(`Game mode: dice roll; Player turn: ${playerTurn}`);
       myOutputValue = playerRoll();
       gameMode = "choose order";
       return myOutputValue;
     }
     // game asks player to pick order of dice
     if (gameMode == "choose order") {
-      console.log(`Game mode: choose order; Player turn: ${playerTurn}`);
       if (input !== "1" && input !== "2") {
         return `Please choose an order. <br> Dice 1: ${playerRolls[0]} <br> Dice 2: ${playerRolls[1]}`;
       } else if (input == "1") {
@@ -52,9 +48,6 @@ var main = function (input) {
         // change player scores to numbers before storing so that you can compare it later
         playerScores.push(
           Number(playerRolls[0].toString() + playerRolls[1].toString())
-        );
-        console.log(
-          `Player chose order 1. playerScore: ${playerScores[playerTurn - 1]}`
         );
         myOutputValue = `Player ${playerTurn}, you chose Dice 1 first. Your number is ${
           playerScores[playerTurn - 1]
@@ -67,9 +60,6 @@ var main = function (input) {
         playerScores.push(
           Number(playerRolls[1].toString() + playerRolls[0].toString())
         );
-        console.log(
-          `Player chose order 2. playerScore: ${playerScores[playerTurn - 1]}`
-        );
         myOutputValue = `Player ${playerTurn}, you chose Dice 2 first. Your number is ${
           playerScores[playerTurn - 1]
         }. It is now Player ${playerTurn + 1}'s turn.`;
@@ -78,11 +68,6 @@ var main = function (input) {
         playerRolls = [];
         playerTurn += 1;
       }
-      console.log(
-        `Player scores are ${playerScores}; Data type for elements in playerScore array should be numbers. It is now ${typeof playerScores[
-          playerTurn - 1
-        ]}`
-      );
     }
   }
 
