@@ -46,18 +46,27 @@ var main = function (input) {
     roundCounter = 0;
     if (player1Choice > player2Choice) {
       player1Wins += 1;
-      var outputText = joiner(player2Choice, player1Choice);
-      return outputText + `<br>` + outputText;
+      var outputText =
+        choiceSentence(player2Choice, player1Choice) +
+        `<br><br>` +
+        scoreSentence(player1Wins, player2Wins, draws);
+      return outputText;
     }
     if (player1Choice < player2Choice) {
       player2Wins += 1;
-      var outputText = joiner(player2Choice, player1Choice);
-      return outputText + `<br>` + outputText;
+      var outputText =
+        choiceSentence(player2Choice, player1Choice) +
+        `<br><br>` +
+        scoreSentence(player1Wins, player2Wins, draws);
+      return outputText;
     }
     if (player1Choice == player2Choice) {
       draws += 1;
-      var outputText = joiner(player2Choice, player1Choice);
-      return outputText + `<br>` + outputText;
+      var outputText =
+        choiceSentence(player2Choice, player1Choice) +
+        `<br><br>` +
+        scoreSentence(player1Wins, player2Wins, draws);
+      return outputText;
     }
   }
 };
@@ -70,7 +79,11 @@ var player1Choice = "";
 var player2Choice = "";
 var dice = [1, 2, 3, 4, 5, 6];
 var roundCounter = 0;
-var joiner = function (value1, value2) {
-  myOutput = `Player 2 chose ${value1}. Player 1 chose ${value2}`;
-  return myOutput;
+var choiceSentence = function (value1, value2) {
+  myOutputValue = `Player 2 chose ${value1}. Player 1 chose ${value2}`;
+  return myOutputValue;
+};
+var scoreSentence = function (value1, value2, value3) {
+  myOutputValue = `Player 1 wins = ${value1}<br>Player 2 wins = ${value2}<br>Draws = ${value3}`;
+  return myOutputValue;
 };
