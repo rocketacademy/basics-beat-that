@@ -14,17 +14,19 @@ var diceRoll = function () {
 };
 //[HF] Result comparison
 var finalResult = function () {
-  var playerChoices = `${player1} you chose ${p1choice} <br> ${player2} you chose ${p2choice}`;
+  var playerChoices = `${player1} you chose ${
+    p1choice[p1choice.length - 1]
+  } <br> ${player2} you chose ${p2choice[p2choice.length - 1]}`;
   // Both Draw
-  if (p1choice == p2choice) {
+  if (p1choice[p1choice.length - 1] == p2choice[p2choice.length - 1]) {
     displayMsg = `ITS A DRAW! <br> ${playerChoices}`;
   }
   // P1 Wins
-  if (p1choice > p2choice) {
+  if (p1choice[p1choice.length - 1] > p2choice[p2choice.length - 1]) {
     displayMsg = `${player1} WINS! <br> ${playerChoices} <br> click submit to play again!`;
   }
   // P2 Wins
-  if (p1choice < p2choice) {
+  if (p1choice[p1choice.length - 1] < p2choice[p2choice.length - 1]) {
     displayMsg = `${player2} WINS! <br> ${playerChoices} <br> click submit to play again!`;
   }
   return displayMsg;
@@ -73,10 +75,6 @@ function main(input) {
   if (gameMode == "gameStart") {
     var rollOne = diceRoll();
     var rollTwo = diceRoll();
-    //console.log("roll1");
-    //console.log(rollOne);
-    //console.log("roll2");
-    //console.log(rollTwo); * okay so after removing console log, the code can work. I don't know why (17 feb)
     var p1option1 = rollOne.toString() + rollTwo.toString();
     p1options.push(p1option1);
     var p1option2 = rollTwo.toString() + rollOne.toString();
@@ -84,71 +82,90 @@ function main(input) {
     gameMode = "P1 rolled";
     console.log("should be P1 Rolled");
     console.log(gameMode);
-    return `${player1} you have rolled... <br> First Dice : ${rollOne} <br> Second Dice : ${rollTwo} <br> Kindly input your choice ('1' OR '2') above to play against ${player2} : <br> 1 = ${p1options[0]} <br> 2 = ${p1options[1]}`;
+    return `${player1} you have rolled... <br> First Dice : ${rollOne} <br> Second Dice : ${rollTwo} <br> Kindly input your choice ('1' OR '2') above to play against ${player2} : <br> 1 = ${
+      p1options[p1options.length - 2]
+    } <br> 2 = ${p1options[p1options.length - 1]}`;
   }
   // If player 1 input Not '1' or '2' display error message (works)
-  if ((gameMode == "P1 rolled") & (input !== "1" && input !== "2")) {
-    console.log("stuck");
-    console.log(gameMode);
-    return `${player1}... you have entered and invalid option la <br> Kindly input your choice ('1' OR '2') above to play against ${player2} : <br> 1 = ${p1options[0]} <br> 2 = ${p1options[1]}`;
-  }
-  // If player 1 input option '1' or '2', store option and get player 2 to roll (works)
-  if ((gameMode == "P1 rolled") & (input == "1")) {
-    p1choice.push(p1options[0]);
-    gameMode = "P2's roll";
-    console.log("chose 1, should be P2 turn");
-    console.log(gameMode);
-    return `${player1} you chose ${p1choice}. <br> ${player2} its now your turn to roll the dice!`;
-  }
-  if ((gameMode == "P1 rolled") & (input == "2")) {
-    p1choice.push(p1options[1]);
-    gameMode = "P2's roll";
-    console.log("chose 2, should be P2 turn");
-    console.log(gameMode);
-    return `${player1} you chose ${p1choice}. <br> ${player2} its now your turn to roll the dice!`;
+  if (gameMode == "P1 rolled") {
+    if (input !== "1" && input !== "2") {
+      console.log("stuck");
+      console.log(gameMode);
+      return `${player1}... you have entered and invalid option la <br> Kindly input your choice ('1' OR '2') above to play against ${player2} : <br> 1 = ${
+        p1options[p1options.length - 2]
+      } <br> 2 = ${p1options[p1options.length - 1]}`;
+    }
+    // If player 1 input option '1' or '2', store option and get player 2 to roll (works)
+    if (input == "1") {
+      p1choice.push(p1options[p1options.length - 2]);
+      gameMode = "P2's roll";
+      console.log("chose 1, should be P2 turn");
+      console.log(gameMode);
+      return `${player1} you chose ${
+        p1choice[p1choice.length - 2]
+      }. <br> ${player2} its now your turn to roll the dice!`;
+    }
+    if (input == "2") {
+      p1choice.push(p1options[p1options.length - 1]);
+      gameMode = "P2's roll";
+      console.log("chose 2, should be P2 turn");
+      console.log(gameMode);
+      return `${player1} you chose ${
+        p1choice[p1choice.length - 1]
+      }. <br> ${player2} its now your turn to roll the dice!`;
+    }
   }
   // When P2 supposed to roll dice but accidentally types something (works)
-  if (gameMode == "P2's roll" && input !== "") {
-    console.log("should be P2 turn but cui");
-    console.log(gameMode);
-    return `${player2} please click the "submit" button to roll your dice.`;
+  if (gameMode == "P2's roll") {
+    if (input !== "") {
+      console.log("should be P2 turn but cui");
+      console.log(gameMode);
+      return `${player2} please click the "submit" button to roll your dice.`;
+    }
+    if (input == "") {
+      var rollOne = diceRoll();
+      var rollTwo = diceRoll();
+      var p2option1 = rollOne.toString() + rollTwo.toString();
+      p2options.push(p2option1);
+      var p2option2 = rollTwo.toString() + rollOne.toString();
+      p2options.push(p2option2);
+      gameMode = "P2 rolled";
+      console.log("should be P2 Rolled");
+      console.log(gameMode);
+      return `${player2} you have rolled... <br> First Dice : ${rollOne} <br> Second Dice : ${rollTwo} <br> Kindly input your choice ('1' OR '2') above to play against ${player1} : <br> 1 = ${
+        p2options[p2options.length - 2]
+      } <br> 2 = ${p2options[p2options.length - 1]}`;
+    }
   }
-  if (gameMode == "P2's roll" && input == "") {
-    var rollOne = diceRoll();
-    var rollTwo = diceRoll();
-    //console.log("roll1");
-    //console.log(rollOne);
-    //console.log("roll2");
-    //console.log(rollTwo);
-    var p2option1 = rollOne.toString() + rollTwo.toString();
-    p2options.push(p2option1);
-    var p2option2 = rollTwo.toString() + rollOne.toString();
-    p2options.push(p2option2);
-    gameMode = "P2 rolled";
-    console.log("should be P2 Rolled");
-    console.log(gameMode);
-    return `${player2} you have rolled... <br> First Dice : ${rollOne} <br> Second Dice : ${rollTwo} <br> Kindly input your choice ('1' OR '2') above to play against ${player1} : <br> 1 = ${p2options[0]} <br> 2 = ${p2options[1]}`;
-  }
-  // If player 2 input Not '1' or '2' display error message (works)
-  if ((gameMode == "P2 rolled") & (input !== "1" && input !== "2")) {
-    console.log("stuck");
-    console.log(gameMode);
-    return `${player2}... you have entered and invalid option la <br> Kindly input your choice ('1' OR '2') above to play against ${player2} : <br> 1 = ${p2options[0]} <br> 2 = ${p2options[1]}`;
-  }
-  // If player 1 input option '1' or '2', store option and get player 2 to roll (works)
-  if ((gameMode == "P2 rolled") & (input == "1")) {
-    p2choice.push(p2options[0]);
-    gameMode = "results";
-    console.log("chose 1, should be P2 turn");
-    console.log(gameMode);
-    return `${player2} you chose ${p2choice}. <br> Click Submit to see who won!`;
-  }
-  if ((gameMode == "P2 rolled") & (input == "2")) {
-    p2choice.push(p2options[1]);
-    gameMode = "results";
-    console.log("chose 2, should be P2 turn");
-    console.log(gameMode);
-    return `${player2} you chose ${p2choice}. <br> Click Submit to see who won!`;
+
+  if (gameMode == "P2 rolled") {
+    // If player 2 input Not '1' or '2' display error message (works)
+    if (input !== "1" && input !== "2") {
+      console.log("stuck");
+      console.log(gameMode);
+      return `${player2}... you have entered and invalid option la <br> Kindly input your choice ('1' OR '2') above to play against ${player2} : <br> 1 = ${
+        p2options[p2options.length - 2]
+      } <br> 2 = ${p2options[p2options.length - 1]}`;
+    }
+    // If player 1 input option '1' or '2', store option and get player 2 to roll (works)
+    if (input == "1") {
+      p2choice.push(p2options[p2options.length - 2]);
+      gameMode = "results";
+      console.log("chose 1, should be P2 turn");
+      console.log(gameMode);
+      return `${player2} you chose ${
+        p2choice[p2choice.length - 2]
+      }. <br> Click Submit to see who won!`;
+    }
+    if (input == "2") {
+      p2choice.push(p2options[p2options.length - 1]);
+      gameMode = "results";
+      console.log("chose 2, should be P2 turn");
+      console.log(gameMode);
+      return `${player2} you chose ${
+        p2choice[p2choice.length - 1]
+      }. <br> Click Submit to see who won!`;
+    }
   }
   // Results
   if (gameMode == "results") {
