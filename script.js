@@ -16,6 +16,7 @@
 
 // Global Variables
 var gameMode = "Roll Dice";
+var getPlayerDice = [];
 
 // Function to Roll Dice
 var rollDice = function () {
@@ -24,7 +25,17 @@ var rollDice = function () {
   return diceNumber;
 };
 
+var rollBothDice = function () {
+  var counter = 0;
+  while (counter < 2) {
+    getPlayerDice.push(rollDice());
+    counter++;
+  }
+  console.log("This is the Player's Dice Numbers:", getPlayerDice);
+  return `You rolled ${getPlayerDice[0]} for Dice 1 and ${getPlayerDice[1]} for Dice 2.`;
+};
+
 var main = function (input) {
-  var myOutputValue = rollDice();
+  var myOutputValue = rollBothDice();
   return myOutputValue;
 };
