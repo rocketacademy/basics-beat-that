@@ -17,8 +17,15 @@
         text-align: center;
       }
 
-      #container {
-        background-color: pink;
+      #container1 {
+        background-color: rgb(196, 192, 255);
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+      }
+
+      #container2 {
+        background-color: rgb(192, 217, 255);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,7 +47,7 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: rgb(255, 255, 255);
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -50,12 +57,21 @@
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
-    <div id="container">
-      <p>Input:</p>
+    <div id="container1">
+      <p><b>Instructions</b></p>
+      <p>
+        Pick the order of your dice rolls to form the largest possible number.
+        The player with the greatest number wins!
+      </p>
+      <p>Click "Submit" to start the game.</p>
+    </div>
+    <div id="container2">
+      <p><b>Let's Play!</b></p>
+      <p>Type here:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <p>Game Message:</p>
       <div id="output-div"></div>
     </div>
     <!-- Import program logic -->

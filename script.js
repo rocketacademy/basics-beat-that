@@ -92,7 +92,8 @@ var determineWinner = function () {
         <br><br>We're all winners, it's a tie!`;
   }
 
-  return `${winningMessage} Click "Submit" to play another round!`;
+  return `${winningMessage}
+  <br><br>Click "Submit" to play another round!`;
 };
 
 // Function to Reset Game
@@ -102,6 +103,7 @@ var resetGame = function () {
   storeAllPlayersValue = [];
 };
 
+// The Actual Game
 var main = function (input) {
   console.log(`The game mode is ${gameMode}`);
   console.log(`This is player ${player1Or2}'s turn`);
