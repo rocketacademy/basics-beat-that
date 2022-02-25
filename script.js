@@ -21,8 +21,9 @@ var playersSubmissions = [];
 
 // Win-Loss Records
 var winLossRecords = [];
-
-// Helper Functions
+var checkTiedRolls = [];
+var checkTiedWins = [];
+var tiedWinnersTemp = [];
 
 //Initial Game State
 var gameState = `summonTheGamemaster`;
@@ -119,14 +120,15 @@ Key in any number from 2 to 5. Ah Why 5? Well that blasted plague is still going
   if (gameState == `gameSettingsNames` && input != ``) {
     while (playersNames.length < numberOfPlayers) {
       playersNames.push(input);
-      console.log(`gameState`, gameState);
+      console.log(`gameState1`, gameState);
       console.log(`playersNames`, playersNames);
+
+      if (playersNames.length == numberOfPlayers) {
+        gameState = `gameSettingsNumDice`;
+        return `Hello ${input}. You are the final player joining us. Okay now that we have all players names, we can move on.<br><br>How many dice would you like to play with? Choose a number from 2 - 5.`;
+      }
       return `Hello ${input}. is there another player's name?`;
     }
-
-    gameState = `gameSettingsNumDice`;
-    console.log(`gameState`, gameState);
-    return `Okay now that we have all players names, we can move on.<br><br>How many dice would you like to play with? Choose a number from 2 - 5.`;
   }
 
   if (
@@ -209,75 +211,133 @@ Key in any number from 2 to 5. Ah Why 5? Well that blasted plague is still going
     console.log(`roundsPlayed`, roundsPlayed);
 
     while (roundsPlayed < numberOfRounds) {
-      playersSubmissions = [];
-      for (
-        var totalPlayersRollCount = 0;
-        totalPlayersRollCount < numberOfPlayers;
-        totalPlayersRollCount += 1
-      ) {
-        playersDiceRolls = [];
+      {
+        playersSubmissions = [];
+        console.log(`current round`, roundsPlayed + 1);
         for (
-          var diceRollCount = 0;
-          diceRollCount < numberOfDice;
-          diceRollCount += 1
+          var totalPlayersRollCount = 0;
+          totalPlayersRollCount < numberOfPlayers;
+          totalPlayersRollCount += 1
         ) {
-          var diceRoll = function () {
-            return Math.ceil(Math.random() * 6);
-          };
-          playersDiceRolls.push(diceRoll());
-          console.log(`playersDiceRolls`, playersDiceRolls);
-        }
-
-        finalValue = playersDiceRolls.join(``);
-        console.log(`finalValue`, finalValue);
-        playersSubmissions.push(finalValue);
-        console.log(`playersSubmissions`, playersSubmissions);
-
-        //Determine winner and add to win-loss records before restarting for the next round
-        var maxArrayValue = playersSubmissions[0];
-        for (
-          maxArrayValueCount = 1;
-          maxArrayValueCount < playersSubmissions.length;
-          maxArrayValueCount += 1
-        ) {
-          if (playersSubmissions[maxArrayValueCount] > maxArrayValue) {
-            maxArrayValue = [maxArrayValueCount];
+          playersDiceRolls = [];
+          for (
+            var diceRollCount = 0;
+            diceRollCount < numberOfDice;
+            diceRollCount += 1
+          ) {
+            var diceRoll = function () {
+              return Math.ceil(Math.random() * 6);
+            };
+            playersDiceRolls.push(diceRoll());
+            console.log(`playersDiceRolls`, playersDiceRolls);
           }
-          var winnerIndex = playersSubmissions.indexOf(maxArrayValue);
-          console.log(`winnerIndex`, winnerIndex);
-          winLossRecords[winnerIndex] += 1;
-          console.log(`winLossRecords`, winLossRecords);
-          var winner = playersNames[winnerIndex];
-          console.log(`winner of round`, winner);
+
+          finalValue = playersDiceRolls.join(``);
+          console.log(`finalValue`, finalValue);
+          playersSubmissions.push(finalValue);
+          console.log(`playersSubmissions`, playersSubmissions);
         }
       }
+      //Determine winner and add to win-loss records before restarting for the next round
+      var maxArrayValue = playersSubmissions[0];
+      console.log(`initial test high score`, maxArrayValue);
+      for (
+        maxArrayValueCount = 1;
+        maxArrayValueCount < playersSubmissions.length;
+        maxArrayValueCount += 1
+      ) {
+        if (playersSubmissions[maxArrayValueCount] > maxArrayValue) {
+          maxArrayValue = playersSubmissions[maxArrayValueCount];
+        }
+      }
+
+      //check for ties
+      for (
+        arrayCheckCount = 0;
+        arrayCheckCount < playersSubmissions.length;
+        arrayCheckCount += 1
+      ) {
+        var valueBeingChecked = playersSubmissions[arrayCheckCount];
+        if (valueBeingChecked === maxArrayValue) {
+          checkTiedRolls.push(arrayCheckCount);
+        }
+      }
+
+      if (checkTiedRolls.length > 1) {
+        while (checkTiedRolls.length != 0) {
+          var winnerIndex = checkTiedRolls.pop();
+          winLossRecords[winnerIndex] += 1;
+        }
+      }
+
+      if ((checkTiedWins.length = 1)) {
+        var winnerIndex = playersSubmissions.indexOf(maxArrayValue);
+        console.log(`winnerIndex`, winnerIndex);
+        winLossRecords[winnerIndex] += 1;
+        console.log(`winner of game`, winner);
+      }
+
+      console.log(`final high score`, maxArrayValue);
+      console.log(`winLossRecords`, winLossRecords);
       roundsPlayed += 1;
       console.log(`roundsPlayed`, roundsPlayed);
     }
+
+    //Return overall winner of the game when all the rounds have elapsed.
     if ((roundsPlayed = numberOfRounds)) {
-      //return final end message when all the rounds have ended}
       console.log(`winLossrecords`, winLossRecords);
       var maxArrayValue = winLossRecords[0];
+      console.log(`maxArrayValue`, maxArrayValue);
       for (
         maxArrayValueCount = 1;
         maxArrayValueCount < winLossRecords.length;
         maxArrayValueCount += 1
       ) {
         if (winLossRecords[maxArrayValueCount] > maxArrayValue) {
-          maxArrayValue = [maxArrayValueCount];
+          maxArrayValue = winLossRecords[maxArrayValueCount];
         }
+        console.log(`maxArrayValue`, maxArrayValue);
+      }
+
+      //check for ties
+      for (
+        arrayCheckCount = 0;
+        arrayCheckCount < winLossRecords.length;
+        arrayCheckCount += 1
+      ) {
+        var valueBeingChecked = winLossRecords[arrayCheckCount];
+        if (valueBeingChecked === maxArrayValue) {
+          checkTiedWins.push(arrayCheckCount);
+        }
+      }
+
+      if (checkTiedWins.length > 1) {
+        while (checkTiedWins.length != 0) {
+          var winnerIndex = checkTiedWins.pop();
+          tiedWinnersTemp.push(playersNames[winnerIndex]);
+        }
+        return `At the end of ${roundsPlayed} exciting rounds, we have a tie!<br>
+<br>
+<b>Congratulations ${tiedWinnersTemp.join()}</b>, luck was in your favour tonight and you each won ${maxArrayValue} rounds!<br>
+<br>
+If you wish to continue playing, just click the Start Over button above.<br>
+<br>
+If you've had enough, then I wish you farewell and hope we meet again soon.`;
+      }
+
+      if ((checkTiedWins.length = 1)) {
         var winnerIndex = winLossRecords.indexOf(maxArrayValue);
         console.log(`winnerIndex`, winnerIndex);
         var winner = playersNames[winnerIndex];
         console.log(`winner of game`, winner);
+        return `At the end of ${roundsPlayed} exciting rounds, we finally have a winner!<br>
+<br>
+<b>Congratulations ${winner}</b>, luck was in your favour tonight and you won a total of ${maxArrayValue} rounds!<br>
+<br>
+If you wish to continue playing, just click the Start Over button above.<br>
+<br>
+If you've had enough, then I wish you farewell and hope we meet again soon.`;
       }
-
-      return `At the end of ${roundsPlayed} exciting rounds, we finally have a winner!<br>
-      <br><b>Congratulations ${winner}</b>, luck was in your favour tonight and you won a total of ${maxArrayValue} rounds!<br>
-      <br>
-      If you wish to continue playing, just click the Start Over button above.<br>
-      <br>
-      If you've had enough, then I wish you farewell and hope we meet again soon.`;
     }
   }
 };

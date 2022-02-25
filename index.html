@@ -104,15 +104,7 @@ The <html> element is known as the root element of a HTML page. All other elemen
     <br />
     <center>
     <button onClick="window.location.reload();">Start Over</button></br>
-    <button type="button" class ="collapsible">Options for Win Condition</button>
-
-    <div class="morecontent">
-      XXXXXYYYYZZZZZ</div>
     
-      <button type="button" class ="collapsible">Options for Calculation Method</button>
-      
-      <div class="morecontent">
-      XXXYYZZZZZZ</div>
 </center>
 
     <div id="container">
@@ -144,24 +136,6 @@ The <html> element is known as the root element of a HTML page. All other elemen
     <!-- The script tag encloses JavaScript syntax for the browser to interpret programtically -->
     <!-- The following line imports all code written in the script.js file -->
 
-
-    <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-    
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.display === "block") {
-          content.style.display = "none";
-        } else {
-      content.style.display = "block";
-    }
-  });
-}
-
-    </script>
 
     <script src="script.js"></script>
     <!-- Define button click functionality -->
