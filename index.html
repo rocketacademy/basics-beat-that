@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: rgb(192, 212, 255);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,7 +40,7 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: rgb(1, 15, 58);
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -51,12 +51,15 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
+      <p>Give Me Your Answer:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+      <p>Game Master says:</p>
+      <div id="output-div" ; style="color: whitesmoke">
+        Welcome to "BEAT THAT!" You will be able to roll dice to determine your score for each round, by combining the total value of the dice rolls. </br> You will have two chances to swap the position of the dice to get a higher score, and at the end of the game we will tally your total score. Winner gets a virtual beer 🍻 </br></br>
+        First, how many people will be playing this game?"
+      </div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>

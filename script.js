@@ -97,7 +97,7 @@ var updateCurrentRoundScoreMsg = function () {
     playerScoreDatabase[currentPlayer]
   );
   currentPlayerRolls = []; //empties out all the dice values as we have saved it.
-  return `Your score this round is ${
+  return `${playerName[currentPlayer]}'s score in Round ${gameRound} is ${
     playerScoreDatabase[currentPlayer][gameRound - 1]
   }, and your scores so far are ${playerScoreDatabase[currentPlayer]}.</br>`;
 };
@@ -328,7 +328,7 @@ var main = function (input) {
     } else {
       if (currentPlayer < numPlayers - 1) {
         //if this is not the last player
-        myOutputValue += `Unfortunately you have used up all your dice swap chances.`;
+        myOutputValue += `Unfortunately you have used up all your dice swap chances. `;
         var message = updateCurrentRoundScoreMsg();
         myOutputValue += message;
         myOutputValue += nextPlayerMsg();
@@ -336,7 +336,7 @@ var main = function (input) {
       }
       if (currentPlayer == numPlayers - 1 && gameRound != 5) {
         //if this is the last player in this round, and it is not the last round of the game
-        myOutputValue += `Unfortunately you have used up all your dice swap chances.`;
+        myOutputValue += `Unfortunately you have used up all your dice swap chances. `;
         var message = updateCurrentRoundScoreMsg();
         myOutputValue += message;
         myOutputValue += readyPlayer1Msg();
