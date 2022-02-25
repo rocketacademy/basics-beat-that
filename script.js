@@ -39,6 +39,30 @@ var rollBothDice = function () {
   <br><br> Now, select either "1" (Dice 1 comes first) or "2" (Dice 2 comes first) to determine the order of your dice.`;
 };
 
+// Function to display Player Value
+var displayPlayerValue = function (input) {
+  // Input validation if user does not choose either "1" or "2"
+  if (input != 1 && input != 2) {
+    console.log("Invalid input:", input);
+    return `That is an invalid choice! Please type either "1" or "2" to select which dice should be ordered first.
+      <br><br>As a reminder, Dice 1: ${getPlayerDice[0]} | Dice 2: ${getPlayerDice[1]}`;
+  }
+
+  // When Input is "1"
+  if (input == 1) {
+    playerValue = Number(`${getPlayerDice[0]}${getPlayerDice[1]}`);
+    console.log("The player input 1. The player's value is", playerValue);
+    return `Your number is ${playerValue}`;
+  }
+
+  // When Input is "2"
+  if (input == 2) {
+    playerValue = Number(`${getPlayerDice[1]}${getPlayerDice[0]}`);
+    console.log("The player input 2. The player's value is", playerValue);
+    return `Your number is ${playerValue}`;
+  }
+};
+
 var main = function (input) {
   var myOutputValue = "";
   // Game Mode to Roll Both Dice
@@ -51,25 +75,7 @@ var main = function (input) {
   }
 
   if (gameMode == "Choose Dice Order") {
-    // Input validation if user does not choose either "1" or "2"
-    if (input != 1 && input != 2) {
-      console.log("Invalid input:", input);
-      return `That is an invalid choice! Please type either "1" or "2" to select which dice should be ordered first.
-      <br><br>As a reminder, Dice 1: ${getPlayerDice[0]} | Dice 2: ${getPlayerDice[1]}`;
-    }
-
-    // When Input is "1"
-    if (input == 1) {
-      getPlayerValue = Number(`${getPlayerDice[0]}${getPlayerDice[1]}`);
-      console.log("The player input 1. The player's value is", getPlayerValue);
-      return `Your number is ${getPlayerValue}`;
-    }
-
-    // When Input is "2"
-    if (input == 2) {
-      getPlayerValue = Number(`${getPlayerDice[1]}${getPlayerDice[0]}`);
-      console.log("The player input 2. The player's value is", getPlayerValue);
-      return `Your number is ${getPlayerValue}`;
-    }
+    myOutputValue = displayPlayerValue();
+    return myOutputValue;
   }
 };
