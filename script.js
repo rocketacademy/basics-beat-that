@@ -5,7 +5,7 @@
 // Game registers Player 1's selection & calls of player 2 to roll & select
 // Game then shows winner, some stats, triggers next round, etc
 
-//[HF1] Dice Roll
+//[HF] Dice Roll
 var diceRoll = function () {
   var randomNumber = Math.random() * 6;
   var randomInteger = Math.floor(randomNumber);
@@ -32,6 +32,8 @@ var finalResult = function () {
   return displayMsg;
 };
 
+//[HF]
+
 //Global Variables
 var player1 = "";
 var player2 = "";
@@ -40,6 +42,7 @@ var p1options = [];
 var p2options = [];
 var p1choice = [];
 var p2choice = [];
+
 function main(input) {
   // When mode : waiting for player 1 name,  player 1 does not enter name
   if (gameMode == "P1 name" && input == "") {
@@ -102,7 +105,7 @@ function main(input) {
       console.log("chose 1, should be P2 turn");
       console.log(gameMode);
       return `${player1} you chose ${
-        p1choice[p1choice.length - 2]
+        p1choice[p1choice.length - 1]
       }. <br> ${player2} its now your turn to roll the dice!`;
     }
     if (input == "2") {
@@ -154,7 +157,7 @@ function main(input) {
       console.log("chose 1, should be P2 turn");
       console.log(gameMode);
       return `${player2} you chose ${
-        p2choice[p2choice.length - 2]
+        p2choice[p2choice.length - 1]
       }. <br> Click Submit to see who won!`;
     }
     if (input == "2") {
@@ -171,11 +174,6 @@ function main(input) {
   if (gameMode == "results") {
     var gameResults = finalResult();
     gameMode = "playAgain";
-    console.log(gameMode);
-    console.log(p1options);
-    console.log(p2options);
-    console.log(p1choice);
-    console.log(p2choice);
     return gameResults;
   }
   // play another round
