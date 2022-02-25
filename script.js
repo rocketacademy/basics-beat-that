@@ -72,6 +72,31 @@ var displayPlayerValue = function (input) {
   return `Your number is ${playerValue}.`;
 };
 
+// Function to Determine Winner
+var determineWinner = function () {
+  var winningMessage = `Player 1: ${storeAllPlayersValue[0]} | Player 2: ${storeAllPlayersValue[1]}`;
+
+  //Player 1 wins
+  if (storeAllPlayersValue[0] > storeAllPlayersValue[1]) {
+    winningMessage = `${winningMessage}
+        <br><br>Player 1 wins!`;
+  }
+
+  //Player 2 wins
+  if (storeAllPlayersValue[1] > storeAllPlayersValue[0]) {
+    winningMessage = `${winningMessage}
+        <br><br>Player 2 wins!`;
+  }
+
+  //Player 1 and 2 tie
+  if (storeAllPlayersValue[0] == storeAllPlayersValue[1]) {
+    winningMessage = `${winningMessage}
+        <br><br>We're all winners, it's a tie!`;
+  }
+
+  return winningMessage;
+};
+
 var main = function (input) {
   var myOutputValue = "";
   // Game Mode to Roll Both Dice
@@ -87,14 +112,21 @@ var main = function (input) {
     myOutputValue = displayPlayerValue(input);
 
     if (player1Or2 == 1) {
+      // Player 2's turn
       player1Or2 = 2;
       gameMode = "Roll Dice";
       return myOutputValue;
     }
 
     if (player1Or2 == 2) {
+      // Done with Players 1 and 2's turns
       gameMode = "Determine Winner";
       return myOutputValue;
     }
+  }
+
+  if (gameMode == "Determine Winner") {
+    myOutputValue = determineWinner();
+    return myOutputValue;
   }
 };
