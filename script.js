@@ -16,8 +16,10 @@
 
 // Global Variables
 var gameMode = "Roll Dice";
+var player1Or2 = 1;
 var getPlayerDice = [];
 var playerValue = "";
+var storeAllPlayersValue = [];
 
 // Function to Roll Dice
 var rollDice = function () {
@@ -34,7 +36,8 @@ var rollBothDice = function () {
     counter++;
   }
   console.log("This is the Player's Dice Numbers:", getPlayerDice);
-  return `Rolly polly, here are your rolls!
+  console.log("This is Player", player1Or2);
+  return `Rolly polly, here are your rolls Player ${player1Or2}!
   <br><br> Dice 1: ${getPlayerDice[0]} | Dice 2: ${getPlayerDice[1]}
   <br><br> Now, select either "1" (Dice 1 comes first) or "2" (Dice 2 comes first) to determine the order of your dice.`;
 };
@@ -52,15 +55,21 @@ var displayPlayerValue = function (input) {
   if (input == 1) {
     playerValue = Number(`${getPlayerDice[0]}${getPlayerDice[1]}`);
     console.log("The player input 1. The player's value is", playerValue);
-    return `Your number is ${playerValue}`;
   }
 
   // When Input is "2"
   if (input == 2) {
     playerValue = Number(`${getPlayerDice[1]}${getPlayerDice[0]}`);
     console.log("The player input 2. The player's value is", playerValue);
-    return `Your number is ${playerValue}`;
   }
+
+  // Store all Players Value
+  storeAllPlayersValue.push(playerValue);
+
+  // Clear all Players' Dice Rolls for a new game
+  getPlayerDice = [];
+
+  return `Your number is ${playerValue}.`;
 };
 
 var main = function (input) {
@@ -75,7 +84,17 @@ var main = function (input) {
   }
 
   if (gameMode == "Choose Dice Order") {
-    myOutputValue = displayPlayerValue();
-    return myOutputValue;
+    myOutputValue = displayPlayerValue(input);
+
+    if (player1Or2 == 1) {
+      player1Or2 = 2;
+      gameMode = "Roll Dice";
+      return myOutputValue;
+    }
+
+    if (player1Or2 == 2) {
+      gameMode = "Determine Winner";
+      return myOutputValue;
+    }
   }
 };
