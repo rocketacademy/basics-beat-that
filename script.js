@@ -4,23 +4,23 @@ var diceRoll = function (maxNum) {
   return Math.ceil(randNum * maxNum);
 };
 var playerRegister = []; // player0, player1, etc. store
-var playerSwapChance = []; // empty for now, will fill in 3 chances for every player
+var playerSwapChance = []; // empty for now, will fill in 2 chances for every player (initially 3)
 var playerScoreDatabase = []; //index0 = Array of Player One's scores, for each round. This is an array storing each player's arrays, which stores each player's final score from each round (e.g. 4321)
-var currentPlayerCurrentRoundScore = [];
+var currentPlayerCurrentRoundScore = [0, 0, 0, 0, 0];
 var playerEndGameScore = []; // final value.
 
 var generatePlayerRegisterMsg = function (numPlayers) {
   //generates number of players, creates an array to store the number of times remaining that they can do the swap, and creates the playerScoreDatabase by storing empty arrays.
   for (i = 0; i < numPlayers; i += 1) {
     playerRegister[i] = ` Player${i + 1}`;
-    playerSwapChance[i] = 3;
-    playerScoreDatabase[i] = currentPlayerCurrentRoundScore; //currentPlayerCurrentRoundScore is a blank array. this assigns each index value in the array, as an array (hopefully).
+    playerSwapChance[i] = 2; ///initially this was 3 swap chances for 10 rounds, but i decided 10 rounds was wayyyy toooo lonnngggg for the game. so 2 swap chances for a 5 round game.
+    playerScoreDatabase[i].push(1); //currentPlayerCurrentRoundScore is a blank array. this assigns each index value in the array, as an array (hopefully).
   }
   return `We now have ${numPlayers} players, and we know nothing about${playerRegister}.</br> 
   Please tell me their real names, starting with Player 1.`;
 };
 
-var gameRound = 0; //starts with Zero, will increment to 1 when names are provided
+var gameRound = 0; //starts with Zero, will increment to 1 when names are provided. max game round is 5
 var currentPlayer = 0; // game state, where 0 is player 1, 1 is player 2, etc. this influences what array value we will store.
 
 var numPlayers = 0; //start with zero players, to trigger "Enter number of players sequence" to store numPlayers value.
@@ -42,7 +42,7 @@ var rollCurrentPlayerDiceMsg = function (numDicesInGame, currentPlayer) {
     message += `</br> Dice ${j + 1}: You rolled a ${currentPlayerRolls[j]}!`;
   }
   playerDiceRollsDatabase[currentPlayer] = currentPlayerRolls;
-  message += `</br></br> Those are some nice rolls: ${playerDiceRollsDatabase[currentPlayer]}.`;
+  message += `</br></br> Those are some nice rolls: ${playerDiceRollsDatabase[currentPlayer]}. `;
   return message;
 };
 
@@ -69,6 +69,7 @@ var swapDicePositionMsg = function (declaredDice) {
   console.log(currentPlayerRolls, "spliced in");
   const newPlayerScore = currentPlayerRolls.join("");
   swapState = 0;
+  playerSwapChance[currentPlayer] -= 1;
   console.log(
     "oldPlayerScore",
     oldPlayerScore,
@@ -79,26 +80,32 @@ var swapDicePositionMsg = function (declaredDice) {
 };
 var swapState = 0; //game state when swap state =1, prevents the game from proceeding, unless they enter a valid swap input.
 
-var updateCurrentRoundScoreMsg = function (gameRound, currentPlayer) {
-  var tempPlayerScores = playerScoreDatabase[currentPlayer]; //local variable, to retrieve array value for player's scores for each round
-  console.log("tempPlayerScores", tempPlayerScores);
+var updateCurrentRoundScoreMsg = function () {
+  console.log("currentPlayer", currentPlayer, playerName[currentPlayer]);
+  console.log("whole database", playerScoreDatabase);
+  // var tempPlayerScores = playerScoreDatabase[currentPlayer]; //local variable, to retrieve array value for player's scores for each round
+  // console.log("tempPlayerScores", tempPlayerScores);
   var tempRoundScore = currentPlayerRolls.join(""); //local variable to calculate the combined value of current dice rolls.
-  console.log("tempRoundScore", tempRoundScore);
-  tempPlayerScores[gameRound - 1] = Number(tempRoundScore); //stores current round score in the array
-  playerScoreDatabase[currentPlayer] = tempPlayerScores; //refresh data base with player's scores for all rounds.
+  var currentPlayerScores = playerScoreDatabase[currentPlayer];
+  console.log(
+    "current player all rounds score",
+    currentPlayerScores[gameRound - 1]
+  );
+  currentPlayerScores[gameRound - 1].push(Number(tempRoundScore)); //stores current round score in the array
+  // playerScoreDatabase[currentPlayer] = tempPlayerScores; //refresh data base with player's scores for all rounds.
   console.log(
     "tempPlayerScores[gameRound]",
-    tempPlayerScores[gameRound - 1],
+    playerScoreDatabase[currentPlayer][gameRound - 1],
     "playerScoreDatabase[currentPlayer]",
     playerScoreDatabase[currentPlayer]
   );
   currentPlayerRolls = []; //empties out all the dice values as we have saved it.
   return `Your score this round is ${
-    tempPlayerScores[gameRound - 1]
+    playerScoreDatabase[currentPlayer][gameRound - 1]
   }, and your scores so far are ${playerScoreDatabase[currentPlayer]}.</br>`;
 };
 
-var nextPlayerMsg = function (currentPlayer) {
+var nextPlayerMsg = function () {
   //if this is not the last player in the round
   currentPlayer += 1;
   console.log("currentPlayer", currentPlayer);
@@ -108,29 +115,42 @@ var nextPlayerMsg = function (currentPlayer) {
   Time to roll the dice! Just click the button.`;
 };
 
-var readyPlayer1Msg = function (currentPlayer) {
+var readyPlayer1Msg = function () {
   //if this is the last player in this round, which is not the final round.
   gameRound += 1;
   currentPlayer = 0;
   return `</br>Alright, ${
-    playerName[currentPlayer - 1]
+    playerName[numPlayers - 1]
   }'s turn is over. It's time to start Round ${gameRound}! <br>
           ${
             playerName[currentPlayer]
           }, it's your turn again. Click to roll your dice.`;
 };
 
-var endGameMsg = function (gameRound) {
+var endGameMsg = function () {
   //if this is the last player in the final round.. time to calculate winner and deliver winning message.
-  for (l = 0; l < numPlayers; l += 1) {
-    var currentPlayerAllRoundsScore = playerScoreDatabase[l]; //this retrieves each player's array of game round scores, which is hopefully [1234, 2341, 6123, 3216 ...]
+  for (m = 0; m < numPlayers; m += 1) {
+    var currentPlayerAllRoundsScore = playerScoreDatabase[m]; //this retrieves each player's array of game round scores, which is hopefully [1234, 2341, 6123, 3216 ...]
+    console.log(
+      "array of players score for each round (initially)",
+      currentPlayerAllRoundsScore,
+      "iteration",
+      m
+    );
     var currentPlayerRunningTally = 0; //starts/resets current player's endGame score calculations at 0
-    for (m = 0; m < 10; m += 1) {
-      currentPlayerRunningTally += currentPlayerAllRoundsScore[m]; //adds each round's 4 digit score to a running tally
-      playerEndGameScore[l] = currentPlayerRunningTally; // updates the current player's endgame score with current running tally, until we include addition of round 10 score and calculate for a different player.
+    for (n = 0; n < 5; n += 1) {
+      currentPlayerRunningTally += currentPlayerAllRoundsScore[n]; //adds each round's 4 digit score to a running tally
+      console.log(
+        "current round",
+        n,
+        "running tally",
+        currentPlayerRunningTally
+      );
+      playerEndGameScore[m] = currentPlayerRunningTally; // updates the current player's endgame score with current running tally, until we include addition of round 10 score and calculate for a different player.
+      console.log("currentPlayer", m, "playerEndGameScore", playerEndGameScore);
     }
     // inner loop ends when playerEndGameScore is calculated incrementally for the current player.
-  } // outer loop emds when each player has gotten their turn at calculating playerEndGameScore.
+  } // outer loop ends when each player has gotten their turn at calculating playerEndGameScore.
   // now we need to get the highest score.
   var score = playerEndGameScore; //define normal variable as array, for use in next line
   var maxScore = Math.max(...score); // use spread operator to get max value in the array called score
@@ -164,48 +184,75 @@ var main = function (input) {
   if (swapState == 1) {
     //user has chance to swap, and needs to choose
     console.log("pre-swap current player", currentPlayer);
-    if (isNaN(input)) {
+    console.log(isNaN(Number(input)));
+    if (input == "") {
+      return `Please type either 'no' or choose to swap a dice (ordered by ${playerDiceRollsDatabase[currentPlayer]}) to the front.`;
+    }
+    if (isNaN(Number(input))) {
       //if user didn't key in a number...
       input = input.toLowerCase();
+      console.log("input", input);
       if (input != "no") {
         //when user doesn't type no but doesn't choose a dice number to swap
+        console.log("NAN Input");
         return `Please type either 'no' or choose to swap a dice (ordered by ${playerDiceRollsDatabase[currentPlayer]}) to the front.`;
       }
+      console.log(
+        "PROBLEM START",
+        "currentPlayer",
+        currentPlayer,
+        "input",
+        input,
+        "gameRound",
+        gameRound,
+        "swapState",
+        swapState
+      );
       if (input == "no") {
         swapState = 0; //remove gameState blocker for swapping dice.
+        console.log("INSIDELOOP");
         if (currentPlayer < numPlayers - 1) {
           //nt last player
-          myOutputValue += updateCurrentRoundScoreMsg(gameRound, currentPlayer);
-          myOutputValue += nextPlayerMsg(currentPlayer);
+          myOutputValue += updateCurrentRoundScoreMsg();
+          myOutputValue += nextPlayerMsg();
+          console.log("TOM");
           return myOutputValue;
         }
-        if (currentPlayer == numPlayers - 1 && gameRound != 10) {
+        if (currentPlayer == numPlayers - 1 && gameRound != 5) {
           //lastplayer, not last round
-          myOutputValue += updateCurrentRoundScoreMsg(gameRound, currentPlayer);
-          myOutputValue += readyPlayer1Msg(currentPlayer);
+          myOutputValue += updateCurrentRoundScoreMsg();
+          myOutputValue += readyPlayer1Msg();
+          console.log("KIDS");
           return myOutputValue;
         }
-        if (gameRound == 10 && currentPlayer == numPlayers - 1) {
-          myOutputValue += updateCurrentRoundScoreMsg(gameRound, currentPlayer);
-          myOutputValue = endGameMsg(gameRound);
+        if (gameRound == 5 && currentPlayer == numPlayers - 1) {
+          myOutputValue += updateCurrentRoundScoreMsg();
+          myOutputValue = endGameMsg();
+          console.log("THANOS");
           return myOutputValue;
         }
       }
     }
-    if (input <= numDicesInGame && input != 1) {
+    if (input <= numDicesInGame && input != 1 && input != "") {
       myOutputValue = swapDicePositionMsg(input);
-      myOutputValue += updateCurrentRoundScoreMsg(gameRound, currentPlayer);
+      myOutputValue += updateCurrentRoundScoreMsg();
       if (currentPlayer < numPlayers - 1) {
-        myOutputValue += nextPlayerMsg(currentPlayer);
+        myOutputValue += nextPlayerMsg();
+        console.log("TOMMY");
         return myOutputValue;
       }
-      if (currentPlayer == numPlayers - 1 && gameRound != 10) {
-        myOutputValue += readyPlayer1Msg(currentPlayer);
+      if (currentPlayer == numPlayers - 1 && gameRound != 5) {
+        myOutputValue += readyPlayer1Msg();
+        console.log("JERRRRRYCANNN");
         return myOutputValue;
       }
-      if (gameRound == 10 && currentPlayer == numPlayers - 1) {
+      if (gameRound == 5 && currentPlayer == numPlayers - 1) {
         myOutputValue += endGameMsg(gameRound);
+        console.log("DRSTRANGE");
         return myOutputValue;
+      }
+      if (input == "") {
+        return `Please type either 'no' or choose to swap a dice (ordered by ${playerDiceRollsDatabase[currentPlayer]}) to the front.`;
       }
     }
   }
@@ -263,16 +310,15 @@ var main = function (input) {
       } //instructions
       myOutputValue += ` and we are playing with ${numDicesInGame} dice. We will be using the dice to form a ${numDicesInGame} digit number in succession.</br></br> 
       Tutorial: Say you opted to use 4 dice. If you rolled '1','3,'3','5'; the score for that round will be '1335'. You will have the chance to swap one of the dice to the front on each round. </br> If you choose to do so.. let's say you choose Dice '4', the new number will be '5133' which gives you a higher score.</br></br>
-    You will play 10 rounds and have a maximum of 3 chances to swap dice. The player with the highest total score wins.</br></br>
+    You will play 5 rounds and have a maximum of 2 chances to swap dice. The player with the highest total score wins.</br></br>
     Ready to play? Let's start round ${gameRound} and roll the dice for ${playerName[currentPlayer]}!! Just click the button.`;
       return myOutputValue;
     }
   }
   //Round 1, with dice. gameRound =1, currentPlayer =0 (means player1), time to roll.
-  if (swapState == 0 && gameRound <= 10 && currentPlayer < numPlayers) {
+  if (swapState == 0 && gameRound <= 5 && currentPlayer < numPlayers) {
     myOutputValue = rollCurrentPlayerDiceMsg(numDicesInGame, currentPlayer);
-    console.log("playerDiceRollsDatabase", playerDiceRollsDatabase);
-    if (playerSwapChance != 0) {
+    if (playerSwapChance[currentPlayer] != 0) {
       myOutputValue += ableToSwapMsg(playerSwapChance);
       swapState = 1;
       return myOutputValue;
@@ -280,16 +326,16 @@ var main = function (input) {
       if (currentPlayer < numPlayers - 1) {
         //if this is not the last player
         myOutputValue += `Unfortunately you have used up all your dice swap chances.`;
-        var message = updateCurrentRoundScoreMsg(gameRound, currentPlayer);
+        var message = updateCurrentRoundScoreMsg();
         myOutputValue += message;
         currentPlayer += 1;
         myOutputValue += `</br></br> Thank you, ${playerName[currentPlayer]} next! Click to start your roll.`;
         return myOutputValue;
       }
-      if (currentPlayer == numPlayers - 1 && gameRound != 10) {
+      if (currentPlayer == numPlayers - 1 && gameRound != 5) {
         //if this is the last player in this round, and it is not the last round of the game
         myOutputValue += `Unfortunately you have used up all your dice swap chances.`;
-        var message = updateCurrentRoundScoreMsg(gameRound, currentPlayer);
+        var message = updateCurrentRoundScoreMsg();
         myOutputValue += message;
         gameRound += 1; //next round
         currentPlayer = 0; //go back to player 1.
