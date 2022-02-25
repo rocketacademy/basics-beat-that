@@ -24,7 +24,6 @@ var storeAllPlayersValue = [];
 // Function to Roll Dice
 var rollDice = function () {
   var diceNumber = Math.floor(Math.random() * 6) + 1;
-  console.log("This is the Dice Number:", diceNumber);
   return diceNumber;
 };
 
@@ -36,8 +35,7 @@ var rollBothDice = function () {
     counter++;
   }
   console.log("This is the Player's Dice Numbers:", getPlayerDice);
-  console.log("This is Player", player1Or2);
-  return `Rolly polly, here are your rolls Player ${player1Or2}!
+  return `Here are your rolls Player ${player1Or2}!
   <br><br> Dice 1: ${getPlayerDice[0]} | Dice 2: ${getPlayerDice[1]}
   <br><br> Now, select either "1" (Dice 1 comes first) or "2" (Dice 2 comes first) to determine the order of your dice.`;
 };
@@ -94,10 +92,19 @@ var determineWinner = function () {
         <br><br>We're all winners, it's a tie!`;
   }
 
-  return winningMessage;
+  return `${winningMessage} Click "Submit" to play another round!`;
+};
+
+// Function to Reset Game
+var resetGame = function () {
+  player1Or2 = 1;
+  gameMode = "Roll Dice";
+  storeAllPlayersValue = [];
 };
 
 var main = function (input) {
+  console.log(`The game mode is ${gameMode}`);
+  console.log(`This is player ${player1Or2}'s turn`);
   var myOutputValue = "";
   // Game Mode to Roll Both Dice
   if (gameMode == "Roll Dice") {
@@ -115,18 +122,23 @@ var main = function (input) {
       // Player 2's turn
       player1Or2 = 2;
       gameMode = "Roll Dice";
-      return myOutputValue;
+      return `${myOutputValue}
+      <br><br>Player 2, you're up next!`;
     }
 
     if (player1Or2 == 2) {
       // Done with Players 1 and 2's turns
       gameMode = "Determine Winner";
-      return myOutputValue;
+      return `${myOutputValue}
+      <br><br>Click "Submit" to find out who won!`;
     }
   }
 
   if (gameMode == "Determine Winner") {
     myOutputValue = determineWinner();
+
+    // Reset Game
+    resetGame();
     return myOutputValue;
   }
 };
