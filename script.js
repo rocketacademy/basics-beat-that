@@ -15,7 +15,7 @@ var generatePlayerRegisterMsg = function (numPlayers) {
   for (i = 0; i < numPlayers; i += 1) {
     playerRegister[i] = ` Player${i + 1}`;
     playerSwapChance[i] = 2; ///initially this was 3 swap chances for 10 rounds, but i decided 10 rounds was wayyyy toooo lonnngggg for the game. so 2 swap chances for a 5 round game.
-    playerScoreDatabase[i] = currentPlayerCurrentRoundScore; //currentPlayerCurrentRoundScore is a blank array. this assigns each index value in the array, as an array (hopefully).
+    playerScoreDatabase[i] = []; //currentPlayerCurrentRoundScore is a blank array. this assigns each index value in the array, as an array (hopefully).
   }
   return `We now have ${numPlayers} players, and we know nothing about${playerRegister}.</br> 
   Please tell me their real names, starting with Player 1.`;
@@ -32,7 +32,7 @@ var numDicesInGame = 0; //by default, number of rolled dices is 0 - upon which g
 var currentPlayerRolls = []; //temp table to store current set of dice values for current player
 var playerDiceRollsDatabase = []; //player will generate number dicerolls, which will be stored in individual arrays for each player. This array will store all the arrays. this will reset for each round.
 
-var rollCurrentPlayerDiceMsg = function (numDicesInGame, currentPlayer) {
+var rollCurrentPlayerDiceMsg = function () {
   //the person's player number is their index in the playerRegister.
   //currentPlayer for Player1 is 0, currentPlayer for Player2 is 1, and so on.
   //This generates a dice value array called currentPlayerRolls (local variable), and assigns its array value as the return value for the player number in the DiceRolls database. Don't know if this works, will have to test.
@@ -126,6 +126,7 @@ var readyPlayer1Msg = function () {
 
 var endGameMsg = function () {
   //if this is the last player in the final round.. time to calculate winner and deliver winning message.
+  console.log("entering endgame");
   for (m = 0; m < numPlayers; m += 1) {
     var currentPlayerAllRoundsScore = playerScoreDatabase[m]; //this retrieves each player's array of game round scores, which is hopefully [1234, 2341, 6123, 3216 ...]
     console.log(
@@ -149,13 +150,19 @@ var endGameMsg = function () {
     // inner loop ends when playerEndGameScore is calculated incrementally for the current player.
   } // outer loop ends when each player has gotten their turn at calculating playerEndGameScore.
   // now we need to get the highest score.
-  var score = playerEndGameScore; //define normal variable as array, for use in next line
-  var maxScore = Math.max(...score); // use spread operator to get max value in the array called score
-  var playerIndex = playerEndGameScore.indexOf(maxScore); // find which playerNumber it is...
+  var highestScore = 0;
+  for (p = 0; p < numPlayers; p += 1) {
+    if (playerEndGameScore[p] > highestScore) {
+      highestScore = playerEndGameScore[p];
+    }
+  }
+  console.log("highestScore", highestScore);
+  var playerIndex = playerEndGameScore.indexOf(highestScore); // find which playerNumber it is...
+  console.log("playerIndex", playerIndex);
   var winnerPlayerName = playerName[playerIndex]; //return name of winning player.
-  var winMessage = `</br>The highest score in this game comes from.. ${winnerPlayerName}, with a score of ${maxScore}! Massive congrats ${winnerPlayerName}!!</br></br>The full list of scores are below:</br>`;
+  var winMessage = `</br>The highest score in this game comes from.. ${winnerPlayerName}, with a score of ${highestScore}! Massive congrats ${winnerPlayerName}!!</br></br>The full list of scores are below:</br>`;
   for (n = 0; n < numPlayers; n += 1) {
-    winMessage += `${playerName[n]} got a total score of ${playerEndGameScore[n]}, which was the sum of his scores from all 10 rounds (${playerScoreDatabase[n]})</br>`;
+    winMessage += `${playerName[n]} got a total score of ${playerEndGameScore[n]}, which was the sum of his scores from all 5 rounds (${playerScoreDatabase[n]})</br>`;
   }
   winMessage += `</br>Thanks for playing! This game has now ended. To start a new game, please tell me the number of players playing the next game.`;
   gameRound = 0;
@@ -181,7 +188,7 @@ var main = function (input) {
   if (swapState == 1) {
     //user has chance to swap, and needs to choose
     console.log("pre-swap current player", currentPlayer);
-    console.log(isNaN(Number(input)));
+    console.log("Is not a number", isNaN(Number(input)));
     if (input == "") {
       return `Please type either 'no' or choose to swap a dice (ordered by ${playerDiceRollsDatabase[currentPlayer]}) to the front.`;
     }
@@ -224,7 +231,7 @@ var main = function (input) {
         }
         if (gameRound == 5 && currentPlayer == numPlayers - 1) {
           myOutputValue += updateCurrentRoundScoreMsg();
-          myOutputValue = endGameMsg();
+          myOutputValue += endGameMsg();
           console.log("THANOS");
           return myOutputValue;
         }
@@ -244,7 +251,7 @@ var main = function (input) {
         return myOutputValue;
       }
       if (gameRound == 5 && currentPlayer == numPlayers - 1) {
-        myOutputValue += endGameMsg(gameRound);
+        myOutputValue += endGameMsg();
         console.log("DRSTRANGE");
         return myOutputValue;
       }
@@ -253,7 +260,6 @@ var main = function (input) {
       }
     }
   }
-
   if (
     (gameRound == 0 && numPlayers == 0 && isNaN(input) == true) ||
     (gameRound == 0 && numPlayers == 0 && (input > 5 || input < 2))
@@ -312,9 +318,9 @@ var main = function (input) {
       return myOutputValue;
     }
   }
-  //Round 1, with dice. gameRound =1, currentPlayer =0 (means player1), time to roll.
-  if (swapState == 0 && gameRound <= 5 && currentPlayer < numPlayers) {
-    myOutputValue = rollCurrentPlayerDiceMsg(numDicesInGame, currentPlayer);
+  //Round *, with dice. gameRound =1, currentPlayer =0 (means player1), time to roll.
+  if (swapState == 0 && currentPlayer < numPlayers) {
+    myOutputValue = rollCurrentPlayerDiceMsg();
     if (playerSwapChance[currentPlayer] != 0) {
       myOutputValue += ableToSwapMsg(playerSwapChance);
       swapState = 1;
@@ -325,8 +331,7 @@ var main = function (input) {
         myOutputValue += `Unfortunately you have used up all your dice swap chances.`;
         var message = updateCurrentRoundScoreMsg();
         myOutputValue += message;
-        currentPlayer += 1;
-        myOutputValue += `</br></br> Thank you, ${playerName[currentPlayer]} next! Click to start your roll.`;
+        myOutputValue += nextPlayerMsg();
         return myOutputValue;
       }
       if (currentPlayer == numPlayers - 1 && gameRound != 5) {
@@ -334,9 +339,14 @@ var main = function (input) {
         myOutputValue += `Unfortunately you have used up all your dice swap chances.`;
         var message = updateCurrentRoundScoreMsg();
         myOutputValue += message;
-        gameRound += 1; //next round
-        currentPlayer = 0; //go back to player 1.
-        myOutputValue += `Unfortunately you have used up all your dice swap chances. </br> Round ${gameRound} is starting now, and ${playerName[currentPlayer]} you are up again! Click to start your roll.`;
+        myOutputValue += readyPlayer1Msg();
+        return myOutputValue;
+      }
+      if (currentPlayer == numPlayers - 1 && gameRound == 5) {
+        myOutputValue += updateCurrentRoundScoreMsg();
+        myOutputValue += endGameMsg();
+        console.log("DRSTRANGE2");
+        return myOutputValue;
       }
     }
   }
