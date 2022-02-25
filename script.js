@@ -1,4 +1,5 @@
 var myOutputValue = "";
+var test = "";
 var diceRoll = function (maxNum) {
   var randNum = Math.random();
   return Math.ceil(randNum * maxNum);
@@ -6,7 +7,7 @@ var diceRoll = function (maxNum) {
 var playerRegister = []; // player0, player1, etc. store
 var playerSwapChance = []; // empty for now, will fill in 2 chances for every player (initially 3)
 var playerScoreDatabase = []; //index0 = Array of Player One's scores, for each round. This is an array storing each player's arrays, which stores each player's final score from each round (e.g. 4321)
-var currentPlayerCurrentRoundScore = [0, 0, 0, 0, 0];
+var currentPlayerCurrentRoundScore = [];
 var playerEndGameScore = []; // final value.
 
 var generatePlayerRegisterMsg = function (numPlayers) {
@@ -14,7 +15,7 @@ var generatePlayerRegisterMsg = function (numPlayers) {
   for (i = 0; i < numPlayers; i += 1) {
     playerRegister[i] = ` Player${i + 1}`;
     playerSwapChance[i] = 2; ///initially this was 3 swap chances for 10 rounds, but i decided 10 rounds was wayyyy toooo lonnngggg for the game. so 2 swap chances for a 5 round game.
-    playerScoreDatabase[i].push(1); //currentPlayerCurrentRoundScore is a blank array. this assigns each index value in the array, as an array (hopefully).
+    playerScoreDatabase[i] = currentPlayerCurrentRoundScore; //currentPlayerCurrentRoundScore is a blank array. this assigns each index value in the array, as an array (hopefully).
   }
   return `We now have ${numPlayers} players, and we know nothing about${playerRegister}.</br> 
   Please tell me their real names, starting with Player 1.`;
@@ -36,7 +37,7 @@ var rollCurrentPlayerDiceMsg = function (numDicesInGame, currentPlayer) {
   //currentPlayer for Player1 is 0, currentPlayer for Player2 is 1, and so on.
   //This generates a dice value array called currentPlayerRolls (local variable), and assigns its array value as the return value for the player number in the DiceRolls database. Don't know if this works, will have to test.
   currentPlayerRolls = [];
-  var message = `We are going to roll ${numDicesInGame} dice, and we got..`;
+  var message = `We are going to roll ${numDicesInGame} dice, and we got...`;
   for (j = 0; j < numDicesInGame; j += 1) {
     currentPlayerRolls[j] = diceRoll(6);
     message += `</br> Dice ${j + 1}: You rolled a ${currentPlayerRolls[j]}!`;
@@ -47,7 +48,7 @@ var rollCurrentPlayerDiceMsg = function (numDicesInGame, currentPlayer) {
 };
 
 var ableToSwapMsg = function (playerSwapChance) {
-  var message = `Would you like the swap the order of any dice to the front?</br>`;
+  var message = `Would ${playerName[currentPlayer]} like the swap the order of any dice to the front?</br>`;
   if (numDicesInGame > 2) {
     message += `You have ${playerSwapChance[currentPlayer]} chance left to swap! Type the dice number to swap (2-${numDicesInGame}) OR type 'no' to continue.`;
   } else {
@@ -86,12 +87,8 @@ var updateCurrentRoundScoreMsg = function () {
   // var tempPlayerScores = playerScoreDatabase[currentPlayer]; //local variable, to retrieve array value for player's scores for each round
   // console.log("tempPlayerScores", tempPlayerScores);
   var tempRoundScore = currentPlayerRolls.join(""); //local variable to calculate the combined value of current dice rolls.
-  var currentPlayerScores = playerScoreDatabase[currentPlayer];
-  console.log(
-    "current player all rounds score",
-    currentPlayerScores[gameRound - 1]
-  );
-  currentPlayerScores[gameRound - 1].push(Number(tempRoundScore)); //stores current round score in the array
+  tempRoundScore = Number(tempRoundScore);
+  playerScoreDatabase[currentPlayer].push(tempRoundScore); //stores current round score in the array
   // playerScoreDatabase[currentPlayer] = tempPlayerScores; //refresh data base with player's scores for all rounds.
   console.log(
     "tempPlayerScores[gameRound]",
