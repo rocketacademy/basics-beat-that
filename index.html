@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: rgb(192, 227, 255);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -49,9 +49,9 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Beat That! ⚔️ The showdown</h1>
     <div id="container">
-      <p>Input:</p>
+      <p id="p1">Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
@@ -62,6 +62,8 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
+      document.getElementById("p1").innerHTML =
+        "Please enter the number of dice rolls! <br> Please note that you can type restart at any time to restart the game.";
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
         // Set result to input value
