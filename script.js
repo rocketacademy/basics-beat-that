@@ -15,8 +15,7 @@ var player1Rolls =[];
 var player2Rolls = [];
 //creation of reset button
 var resetGame = function(){
-  currentGameMode = "waiting for username"
-  playerAnswers =[];
+  currentGameMode = 'waiting for player1 to roll dice!'
 }
 //Comparison of value (Declare Global Variable)
 var playerAnswers = [];
@@ -44,11 +43,11 @@ var rollDiceForPlayer2 = function(){
 
   var chooseWinner = function(){
     if(playerAnswers[0]>playerAnswers[1]){
-      return `player 1 wins`;
+      return `Player 1 wins!`;
     } if(playerAnswers[1]>playerAnswers[0]){
-     return `player 2 wins`;
+     return `Player 2 wins!`;
     } if(playerAnswers[0]==playerAnswers[1]){
-      return `its a tie`;
+      return `Its a tie!`;
     };
   };
 
@@ -64,14 +63,14 @@ var rollDiceForPlayer2 = function(){
     currentGameMode = 'waiting for player2 to roll dice'
     var Player1Score = player1Rolls[0] + "" + player1Rolls[1];
     playerAnswers.push(Player1Score)
-    return `player 1 your score is ${Player1Score} ; player 2 please roll dice`
+    return `Player 1, your score is ${Player1Score} ; Player 2 please roll dice`
   }
     if (currentGameMode == 'waiting for player1 to decide which dice goes first' && input == 2){
       currentGameMode = 'waiting for player2 to roll dice'
     var Player1Score = player1Rolls[1] + "" + player1Rolls[0];
     playerAnswers.push(Player1Score)
     console.log(playerAnswers)
-    return `your score is ${Player1Score} ; player 2 please roll dice` 
+    return `Player 1, your score is ${Player1Score} ; Player 2 please roll dice` 
   }
     else if(currentGameMode == 'waiting for player2 to roll dice'){
        currentGameMode = 'waiting for player2 to decide which dice goes first'
@@ -82,15 +81,14 @@ var rollDiceForPlayer2 = function(){
     else if(currentGameMode == 'waiting for player2 to decide which dice goes first' && input == 1){
     var Player2Score = player2Rolls[0] + "" + player2Rolls[1];
     playerAnswers.push(Player2Score)
-    resetGame();
-    return chooseWinner() + ` player2 score is ${Player2Score}, and player 1 score is ${playerAnswers[0]}`
+    resetGame()
+    return `${chooseWinner()} <br> Player 2 score is ${Player2Score} <br> Player 1 score is ${playerAnswers[0]} <br> Player 1, press "PLAY" to roll the dice again`
   }
      if(currentGameMode == 'waiting for player2 to decide which dice goes first' && input == 2){
     var Player2Score = player2Rolls[1] + "" + player2Rolls[0];
     playerAnswers.push(Player2Score)
-    resetGame();
-    return chooseWinner() + ` player2 score is ${Player2Score}, and player 1 score is ${playerAnswers[0]}`
+    resetGame()
+    return `${chooseWinner()} <br> Player 2 score is ${Player2Score} <br> Player 1 score is ${playerAnswers[0]} <br> Player 1, press "PLAY" to roll the dice again`
    
-
      };
     };
