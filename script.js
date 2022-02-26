@@ -38,7 +38,7 @@ var main = function (input) {
     You rolled...<br>
     # Dice One: ${playerOneDiceOne}<br>
     # Dice Two: ${playerOneDiceTwo} <br><br>
-    Your final choice between Option 1 and 2 is... <br>
+    Choose either '1' or '2' to continue... <br>
     # Option 1: ${playerOneDiceOne}${playerOneDiceTwo} <br>
     # Option 2: ${playerOneDiceTwo}${playerOneDiceOne}`;
   }
@@ -79,7 +79,7 @@ var main = function (input) {
     You rolled...<br>
     # Dice One: ${playerTwoDiceOne}<br>
     # Dice Two: ${playerTwoDiceTwo} <br><br>
-    Your final choice between Option 1 and 2 is... <br>
+    Choose either '1' or '2' to continue... <br>
     # Option 1: ${playerTwoDiceOne}${playerTwoDiceTwo} <br>
     # Option 2: ${playerTwoDiceTwo}${playerTwoDiceOne}`;
   }
