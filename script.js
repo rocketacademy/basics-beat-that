@@ -38,7 +38,7 @@ var main = function (input) {
     You rolled...<br>
     # Dice One: ${playerOneDiceOne}<br>
     # Dice Two: ${playerOneDiceTwo} <br><br>
-    Choose either '1' or '2' to continue... <br>
+    Please type in either '1' or '2' to continue... <br>
     # Option 1: ${playerOneDiceOne}${playerOneDiceTwo} <br>
     # Option 2: ${playerOneDiceTwo}${playerOneDiceOne}`;
   }
@@ -65,7 +65,7 @@ var main = function (input) {
 
   // if player one does not choose any of the options
   if (playerOneChoice == "") {
-    return `Player 1, please select either<br>
+    return `Player 1, please type in either '1' or '2' to continue... <br><br>
       # Option 1: ${playerOneDiceOne}${playerOneDiceTwo} <br>
       # Option 2: ${playerOneDiceTwo}${playerOneDiceOne}`;
   }
@@ -79,7 +79,7 @@ var main = function (input) {
     You rolled...<br>
     # Dice One: ${playerTwoDiceOne}<br>
     # Dice Two: ${playerTwoDiceTwo} <br><br>
-    Choose either '1' or '2' to continue... <br>
+    Please type in either '1' or '2' to continue... <br>
     # Option 1: ${playerTwoDiceOne}${playerTwoDiceTwo} <br>
     # Option 2: ${playerTwoDiceTwo}${playerTwoDiceOne}`;
   }
@@ -144,7 +144,7 @@ var main = function (input) {
 
   // if player two does not choose any of the options
   if (playerTwoChoice == "") {
-    return `Player 2, please select either<br>
+    return `Player 2, please type in either '1' or '2' to continue... <br><br>
       # Option 1: ${playerTwoDiceOne}${playerTwoDiceTwo} <br>
       # Option 2: ${playerTwoDiceTwo}${playerTwoDiceOne}`;
   }
