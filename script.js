@@ -1,82 +1,226 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Coding Basics</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+//live server
+//index of to find a position number of an input
 
-      body {
-        font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
-      }
+//dice roll
+//main function
+//number of players --> store into var
+//number of dices --> store into var
+//name of players --> while statement --> store into array
+//player 1 roll --> while statement number of dices --> store into array
+//player 1 decision --> store into array
+//player 2 roll etc --> if --> number of players = player number --> go next
+//show all player rolls in order
+//scoreboard --> mathmax --> index of --> parallel array --> array[index]
+//new game
 
-      #header {
-        text-align: center;
-      }
+var gameMode = "number of dice rolls";
+var numberOfPlayers = "";
+var numberOfDices = "";
+var playerNames = [];
+var playerCount = 0;
+var diceCount = 0;
+var playerRoll1 = [];
+var playerRoll2 = [];
+var playerScore1 = [];
+var playerScore2 = [];
+var roundNumber1 = 0;
+var roundNumber2 = 0;
+var player1TotalScore = "";
+var player2TotalScore = "";
 
-      #container {
-        background-color: rgb(192, 227, 255);
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
-      }
+//dice roll
+var rollDice = function () {
+  var randomDecimal = Math.random() * 6;
+  var randomInteger = Math.floor(randomDecimal);
+  var diceNumber = randomInteger + 1;
+  console.log("dice roll: ", diceNumber);
+  return diceNumber;
+};
 
-      input {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 9px;
-        width: 100%;
-      }
+//main function
+var main = function (input) {
+  var myOutputValue = "";
+  console.log("Game mode check:", gameMode);
 
-      button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
-      }
+  //number of players
+  // if (gameMode == "number of players") {
+  //   numberOfPlayers = input;
+  //   console.log("number of players: ", numberOfPlayers);
+  //   console.log("game mode: ", gameMode);
+  //   console.log(isNaN(numberOfPlayers));
 
-      #output-div {
-        background-color: lightgrey;
-        margin: 20px auto;
-        padding: 20px;
-        width: 100%;
-      }
-    </style>
-  </head>
+  //   if (isNaN(numberOfPlayers) || numberOfPlayers == "") {
+  //     gameMode = "number of players";
+  //     myOutputValue = "Kindly type in the number of players for the session!";
+  //   } else {
+  //     gameMode = "number of dice rolls";
+  //     document.getElementById("p1").innerHTML =
+  //       "Please input number of dice rolls.";
+  //     myOutputValue = `Welcome! <br> There are ${numberOfPlayers} number of players for this session! <br> Please enter the number of dice rolls`;
+  //   }
 
-  <body>
-    <h1 id="header">Beat That! ⚔️ The showdown</h1>
-    <div id="container">
-      <p id="p1">Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
-    </div>
-    <!-- Import program logic -->
-    <script src="script.js"></script>
-    <!-- Define button click functionality -->
-    <script>
+  //   return myOutputValue;
+  // }
+
+  //number of dice rolls
+
+  if (input.toLowerCase() == "restart") {
+    gameMode = "number of dice rolls";
+    numberOfDices = "";
+    playerNames = [];
+    diceCount = 0;
+    playerRoll1 = [];
+    playerRoll2 = [];
+    playerScore1 = [];
+    playerScore2 = [];
+    roundNumber1 = 0;
+    roundNumber2 = 0;
+    player1TotalScore = "";
+    player2TotalScore = "";
+    myOutputValue = `Game restarted! <br> Please enter the number of dice rolls!`;
+    document.getElementById("p1").innerHTML =
+      "Please enter the number of dice rolls!";
+  } else if (gameMode == "number of dice rolls") {
+    numberOfDices = input;
+    console.log("number of dice rolls: ", numberOfDices);
+    console.log("game mode: ", gameMode);
+    console.log(isNaN(numberOfDices));
+
+    if (isNaN(numberOfDices) || numberOfDices == "") {
+      gameMode = "number of dice rolls";
+      myOutputValue =
+        "Kindly type in the number of dice rolls for the session!";
+    } else {
+      gameMode = "player 1 username";
       document.getElementById("p1").innerHTML =
-        "Please enter the number of dice rolls! <br> Please note that you can type restart at any time to restart the game.";
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        "Please enter the username for player 1.";
+      myOutputValue = `Welcome! <br> There are ${numberOfDices} number of dices for this session! <br>
+      Please enter the username for player 1!`;
+    }
 
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
+    return myOutputValue;
+  }
 
-        // Reset input value
-        input.value = "";
+  //player usernames
+  else if (gameMode == "player 1 username") {
+    if (input == "") {
+      myOutputValue = `Kindly type in the username for player 1.`;
+      document.getElementById(
+        "p1"
+      ).innerHTML = `Please enter the username for player 1.`;
+      gameMode = "player 1 username";
+    } else {
+      playerNames.push(input);
+      myOutputValue = `Welcome player 1! <br>
+    Please enter the username for player 2!`;
+      document.getElementById(
+        "p1"
+      ).innerHTML = `Please enter the username for player 2.`;
+      gameMode = "player 2 username";
+    }
+    return myOutputValue;
+  }
+  //player 2 username
+  else if (gameMode == "player 2 username") {
+    if (input == "") {
+      myOutputValue = `Kindly type in the username for player 2.`;
+      document.getElementById(
+        "p1"
+      ).innerHTML = `Please enter the username for player 2.`;
+      gameMode = "player 2 username";
+    } else {
+      playerNames.push(input);
+      myOutputValue = `Welcome player 2! <br>
+    Please roll the dice for player 1!`;
+      document.getElementById(
+        "p1"
+      ).innerHTML = `Please roll the dice for player 1!`;
+      gameMode = "player 1";
+    }
+    return myOutputValue;
+  }
+  //
+  else if (gameMode == "player 1") {
+    playerCount = 0;
+    myOutputValue = `${playerNames[playerCount]} has rolled:`;
+    while (diceCount < numberOfDices) {
+      var diceRoll = rollDice();
+      playerRoll1.push(diceRoll);
+      myOutputValue =
+        myOutputValue +
+        `<br> ${playerRoll1[diceCount]} for dice number ${diceCount + 1}.`;
+      diceCount = diceCount + 1;
+    }
+
+    if (diceCount == numberOfDices) {
+      playerRoll1.sort(function (a, b) {
+        return b - a;
       });
-    </script>
-  </body>
-</html>
+      playerScore1.push(parseInt(playerRoll1.join("")));
+      myOutputValue =
+        myOutputValue +
+        `<br> <br> Your number is ${playerScore1[roundNumber1]}.`;
+    }
+    diceCount = 0;
+    roundNumber1 = roundNumber1 + 1;
+    myOutputValue =
+      myOutputValue + `<br> Click again to roll the dice for player 2!`;
+    gameMode = "player 2";
+    return myOutputValue;
+  }
+
+  //player 2
+  else if (gameMode == "player 2") {
+    playerCount = 1;
+    myOutputValue = `${playerNames[playerCount]} has rolled:`;
+    while (diceCount < numberOfDices) {
+      var diceRoll2 = rollDice();
+      playerRoll2.push(diceRoll2);
+      myOutputValue =
+        myOutputValue +
+        `<br> ${playerRoll2[diceCount]} for dice number ${diceCount + 1}.`;
+      diceCount = diceCount + 1;
+    }
+
+    if (diceCount == numberOfDices) {
+      playerRoll2.sort(function (a, b) {
+        return b - a;
+      });
+      playerScore2.push(parseInt(playerRoll2.join("")));
+      myOutputValue =
+        myOutputValue +
+        `<br> <br> Your number is ${playerScore2[roundNumber2]}.`;
+    }
+    diceCount = 0;
+    roundNumber2 = roundNumber2 + 1;
+    myOutputValue = myOutputValue + `<br> Click again to show the score!`;
+    gameMode = "score";
+    return myOutputValue;
+  }
+
+  //score
+  else if ((gameMode = "score")) {
+    player1TotalScore = playerScore1.reduce((a, b) => a + b, 0);
+    player2TotalScore = playerScore2.reduce((a, b) => a + b, 0);
+    console.log(player1TotalScore);
+    console.log(player2TotalScore);
+    if (parseInt(player1TotalScore) > parseInt(player2TotalScore)) {
+      myOutputValue = `${playerNames[0]} has a total score of ${player1TotalScore}. <br> ${playerNames[1]} has a total score of ${player2TotalScore}. <br> ${playerNames[0]} wins!`;
+      gameMode = "player 1";
+      playerRoll1 = [];
+      playerRoll2 = [];
+    } else if (parseInt(player1TotalScore) == parseInt(player2TotalScore)) {
+      myOutputValue = `${playerNames[0]} has a total score of ${player1TotalScore}. <br> ${playerNames[1]} has a total score of ${player2TotalScore}. <br> It's a draw!`;
+      gameMode = "player 1";
+      playerRoll1 = [];
+      playerRoll2 = [];
+    } else if (parseInt(player1TotalScore) < parseInt(player2TotalScore)) {
+      myOutputValue = `${playerNames[0]} has a total score of ${player1TotalScore}. <br> ${playerNames[1]} has a total score of ${player2TotalScore}. <br> ${playerNames[1]} wins!`;
+      gameMode = "player 1";
+      playerRoll1 = [];
+      playerRoll2 = [];
+    }
+  }
+
+  return myOutputValue;
+};
