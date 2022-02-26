@@ -62,7 +62,7 @@ var main = function (input) {
 
       input = parseInt(input);
 
-      if (input != 1 && input != 2) {
+      if (input != 1 || input != 2) {
         myOutputValue = `Valid options are only 1 and 2 🤦🏻`;
       }
 
@@ -77,7 +77,7 @@ var main = function (input) {
         currentGameMode = "Waiting for next player";
         playerScores.push(finalVal);
 
-        if (round == noOfRounds) {
+        if (round == noOfPlayers) {
           scoreBoard = findSortedArray(playerScores);
           maxNum = scoreBoard[0]["player"];
           myOutputValue = `Player ${round}, you chose Dice ${input} first. <br> Your number is ${finalVal} <br> <br><hr> <br> 
