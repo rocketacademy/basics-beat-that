@@ -49,9 +49,11 @@ var compareNumbers = function (number1, number2) {
 
 // function to set everything back to 0, while keeping player scores.
 var resetGame = function () {
+  // reset player turn and game states.
   currentPlayer = 1;
   gameState = STATE_ROLL;
 
+  // reset round information.
   diceRoll = [];
   playerNumber = 0;
   playerNumberArray = [];
@@ -179,24 +181,18 @@ var main = function (input) {
   let output = "";
 
   // states for rolling dice, and presenting dice.
-  if (gameState == STATE_ROLL && currentPlayer <= totalPlayers) {
+  if (gameState == STATE_ROLL && currentPlayer <= totalPlayers)
     return playDiceRoll();
-  }
 
   // states for choosing dice order, and presenting the final number.
-  if (gameState == STATE_CHOOSE && currentPlayer <= totalPlayers) {
+  if (gameState == STATE_CHOOSE && currentPlayer <= totalPlayers)
     return playChooseOrder(input);
-  }
 
   // state for comparing numbers and presenting game result.
-  if (gameState == STATE_RESULT) {
-    return playShowResult();
-  }
+  if (gameState == STATE_RESULT) return playShowResult();
 
   // state for restarting the game.
-  if (gameState == STATE_RESTART) {
-    return playRestartGame(input);
-  }
+  if (gameState == STATE_RESTART) return playRestartGame(input);
 
   return output;
 };
