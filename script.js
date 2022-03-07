@@ -13,20 +13,11 @@ var playerOneDiceTwo = "";
 var playerTwoChoice = "";
 var playerTwoDiceRoll = "";
 var playerTwoDiceOne = "";
-var playerTwoDiceTwo = "";
 
 var main = function (input) {
   // refresh all variables to play again
   if (playerTwoChoice !== "") {
-    playerOneChoice = "";
-    playerOneDiceRoll = "";
-    playerOneDiceOne = "";
-    playerOneDiceTwo = "";
-
-    playerTwoChoice = "";
-    playerTwoDiceRoll = "";
-    playerTwoDiceOne = "";
-    playerTwoDiceTwo = "";
+    resetGame();
   }
 
   // player one has not rolled the dice
@@ -94,23 +85,20 @@ var main = function (input) {
 
     // if player two loses
     if (playerTwoChoice < playerOneChoice) {
-      return `Player 2, your choice is ${playerTwoChoice}. <br>
-      Player 1's choice is ${playerOneChoice}. <br><br>
-      Player 1 wins, Player 2 loses!`;
+      var returnMessage = playerTwoLoses();
+      return returnMessage;
     }
 
     // if player two wins
     if (playerTwoChoice > playerOneChoice) {
-      return `Player 2, your choice is ${playerTwoChoice}. <br>
-      Player 1's choice is ${playerOneChoice}. <br><br>
-      Player 1 loses, Player 2 wins!`;
+      var returnMessage = playerTwoWins();
+      return returnMessage;
     }
 
     // if draw
     if (playerTwoChoice == playerOneChoice) {
-      return `Player 2, your choice is ${playerTwoChoice}. <br>
-      Player 1's choice is ${playerOneChoice}. <br><br>
-      It's a draw!`;
+      var returnMessage = playersDraw();
+      return returnMessage;
     }
   }
 
@@ -122,23 +110,20 @@ var main = function (input) {
 
     // if player two loses
     if (playerTwoChoice < playerOneChoice) {
-      return `Player 2, your choice is ${playerTwoChoice}. <br>
-      Player 1's choice is ${playerOneChoice}. <br><br>
-      Player 1 wins, Player 2 loses!`;
+      var returnMessage = playerTwoLoses();
+      return returnMessage;
     }
 
     // if player two wins
     if (playerTwoChoice > playerOneChoice) {
-      return `Player 2, your choice is ${playerTwoChoice}. <br>
-     Player 1's choice is ${playerOneChoice}. <br><br>
-     Player 1 loses, Player 2 wins!`;
+      var returnMessage = playerTwoWins();
+      return returnMessage;
     }
 
     // if draw
     if (playerTwoChoice == playerOneChoice) {
-      return `Player 2, your choice is ${playerTwoChoice}. <br>
-    Player 1's choice is ${playerOneChoice}. <br><br>
-    It's a draw!`;
+      var returnMessage = playersDraw();
+      return returnMessage;
     }
   }
 
@@ -150,10 +135,42 @@ var main = function (input) {
   }
 };
 
+// function to roll dices
 var rollDices = function () {
-  // Generate a decimal inclusive of 0 and exclusive of 6
-  var randomDecimal = Math.random() * 6;
-  // Remove the decimal with the floor operation to get an integer from 1 to 6 inclusive
-  var randomInteger = Math.floor(randomDecimal) + 1;
+  var randomInteger = Math.floor(Math.random() * 6) + 1;
   return randomInteger;
+};
+
+// function to reset game
+var resetGame = function () {
+  playerOneChoice = "";
+  playerOneDiceRoll = "";
+  playerOneDiceOne = "";
+  playerOneDiceTwo = "";
+
+  playerTwoChoice = "";
+  playerTwoDiceRoll = "";
+  playerTwoDiceOne = "";
+  playerTwoDiceTwo = "";
+};
+
+//function for msg where player 2 wins
+var playerTwoWins = function () {
+  return `Player 2, your choice is ${playerTwoChoice}. <br>
+      Player 1's choice is ${playerOneChoice}. <br><br>
+      Player 1 loses, Player 2 wins!`;
+};
+
+//function for msg where player 2 loses
+var playerTwoLoses = function () {
+  return `Player 2, your choice is ${playerTwoChoice}. <br>
+      Player 1's choice is ${playerOneChoice}. <br><br>
+      Player 1 wins, Player 2 loses!`;
+};
+
+//function for msg where players draw
+var playersDraw = function () {
+  return `Player 2, your choice is ${playerTwoChoice}. <br>
+      Player 1's choice is ${playerOneChoice}. <br><br>
+      It's a draw!`;
 };
