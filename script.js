@@ -30,6 +30,7 @@ var main = function (input) {
     }
   } else if (gameState == GAME_STATE_COMPARE_SCORES) {
     outputMessage = comparePlayersScore();
+    resetGame();
   }
   return outputMessage;
 };
@@ -95,5 +96,13 @@ var comparePlayersScore = function () {
   } else if (allPlayersScore[0] == allPlayersScore[1]) {
     compareMessage = compareMessage + "<br><br>It's a tie!";
   }
+  compareMessage = compareMessage + "<br><br>Press submit to reset game.";
   return compareMessage;
+};
+
+var resetGame = function () {
+  gameState = GAME_STATE_DICE_ROLL;
+  currentPlayerRolls = [];
+  currentPlayer = 1;
+  allPlayersScore = [];
 };
