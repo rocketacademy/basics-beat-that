@@ -13,21 +13,24 @@ var main = function (input) {
   if (gameState == GAME_STATE_DICE_ROLL) {
     outputMessage = playerDiceRoll();
     gameState = GAME_STATE_CHOOSE_DICE_ORDER;
-  } else if ((gameState = GAME_STATE_CHOOSE_DICE_ORDER)) {
+  } else if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
     outputMessage = getPlayerScore(input);
     if (currentPlayer == 1 && !outputMessage.includes("Error")) {
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
-      return (
-        outputMessage + "<br><br>It is now Player " + currentPlayer + "'s turn!"
-      );
+      outputMessage =
+        outputMessage +
+        "<br><br>It is now Player " +
+        currentPlayer +
+        "'s turn!";
     } else if (currentPlayer == 2 && !outputMessage.includes("Error")) {
-      currentPlayer = 1;
       gameState = GAME_STATE_COMPARE_SCORES;
-      return outputMessage + "<br><br>Press submit to calculate scores!";
+      outputMessage =
+        outputMessage + "<br><br>Press submit to calculate scores!";
     }
+  } else if (gameState == GAME_STATE_COMPARE_SCORES) {
+    outputMessage = comparePlayersScore();
   }
-  // else if ((gameState = GAME_STATE_COMPARE_SCORES)){}
   return outputMessage;
 };
 
@@ -76,4 +79,21 @@ var getPlayerScore = function (playerInput) {
   allPlayersScore.push(playerScore);
   currentPlayerRolls = [];
   return "Your chosen value is: " + playerScore;
+};
+
+var comparePlayersScore = function () {
+  compareMessage =
+    "Player 1 score: " +
+    allPlayersScore[0] +
+    "<br>Player 2 score: " +
+    allPlayersScore[1];
+
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 1 wins!";
+  } else if (allPlayersScore[0] < allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 2 wins!";
+  } else if (allPlayersScore[0] == allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>It's a tie!";
+  }
+  return compareMessage;
 };
