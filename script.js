@@ -13,9 +13,11 @@ var main = function (input) {
 
   //player 1 enters either "1" or "2" for the order of preference
   else if (gameMode == "player 1 select") {
-    gameMode = "player 2 roll dice";
-    player1Choice = playerSelect(input, player1);
-    return `Player 1, the number you have chosen is ${player1Choice}`;
+    if (input == 1 || input == 2) {
+      gameMode = "player 2 roll dice";
+      player1Choice = playerSelect(input, player1);
+      return `Player 1, the number you have chosen is ${player1Choice}`;
+    } else return `Please input either "1" or "2".`;
   }
 
   //player 2 clicks submit to roll two dice
@@ -25,9 +27,11 @@ var main = function (input) {
   }
   //player 2 enters either "1" or "2" for the order of preference
   else if (gameMode == "player 2 select") {
-    gameMode = "determine winner";
-    player2Choice = playerSelect(input, player2);
-    return `Player 2, , the number you have chosen is ${player2Choice}`;
+    if (input == 1 || input == 2) {
+      gameMode = "determine winner";
+      player2Choice = playerSelect(input, player2);
+      return `Player 2, the number you have chosen is ${player2Choice}`;
+    } else return `Please input either "1" or "2".`;
   }
 
   //calculate whether player 1 or player 2 has the higher score and then reset the game
@@ -73,16 +77,16 @@ var determineWinner = function (player1Choice, player2Choice) {
     gameMode = "player 1 roll dice";
     player1 = [];
     player2 = [];
-    return `Player 1's number was ${player1Choice}, player 2's number was ${player2Choice}. Player 1 wins. Press <Submit> to play again!`;
+    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>Player 1 wins!</b><br><br> Press "Submit" to play again!`;
   } else if (Number(player1Choice) < Number(player2Choice)) {
     player1 = [];
     player2 = [];
     gameMode = "player 1 roll dice";
-    return `Player 1's number was ${player1Choice}, player 2's number was ${player2Choice}. Player 2 wins. Press <Submit> to play again!`;
+    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>Player 2 wins!</b><br><br> Press "Submit" to play again!`;
   } else {
     player1 = [];
     player2 = [];
     gameMode = "player 1 roll dice";
-    return `Player 1's number was ${player1Choice}, player 2's number was ${player2Choice}. It's a draw! Press <Submit> to play again!`;
+    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>It's a draw!</b> <br><br>Press "Submit" to play again!`;
   }
 };
