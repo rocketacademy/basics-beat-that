@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
     <title>Coding Basics</title>
     <style>
       * {
@@ -8,12 +14,13 @@
       }
 
       body {
-        font-family: sans-serif;
+        font-family: "Merriweather";
         margin-left: 30px;
         margin-right: 30px;
       }
 
       #header {
+        font-family: "Montserrat";
         text-align: center;
       }
 
@@ -25,7 +32,8 @@
       }
 
       input {
-        font-size: 21px;
+        font-family: "Merriweather";
+        font-size: 16px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
@@ -33,7 +41,8 @@
       }
 
       button {
-        font-size: 21px;
+        font-family: "Merriweather";
+        font-size: 16px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
@@ -45,17 +54,32 @@
         padding: 20px;
         width: 100%;
       }
+
+      #instructions {
+        font-family: "Montserrat";
+        text-align: center;
+        font-size: 14px;
+      }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Let's Play: Beat That 🎲🎲</h1>
+    <div id="instructions">
+      <p style="color: blue;">Game Instructions:</b></p>
+      <p>
+        1. Roll 2 dice.<br />
+        2. Pick which dice to be ordered first to form the biggest number possible. <br />
+        3. Hopefully BEAT your opponent's number. <br />
+        4. Have fun~
+      </p>
+    </div>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <p>Answer goes here:</p>
+      <input id="input-field" value="Hit submit to start the game" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <p>Game Message:</p>
       <div id="output-div"></div>
     </div>
     <!-- Import program logic -->
