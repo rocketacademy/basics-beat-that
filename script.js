@@ -15,7 +15,7 @@ var main = function (input) {
   else if (gameMode == "player 1 select") {
     gameMode = "player 2 roll dice";
     player1Choice = playerSelect(input, player1);
-    return `Player 1, your number is ${player1Choice}`;
+    return `Player 1, the number you have chosen is ${player1Choice}`;
   }
 
   //player 2 clicks submit to roll two dice
@@ -27,7 +27,7 @@ var main = function (input) {
   else if (gameMode == "player 2 select") {
     gameMode = "determine winner";
     player2Choice = playerSelect(input, player2);
-    return `Player 2, your number is ${player2Choice}`;
+    return `Player 2, , the number you have chosen is ${player2Choice}`;
   }
 
   //calculate whether player 1 or player 2 has the higher score and then reset the game
