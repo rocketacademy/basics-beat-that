@@ -64,12 +64,9 @@ var playerSelect = function (input, playerNumber) {
     if (input == "1") {
       playerChoice = `${playerNumber[0]}${playerNumber[1]}`;
       return playerChoice;
-    }
-    if (input == "2") {
+    } else {
       playerChoice = `${playerNumber[1]}${playerNumber[0]}`;
       return playerChoice;
-    } else {
-      return `Please input either "1" or "2".`;
     }
   }
 };
@@ -81,18 +78,18 @@ var determineWinner = function (player1Choice, player2Choice) {
     player2 = [];
     player1Score += 1;
     gameMode = "player 1 roll dice";
-    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>Player 1 wins!</b><br><br> Press "Submit" to play again! <br><br> <b>Current Score</b> <br>Player 1: ${player1Score} <br>Player 2:${player2Score} <br>Draws:${drawScore}`;
+    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>Player 1 wins!</b><br><br> Press "Submit" to play again! <br><br> <b>Current Score</b> <br>Player 1: ${player1Score} <br>Player 2: ${player2Score} <br>Draws: ${drawScore}`;
   } else if (Number(player1Choice) < Number(player2Choice)) {
     player1 = [];
     player2 = [];
     player1Score += 1;
     gameMode = "player 1 roll dice";
-    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>Player 2 wins!</b><br><br> Press "Submit" to play again! <br><br> <b>Current Score</b> <br>Player 1: ${player1Score} <br>Player 2:${player2Score} <br>Draws:${drawScore}`;
+    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>Player 2 wins!</b><br><br> Press "Submit" to play again! <br><br> <b>Current Score</b> <br>Player 1: ${player1Score} <br>Player 2: ${player2Score} <br>Draws: ${drawScore}`;
   } else {
     player1 = [];
     player2 = [];
     drawScore += 1;
     gameMode = "player 1 roll dice";
-    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>It's a draw!</b> <br><br>Press "Submit" to play again! <br><br> <b>Current Score</b> <br>Player 1: ${player1Score} <br>Player 2:${player2Score} <br>Draws:${drawScore}`;
+    return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>It's a draw!</b> <br><br>Press "Submit" to play again! <br><br> <b>Current Score</b> <br>Player 1: ${player1Score} <br>Player 2: ${player2Score} <br>Draws: ${drawScore}`;
   }
 };
