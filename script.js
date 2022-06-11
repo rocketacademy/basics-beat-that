@@ -111,13 +111,11 @@ var generateScoreboard = function () {
 
 var main = function (input) {
   var gameMessage = "";
-  console.log(currentGameStatus);
 
   if (currentGameStatus == "player 1 turn") {
     // roll the dice for both players
     totalGames += 1;
     generatePlayerRoll();
-    console.log(player1Roll, player2Roll);
     player1dice1 = player1Roll[0];
     player1dice2 = player1Roll[1];
     gameMessage = showRollOutcome("Player 1", player1dice1, player1dice2);
