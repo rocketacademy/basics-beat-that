@@ -1,8 +1,9 @@
-var GAME_MODE_DICE_ROLL = 'GAME MODE DICE ROLL';
-var GAME_MODE_DICE_ORDER = 'GAME MODE DICE ORDER';
-var gameMode = 'GAME MODE DICE ROLL';
-
-var playerRolls = [];
+// var GAME_MODE_DICE_ROLL = 'GAME MODE DICE ROLL';
+// var GAME_MODE_DICE_ORDER = 'GAME MODE DICE ORDER';
+var gameMode = 'waiting for user to press submit';
+var currentPlayer = 1;
+var currentPlayerRolls = [];
+var bothPlayersScores = [];
 
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -14,32 +15,49 @@ var rollDice = function () {
 var rollDiceForPlayer = function () {
   var counter = 0
   while (counter < 2) {
-    playerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
     counter += 1;
   }
-  return "Welcome Player 1. <br> You rolled " + playerRolls[0] + " for Dice 1 and" + playerRolls[1] + " for Dice 2. <br> Please choose the order of the dice."
+  return "Welcome Player " + currentPlayer + ". <br> You rolled " + currentPlayerRolls[0] + " for Dice 1 and" + currentPlayerRolls[1] + " for Dice 2. <br> Please choose the order of the dice."
 };
 
-var getPlayerResult = function () {
-  var playerResult = '';
+var getPlayerResult = function (input) {
+  var playerResult; // why don't need ""
   if (input != 1 && input != 2) {
-    return "Error! Please only enter 1 or 2, depending on which dice you would like to choose as the first digit of your number <br> You rolled " + playerRolls[0] + " for Dice 1 and" + playerRolls[1] + " for Dice 2.";
+    return "Error! Please only enter 1 or 2, depending on which dice you would like to choose as the first digit of your final result. <br> You rolled " + currentPlayerRolls[0] + " for Dice 1 and " + currentPlayerRolls[1] + " for Dice 2.";
   } else if (input == 1) {
-    playerResult = Number(String(playerRolls[0]) + String(playerRolls[1]));
-    return "Player 1, you chose Dice 1 first. <br> Your number is " + playerResult + "<br> It is now Player 2's turn."
+    playerResult = Number(String(currentPlayerRolls[0]) + String(currentPlayerRolls[1]));
+    return "Your chosen value is: " + playerResult
   } else if (input == 2) {
-    playerResult = Number(String(playerRolls[1]) + String(playerRolls[0]));
-    return "Player 1, you chose Dice 2 first. <br> Your number is " + playerResult + "."
+    playerResult = Number(String(currentPlayerRolls[1]) + String(currentPlayerRolls[0]));
+    return "Your chosen value is: " + playerResult
+  }
+  bothPlayersScores.push(playerResult);
+  // clear current player rolls array for next player
+  currentPlayerRolls = [];
+  return "Your final result is: " + playerResult;
+};
+
+var main = function (input) {
+  var myOutputValue = '';
+
+  if (gameMode == 'waiting for user to press submit') {
+    myOutputValue = rollDiceForPlayer();
+    gameMode = 'user to choose dice order';
+    return myOutputValue;
   }
 
-  var main = function (input) {
-    var myOutputValue = '';
-    if (gameMode == GAME_MODE_DICE_ROLL) {
-      myOutputValue = rollDiceForPlayer();
-      gameMode = GAME_MODE_DICE_ORDER;
-    } else if (gameMode == GAME_MODE_DICE_ORDER) {
-      myOutputValue = getPlayerResult(input)
+  if (gameMode == 'user to choose dice order') {
+    myOutputValue = getPlayerResult(input)
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameMode = 'waiting for user to press submit';
+      return myOutputValue + "<br> It is now Player 2's turn!";
     }
-    return outputMessage;
+    if (currentPlayer == 2) {
+      gameMode = 'comparing player scores';
+      return myOutputValue + "<br> Click submit to compare your scores!";
+    }
   }
+
 };
