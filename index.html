@@ -2,6 +2,12 @@
 <html>
   <head>
     <title>Coding Basics</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
     <style>
       * {
         box-sizing: border-box;
@@ -9,8 +15,11 @@
 
       body {
         font-family: sans-serif;
+        margin-top: 30px;
         margin-left: 30px;
         margin-right: 30px;
+        background-color: black;
+        color: white;
       }
 
       #header {
@@ -18,9 +27,11 @@
       }
 
       #container {
-        background-color: pink;
+        /* background-color: lightblue; */
+        background-image: url("https://contenthub-static.grammarly.com/blog/wp-content/uploads/2016/07/dice.gif");
+        color: white;
         margin: 40px auto;
-        max-width: 800px;
+        max-width: 1300px;
         padding: 38px 31px;
       }
 
@@ -40,6 +51,7 @@
       }
 
       #output-div {
+        color: black;
         background-color: lightgrey;
         margin: 20px auto;
         padding: 20px;
@@ -51,29 +63,69 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <div class="row">
+        <div class="col">
+          <p><b>Number of players:</b></p>
+          <div class="col float-left" style="width: 100px">
+            <input id="player-count" type="number" value="2" min="2" max="10" step="1"/>
+          </div>
+        </div>
+        <div class="col">
+          <p><b>Number of dice:</b></p>
+          <div class="col float-left" style="width: 100px">
+            <input id="dice-count" type="number" value="1" min="1" max="5" step="1"/>
+          </div>
+        </div>
+        <div class="col">
+          <p><b>Number of rounds:</b></p>
+          <div class="col float-left" style="width: 100px">
+            <input id="rounds" type="number" value="1" min="1" max="10" step="1"/>
+          </div>
+        </div>
+      </div>
+      <p><b>Choose your winning condition:</b></p>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="winning-condition" id="higher-wins" value="higher-wins" checked>
+        <label class="form-check-label" for="higher-wins">
+          Highest combined score wins
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="winning-condition" id="lower-wins" value="lower-wins">
+        <label class="form-check-label" for="lower-wins">
+          Lowest combined score wins
+        </label>
       <br />
-      <button id="submit-button">Submit</button>
+      <br />
+      <button id="submit-button">Go!</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
     <!-- Import program logic -->
-    <script src="script.js"></script>
+    <script src="script_more_comfortable.js"></script>
     <!-- Define button click functionality -->
     <script>
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        var players = document.querySelector("#player-count");
+        var diceCount = document.querySelector("#dice-count");
+        var rounds = document.querySelector("#rounds");
+        if (document.getElementById("higher-wins").checked == true){
+          var result = main(players.value, diceCount.value, rounds.value, "highest score wins");
+        }
+        else {
+          var result = main(players.value, diceCount.value, rounds.value, "lowest score wins");
+        }
 
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
 
         // Reset input value
-        input.value = "";
+        players.value = 2;
+        diceCount.value = 1;
+        rounds.value = 1;
       });
     </script>
   </body>

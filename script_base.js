@@ -59,7 +59,6 @@ var playerDiceRoll = function () {
 };
 
 var getPlayerScore = function (playerInput) {
-  var playerScores;
   if (playerInput != 1 && playerInput != 2) {
     return (
       "Error! Please only input '1' or '2' to choose which dice to use as he first digit. <br><br>Your dice rolls are: <br>Dice 1: " +
