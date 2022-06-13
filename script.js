@@ -1,7 +1,11 @@
+var gameMode = "match select";
+
+var matchSelect = "Normal";
 var lowOrHigh = "Highest";
+var numDices = 2;
+var maxPlayers = 2; //number of players
 
 var playerTurn = 0; //checks whose turn is it
-var maxPlayers = 2; //number of players
 
 var gameRound = 1;
 var roundScoreBoard = []; //gather the
@@ -12,7 +16,7 @@ var leaderBoardSequence = [];
 
 //create Random number
 var generateRandomNum = function () {
-  return Math.ceil(Math.random() * 9);
+  return Math.ceil(Math.random() * 6);
 };
 
 //sorts the user dice roll from highest to lowest
@@ -23,6 +27,15 @@ var highestNum = function (numOrder) {
 //sorts the user dice roll from lowest to highest
 var lowestNum = function (numStore) {
   return numOrder.sort();
+};
+
+var numToDice = function (num) {
+  if (num == 1) return "⚀";
+  else if (num == 2) return "⚁";
+  else if (num == 3) return "⚂";
+  else if (num == 4) return "⚃";
+  else if (num == 5) return "⚄";
+  else return "⚅";
 };
 
 var getPlayerSequence = function () {
@@ -59,14 +72,79 @@ var gameStats = function () {
   return gameStatString;
 };
 
+var configMatchSelect = function (userInput) {
+  if (!(userInput == 1 || userInput == 2))
+    return `<b>Incorrect input</b> <br><br>
+    Select your <i>game mode</i>: <br />
+      (1) Normal Match <br />
+      (2) Knockout Match`;
+  else {
+    if (userInput == 1) matchSelect = "Normal";
+    else matchSelect = "Knockout";
+
+    gameMode = "player select";
+    return `<b>Game Mode:</b> ${matchSelect} <br><br> Now select the <i>number of players</i> (greater than 1): `;
+  }
+};
+
+var configPlayerSelect = function (userInput) {
+  var checkNum = Number(userInput);
+  if (Number.isInteger(checkNum)) {
+    if (checkNum < 2)
+      return `<b>Player Select: </b><br> Enter a number that is greater than 1`;
+    gameMode = "dice select";
+    maxPlayers = checkNum;
+    return `<b>Game Mode:</b> ${matchSelect} <br>
+    <b>No. of Players: </b> ${checkNum} <br><br> Now select the <i>number of dice</i> to roll (greater than 1): `;
+  } else
+    return "<b>The input is not a number.</b> <br><br> <b>Players Select: </b><br> Please enter a number";
+};
+
+var configDiceSelect = function (userInput) {
+  var checkNum = Number(userInput);
+  if (Number.isInteger(checkNum)) {
+    if (checkNum < 1)
+      return `<b>Dice Select: </b><br> Enter a number that is greater than 0`;
+    gameMode = "low or high";
+    numDices = checkNum;
+    return `<b>Game Mode:</b> ${matchSelect} <br>
+    <b>No. of Players: </b> ${maxPlayers} <br>
+    <b>No. of Dice/s: </b> ${checkNum} <br><br> Now select your <i>match mode</i>: <br/>
+      (1) Highest number wins<br/>
+      (2) Lowest number wins`;
+  } else
+    return "<b>The input is not a number.</b> <br><br> <b>Dice Select: </b><br> Please enter a number";
+};
+
+var configLowOrHigh = function (userInput) {
+  if (!(userInput == 1 || userInput == 2))
+    return `<b>Incorrect input</b> <br><br>
+    Select your <i>match mode</i>: <br/>
+      (1) Highest number wins<br/>
+      (2) Lowest number wins`;
+  else {
+    if (userInput == 1) lowOrHigh = "Highest";
+    else matchSelect = "Lowest";
+
+    gameMode = "game proper";
+    return `<b>Game Mode:</b> ${matchSelect} <br>
+    <b>No. of Players: </b> ${maxPlayers} <br>
+    <b>No. of Dice/s: </b> ${numDices} <br>
+    <b>Match Mode: </b> ${lowOrHigh} <br><br> Click the submit button to start the game: `;
+  }
+};
+
 // Game Proper
-var gameProper = function () {
+var normalGame = function () {
   var userNumberStore = []; //random number generated | temporary storage
-  for (let num = 0; num < 2; num++) userNumberStore.push(generateRandomNum()); //generated number
+  for (let num = 0; num < numDices; num++)
+    userNumberStore.push(generateRandomNum()); //generated number
 
   var numString = `You rolled: `; //displayed numbers
   for (let userNum = 0; userNum < userNumberStore.length; userNum++) {
-    numString += `${userNumberStore[userNum]} | `;
+    numString += `${numToDice(userNumberStore[userNum])} - ${
+      userNumberStore[userNum]
+    } | `;
   }
 
   var orderednum = [];
@@ -106,6 +184,23 @@ var gameProper = function () {
   }
 };
 
+var knockoutGame = function () {};
+
+var gameReset = function () {};
+
 var main = function (input) {
-  return gameProper();
+  if (input == "reset") {
+    return gameReset();
+  } else if (gameMode == "match select") {
+    return configMatchSelect(input);
+  } else if (gameMode == "player select") {
+    return configPlayerSelect(input);
+  } else if (gameMode == "dice select") {
+    return configDiceSelect(input);
+  } else if (gameMode == "low or high") {
+    return configLowOrHigh(input);
+  } else if (gameMode == "game proper") {
+    if (matchSelect == "Normal") return normalGame();
+    else return knockoutGame();
+  }
 };
