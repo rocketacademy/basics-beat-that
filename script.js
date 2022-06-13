@@ -103,7 +103,7 @@ var main = function (input) {
       final = 0;
       playerRolls = [];
       currentPlayer = 1;
-      return output + "<br><br> Click roll to start a new round!";
+      return output + "<br><br> Click roll for a rematch!";
     }
   } else {
     firstDice = 0;
@@ -112,6 +112,9 @@ var main = function (input) {
     playerRolls = [];
     currentPlayer = 1;
     gameState = begin;
-    return `Thank you for playing! Press 'roll' to start a new round!`;
+    playerOne = 0;
+    playerTwo = 0;
+    draw = 0;
+    return `Thank you for playing! Click 'roll' to start a new round!`;
   }
 };
