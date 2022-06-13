@@ -1,4 +1,5 @@
 var gameMode = "match select";
+var prevGameMode = "";
 
 var matchSelect = "Normal";
 var lowOrHigh = "Highest";
@@ -14,6 +15,24 @@ var totalScoreBoard = []; //
 var leaderBoard = [];
 var leaderBoardSequence = [];
 
+var reset = function () {
+  gameMode = "match select";
+
+  matchSelect = "Normal";
+  lowOrHigh = "Highest";
+  numDices = 2;
+  maxPlayers = 2; //number of players
+
+  playerTurn = 0; //checks whose turn is it
+
+  gameRound = 1;
+  roundScoreBoard = []; //gather the
+  totalScoreBoard = []; //
+
+  leaderBoard = [];
+  leaderBoardSequence = [];
+};
+
 //create Random number
 var generateRandomNum = function () {
   return Math.ceil(Math.random() * 6);
@@ -25,7 +44,7 @@ var highestNum = function (numOrder) {
 };
 
 //sorts the user dice roll from lowest to highest
-var lowestNum = function (numStore) {
+var lowestNum = function (numOrder) {
   return numOrder.sort();
 };
 
@@ -43,7 +62,7 @@ var getPlayerSequence = function () {
     leaderBoardSequence[i] = i + 1;
 };
 
-var getLeaderboards = function () {
+var getHighLeaderboards = function () {
   leaderBoard = totalScoreBoard;
   getPlayerSequence();
   for (let i = 0; i < leaderBoard.length; i++) {
@@ -62,10 +81,30 @@ var getLeaderboards = function () {
   }
 };
 
+var getLowLeaderboards = function () {
+  leaderBoard = totalScoreBoard;
+  getPlayerSequence();
+  for (let i = 0; i < leaderBoard.length; i++) {
+    for (let j = 0; j < leaderBoard.length - i - 1; j++) {
+      if (leaderBoard[j] > leaderBoard[j + 1]) {
+        var temp = leaderBoard[j + 1];
+        var tempSeq = leaderBoardSequence[j + 1];
+
+        leaderBoard[j + 1] = leaderBoard[j];
+        leaderBoardSequence[j + 1] = leaderBoardSequence[j];
+
+        leaderBoard[j] = temp;
+        leaderBoardSequence[j] = tempSeq;
+      }
+    }
+  }
+};
+
 //display End of Round game stats
 var gameStats = function () {
-  getLeaderboards();
-  var gameStatString = `Total Game Stats: <br>`;
+  if (lowOrHigh == "Highest") getHighLeaderboards();
+  else getLowLeaderboards();
+  var gameStatString = `${matchSelect} Game Stats (${lowOrHigh}): <br>`;
   for (let player = 0; player < leaderBoard.length; player++) {
     gameStatString += `Player ${leaderBoardSequence[player]}: ${leaderBoard[player]}<br>`;
   }
@@ -124,7 +163,7 @@ var configLowOrHigh = function (userInput) {
       (2) Lowest number wins`;
   else {
     if (userInput == 1) lowOrHigh = "Highest";
-    else matchSelect = "Lowest";
+    else lowOrHigh = "Lowest";
 
     gameMode = "game proper";
     return `<b>Game Mode:</b> ${matchSelect} <br>
@@ -175,31 +214,42 @@ var normalGame = function () {
         console.log(`Player ${i}`, totalScoreBoard[i]);
       }
     }
-    return `- End of Round - <br> ${gameStats()}`;
+    return `- End of Round ${gameRound - 1} - <br> ${gameStats()}`;
   } else {
     roundScoreBoard[playerTurn] = intUserNum;
     playerTurn += 1; //increase player
 
-    return `Round ${gameRound} <br> Welcome Player ${playerTurn}!<br> ${numString} <br> ${orderedNumString}.`;
+    return `<b>Round ${gameRound}</b> <br> Welcome Player ${playerTurn}!<br> ${numString} <br> ${orderedNumString}.`;
   }
 };
 
 var knockoutGame = function () {};
 
-var gameReset = function () {};
+var gameReset = function (userInput) {
+  var yOrN = userInput.toLowerCase();
+  console.log(yOrN);
+  if (yOrN == "y") {
+    reset();
+    return `Select your gamemode: <br/>
+        (1) Normal Match <br/>
+        (2) Knockout Match`;
+  } else if (yOrN == "n") {
+    gameMode = prevGameMode;
+    return "<b>Game reset aborted!</b> <br><br> Click the submit button to continue.";
+  } else return `<b>Game Reset</b> <br> Incorrect input, type y/n to continue`;
+};
 
 var main = function (input) {
   if (input == "reset") {
-    return gameReset();
-  } else if (gameMode == "match select") {
-    return configMatchSelect(input);
-  } else if (gameMode == "player select") {
-    return configPlayerSelect(input);
-  } else if (gameMode == "dice select") {
-    return configDiceSelect(input);
-  } else if (gameMode == "low or high") {
-    return configLowOrHigh(input);
-  } else if (gameMode == "game proper") {
+    prevGameMode = gameMode;
+    gameMode = "reset";
+    return "<b>Are you sure you want to reset?</b> (y/n) <br> All records will reset and will go back to match selection.";
+  } else if (gameMode == "reset") return gameReset(input);
+  else if (gameMode == "match select") return configMatchSelect(input);
+  else if (gameMode == "player select") return configPlayerSelect(input);
+  else if (gameMode == "dice select") return configDiceSelect(input);
+  else if (gameMode == "low or high") return configLowOrHigh(input);
+  else if (gameMode == "game proper") {
     if (matchSelect == "Normal") return normalGame();
     else return knockoutGame();
   }
