@@ -7,6 +7,9 @@ var gameRound = 1;
 var roundScoreBoard = []; //gather the
 var totalScoreBoard = []; //
 
+var leaderBoard = [];
+var leaderBoardSequence = [];
+
 //create Random number
 var generateRandomNum = function () {
   return Math.ceil(Math.random() * 9);
@@ -22,11 +25,36 @@ var lowestNum = function (numStore) {
   return numOrder.sort();
 };
 
+var getPlayerSequence = function () {
+  for (let i = 0; i < totalScoreBoard.length; i++)
+    leaderBoardSequence[i] = i + 1;
+};
+
+var getLeaderboards = function () {
+  leaderBoard = totalScoreBoard;
+  getPlayerSequence();
+  for (let i = 0; i < leaderBoard.length; i++) {
+    for (let j = 0; j < leaderBoard.length - i - 1; j++) {
+      if (leaderBoard[j] < leaderBoard[j + 1]) {
+        var temp = leaderBoard[j + 1];
+        var tempSeq = leaderBoardSequence[j + 1];
+
+        leaderBoard[j + 1] = leaderBoard[j];
+        leaderBoardSequence[j + 1] = leaderBoardSequence[j];
+
+        leaderBoard[j] = temp;
+        leaderBoardSequence[j] = tempSeq;
+      }
+    }
+  }
+};
+
 //display End of Round game stats
 var gameStats = function () {
+  getLeaderboards();
   var gameStatString = `Total Game Stats: <br>`;
-  for (let player = 0; player < totalScoreBoard.length; player++) {
-    gameStatString += `Player ${player + 1}: ${totalScoreBoard[player]}<br>`;
+  for (let player = 0; player < leaderBoard.length; player++) {
+    gameStatString += `Player ${leaderBoardSequence[player]}: ${leaderBoard[player]}<br>`;
   }
   return gameStatString;
 };
