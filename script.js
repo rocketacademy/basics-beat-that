@@ -1,5 +1,3 @@
-// var GAME_MODE_DICE_ROLL = 'GAME MODE DICE ROLL';
-// var GAME_MODE_DICE_ORDER = 'GAME MODE DICE ORDER';
 var gameMode = 'waiting for user to press submit';
 var currentPlayer = 1;
 var currentPlayerRolls = [];
@@ -18,24 +16,43 @@ var rollDiceForPlayer = function () {
     currentPlayerRolls.push(rollDice());
     counter += 1;
   }
-  return "Welcome Player " + currentPlayer + ". <br> You rolled " + currentPlayerRolls[0] + " for Dice 1 and" + currentPlayerRolls[1] + " for Dice 2. <br> Please choose the order of the dice."
+  return "Welcome Player " + currentPlayer + ". <br> You rolled " + currentPlayerRolls[0] + " for Dice 1 and " + currentPlayerRolls[1] + " for Dice 2. <br> Please choose which dice you would like to represent the first digit of your number."
 };
 
 var getPlayerResult = function (input) {
-  var playerResult; // why don't need ""
+  var playerResult;
   if (input != 1 && input != 2) {
+    gameMode = "waiting for user to press submit";
     return "Error! Please only enter 1 or 2, depending on which dice you would like to choose as the first digit of your final result. <br> You rolled " + currentPlayerRolls[0] + " for Dice 1 and " + currentPlayerRolls[1] + " for Dice 2.";
   } else if (input == 1) {
     playerResult = Number(String(currentPlayerRolls[0]) + String(currentPlayerRolls[1]));
-    return "Your chosen value is: " + playerResult
   } else if (input == 2) {
     playerResult = Number(String(currentPlayerRolls[1]) + String(currentPlayerRolls[0]));
-    return "Your chosen value is: " + playerResult
   }
   bothPlayersScores.push(playerResult);
-  // clear current player rolls array for next player
   currentPlayerRolls = [];
   return "Your final result is: " + playerResult;
+};
+
+var comparePlayerScores = function () {
+  var compareMessage = "Player 1's score: " + bothPlayersScores[0] + "<br> Player 2's score " + bothPlayersScores[1];
+  if (bothPlayersScores[0] > bothPlayersScores[1]) {
+    compareMessage = compareMessage + "<br> Player 1 wins!"
+  }
+  if (bothPlayersScores[0] < bothPlayersScores[1]) {
+    compareMessage = compareMessage + "<br> Player 2 wins!"
+  }
+  if (bothPlayersScores[0] == bothPlayersScores[1]) {
+    compareMessage = compareMessage + "<br> It's a tie!"
+  }
+
+  return compareMessage;
+}
+
+var resetGame = function () {
+  currentPlayer = 1;
+  bothPlayersScores = [];
+  gameMode = 'waiting for user to press submit';
 };
 
 var main = function (input) {
@@ -45,19 +62,23 @@ var main = function (input) {
     myOutputValue = rollDiceForPlayer();
     gameMode = 'user to choose dice order';
     return myOutputValue;
-  }
-
-  if (gameMode == 'user to choose dice order') {
+  } else if (gameMode == 'user to choose dice order') {
     myOutputValue = getPlayerResult(input)
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameMode = 'waiting for user to press submit';
       return myOutputValue + "<br> It is now Player 2's turn!";
-    }
-    if (currentPlayer == 2) {
+    } else if (currentPlayer == 2) {
       gameMode = 'comparing player scores';
       return myOutputValue + "<br> Click submit to compare your scores!";
     }
-  }
+  } else if (gameMode == 'comparing player scores') {
+    myOutputValue = comparePlayerScores();
+    resetGame();
 
+    return myOutputValue;
+  }
 };
+
+// problems: 
+// game continues even if input is invalid, though error message shows
