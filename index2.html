@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Coding Basics</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: sans-serif;
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+
+      #header {
+        text-align: center;
+      }
+
+      #container {
+        background-color: paleturquoise;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+      }
+
+      input {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 100%;
+      }
+
+      button {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 6px;
+      }
+
+      #output-div {
+        background-color: mediumturquoise;
+        margin: 20px auto;
+        padding: 20px;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <div id="container">
+      <p>Welcome to Beat That! - Knockout edition.</p>
+      <p>
+        Both players roll two dice and form a number with the dice rolled.
+        Whoever gets the higher number stays; the loser goes out of the round
+        and the next challenger takes their place.
+      </p>
+      <p><b>The last man standing wins!</b></p>
+      <p>Please type in the number of players to begin:</p>
+      <p></p>
+      <p>Input:</p>
+      <input id="input-field" />
+      <br />
+      <button id="submit-button">Go!</button>
+      <p>Output:</p>
+      <div id="output-div"></div>
+    </div>
+    <!-- Import program logic -->
+    <script src="script2.js"></script>
+    <!-- Define button click functionality -->
+    <script>
+      var button = document.querySelector("#submit-button");
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var input = document.querySelector("#input-field");
+        var result = main(input.value);
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+
+        // Reset input value
+        input.value = "";
+      });
+    </script>
+  </body>
+</html>
