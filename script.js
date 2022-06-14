@@ -127,7 +127,7 @@ var gameReset = function () {
 };
 
 var leaderBoard = function () {
-  return `<br><br><br>click Submit to play again.<br><br>Score Board<br>Player 1 won : ${leaderBoardInfo[2]}<br>Player 2 won : ${leaderBoardInfo[3]}<br>ties: ${leaderBoardInfo[1]}<br>rounds played: ${leaderBoardInfo[0]}`;
+  return `<br><br><br>click Submit to play again.<br><br>Leader Board<br>Player 1 won : ${leaderBoardInfo[2]}<br>Player 2 won : ${leaderBoardInfo[3]}<br>ties: ${leaderBoardInfo[1]}<br>rounds played: ${leaderBoardInfo[0]}`;
 };
 // 1) there will be 2 players playing this game
 // 2) when enter website. at Output box "click Submit to start". click submit
