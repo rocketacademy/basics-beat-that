@@ -18,21 +18,22 @@ var main = function (input) {
 
       gameMode = GAME_MODE_PLAYER_ROLL_DICE;
 
-      myOutputMessage +
-        `<br><br>it is Player ${currentPlayer} turn to roll dice. click Submit to roll dice.`;
+      myOutputMessage += `<br><br>it is Player ${currentPlayer} turn to roll dice. click Submit to roll dice.`;
       return myOutputMessage;
     }
 
     if (currentPlayer == 2) {
-      console.log(`game mode switch to compare p1 and p2 combination`);
+      console.log(`game mode switch to compare p1 and p2 scores`);
       gameMode = GAME_MODE_COMPARE_COMBINATION;
 
-      myOutputMessage + `<br><br>click Submit to compare players combination.`;
+      myOutputMessage += `<br><br>click Submit to compare players combination.`;
       return myOutputMessage;
     }
   } else if ((gameMode = GAME_MODE_COMPARE_COMBINATION)) {
+    console.log(`show result after comparing score`);
     myOutputMessage = compareScore();
     gameReset();
+    console.log(`game reset`);
 
     return myOutputMessage;
   }
@@ -44,7 +45,7 @@ var playerDiceRoll = [];
 
 var currentPlayer = 1;
 var playerDiceScore = [];
-var winRate = [0, 0, 0];
+var leaderBoardInfo = [0, 0, 0, 0];
 
 var GAME_MODE_PLAYER_ROLL_DICE = "GAME_MODE_PLAYER_ROLL_DICE";
 var GAME_MODE_PLAYER_CHOOSE_COMBINATION = "GAME_MODE_PLAYER_CHOOSE_COMBINATION";
@@ -93,23 +94,22 @@ var getPlayerScore = function (playerInput) {
 
 // function to compare players score
 var compareScore = function () {
+  leaderBoardInfo[0] += 1;
   var compareMessage = `Player 1's combination: ${playerDiceScore[0]} <br><br>Player 2's combination: ${playerDiceScore[1]}`;
-  // tie
+  // if tie
   if (playerDiceScore[0] == playerDiceScore[1]) {
-    winRate[0] += 1;
-    return compareMessage + `<br><br>Its a draw.`;
+    leaderBoardInfo[1] += 1;
+    return compareMessage + `<br><br>Its a draw.${leaderBoard()}`;
   }
-  // p1 win
+  // if p1 win
   if (playerDiceScore[0] > playerDiceScore[1]) {
-    winRate[1] += 1;
-    return compareMessage + `<br><br>Player 1 win`;
+    leaderBoardInfo[2] += 1;
+    return compareMessage + `<br><br>Player 1 win.${leaderBoard()}`;
   }
-  // p2 win
+  // if p2 win
   if (playerDiceScore[0] < playerDiceScore[1]) {
-    winRate[2] += 1;
-    return (
-      compareMessage + `<br><br>Player 2 win<br><br>click Submit to play again.`
-    );
+    leaderBoardInfo[3] += 1;
+    return compareMessage + `<br><br>Player 2 win.${leaderBoard()}`;
   }
 };
 
@@ -120,6 +120,9 @@ var gameReset = function () {
   playerDiceScore = [];
 };
 
+var leaderBoard = function () {
+  return `<br><br><br>click Submit to play again.<br><br>Score Board<br>Player 1 won : ${leaderBoardInfo[2]}<br>Player 2 won : ${leaderBoardInfo[3]}<br>ties: ${leaderBoardInfo[1]}<br>rounds played: ${leaderBoardInfo[0]}`;
+};
 // 1) there will be 2 players playing this game
 // 2) when enter website. at Output box "click Submit to start". click submit
 // 3) dice roll for player 1, return result dice 1 & dice 2. for example, 3 and 6
