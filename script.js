@@ -75,7 +75,6 @@ var getPlayerScore = function (playerOrderChoice) {
   }
   // Storing of all players record
   allPlayerScores.push(playerScore);
-  console.log(allPlayerScores);
   // Change current player record
   currentPlayerRolls = [];
   return playerChoiceMessage;
@@ -111,6 +110,7 @@ var resetGame = function () {
   var resetGameMessage = "";
   currentPlayer = 1;
   gameState = gameStateDiceRoll;
+  allPlayerScores = [];
 };
 
 var main = function (input) {
