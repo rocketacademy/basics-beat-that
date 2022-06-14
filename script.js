@@ -13,16 +13,18 @@
 
 // Global Variables
 // GV - Constants
-var gameStateTypeInUserName = "Game State - Type in Username";
 var gameStateDiceRoll = "Game State - Dice Roll";
 var gameStateChooseDiceOrder = "Game State - Choose Dice Order";
 var gameStateCompareScores = "Game State - Compare Scores";
-var error = "Error";
+var validInput = "Valid Input";
+var invalidInput = "Invalid Input";
 
 // GV - Variables
 var userName = "";
 var gameState = gameStateDiceRoll;
 var currentPlayer = 1;
+var gamesPlayed = 0;
+var inputValidation = validInput;
 
 // Arrays
 var currentPlayerRolls = [];
@@ -55,15 +57,17 @@ var getPlayerScore = function (playerOrderChoice) {
   var playerScore = 0;
   // Player Choice
   if (playerOrderChoice != 1 && playerOrderChoice != 2) {
-    playerScore = null;
-    playerChoiceMessage =
-      'Invalid input. Please input either "1" or "2" to continue the game.';
+    inputValidation = invalidInput;
+    playerChoiceMessage = `Invalid input. Please input either "1" or "2" to form your desired 2-digit number and continue the game. <br>Dice 1 is ${currentPlayerRolls[0]}. <br> Dice 2 is ${currentPlayerRolls[1]}.`;
+    return playerChoiceMessage;
   } else if (playerOrderChoice == 1) {
+    inputValidation = validInput;
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
     playerChoiceMessage = `Player ${currentPlayer} is ${playerScore}.`;
   } else if (playerOrderChoice == 2) {
+    inputValidation = validInput;
     playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
@@ -71,6 +75,7 @@ var getPlayerScore = function (playerOrderChoice) {
   }
   // Storing of all players record
   allPlayerScores.push(playerScore);
+  console.log(allPlayerScores);
   // Change current player record
   currentPlayerRolls = [];
   return playerChoiceMessage;
@@ -106,14 +111,7 @@ var resetGame = function () {
   var resetGameMessage = "";
   currentPlayer = 1;
   gameState = gameStateDiceRoll;
-  allPlayerScores = [];
 };
-
-// Welcome Message
-
-var defaultOutput = document.querySelector("#output-div");
-defaultOutput.innerHTML =
-  "Hello! This is the Beat That game. Two players are to play the game. Please press the Submit button to have Player 1's dice rolling.";
 
 var main = function (input) {
   var gameMessage = " ";
@@ -125,7 +123,7 @@ var main = function (input) {
   // Player Score
   else if (gameState == gameStateChooseDiceOrder) {
     gameMessage = getPlayerScore(input);
-    if (currentPlayer == 1) {
+    if (currentPlayer == 1 && inputValidation == validInput) {
       // Change Player
       currentPlayer = 2;
       gameState = gameStateDiceRoll;
@@ -134,7 +132,7 @@ var main = function (input) {
       );
     }
     // Shift to Compare Score Mode
-    if (currentPlayer == 2) {
+    if (currentPlayer == 2 && inputValidation == validInput) {
       gameState = gameStateCompareScores;
       return gameMessage + " Press the Submit button to compare scores.";
     }
