@@ -1,4 +1,4 @@
 var main = function (input) {
-  var myOutputValue = 'hello world';
+  var myOutputValue = 4;
   return myOutputValue;
 };
