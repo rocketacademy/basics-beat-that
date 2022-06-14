@@ -16,6 +16,9 @@ var currentDiceTwo = 0;
 var currentPlayerOneNum = 0;
 var currentPlayerTwoNum = 0;
 
+//Scores
+var scoreboard = [0, 0];
+
 var rollDice = function () {
   var randomInteger = Math.random() * 6;
   var rollDiceNum = Math.floor(randomInteger);
@@ -51,7 +54,9 @@ var selectOrder = function (player, input) {
 
   if (player == PLAYERONETURN) {
     currentPlayerOneNum = output;
+    scoreboard[0] += output;
   } else if (player == PLAYERTWOTURN) {
+    scoreboard[1] += output;
     currentPlayerTwoNum = output;
   }
   return `Player ${player} has selected ${output}.`;
@@ -64,6 +69,14 @@ var winCheck = function (num1, num2) {
     return `<br>Player 1's value was ${currentPlayerOneNum}.<br>Player ${PLAYERTWOTURN} wins!`;
   } else {
     return `<br>Player 1's value was ${currentPlayerOneNum}.<br>It's a draw.`;
+  }
+};
+
+var displayScore = function (scoreboard) {
+  if (scoreboard[1] > scoreboard[0]) {
+    return `<br><br>Player 2: ${scoreboard[1]}<br>Player 1: ${scoreboard[0]}`;
+  } else {
+    return `<br><br>Player 1: ${scoreboard[0]}<br>Player 2: ${scoreboard[1]}`;
   }
 };
 
@@ -87,6 +100,6 @@ var main = function (input) {
 
     currentGameState = ROLLPHASE;
     currentTurn += 1;
-    return closeStatement + winStatement;
+    return closeStatement + winStatement + displayScore(scoreboard);
   }
 };
