@@ -3,14 +3,22 @@ var main = function (input) {
   var myOutputMessage = "";
 
   if (gameMode == GAME_MODE_PLAYER_ROLL_DICE) {
-    console.log(`game mode is at, roll dice`);
+    if (input != "") {
+      return `ERROR. please click Submit to start`;
+    } else {
+      console.log(`game mode is at, roll dice`);
 
-    myOutputMessage = rollingDice();
-    gameMode = GAME_MODE_PLAYER_CHOOSE_COMBINATION;
+      myOutputMessage = rollingDice();
+      gameMode = GAME_MODE_PLAYER_CHOOSE_COMBINATION;
+    }
   } else if (gameMode == GAME_MODE_PLAYER_CHOOSE_COMBINATION) {
-    console.log(`game mode is at, choosing dice combination`);
+    if (input != "1" && input != "2") {
+      return `ERROR. <br><br>Player ${currentPlayer} enter either "1" or "2" for the order of your dice. <br>your dice roll were ${playerDiceRoll[0]} and ${playerDiceRoll[1]}`;
+    } else {
+      console.log(`game mode is at, choosing dice combination`);
 
-    myOutputMessage = getPlayerScore(input);
+      myOutputMessage = getPlayerScore(input);
+    }
 
     if (currentPlayer == 1) {
       console.log(`game mode switch to player 2 to roll dice`);
@@ -74,9 +82,7 @@ var rollingDice = function () {
 // function to combine player dice roll
 var getPlayerScore = function (playerInput) {
   var playerScore;
-  if (playerInput != "1" && playerInput != "2") {
-    return `ERROR. <br><br>Player ${currentPlayer} enter either "1" or "2" for the order of your dice. <br>your dice roll were ${playerDiceRoll[0]} and ${playerDiceRoll[1]}`;
-  }
+
   if (playerInput == "1") {
     console.log(`player choose combi 1`);
     playerScore = Number(playerDiceRoll[0] + playerDiceRoll[1]);
