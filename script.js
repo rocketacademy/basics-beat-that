@@ -1,23 +1,20 @@
 //Statuses
-var FIRST = 1;
-var SECOND = 2;
-var PLAYERONETURN = 1;
-var PLAYERTWOTURN = 2;
-var ROLLPHASE = 1;
-var ORDERINGPHASE = 2;
+var PLAYERSELECTPHASE = 0;
+var DICENUMBERSELECTPHASE = 1;
+var ROLLPHASE = 2;
 
 //Flow Control: Current game states and player turn.
-var currentGameState = ROLLPHASE;
+var playerCount = 0;
+var currentDiceNum = 0;
+var currentGameState = PLAYERSELECTPHASE;
 var currentTurn = 0;
+var currentPlayer = 0;
 
 //Stored Values
-var currentDiceOne = 0;
-var currentDiceTwo = 0;
-var currentPlayerOneNum = 0;
-var currentPlayerTwoNum = 0;
+var currentPlayerNum = [];
 
 //Scores
-var scoreboard = [0, 0];
+var scoreboard = [];
 
 var rollDice = function () {
   var randomInteger = Math.random() * 6;
@@ -26,80 +23,92 @@ var rollDice = function () {
   return finalNum;
 };
 
-var currentPlayer = function (currentTurn) {
-  return (currentTurn % 2) + 1;
+var initialiseScoreboard = function () {
+  for (var i = 0; i < playerCount; i++) {
+    scoreboard.push({ player: i, score: 0 });
+  }
 };
 
 var playerRoll = function (input) {
-  currentDiceOne = rollDice();
-  currentDiceTwo = rollDice();
-  return `Player ${input} has rolled:<br>Dice 1: ${currentDiceOne}<br>Dice 2: ${currentDiceTwo}<br><br>Now, select the dice number to be placed first.`;
+  var diceValues = [];
+  var outputString = "";
+  for (var i = 0; i < currentDiceNum; i++) {
+    diceValues.push(rollDice());
+  }
+
+  diceValues.sort().reverse();
+
+  for (var i = 0; i < diceValues.length; i++) {
+    outputString += String(diceValues[i]);
+  }
+
+  var outputInt = Number(outputString);
+  currentPlayerNum[input] = outputInt;
+  scoreboard[input].score += outputInt;
+
+  return `Player ${input + 1} has rolled:<br>${outputInt}`;
 };
 
-var selectOrderInputValidator = function (input) {
-  if (input == FIRST || input == SECOND) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-var selectOrder = function (player, input) {
-  var output = 0;
-  if (input == FIRST) {
-    output = Number(String(currentDiceOne) + String(currentDiceTwo));
-  } else {
-    output = Number(String(currentDiceTwo) + String(currentDiceOne));
+var winCheck = function (currentPlayerNum) {
+  var currentWinner = 0;
+  var currentScore = currentPlayerNum[0];
+  for (var i = 1; i < currentPlayerNum.length; i++) {
+    if (currentPlayerNum[i] > currentScore) {
+      currentWinner = i;
+      currentScore = currentPlayerNum[i];
+    }
   }
 
-  if (player == PLAYERONETURN) {
-    currentPlayerOneNum = output;
-    scoreboard[0] += output;
-  } else if (player == PLAYERTWOTURN) {
-    scoreboard[1] += output;
-    currentPlayerTwoNum = output;
+  var output = "<br><br>This round's scores:<br>";
+  for (var i = 0; i < currentPlayerNum.length; i++) {
+    output += `<br>Player ${i + 1} rolled ${currentPlayerNum[i]}.`;
   }
-  return `Player ${player} has selected ${output}.`;
-};
 
-var winCheck = function (num1, num2) {
-  if (num1 > num2) {
-    return `<br>Player 1's value was ${currentPlayerOneNum}.<br>Player ${PLAYERONETURN} wins!`;
-  } else if (num2 > num1) {
-    return `<br>Player 1's value was ${currentPlayerOneNum}.<br>Player ${PLAYERTWOTURN} wins!`;
-  } else {
-    return `<br>Player 1's value was ${currentPlayerOneNum}.<br>It's a draw.`;
-  }
+  return `${output}<br><br>Player ${
+    currentWinner + 1
+  }'s value was ${currentScore} and is the highest for this round.<br>Please choose the number of dice to play and press Go!`;
 };
 
 var displayScore = function (scoreboard) {
-  if (scoreboard[1] > scoreboard[0]) {
-    return `<br><br>Player 2: ${scoreboard[1]}<br>Player 1: ${scoreboard[0]}`;
-  } else {
-    return `<br><br>Player 1: ${scoreboard[0]}<br>Player 2: ${scoreboard[1]}`;
+  scoreboardCopy = [...scoreboard];
+  scoreboardCopy.sort((a, b) => a.score - b.score).reverse();
+  var output = "<br><br>Current Leaderboard!<br>";
+  for (var i = 0; i < scoreboardCopy.length; i++) {
+    output += `<br>Player ${scoreboardCopy[i].player + 1} scored ${
+      scoreboardCopy[i].score
+    }`;
   }
+  return output;
 };
 
 var main = function (input) {
-  currentPlayerValue = currentPlayer(currentTurn);
-  if (currentGameState == ROLLPHASE) {
-    currentGameState = ORDERINGPHASE;
-    return playerRoll(currentPlayerValue);
-  } else if (currentGameState == ORDERINGPHASE) {
-    if (selectOrderInputValidator(input) == false) {
-      return "Please choose dice 1 or 2 to be placed first.";
-    }
-
-    closeStatement = selectOrder(currentPlayerValue, input);
-
-    if (currentPlayer(currentTurn) == PLAYERTWOTURN) {
-      winStatement = winCheck(currentPlayerOneNum, currentPlayerTwoNum);
-    } else {
-      winStatement = "";
-    }
-
-    currentGameState = ROLLPHASE;
-    currentTurn += 1;
-    return closeStatement + winStatement + displayScore(scoreboard);
+  if (currentGameState == PLAYERSELECTPHASE) {
+    currentGameState = DICENUMBERSELECTPHASE;
+    playerCount = input;
+    initialiseScoreboard();
+    return `You have selected ${input} players.<br>Now select the number of dice to roll (probably up to 10, so it doesn't lag so much.).`;
   }
+
+  if (currentGameState == DICENUMBERSELECTPHASE) {
+    currentGameState = ROLLPHASE;
+    currentDiceNum = input;
+    return `You have chosen to play with ${input} dice.<br>Player 1 press Go! to roll.`;
+  }
+
+  if (currentGameState == ROLLPHASE) {
+    var closeStatement = playerRoll(currentPlayer);
+  }
+
+  if (currentPlayer == playerCount - 1) {
+    winStatement = winCheck(currentPlayerNum) + displayScore(scoreboard);
+    currentGameState = DICENUMBERSELECTPHASE;
+    currentPlayer = 0;
+    currentDiceNum = [];
+  } else {
+    currentPlayer += 1;
+    winStatement = "";
+  }
+
+  currentTurn += 1;
+  return closeStatement + winStatement;
 };
