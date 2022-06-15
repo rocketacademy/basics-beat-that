@@ -17,8 +17,12 @@
         text-align: center;
       }
 
+      #footer {
+        text-align: center;
+      }
+
       #container {
-        background-color: pink;
+        background-color: lightcyan;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,19 +44,23 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: grey;
+        color: yellow;
+        font-weight: 700;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+        text-align: center;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲🎲 Basics: Beat That! 🚀</h1>
     <div id="container">
+ 
       <p>Input:</p>
-      <input id="input-field" />
+      <input type="number" id="input-field" value="2"/>
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
@@ -76,5 +84,12 @@
         input.value = "";
       });
     </script>
+
+    <h4 id="footer">
+    Hello! Welcome to Beat That! <br><br>
+    Set the number of players (from 2 to 6), then click submit to start the game.<br><br>
+    Create a two-digit number by selecting the order of your dice rolls.<br><br>
+    The player with the highest number wins! Good luck!<br><br>
+    </h4>
   </body>
 </html>
