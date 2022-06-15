@@ -110,10 +110,10 @@ var winnerCheck = function () {
     // if gamemode is higher, higher number wins
     if (player1FinalNumber > player2FinalNumber) {
       player1Score = player1Score + 1;
-      message = `Player 1 wins!`;
+      message = `Yay, Player 1 wins!`;
     } else {
       player2Score = player2Score + 1;
-      message = `Player 2 wins!`;
+      message = `Yay, Player 2 wins!`;
     }
   } else {
     // if gamemode is lower, higher number wins
