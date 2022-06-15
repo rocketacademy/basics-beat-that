@@ -18,10 +18,11 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+        text-align: center;
       }
 
       input {
@@ -30,6 +31,7 @@
         margin: 0 0 23px 0;
         padding: 0 9px;
         width: 100%;
+        text-align: center;
       }
 
       button {
@@ -37,6 +39,7 @@
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
+        text-align: center;
       }
 
       #output-div {
@@ -44,18 +47,27 @@
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+        text-align: center;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲🎲 Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
+      <p>
+        This is a two player game. Each player will roll two dices (i.e. dice 1
+        and dice 2) and decide the order of the rolls (e.g. dice 1-dice 2, or
+        dice 2-dice 1). The highest roll wins!
+      </p>
+      <br />
+      <p>Press "submit" to begin the game.</p>
+
+      <p><b>Input:</b></p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <p><b>Output:</b></p>
       <div id="output-div"></div>
     </div>
     <!-- Import program logic -->
