@@ -20,15 +20,18 @@ var validInput = "Valid Input";
 var invalidInput = "Invalid Input";
 
 // GV - Variables
-var userName = "";
 var gameState = gameStateDiceRoll;
 var currentPlayer = 1;
-var gamesPlayed = 0;
+var gamesPlayed = 1;
 var inputValidation = validInput;
+var player1ScoreSum = 0;
+var player2ScoreSum = 0;
 
 // Arrays
 var currentPlayerRolls = [];
 var allPlayerScores = [];
+var player1ScoreRecord = [];
+var player2ScoreRecord = [];
 
 // Helper Functions
 // Helper Function 1 - Roll Dice Function
@@ -88,19 +91,19 @@ var comparePlayerScores = function () {
   if (allPlayerScores[0] > allPlayerScores[1]) {
     compareMessage =
       compareMessage +
-      " <br>Player 1 wins! <br>Please press the Submit button to reset the game.";
+      " <br>Player 1 wins! <br>Please press the Submit button to reset the game.<br>";
   }
   // Player 2 wins
   if (allPlayerScores[0] < allPlayerScores[1]) {
     compareMessage =
       compareMessage +
-      " <br>Player 2 wins! <br>Please press the Submit button to reset the game.";
+      " <br>Player 2 wins! <br>Please press the Submit button to reset the game.<br>";
   }
   // Draw
   if (allPlayerScores[0] == allPlayerScores[1]) {
     compareMessage =
       compareMessage +
-      " <br>It is a Draw! <br>Please press the Submit button to reset the game.";
+      " <br>It is a Draw! <br>Please press the Submit button to reset the game.<br>";
   }
   return compareMessage;
 };
@@ -111,6 +114,40 @@ var resetGame = function () {
   currentPlayer = 1;
   gameState = gameStateDiceRoll;
   allPlayerScores = [];
+};
+
+// Helper Function 6 - Player Score Summation and Record
+var player1Sum = function () {
+  player1ScoreRecord.push(allPlayerScores[0]);
+  player1ScoreSum += allPlayerScores[0];
+  return player1ScoreSum;
+};
+var player2Sum = function () {
+  player2ScoreRecord.push(allPlayerScores[1]);
+  player2ScoreSum += allPlayerScores[1];
+  return player2ScoreSum;
+};
+
+//Helper Function 7 - Player Score Sum Comparison
+var comparePlayerScoreSums = function () {
+  var compareSumMessage = "";
+
+  // Score Sum Draw
+  if (player1ScoreSum == player2ScoreSum) {
+    compareSumMessage = `<br>It is a draw thus far.`;
+  }
+
+  // Score Sum - Player 1 win
+  if (player1ScoreSum > player2ScoreSum) {
+    compareSumMessage = `<br>Player 1 is currently winning!`;
+  }
+
+  // Score Sum - Player 2 win
+  if (player1ScoreSum < player2ScoreSum) {
+    compareSumMessage = `<br>Player 2 is currently winning!`;
+  }
+
+  return compareSumMessage;
 };
 
 var main = function (input) {
@@ -139,7 +176,13 @@ var main = function (input) {
   }
   // Compare Scores
   else if (gameState == gameStateCompareScores) {
-    gameMessage = comparePlayerScores();
+    gameMessage =
+      comparePlayerScores() +
+      `<br>SCOREBOARD<br>` +
+      `<br>Player 1's combined score thus far is ${player1Sum()}. <br>Player 2's combined score thus far is ${player2Sum()}.` +
+      comparePlayerScoreSums() +
+      `<br><br>Number of rounds played = ${gamesPlayed}. <br>Player 1's 2-digit numbers thus far are ${player1ScoreRecord}. <br>Player 2's 2-digit numbers thus far are ${player2ScoreRecord}.`;
+    gamesPlayed += 1;
     // Reset Game
     resetGame();
   }
