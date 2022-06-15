@@ -8,6 +8,7 @@ var playerDiceRolls = [];
 var previousScores = [];
 var previousWinners = [];
 var gamePlayMode = "Choose Play Mode";
+var noOfDice = 2;
 
 var main = function (input) {
   myOutputValue = "";
@@ -32,20 +33,26 @@ var main = function (input) {
     gamePlayMode == "Choose Play Mode"
   ) {
     if (input == "Y" || input == "y") {
-      gameMode = "Roll Dice";
+      gameMode = "Choose Number of Dice";
       gamePlayMode = "Lowest Dice";
-      gameStart = true;
-      return `Lowest 🎲 Game started with ${noOfPlayers} players. Click Submit to start.`;
+      return `Lowest 🎲 Game started with ${noOfPlayers} players. How many 🎲 would you like to play with?`;
     } else if (input == "N" || input == "n") {
-      gameMode = "Roll Dice";
+      gameMode = "Choose Number of Dice";
       gamePlayMode = "Highest Dice";
-      gameStart = true;
-      return `Highest 🎲 Game started with ${noOfPlayers} players. Click Submit to start.`;
+      return `Highest 🎲 Game started with ${noOfPlayers} players. How many 🎲 would you like to play with?`;
     } else {
       return `Please input Y to start the game in reverse mode, or N to play in normal mode.`;
     }
+  } else if (!gameStart && gameMode == "Choose Number of Dice") {
+    if (input <= 1 || isNaN(input) == true) {
+      return `At least 2 dices are required for this game`;
+    } else {
+      noOfDice = input;
+      gameMode = "Roll Dice";
+      gameStart = true;
+      return `Game started with ${noOfDice} 🎲 . Click Submit to start rolling.`;
+    }
   }
-
   //dice-roll mode
   else if (gameStart && gameMode == "Roll Dice") {
     console.log(gamePlayMode);
@@ -80,7 +87,7 @@ var winnerCheck = function (scoreList) {
   var highscore = 0;
   var winnerIndex = 0;
   var additionalWinners = "";
-  var lowestscore = 67;
+  var lowestscore = scoreList[0];
   //go through the score list to find the highest score (Highest Dice Mode)
   if (gamePlayMode == "Highest Dice") {
     for (var j = 0; j < scoreList.length; j++) {
@@ -144,48 +151,43 @@ var overallWinner = function () {
       additionalWinners += ` and ${j + 1}`;
     }
   }
-  return `The Overall Winner is Player ${
+  return `The Overall Winner is Player <b>${
     winnerIndex + 1
-  }${additionalWinners} with ${highscore} wins.`;
+  }${additionalWinners}</b> with ${highscore} wins.`;
 };
 
 var beatThatRollDice = function (playerDiceRolls, i) {
   //roll 2 dices
-  var dice1 = diceRoll();
-  var dice2 = diceRoll();
-  //push the dice numbers to a list
-  playerDiceRolls.push(dice1);
-  playerDiceRolls.push(dice2);
-  //if same dice numbers, call sameDices function
-  if (dice1 == dice2) {
-    var playerScore = sameDices(playerDiceRolls);
-    //console.log(playerDiceRolls);
-    //gameMode = "Roll Dice";
-    myOutputValue = `🎲 Player ${i} has rolled <b>${dice1}</b> for Dice 1 and <b>${dice2}</b> for Dice 2.🎲<br>Your score is ${playerScore}.`;
+  var dices = "";
+  for (var i = 0; i < noOfDice; i++) {
+    var diceNumber = diceRoll();
+    playerDiceRolls.push(diceNumber);
+    dices += `<b>${diceNumber}</b> for Dice ${i + 1} `;
   }
-  //if different dice numbers, change gameMode to "Choose Dice"
-  else {
-    playerScore = autoChooseDice(playerDiceRolls);
-    myOutputValue = `🎲Player ${i} has rolled <b>${dice1}</b> for Dice 1 and <b>${dice2}</b> for Dice 2.🎲<br>Your Score is ${playerScore}`;
-  }
+  playerScore = autoChooseDice(playerDiceRolls);
+  myOutputValue = `🎲Player ${i} has rolled ${dices}.🎲<br>Your Score is ${playerScore}`;
   return myOutputValue;
 };
 
 var autoChooseDice = function (rollList) {
   score = 0;
-  if (gamePlayMode == "Highest Dice") {
-    if (rollList[0] > rollList[1]) {
-      score = rollList[0] * 10 + rollList[1];
-    } else if (rollList[1] > rollList[0]) {
-      score = rollList[1] * 10 + rollList[0];
-    }
-  } else if (gamePlayMode == "Lowest Dice") {
-    if (rollList[0] < rollList[1]) {
-      score = rollList[0] * 10 + rollList[1];
-    } else if (rollList[1] < rollList[0]) {
-      score = rollList[1] * 10 + rollList[0];
-    }
+  var sorted = rollList.sort().reverse();
+  for (var i = 0; i < sorted.length; i++) {
+    score += sorted[i] * 10 ** (sorted.length - 1 - i);
   }
+  // if (gamePlayMode == "Highest Dice") {
+  //   if (rollList[0] > rollList[1]) {
+  //     score = rollList[0] * 10 + rollList[1];
+  //   } else if (rollList[1] > rollList[0]) {
+  //     score = rollList[1] * 10 + rollList[0];
+  //   }
+  // } else if (gamePlayMode == "Lowest Dice") {
+  //   if (rollList[0] < rollList[1]) {
+  //     score = rollList[0] * 10 + rollList[1];
+  //   } else if (rollList[1] < rollList[0]) {
+  //     score = rollList[1] * 10 + rollList[0];
+  //   }
+  // }
   playerScores.push(score);
   return score;
 };
