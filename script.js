@@ -6,6 +6,8 @@ var diceResultPlayer2 = [];
 var diceOrderPlayer2 = "";
 var myOutputValue = "";
 var gameMode = `Player 1 rolls`;
+var Player1Score = 0;
+var Player2Score = 0;
 
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -122,6 +124,8 @@ var main = function (input) {
     console.log("diceOrderPlayer 1", diceOrderPlayer1);
     console.log("diceOrderPlayer 2", diceOrderPlayer2);
     var winner = decideWinner(diceOrderPlayer1, diceOrderPlayer2);
+    Player1Score = Number(Player1Score) + Number(diceOrderPlayer1);
+    Player2Score = Number(Player2Score) + Number(diceOrderPlayer2);
     myOutputValue = `Player 1's hand: ${diceOrderPlayer1}<br><br> Player 2's hand: ${diceOrderPlayer2} <br><br> Congratulations, ${winner}`;
     gameMode = `new game`;
     console.log(gameMode);
@@ -130,9 +134,11 @@ var main = function (input) {
   else if (input == "" && gameMode == `new game`) {
     diceResultPlayer1 = [];
     diceResultPlayer2 = [];
-    console.log(diceResultPlayer1);
-    console.log(diceResultPlayer2);
-    myOutputValue = `Click "submit" to begin a new game.`;
+    if (Player1Score > Player2Score) {
+      myOutputValue = `Player 1 is leading!<br><br>Player 1's score: ${Player1Score}<br><br> Player 2's score: ${Player2Score}<br><br>Click "submit" to begin a new game.`;
+    } else if (Player1Score < Player2Score) {
+      myOutputValue = `Player 2 is leading!<br><br>Player 1's score: ${Player1Score}<br><br> Player 2's score: ${Player2Score}<br><br>Click "submit" to begin a new game.`;
+    }
     gameMode = `Player 1 rolls`;
   }
   return myOutputValue;
