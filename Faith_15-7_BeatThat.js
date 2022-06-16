@@ -1,3 +1,4 @@
+// define global variables
 var userNameArray = [];
 var chosenNumArray = [];
 var diceArray1 = [];
@@ -21,6 +22,7 @@ var gameModeInstructions = function (gameMode) {
     return `You have chosen highest mode. Player with  highest number wins. Key in '1' to play.`;
   }
 };
+//determine largest number rolled among players by sorting array in descending order
 function largestChosenNum(diceArray, diceCt) {
   diceArray.sort(function (a, b) {
     return b - a;
@@ -31,6 +33,7 @@ function largestChosenNum(diceArray, diceCt) {
   }
   return num;
 }
+//determine smallest number rolled among players by sorting array in descending order
 function smallestChosenNum(diceArray, diceCt) {
   diceArray.sort(function (a, b) {
     return a - b;
@@ -47,6 +50,7 @@ var rollDice = function () {
   var diceNum = randomInteger + 1;
   return diceNum;
 };
+//generate n number of rolls from dice, depending how many dices you chose
 var rollDiceNum = function () {
   for (n = 0; n < diceNum; n += 1) {
     diceRoll = rollDice();
@@ -63,6 +67,7 @@ var resetGame = function () {
   gameMode = null;
 };
 var main = function (input) {
+  //check gamemode
   if (!gameMode) {
     if (!input) {
       return chooseModeMsg();
@@ -75,6 +80,7 @@ var main = function (input) {
     return gameModeInstructions(gameMode);
   }
   if (gameMode == "highest") {
+    //run game for 2 players
     if (chosenNumArray.length >= 0 && chosenNumArray.length < 2) {
       if (!userName) {
         if (!input || input != 1) {
@@ -125,6 +131,7 @@ var main = function (input) {
         return `Player ${userNameArray.length}, your number is ${chosenNum}.<br/> Click Submit to determine the winner!`;
       }
     } else {
+      //determine winner
       var player1No = chosenNumArray[0];
       var player2No = chosenNumArray[1];
       var player1NoFormat = Number(player1No);
@@ -141,6 +148,7 @@ var main = function (input) {
     }
   }
   if (gameMode == "lowest") {
+    //run game for 2 players
     if (chosenNumArray.length >= 0 && chosenNumArray.length < 2) {
       if (!userName) {
         if (!input || input != 1) {
@@ -191,6 +199,7 @@ var main = function (input) {
         return `Player ${userNameArray.length}, your number is ${chosenNum}.<br/> Click Submit to determine the winner!`;
       }
     } else {
+      //determine winner
       var player1No = chosenNumArray[0];
       var player2No = chosenNumArray[1];
       var player1NoFormat = Number(player1No);
