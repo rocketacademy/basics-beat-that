@@ -15,6 +15,15 @@ var playerTwoDiceRoll = "";
 var playerTwoDice1 = "";
 var playerTwoDice2 = "";
 
+// Get random dice rolls
+var rollDices = function () {
+  // Generate a decimal inclusive of 0 and exclusive of 6
+  var randomDecimal = Math.random() * 6;
+  // Remove the decimal with the floor operation to get an integer from 1 to 6 inclusive
+  var randomInteger = Math.floor(randomDecimal) + 1;
+  return randomInteger;
+};
+
 var main = function (input) {
   // To refresh all variables to restart the game
   if (playerTwoChoice !== "") {
@@ -140,12 +149,4 @@ var main = function (input) {
       1️⃣ Option 1: ${playerTwoDice1}${playerTwoDice2} <br>
       2️⃣ Option 2: ${playerTwoDice2}${playerTwoDice1}`;
   }
-};
-
-var rollDices = function () {
-  // Generate a decimal inclusive of 0 and exclusive of 6
-  var randomDecimal = Math.random() * 6;
-  // Remove the decimal with the floor operation to get an integer from 1 to 6 inclusive
-  var randomInteger = Math.floor(randomDecimal) + 1;
-  return randomInteger;
 };
