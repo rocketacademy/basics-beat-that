@@ -16,7 +16,7 @@ var allPlayersScore = [];
 var rollDice = function(){
   console.log('Control flow: start of rollDice()');
   var randomDecimal = Math.random() * 6;
-  var randomInteger = Math.floor(randomDecimal)+1;
+  var randomInteger = Math.floor(randomDecimal)+1;//
   console.log('rollDice output, randomInteger:', randomInteger);
   return randomInteger;
 }
@@ -61,13 +61,13 @@ if (playerInput != 1 && playerInput !=2){
 var comparePlayerScores = function(){
   var compareMessage = `Player 1 score: ${allPlayersScore[0]}<br> Player 2 score: ${allPlayersScore[1]}`
  if (allPlayersScore[0] > allPlayersScore[1]){
-    compareMessage = `Player 1 wins.👩`
+    compareMessage += `Player 1 wins.👩`
   };
   if (allPlayersScore[0] < allPlayersScore[1]){
-    compareMessage =`Player 2 wins.🧑`
+    compareMessage +=`Player 2 wins.🧑`
   };
     if (allPlayersScore[0] == allPlayersScore[1]){
-    compareMessage =`This is a tie.🤷‍♀️`
+    compareMessage +=`This is a tie.🤷‍♀️`
   };
   return compareMessage;
 }
