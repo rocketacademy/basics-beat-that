@@ -6,7 +6,7 @@ var noOfPlayers = 0;
 var currentPlayer = 0;
 var playerDiceRolls = [];
 var previousScores = []; //counter for round wins
-var previousWinners = [];
+var previousWinners = []; // counter for winners each round
 var gamePlayMode = "Choose Play Mode";
 var noOfDice = 2;
 
@@ -14,7 +14,7 @@ var main = function (input) {
   myOutputValue = "";
   //choose number of players to play
   if (!gameStart && gameMode == "Waiting for Number of Players") {
-    if (input <= 1 || isNaN(input) == true) {
+    if (input <= 1 || isNaN(input)) {
       myOutputValue = "At least 2 players are required for this game";
     } else {
       // if input is validated (players >=2), user to choose the game mode (highest or lowest dice)
@@ -34,6 +34,9 @@ var main = function (input) {
     gamePlayMode == "Choose Play Mode"
   ) {
     //player chooses Lowest Dice Mode
+
+    // can force input to all lowercase**
+
     if (input == "Y" || input == "y") {
       gameMode = "Choose Number of Dice";
       gamePlayMode = "Lowest Dice";
@@ -48,7 +51,7 @@ var main = function (input) {
     }
     //player chooses number of dice to use
   } else if (!gameStart && gameMode == "Choose Number of Dice") {
-    if (input <= 1 || isNaN(input) == true) {
+    if (input <= 1 || isNaN(input)) {
       return `At least 2 dices are required for this game`;
     } else {
       noOfDice = input;
@@ -174,7 +177,7 @@ var beatThatRollDice = function (playerDiceRolls, i) {
     dices += `<b>${diceNumber}</b> for Dice ${i + 1} `;
   }
   playerScore = autoChooseDice(playerDiceRolls);
-  myOutputValue = `🎲Player ${i} has rolled ${dices}.🎲<br>Your Score is ${playerScore}`;
+  myOutputValue = `🎲Player ${currentPlayer} has rolled ${dices}.🎲<br>Your Score is ${playerScore}`;
   return myOutputValue;
 };
 // helper function to derive score from dice rolls
@@ -191,54 +194,10 @@ var autoChooseDice = function (rollList) {
     //join the individual digits to a multi-digit integer
     score += sorted[i] * 10 ** (sorted.length - 1 - i);
   }
-  // if (gamePlayMode == "Highest Dice") {
-  //   if (rollList[0] > rollList[1]) {
-  //     score = rollList[0] * 10 + rollList[1];
-  //   } else if (rollList[1] > rollList[0]) {
-  //     score = rollList[1] * 10 + rollList[0];
-  //   }
-  // } else if (gamePlayMode == "Lowest Dice") {
-  //   if (rollList[0] < rollList[1]) {
-  //     score = rollList[0] * 10 + rollList[1];
-  //   } else if (rollList[1] < rollList[0]) {
-  //     score = rollList[1] * 10 + rollList[0];
-  //   }
-  // }
+
   playerScores.push(score);
   return score;
 };
-// currently unused function for Base Standard
-// var beatThatChooseDice = function (rollList, input, i) {
-//   var score = 0;
-//   // input validation for choosing dice
-//   if (input != 1 && input != 2) {
-//     return `Please input 1 or 2`;
-//   }
-//   //calculate scores if input is 1 or 2
-//   else if (input == 1) {
-//     score = rollList[0] * 10 + rollList[1];
-//     playerScores.push(score);
-//   } else if (input == 2) {
-//     score = rollList[1] * 10 + rollList[0];
-//     playerScores.push(score);
-//   }
-//   //change gameMode back to Dice Roll
-//   gameMode = "Dice Roll";
-//   if (i < noOfPlayers - 1) {
-//     return `Player ${i}, you chose Dice ${input} first.<br>Your score is ${score}. It is now Player ${
-//       i + 1
-//     }'s turn.`;
-//   } else {
-//     return `Player ${i}, you chose Dice ${input} first.<br>Your score is ${score}.`;
-//   }
-// };
-
-// //if dice numbers are the same, no need to choose dice, just calculate immediately
-// var sameDices = function (rollList) {
-//   var score = rollList[0] * 10 + rollList[1];
-//   playerScores.push(score);
-//   return score;
-// };
 
 // function to restart or end the game after each round
 var resetGame = function (input) {
