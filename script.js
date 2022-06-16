@@ -1,4 +1,4 @@
-// INPUT VALIDATION AND LOOPING NEEDS WORK
+// INPUT VALIDATION NEEDS WORK... AAAARGH!
 
 // GLOBAL VARIABLES
 
@@ -52,6 +52,13 @@ var choosePlayerScoreOrder = function (playerSelection) {
   return myOutputValue;
 };
 
+var resetGameModeClearScores = function () {
+  gameMode = gameModeDiceRoll;
+  currentPlayer = 1;
+  currentPlayerRolls = [];
+  allScores = [];
+};
+
 var main = function (input) {
   var myOutputValue = "";
 
@@ -64,8 +71,12 @@ var main = function (input) {
   if (currentPlayer == "1" && gameMode == "player choice") {
     myOutputValue = choosePlayerScoreOrder(input);
     currentPlayer = 2;
-    return myOutputValue + "<br><br> it is now player 2's turn;";
+    return (
+      myOutputValue +
+      "<br><br> It is now player 2's turn. Click submit to roll the dice, Player 2!"
+    );
   }
+
   if (currentPlayer == "2" && gameMode == "dice roll") {
     myOutputValue = getPlayerHand();
     gameMode = gameModeChooseOrder;
@@ -79,6 +90,8 @@ var main = function (input) {
   }
 
   if (currentPlayer == "2" && gameMode == "compare scores") {
+    // resetGameModeClearScores();
+
     myOutputValue =
       "Player 1,  your score was " +
       allScores[0] +
@@ -87,17 +100,20 @@ var main = function (input) {
       ".";
 
     if (allScores[0] > allScores[1]) {
-      myOutputValue = myOutputValue + "Player 1 wins!😎";
-
-      if (allScores[1] > allScores[0]) {
-        myOutputValue = myOutputValue + "Player 2 wins!😎";
-
-        if ((allScores[0] = allScores[1])) {
-          myOutputValue = myOutputValue + "🙌It's a tie!🙌";
-        }
-        return myOutputValue;
-      }
+      myOutputValue =
+        myOutputValue + "<br> Player 1 wins!😎<br> Press submit to play again.";
+    } else if (allScores[1] > allScores[0]) {
+      myOutputValue =
+        myOutputValue + "<br> Player 2 wins!😎<br> Press submit to play again.";
+    } else if ((allScores[0] = allScores[1])) {
+      myOutputValue =
+        myOutputValue + "<br> 🙌It's a tie!🙌<br> Press submit to play again.";
     }
+    resetGameModeClearScores();
+    console.log(gameMode);
+    console.log(currentPlayer);
+    console.log(allScores);
+    return myOutputValue;
   }
 
   return myOutputValue;
