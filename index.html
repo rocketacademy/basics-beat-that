@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+  <title>Background</title>
+  <body style="background-color: bisque;">
   <head>
     <title>Coding Basics</title>
     <style>
@@ -18,7 +20,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: rgb(207, 140, 140);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -49,14 +51,36 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Beat That Sh*t! 🚀</h1>
+    <img src="player1.png" style="width:200px; height:150px; position: absolute; top: 200px; left: 200px;">
+    <img src="player2.png" style="width:200px; height:150px; position: absolute; top: 200px; right: 200px;">
+    
+    
     <div id="container">
-      <p>Input:</p>
+      <p>Enter "<b>1</b>" or "<b>2</b>":</p>
       <input id="input-field" />
       <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+      <button id="submit-button">Play</button>
+      <p><b>Gameplay</b>:</p>
+      <div id="output-div">
+        <center><b
+          >Greetings! <br /><br />
+          Welcome to Beat That! <br /><br />
+          "Play" to start the game. 🎮</b
+        ></center>
+      </div>
+    </div>
+
+    <div id="gameinstructions">
+      <p style="font-size: large">
+        <center><b>Game Instructions 🕹️</b>
+      </p>
+      <p>
+        Roll two dices and select them in order to make the highest number
+        possible.
+      </p>
+      <p>For example, if you roll a 6 and 9, your best answer would be 96 and not 69.</p>
+      <p>This game is two-player, so grab a friend! 🙍🏻&zwj;♀️🙍🏽&zwj;♀️</p></center>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
