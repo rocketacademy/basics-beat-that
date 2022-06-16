@@ -7,11 +7,12 @@ var main = function (input) {
       return `ERROR. please click Submit to start`;
     } else {
       console.log(`game mode is at, roll dice`);
-
-      myOutputMessage = rollingDice();
       gameMode = GAME_MODE_PLAYER_CHOOSE_COMBINATION;
+      return rollingDice();
     }
-  } else if (gameMode == GAME_MODE_PLAYER_CHOOSE_COMBINATION) {
+  }
+
+  if (gameMode == GAME_MODE_PLAYER_CHOOSE_COMBINATION) {
     if (input != "1" && input != "2") {
       return `ERROR. <br><br>Player ${currentPlayer} enter either "1" or "2" for the order of your dice. <br>your dice roll were ${playerDiceRoll[0]} and ${playerDiceRoll[1]}`;
     } else {
@@ -37,7 +38,9 @@ var main = function (input) {
       myOutputMessage += `<br><br>click Submit to compare players combination.`;
       return myOutputMessage;
     }
-  } else if ((gameMode = GAME_MODE_COMPARE_COMBINATION)) {
+  }
+
+  if ((gameMode = GAME_MODE_COMPARE_COMBINATION)) {
     console.log(`show result after comparing score`);
     myOutputMessage = compareScore();
     gameReset();
@@ -127,7 +130,7 @@ var gameReset = function () {
 };
 
 var leaderBoard = function () {
-  return `<br><br><br>click Submit to play again.<br><br>Leader Board<br>Player 1 won : ${leaderBoardInfo[2]}<br>Player 2 won : ${leaderBoardInfo[3]}<br>ties: ${leaderBoardInfo[1]}<br>rounds played: ${leaderBoardInfo[0]}`;
+  return `<br><br><br>click Submit to play again.<br><br>Score Board<br>Player 1 won : ${leaderBoardInfo[2]}<br>Player 2 won : ${leaderBoardInfo[3]}<br>ties: ${leaderBoardInfo[1]}<br>rounds played: ${leaderBoardInfo[0]}`;
 };
 // 1) there will be 2 players playing this game
 // 2) when enter website. at Output box "click Submit to start". click submit
