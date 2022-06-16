@@ -1,5 +1,6 @@
 var gameState = "waiting input";
 var gameStateChooseDiceOrder = "choose dice order";
+var gameStateChooseDiceOrder2 = "choose dice order2";
 var playerRolls = [];
 var currentPlayer = 1;
 var secondPlayer = 2;
@@ -18,7 +19,11 @@ var rollDiceForPlayer = function(){
     playerRolls.push(rollDice());
   }
   output = "Welcome Player" + currentPlayer + "<br>Your dice1 roll is: " + playerRolls[0] + " <br> Your dice2 roll is: " + playerRolls[1] + ". <br> Please choose 1 or 2";
+  if (currentPlayer == 1){
   gameState = gameStateChooseDiceOrder;
+  } else {
+    gameState = gameStateChooseDiceOrder2;
+  }
   return output;
 
 }
@@ -54,7 +59,7 @@ var main = function(input){
   }
 
   // why is the game state not changing to "compare score"?
-  if (gameState == gameStateChooseDiceOrder){
+  if (gameState == gameStateChooseDiceOrder2){
     if (input == 1){
       score = Number(String(playerRolls[0]) + String(playerRolls[1]));
       playerScores.push(score);
@@ -73,9 +78,18 @@ var main = function(input){
 
   if (gameState == compareScore){
     if (playerScores[0] > playerScores[1]){
-      return "player1 wins!";
+      gameState = "reset"
+      return "Player 1 score is: " + playerScores[0] + " and Player 2 is: " + playerScores[1] + ". Player 1 wins!";
     } else{
-      return "player2 wins!";
+      gameState = "reset"
+      return "Player 1 score is: " + playerScores[0] + " and Player 2 is: " + playerScores[1] + ". Player 2 wins!";
     }
+  }
+  
+  if (gameState == "reset"){
+    gameState = "waiting input";
+    playerRolls = [];
+    playerScores = [];
+    return "Game Reset!";
   }
 }
