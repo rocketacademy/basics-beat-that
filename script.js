@@ -1,7 +1,9 @@
 var winTimes = 0;
 var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
 var GAME_STATE_DICE_ORDER = "GAME_STATE_DICE_ORDER";
-//var GAME_STATE_COMPARE_SCORE = "GAME_STATE_COMPARE_SCORE";
+
+var GAME_STATE_COMPARE_SCORE = "GAME_STATE_COMPARE_SCORE";
+
 var gameState = GAME_STATE_DICE_ROLL;
 
 var currentPlayerRolls = [];
@@ -11,6 +13,7 @@ var allPlayerScore = [];
 
 console.log("counterMode start:" + gameState);
 
+// this function rolls the dice
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
 
@@ -43,6 +46,7 @@ var getPlayerScore = function (playerInput) {
     return `Player ${currentPlayer}, please input only "1" or "2" to choose your first Dice.<br><br> Your rolls are: Dice 1 is ${currentPlayerRolls[0]} while Dice 2 is ${currentPlayerRolls[1]}.`;
   }
 
+  // if player choose 1, then Dice 1 would be first number, Dice 2 would be second number
   if (playerInput == 1) {
     console.log("player input 1");
     playerScore = Number(
@@ -54,6 +58,7 @@ var getPlayerScore = function (playerInput) {
     output1 = `Player ${currentPlayer} you chose Dice ${playerInput} first. Your Number is ${playerScore}.`;
   }
 
+  // if player choose 2 then Dice 2 would be first number, Dice 1 would be second number
   if (playerInput == 2) {
     console.log("player input 2");
     playerScore = Number(
@@ -64,9 +69,11 @@ var getPlayerScore = function (playerInput) {
     output1 = `Player ${currentPlayer} you chose Dice ${playerInput} first. Your Number is ${playerScore}.`;
   }
 
+  // push result into allPlayerScore list
   allPlayerScore.push(playerScore);
   console.log("allPlayerScore push" + allPlayerScore);
 
+  // reset player rolls for next player
   currentPlayerRolls = [];
   console.log("current player rolls should be 0" + currentPlayerRolls);
   return output1;
@@ -93,20 +100,21 @@ var comparePlayerScore = function () {
   return compareValue;
 };
 
-//LETS RESTART OMG
+//the restart function
 var resetGame = function () {
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
   allPlayerScore = [];
 };
 
-//
+//the main function starts here
 var main = function (input) {
   console.log(" Submit:" + gameState);
   console.log("current player" + currentPlayer);
 
   var myOutputValue;
 
+  // gamestate If controls
   if (gameState == GAME_STATE_DICE_ROLL) {
     console.log("gamestate" + "DICE ROLL MODE");
     myOutputValue = rollDiceForPlayer();
@@ -118,21 +126,7 @@ var main = function (input) {
   if (gameState == GAME_STATE_DICE_ORDER) {
     console.log("gamestate" + " DICE ORDER MODE");
     myOutputValue = getPlayerScore(input);
-  }
-
-  if (currentPlayer == 1) {
-    currentPlayer = 2;
-    gameState = GAME_STATE_DICE_ROLL;
-    return `${myOutputValue} It is Player 2's turn.`;
-  }
-
-  if (currentPlayer == 2) {
-    //i swear to god i have been trying to do with var GAME_MODE_COMPARE but it always came out undefined and for some reason, switching to player 3 works
-    currentPlayer = 3;
-    return `${myOutputValue} <br><br> Submit to calculate scores...`;
-  }
-
-  if (currentPlayer == 3) {
+  } else if (gameState == GAME_STATE_COMPARE_SCORE) {
     myOutputValue = comparePlayerScore();
     resetGame();
     console.log(
@@ -144,5 +138,16 @@ var main = function (input) {
         allPlayerScore
     );
     return myOutputValue;
+  }
+
+  // player if controls
+  if (currentPlayer == 1) {
+    currentPlayer = 2;
+    gameState = GAME_STATE_DICE_ROLL;
+    return `${myOutputValue} It is Player 2's turn.`;
+  } else if (currentPlayer == 2) {
+    gameState = GAME_STATE_COMPARE_SCORE;
+    currentPlayer = 2;
+    return `${myOutputValue} <br><br> Submit to calculate scores...`;
   }
 };
