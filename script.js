@@ -41,7 +41,7 @@ var allPlayersScores = [];
 
 //* Function to simulate a dice roll, returns a number from 1 to 6 *//
 var rollDice = function() {
-  console.log('Start of rollDice();');
+  
 
   // Random decimal between 0 and 6
   var randomDecimal = Math.random() * 6;
@@ -225,7 +225,7 @@ var getPlayerScore = function(playerInput) {
   }
 
   // Store playerScore in array
-  allPlayersScore.push(playerScore);
+  allPlayersScores.push(playerScore);
 
   // clear current player rolls array
   currentPlayerRolls = [];
@@ -233,17 +233,17 @@ var getPlayerScore = function(playerInput) {
 };
 
 var comparePlayersScores = function() {
-  var compareMessage = "Player 1 score: " + allPlayersScore[0] + "<br>Player 2 score: " + allPlayersScore[1];
+  var compareMessage = "Player 1 score: " + allPlayersScores[0] + "<br>Player 2 score: " + allPlayersScores[1];
     // player 1 wins
-    if ( allPlayersScore[0] > allPlayersScore[1]){
+    if ( allPlayersScores[0] > allPlayersScores[1]){
       compareMessage = compareMessage + "<br><br>Player 1 wins!";
     }
     // player 2 wins
-    if ( allPlayersScore[0] < allPlayersScore[1]){
+    if ( allPlayersScores[0] < allPlayersScores[1]){
       compareMessage = compareMessage + "<br><br>Player 2 wins!";
     }
     // tie
-    if ( allPlayersScore[0] == allPlayersScore[1]){
+    if ( allPlayersScores[0] == allPlayersScores[1]){
       compareMessage = compareMessage + "<br><br>It's a tie!";
     }
 
@@ -253,7 +253,7 @@ var comparePlayersScores = function() {
 var resetGame = function() {
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
-  allPlayersScore = [];
+  allPlayersScores = [];
 };
 
 var main = function(input) {
@@ -302,7 +302,7 @@ var main = function(input) {
     resetGame();
     console.log("Current player after reset: ", currentPlayer);
     console.log("Game state after reset: ", gameState);
-    console.log("allPlayersScore array: ", allPlayersScore);
+    console.log("allPlayersScore array: ", allPlayersScores);
     
     return outputMessage;
   }
