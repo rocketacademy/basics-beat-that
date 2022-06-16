@@ -27,21 +27,15 @@ var rollByPlayers = function () {
   var newDiceRolls = [rollDice(), rollDice()];
   if (currentGameMode == "player one rolls") {
     playerOneRolls = newDiceRolls;
-    console.log(playerOneRolls);
     playerOneFirst = playerOneRolls[0];
-    console.log(playerOneFirst, "player one first roll");
     playerOneSecond = playerOneRolls[1];
-    console.log(playerOneSecond, "player one second roll");
     currentGameMode = "player one choose order";
     myOutputValue = `🎲<b> WELCOME PLAYER 1 </b>🎲 <br> You rolled ${playerOneFirst} for dice one and ${playerOneSecond} for dice two. <br> Choose the order of the dice by entering "1" or "2".`;
     return myOutputValue;
   } else if (currentGameMode == "player two rolls") {
     playerTwoRolls = newDiceRolls;
-    console.log(playerTwoRolls);
     playerTwoFirst = playerTwoRolls[0];
-    console.log(playerTwoFirst, "player two first roll");
     playerTwoSecond = playerTwoRolls[1];
-    console.log(playerTwoSecond, 'player two second roll"');
     currentGameMode = "player two choose order";
     myOutputValue = `🎲<b> WELCOME PLAYER 2 </b>🎲 <br> You rolled ${playerTwoFirst} for dice one and ${playerTwoSecond} for dice two. <br> Choose the order of the dice by entering "1" or "2".`;
     return myOutputValue;
@@ -52,22 +46,18 @@ var rollByPlayers = function () {
 var chooseOrder = function (input) {
   if (currentGameMode == "player one choose order" && input == 1) {
     playerOneFinal = Number(String(playerOneFirst) + String(playerOneSecond));
-    console.log("player one final number", playerOneFinal);
     currentGameMode = "player two rolls";
     return `🎲<b> Player 1</b>🎲 <br> Your final number is ${playerOneFinal}. Player 2, please click on the 'Submit' button above to proceed.`;
   } else if (currentGameMode == "player one choose order" && input == 2) {
     playerOneFinal = Number(String(playerOneSecond) + String(playerOneFirst));
-    console.log("player one final number", playerOneFinal);
     currentGameMode = "player two rolls";
     return `🎲<b> Player 1</b>🎲 <br> Your final number is ${playerOneFinal}. Player 2, please click on the 'Submit' button above to proceed.`;
   } else if (currentGameMode == "player two choose order" && input == 1) {
     playerTwoFinal = Number(String(playerTwoFirst) + String(playerTwoSecond));
-    console.log("player two final number", playerTwoFinal);
     currentGameMode = "final results";
     return `🎲<b> Player 2</b>🎲 <br> Your final number is ${playerTwoFinal}. Click on the 'Submit' button above for the results.`;
   } else if (currentGameMode == "player two choose order" && input == 2) {
     playerTwoFinal = Number(String(playerTwoSecond) + String(playerTwoFirst));
-    console.log("player two final number", playerTwoFinal);
     currentGameMode = "final results";
     return `🎲<b> Player 2</b>🎲 <br> Your final number is ${playerTwoFinal}. Click on the 'Submit' button above for the results.`;
   }
@@ -77,14 +67,14 @@ var chooseOrder = function (input) {
 
 var whoWon = function () {
   if (playerOneFinal > playerTwoFinal) {
-    console.log(playerOneFinal, playerTwoFinal);
     playerOneWinCounter += 1;
     myOutputValue = `<b>Player 1 has won! </b><br><br> Player 1 final number: ${playerOneFinal}<br> Player 2 final number: ${playerTwoFinal}<br><br> <b>Scores:</b> <br> Player 1: ${playerOneWinCounter}<br>Player 2: ${playerTwoWinCounter}<br><br>Click 'Submit' to play again.`;
   } else if (playerOneFinal < playerTwoFinal) {
     playerTwoWinCounter += 1;
-    myOutputValue = `<b>Player 2 has won! </b><br><br> Player 1 final number: ${playerOneFinal}<br> Player 2 final number: ${playerTwoFinal}<br><br> <b>Scores:</b> <br> Player 1: ${playerOneWinCounter}<br>Player 2: ${playerTwoWinCounter}.<br><br>Click 'Submit' to play again.`;
-  } else console.log(playerOneFinal, playerTwoFinal);
-  myOutputValue = `<b>The 2 players have tied!</b><br><br> Player 1 final number: ${playerOneFinal}<br> Player 2 final number: ${playerTwoFinal}<br><br> <b>Scores:</b> <br> Player 1: ${playerOneWinCounter}<br>Player 2: ${playerTwoWinCounter}.<br><br>Click 'Submit' to play again.`;
+    myOutputValue = `<b>Player 2 has won! </b><br><br> Player 1 final number: ${playerOneFinal}<br> Player 2 final number: ${playerTwoFinal}<br><br> <b>Scores:</b> <br> Player 1: ${playerOneWinCounter}<br>Player 2: ${playerTwoWinCounter}<br><br>Click 'Submit' to play again.`;
+  } else {
+    myOutputValue = `<b>The 2 players have tied!</b><br><br> Player 1 final number: ${playerOneFinal}<br> Player 2 final number: ${playerTwoFinal}<br><br> <b>Scores:</b> <br> Player 1: ${playerOneWinCounter}<br>Player 2: ${playerTwoWinCounter}<br><br>Click 'Submit' to play again.`;
+  }
   return myOutputValue;
 };
 
@@ -95,7 +85,6 @@ var main = function (input) {
     currentGameMode == "player two rolls"
   ) {
     myOutputValue = rollByPlayers();
-    console.log("current game mode ", currentGameMode);
     return myOutputValue;
   } else if (
     currentGameMode == "player one choose order" ||
