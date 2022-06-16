@@ -18,6 +18,7 @@ var main = function (input) {
   var rollDice1;
   var rollDice2;
 
+  // clickCount
   if (clickCount % 2 == 0) {
     rollDice1 = getRandomIndex();
     rollDice2 = getRandomIndex();
@@ -65,16 +66,23 @@ var main = function (input) {
 
 var main01 = function () {
   var outputValue = "";
+  var resultsReport = "";
+  var resultList = [];
 
   var maxNumber = Math.max(...playerResults);
 
   outputValue = `🏆  The winner is player ${
     playerGroupNumber[playerResults.indexOf(maxNumber)]
-  }`;
+  } <br><br>The numbers of each playes are shown as below:<br>`;
+
+  for (var i = 0; i < playerResults.length; i++) {
+    resultsReport = `The number of player ${playerGroupNumber[i]} is ${playerResults[i]}.<br>`;
+    resultList.push(resultsReport);
+  }
 
   console.log(maxNumber);
   console.log(outputValue);
   console.log(playerResults);
   console.log(playerResults.indexOf(maxNumber) + 1);
-  return outputValue;
+  return outputValue + resultList;
 };
