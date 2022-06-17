@@ -15,8 +15,7 @@ var allPlayersScore = [];
 //helper functions
 var rollDice = function(){
   console.log('Control flow: start of rollDice()');
-  var randomDecimal = Math.random() * 6;
-  var randomInteger = Math.floor(randomDecimal)+1;//
+  var randomInteger = Math.floor(Math.random()*6)+1;
   console.log('rollDice output, randomInteger:', randomInteger);
   return randomInteger;
 }
@@ -118,7 +117,7 @@ if (gameState == GAME_STATE_COMPARE_SCORE){
   restGame();
   console.log('current player after rest : ', currentPlayer);
   console.log('game state reset :',gameState);
-  console.log('allPlayersScore array:', allPlayersScore);
+  console.log('allPlayersScoreg array:', allPlayersScore);
   
   return outputMessage;
 };
