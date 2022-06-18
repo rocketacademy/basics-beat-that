@@ -90,6 +90,7 @@ var main = function(input){
     gameState = "waiting input";
     playerRolls = [];
     playerScores = [];
+    currentPlayer = 1;
     return "Game Reset!";
   }
 }
