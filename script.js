@@ -9,6 +9,8 @@ var player1Num = 0;
 var player2Num = 0;
 var player1Arr = [];
 var player2Arr = [];
+var player1Score = 0;
+var player2Score = 0;
 var playerNameArr = [];
 var nameCount = 0;
 var playerNumRecords = ``;
@@ -53,10 +55,11 @@ var savePlayerNameToArray = function (input) {
   message = `Welcome, ${playerNameArr[nameCount]}!`;
   nameCount += 1;
   if (nameCount != 2) {
-    message = message + ` Player 2, please type in your name.`;
+    message = message + `<br>` + ` Player 2, please type in your name.`;
   }
   if (nameCount == 2) {
-    message = message + ` ${playerNameArr[0]}, click submit to roll dice.`;
+    message =
+      message + `<br>` + ` ${playerNameArr[0]}, click submit to roll dice.`;
     gameState = `rolling dice`;
     playerState = `P1`;
   }
@@ -99,8 +102,9 @@ var saveRollstoArray = function (playerState) {
   );
 };
 
-//decide order of Player 1's numbers based on array
+//decide order of player's numbers based on array
 var decideOrder = function (input, player) {
+  var message = ``;
   if (player == 1) {
     console.log(`we're deciding order of Player 1 now!`);
     if (input == 1) {
@@ -108,29 +112,28 @@ var decideOrder = function (input, player) {
       console.log(`this is player 1's number: `, player1Num);
       playerState = `P2`;
       gameState = `rolling dice`;
-      return (
+      message =
         `${playerNameArr[0]}, your number is ${player1Num}` +
         `<br>` +
-        `${playerNameArr[1]}, click submit to roll dice.`
-      );
-    }
-    if (input == 2) {
+        `${playerNameArr[1]}, click submit to roll dice.`;
+    } else if (input == 2) {
       player1Num = player1Arr[1] * 10 + player1Arr[0];
       playerState = `P2`;
       gameState = `rolling dice`;
-      return (
+      message =
         `${playerNameArr[0]}, your number is ${player1Num}` +
         `<br>` +
-        `${playerNameArr[1]}, click submit to roll dice.`
-      );
+        `${playerNameArr[1]}, click submit to roll dice.`;
+    } else {
+      message =
+        `This is an invalid input.` +
+        `<br>` +
+        `Press 1 if you want your number to be ${player1Arr[0]}${player1Arr[1]}` +
+        `<br>` +
+        `Press 2 if you want your number to be ${player1Arr[1]}${player1Arr[0]}`;
     }
-    return (
-      `This is an invalid input.` +
-      `<br>` +
-      `Press 1 if you want your number to be ${player1Arr[0]}${player1Arr[1]}` +
-      `<br>` +
-      `Press 2 if you want your number to be ${player1Arr[1]}${player1Arr[0]}`
-    );
+    player1Score = player1Score + player1Num;
+    return message;
   }
   if (player == 2) {
     console.log(`we're deciding order of Player 2 and deciding winner now!`);
@@ -148,6 +151,7 @@ var decideOrder = function (input, player) {
       );
     }
     console.log(`this is player 2's number, ${player2Num}`);
+    player2Score = player2Score + player2Num;
     message =
       `${playerNameArr[1]}, your number is ${player2Num}` +
       `<br>` +
@@ -173,5 +177,17 @@ var decideWinner = function (player1Num, player2Num) {
       `<br>` +
       `It's a draw!`;
   }
+  message =
+    message +
+    `<br>` +
+    `${playerNameArr[0]}'s score: ${player1Score}` +
+    `<br>` +
+    `${playerNameArr[1]}'s score: ${player2Score}` +
+    `<br>` +
+    `To play again, click submit to for ${playerNameArr[0]} to roll again.`;
+  player1Arr = [];
+  player2Arr = [];
+  playerState = `P1`;
+  gameState = `rolling dice`;
   return message;
 };
