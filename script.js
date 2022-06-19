@@ -48,7 +48,6 @@ var main = function (input) {
   } else {
     //When player choose "1":
     if (input == 1) {
-      playerNember = clickCount;
       currentNumber = tempNum[0] * 10 + tempNum[1];
       playerResults.push(currentNumber);
       myOutputValue = `The number player ${playerNumber} choose is ${currentNumber}. <br><br>Next player please click "Submit" to roll the dice. `;
@@ -57,7 +56,6 @@ var main = function (input) {
 
       //When player choose "2":
     } else if (input == 2) {
-      playerNember = clickCount;
       currentNumber = tempNum[1] * 10 + tempNum[0];
       playerResults.push(currentNumber);
       myOutputValue = `The number player ${playerNumber} choose is ${currentNumber}. <br><br>Next player please click "Submit" to roll the dice.`;
