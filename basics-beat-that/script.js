@@ -81,6 +81,7 @@ function playGame() {
   player2final = [];
 }
 
+//HELPER FUNCTIONS FOR MAIN
 function player1click() {
   rollDice();
   player1choice.push(...holdingArray);
@@ -136,6 +137,7 @@ function rollDice() {
   return diceRoll;
 }
 
+//FINDING WINNER ACCORDING TO GAME STATE
 function findingWinnerDesc() {
   player1choice.sort((a, b) => b - a);
   player1final = player1choice[0] * 10 + player1choice[1];
