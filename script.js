@@ -5,44 +5,7 @@
 //second player does the same thing
 //game decides who wins based on bigger number
 
-// var numPlayers = 0;
-// var playerNameArr = [];
-// var player1Num = 0;
-// var player2Num = 0;
-// var gameState = `waiting for user names`;
-
-// var main = function (input) {
-//   //initial message = `input no of players' - use html
-//   if (numPlayers == 0){
-//   var message = initialisePlayers(input);
-//   return message;
-//   }
-// };
-
-// //intialise players
-// var initialisePlayers = function (input) {
-//   if (numPlayers == 0) {
-//     numPlayers = input;
-//     return `Enter players' name seperately, clicking submit after tpying in each name.`;
-//   } else {
-//     for (var i = 0; i < input; i++) {
-//       if (i < input - 1) {
-//         savePlayerName(i, input);
-//         return `Welcome, ${playerNameArr[i]}! Please type the next player's name.`;
-//       }
-//       savePlayerName(i, input);
-//       return `Welcome ${playerNameArr}. Let's play Beat That!`;
-//     }
-//   }
-// };
-
-// //save player names
-// var savePlayerName = function (i, input) {
-//   playerNameArr.push(input);
-//   return;
-// };
-
-//start with 2 players first
+//git change
 
 var player1Num = 0;
 var player2Num = 0;
@@ -74,9 +37,6 @@ var main = function (input) {
       message = decideOrder2(input);
       return message;
     }
-  } else {
-    message = decideWinner(player1Num, player2Num);
-    return message;
   }
 };
 
