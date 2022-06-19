@@ -59,12 +59,12 @@ var createTable = function() {
 
 var main = function (input) {
   let myOutputValue = '';
-  if (player1Ready === false) {
+  if (player1Ready === false) { 
     dice1 = rollDice();
     dice2 = rollDice();
     myOutputValue += "Welcome Player 1.<br><br>";
     myOutputValue += `You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2.<br><br>Choose the order of the dice.`;
-    player1Ready = true;
+    player1Ready = true; // Changes the program state where player 1 has rolled the dice
     return myOutputValue;
   }
 
@@ -74,7 +74,7 @@ var main = function (input) {
     }
     player1Number = pickOrder(dice1, dice2, input);
     player1Number = parseInt(player1Number);
-    player1Dice = true;
+    player1Dice = true; // Changes the program state where player 1 has picked the order
     myOutputValue = "Player 2, please press the submit button to roll dice.";
     return myOutputValue;
   }
@@ -84,7 +84,7 @@ var main = function (input) {
     dice2 = rollDice();
     myOutputValue += "Welcome Player 2.<br><br>";
     myOutputValue += `You rolled ${dice1} for Dice 1 and ${dice2} for Dice 2.<br><br>Choose the order of the dice.`;
-    player2Ready = true;
+    player2Ready = true; // Changes the program state where player 2 has rolled the dice
     return myOutputValue;
   }
 
@@ -115,6 +115,8 @@ var main = function (input) {
 
   myOutputValue += `Player 1 has ${player1Number} and Player 2 has ${player2Number}<br><br>Press submit to start new game<br><br>`
   myOutputValue += createTable();
+
+  // Resets the round to the beginning state
   resetGame();
 
 
