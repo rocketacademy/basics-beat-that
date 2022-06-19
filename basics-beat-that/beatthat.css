@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+#header {
+  text-align: center;
+}
+
+#container {
+  background-color: pink;
+  margin: 40px auto;
+  max-width: 800px;
+  padding: 38px 31px;
+  display: grid;
+  /* grid-template-columns: (3, 1fr); */
+  border-color: black;
+  border-radius: 5px;
+  border-style: solid;
+}
+
+button {
+  font-size: 21px;
+  line-height: 33px;
+  margin: 0 0 23px 0;
+  padding: 0 6px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.rules-dropdown {
+  background-color: indianred;
+  color: white;
+  max-width: 200px;
+  font-size: 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: mistyrose;
+  min-width: 200px;
+  max-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  height: 300px;
+  font-family: "Roboto Mono", monospace;
+}
+
+.dropdown-content small {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.show {
+  display: block;
+}
+
+#roll-button-player-1 {
+  background-color: bisque;
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+#roll-button-player-2 {
+  background-color: bisque;
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+#results {
+  background-color: lightcoral;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#output-div {
+  background-color: lightgrey;
+  margin: 20px auto;
+  padding: 20px;
+  width: 100%;
+  font-size: 30px;
+  justify-content: space-around;
+}
+
+#toggle-button {
+  background-color: indianred;
+  color: white;
+  max-width: 200px;
+  font-size: 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#players {
+  margin-left: 500px;
+  margin-right: 400px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 40%);
+  grid-column-gap: 300px;
+  font-size: 40px;
+  font-family: sans-serif;
+}
+
+#player-1-final {
+  display: flex;
+  opacity: 0.5;
+  font-size: 50px;
+}
+
+#player-2-final {
+  display: flex;
+  opacity: 0.5;
+  font-size: 50px;
+}
+
+#player-rolls {
+  display: grid;
+  grid-template-columns: 2, 1fr;
+  position: relative;
+  top: -50px;
+  right: -300px;
+  font-size: 20px;
+}
+
+#roll-button-player-1 {
+  cursor: pointer;
+}
+
+#roll-button-player-2 {
+  cursor: pointer;
+}
