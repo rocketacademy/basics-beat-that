@@ -61,7 +61,7 @@ function changeButtonColour() {
       this.style.backgroundColor = "bisque";
     }
   });
-  console.log("CHANGE COLOR");
+  console.log("change button colour activated");
 }
 
 function playGame() {
