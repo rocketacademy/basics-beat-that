@@ -33,14 +33,14 @@ var choosePlayerScoreOrder = function (playerSelection) {
   var playerScore = "";
   if (playerSelection == "1") {
     playerScore = String(currentPlayerRolls[0]) + String(currentPlayerRolls[1]);
-    allScores.push(playerScore);
+    allScores.push(Math.floor(playerScore));
     myOutputValue = `Player ${currentPlayer}, you have selected ${playerSelection} and your score is ${playerScore}. `;
     currentPlayerRolls = [];
     gameMode = gameModeDiceRoll;
     return myOutputValue;
   } else if (playerSelection == "2") {
     playerScore = String(currentPlayerRolls[1]) + String(currentPlayerRolls[0]);
-    allScores.push(playerScore);
+    allScores.push(Math.floor(playerScore));
     myOutputValue = `Player ${currentPlayer}, you have selected ${playerSelection} and your score is ${playerScore}. `;
     currentPlayerRolls = [];
     gameMode = gameModeDiceRoll;
@@ -58,6 +58,12 @@ var resetGameModeClearScores = function () {
   currentPlayerRolls = [];
   allScores = [];
 };
+
+var checkiInputValidation = function(input, gameMode){
+  if (gameMode == "choose order" && input =="1"){
+var validInput = input;
+  return validInput;
+}
 
 var main = function (input) {
   var myOutputValue = "";
@@ -90,7 +96,7 @@ var main = function (input) {
   }
 
   if (currentPlayer == "2" && gameMode == "compare scores") {
-    // resetGameModeClearScores();
+    
 
     myOutputValue =
       "Player 1,  your score was " +
