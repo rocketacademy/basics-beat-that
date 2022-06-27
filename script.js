@@ -7,7 +7,7 @@
 // ===== problem breakdown and planning =====
 // git commit ver 1: one player rolls 2 dice and that player chooses the dice order to get the output
 // git commit ver 2: refactored code to include player 2
-// - will need global variables for currentPlayer, allPlayersScore (array to store the score of all players)
+// - will need global variables for currentPlayer, allPlayersScores (array to store the score of all players)
 // - refactor outMessages to interact with each player 1 and player 2
 // - write logic for player 1 to go first then player 2, and finally point towards comparing score
 // git commit ver 3: implement comparing dice scores and declare winner
@@ -16,10 +16,10 @@ var GAME_STATE_DICE_ROLL = `GAME_STATE_DICE_ROLL`;
 var GAME_STATE_CHOOSE_DICE_ORDER = `GAME_STATE_CHOOSE_DICE_ORDER`;
 var GAME_STATE_COMPARE_SCORES = `GAME_STATE_COMPARE_SCORES`;
 var gameState = GAME_STATE_DICE_ROLL;
-// Initialize an empty array to store currentPlayerRolls
-var currentPlayerRolls = [];
+
+var currentPlayerRolls = []; // Initialize an empty array to store currentPlayerRolls
 var currentPlayer = 1; // player 1 starts first
-var allPlayersScore = [];
+var allPlayersScores = []; // array to store the score of all players
 
 // Helper function
 var rollDice = function () {
@@ -67,9 +67,28 @@ var getPlayerScore = function (playerInput) {
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
   }
-  allPlayersScore.push(playerScore);
+  allPlayersScores.push(playerScore);
   currentPlayerRolls = []; // clear currentPlayerRolls array
   return `Player ${currentPlayer}, your chosen value is ${playerScore}`;
+};
+
+var comparePlayersScores = function () {
+  // input parameter not needed for the function. Because we are dealing with a global variable, allPlayersScores
+  // General output message
+  compareMessage = `Player 1 score: ${allPlayersScores[0]}<br>Player 2 score: ${allPlayersScores[1]}`;
+  // Player 1 wins
+  if (allPlayersScores[0] > allPlayersScores[1]) {
+    compareMessage = compareMessage + `<br>Player 1 wins!!`;
+  }
+  // Player 2 wins
+  if (allPlayersScores[0] < allPlayersScores[1]) {
+    compareMessage = compareMessage + `<br>Player 2 wins!!`;
+  }
+  // Tie
+  if (allPlayersScores[0] == allPlayersScores[1]) {
+    compareMessage = compareMessage + `<br>It's a tie!`;
+  }
+  return compareMessage;
 };
 
 var main = function (input) {
@@ -107,5 +126,10 @@ var main = function (input) {
       gameState = GAME_STATE_COMPARE_SCORES;
       return `${outputMessage}.<br>Press submit to compare scores`;
     }
+  }
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    console.log(`Control flow: gameState == GAME_STATE_COMPARE_SCORES`);
+    outputMessage = comparePlayersScores();
+    return outputMessage;
   }
 };
