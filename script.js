@@ -91,6 +91,13 @@ var comparePlayersScores = function () {
   return compareMessage;
 };
 
+var resetGame = function () {
+  // Reset the global variables to the original state
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  allPlayersScores = [];
+};
+
 var main = function (input) {
   console.log(
     `Checking game state when submit button is clicked: ${gameState}`
@@ -130,6 +137,10 @@ var main = function (input) {
   if (gameState == GAME_STATE_COMPARE_SCORES) {
     console.log(`Control flow: gameState == GAME_STATE_COMPARE_SCORES`);
     outputMessage = comparePlayersScores();
+    resetGame(); // Note: if you put any code AFTER the return statement, it will never run
+    console.log(`Current player after reset: `, currentPlayer);
+    console.log(`Game state after reset: `, gameState);
+    console.log(`allPlayersScores array: `, allPlayersScores);
     return outputMessage;
   }
 };
