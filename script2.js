@@ -2,13 +2,15 @@
 var PLAYERSELECTPHASE = 0;
 var DICENUMBERSELECTPHASE = 1;
 var ROLLPHASE = 2;
+var VICTORROLLPHASE = 3;
 
 //Flow Control: Current game states and player turn.
 var playerCount = 0;
-var currentDiceNum = 0;
+var currentDiceCount = 0;
 var currentGameState = PLAYERSELECTPHASE;
 var currentTurn = 0;
 var currentPlayer = 0;
+var currentVictor = 0;
 
 //Stored Values
 var currentPlayerNum = [];
@@ -23,16 +25,16 @@ var rollDice = function () {
   return finalNum;
 };
 
-var initialiseScoreboard = function () {
+var initialiseScoreboard = function (board) {
   for (var i = 0; i < playerCount; i++) {
-    scoreboard.push({ player: i, score: 0 });
+    board.push({ player: i, score: 0 });
   }
 };
 
 var playerRoll = function (input) {
   var diceValues = [];
   var outputString = "";
-  for (var i = 0; i < currentDiceNum; i++) {
+  for (var i = 0; i < currentDiceCount; i++) {
     diceValues.push(rollDice());
   }
 
@@ -43,30 +45,32 @@ var playerRoll = function (input) {
   }
 
   var outputInt = Number(outputString);
-  currentPlayerNum[input] = outputInt;
+  currentPlayerNum.push({ player: input, score: outputInt });
   scoreboard[input].score += outputInt;
 
   return `Player ${input + 1} has rolled:<br>${outputInt}`;
 };
 
 var winCheck = function (currentPlayerNum) {
-  var currentWinner = 0;
-  var currentScore = currentPlayerNum[0];
-  for (var i = 1; i < currentPlayerNum.length; i++) {
-    if (currentPlayerNum[i] > currentScore) {
-      currentWinner = i;
-      currentScore = currentPlayerNum[i];
-    }
-  }
+  currentPlayerNumCopy = [...currentPlayerNum];
+  currentPlayerNumCopy.sort((a, b) => a.score - b.score).reverse();
 
   var output = "<br><br>This round's scores:<br>";
-  for (var i = 0; i < currentPlayerNum.length; i++) {
-    output += `<br>Player ${i + 1} rolled ${currentPlayerNum[i]}.`;
+  for (var i = 0; i < currentPlayerNumCopy.length; i++) {
+    output += `<br>Player ${currentPlayerNumCopy[i].player + 1} rolled ${
+      currentPlayerNumCopy[i].score
+    }.`;
   }
 
+  currentVictor = currentPlayerNumCopy[0].player;
+
   return `${output}<br><br>Player ${
-    currentWinner + 1
-  }'s value was ${currentScore} and is the highest for this round.<br>Please choose the number of dice to play and press Go!`;
+    currentPlayerNumCopy[0].player + 1
+  }'s value was ${
+    currentPlayerNumCopy[0].score
+  } and is the highest for this round.<br>Player ${
+    currentPlayerNumCopy[1].player + 1
+  } is going home with NOTHING!`;
 };
 
 var displayScore = function (scoreboard) {
@@ -85,30 +89,35 @@ var main = function (input) {
   if (currentGameState == PLAYERSELECTPHASE) {
     currentGameState = DICENUMBERSELECTPHASE;
     playerCount = input;
-    initialiseScoreboard();
+    initialiseScoreboard(scoreboard);
     return `You have selected ${input} players.<br>Now select the number of dice to roll (probably up to 10, so it doesn't lag so much.).`;
   }
 
   if (currentGameState == DICENUMBERSELECTPHASE) {
+    currentGameState = VICTORROLLPHASE;
+    currentDiceCount = input;
+    return `You have chosen to play with ${input} dice.<br>Press Go! to roll.`;
+  }
+
+  if (currentGameState == VICTORROLLPHASE) {
+    var closeStatement = playerRoll(currentVictor);
     currentGameState = ROLLPHASE;
-    currentDiceNum = input;
-    return `You have chosen to play with ${input} dice.<br>Player 1 press Go! to roll.`;
+    currentPlayer = currentTurn + 1;
+    return closeStatement;
   }
 
   if (currentGameState == ROLLPHASE) {
     var closeStatement = playerRoll(currentPlayer);
-  }
-
-  if (currentPlayer == playerCount - 1) {
     winStatement = winCheck(currentPlayerNum) + displayScore(scoreboard);
     currentGameState = DICENUMBERSELECTPHASE;
-    currentPlayer = 0;
-    currentDiceNum = [];
-  } else {
-    currentPlayer += 1;
-    winStatement = "";
+    currentPlayer = currentVictor;
+    currentTurn += 1;
+    currentPlayerNum = [];
+    if (currentTurn == playerCount - 1) {
+      continuationMessage = `<br><br>The game has ended; please refresh to start a new game.`;
+    } else {
+      continuationMessage = `<br><br>Please select the number of dice to continue your next game.`;
+    }
+    return closeStatement + winStatement + continuationMessage;
   }
-
-  currentTurn += 1;
-  return closeStatement + winStatement;
 };
