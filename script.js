@@ -2,7 +2,7 @@ var minMode = false;
 var playerNum = 0;
 var diceNum = 0;
 var playerScore = [];
-var leaderBoard = [];
+var cumScore = [];
 
 var diceRoll = function () {
   return Math.ceil(Math.random() * 6) + 1;
@@ -63,15 +63,42 @@ var diceNumValidate = function (input) {
   }
 };
 
+var leaderSort = function (inputArr) {
+  var winNum = 0;
+  var winNumIndex = 0;
+  var sortedArr = [];
+
+  inputLength = inputArr.length;
+  var loopCounter = 0;
+
+  while (loopCounter < inputLength) {
+    //Find winning number in remainder of input array and add it to sorted list
+    if (minMode) {
+      winNum = Math.min.apply(null, inputArr);
+    } else {
+      winNum = Math.max.apply(null, inputArr);
+    }
+
+    //Remove the winning number from remainder of input array list
+    winNumIndex = inputArr.indexOf(winNum);
+    sortedArr.push(winNumIndex);
+    inputArr.splice(winNumIndex, 1);
+
+    loopCounter++;
+  }
+
+  return sortedArr;
+};
+
 var main = function (input) {
   //Validate number of players input
   if (playerNum == 0) {
     if (playerNumValidate(input)) {
       playerNum = input;
 
-      //Initialize each player leaderboard and current round score as 0
+      //Initialize each player cumulative score and current round score as 0
       for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
-        leaderBoard.push(0);
+        cumScore.push(0);
         playerScore.push(0);
       }
     } else {
@@ -88,7 +115,7 @@ var main = function (input) {
     }
   }
 
-  //Generate current round score and update leaderboard results
+  //Generate current round score and update cumulative results
   for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
     var diceResult = [];
 
@@ -98,7 +125,7 @@ var main = function (input) {
 
     var currentRoundScore = winNum(diceResult);
 
-    leaderBoard[loopPlayer] = leaderBoard[loopPlayer] + currentRoundScore;
+    cumScore[loopPlayer] = cumScore[loopPlayer] + currentRoundScore;
     playerScore[loopPlayer] = currentRoundScore;
   }
 };
