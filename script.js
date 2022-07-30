@@ -1,6 +1,8 @@
 var minMode = false;
 var playerNum = 0;
 var diceNum = 0;
+var playerScore = [];
+var leaderBoard = [];
 
 var diceRoll = function () {
   return Math.ceil(Math.random() * 6) + 1;
@@ -66,11 +68,18 @@ var main = function (input) {
   if (playerNum == 0) {
     if (playerNumValidate(input)) {
       playerNum = input;
+
+      //Initialize each player leaderboard and current round score as 0
+      for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
+        leaderBoard.push(0);
+        playerScore.push(0);
+      }
     } else {
       return "Please enter a valid number of players.";
     }
   }
 
+  //Validate number of dice input
   if (diceNum == 0) {
     if (diceNumValidate(input)) {
       diceNum = input;
@@ -79,7 +88,17 @@ var main = function (input) {
     }
   }
 
-  //
+  //Generate current round score and update leaderboard results
+  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
+    var diceResult = [];
 
-  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {}
+    for (let loopDice = 0; loopDice < diceNum; loopDice++) {
+      diceResult.push(diceRoll());
+    }
+
+    var currentRoundScore = winNum(diceResult);
+
+    leaderBoard[loopPlayer] = leaderBoard[loopPlayer] + currentRoundScore;
+    playerScore[loopPlayer] = currentRoundScore;
+  }
 };
