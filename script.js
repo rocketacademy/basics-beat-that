@@ -138,8 +138,33 @@ var main = function (input) {
   }
 
   //Generate output message
-  var outputMsgPt1 = "Current round scores as follows:<br>";
-  var outputMsgPt2 = "Cumulative scores as follows:<br>";
+  var currentLeader = leaderSort(playerScore);
+  var cumLeader = leaderSort(cumScore);
+  var playerResult = 0;
+  var cumResult = 0;
 
-  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {}
+  var outputMsgPt1 = `Current round scores as follows:<br>`;
+  var outputMsgPt2 = `Cumulative scores as follows:<br>`;
+
+  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
+    playerResult = Number(currentLeader.splice(0, 1));
+    playerResultScore = playerScore[playerResult];
+    if (playerResult == 0) {
+      outputMsgPt1 = outputMsgPt1 + `You: ${playerResultScore}<br>`;
+    } else {
+      outputMsgPt1 =
+        outputMsgPt1 + `Player ${playerResult + 1}: ${playerResultScore}<br>`;
+    }
+
+    cumResult = Number(cumLeader.splice(0, 1));
+    cumResultScore = cumScore[cumResult];
+    if (cumResult == 0) {
+      outputMsgPt2 = outputMsgPt2 + `You: ${cumResultScore}<br>`;
+    } else {
+      outputMsgPt2 =
+        outputMsgPt2 + `Player ${cumResult + 1}: ${cumResultScore}<br>`;
+    }
+  }
+
+  return `${outputMsgPt1}<br><br>${outputMsgPt2}`;
 };
