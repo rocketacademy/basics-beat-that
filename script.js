@@ -68,6 +68,13 @@ var leaderSort = function (inputArr) {
   var winNumIndex = 0;
   var sortedArr = [];
 
+  var overrideNum = 0;
+  if (minMode) {
+    overrideNum = 10 ** diceNum;
+  } else {
+    overrideNum = 0;
+  }
+
   inputLength = inputArr.length;
   var loopCounter = 0;
 
@@ -82,7 +89,8 @@ var leaderSort = function (inputArr) {
     //Remove the winning number from remainder of input array list
     winNumIndex = inputArr.indexOf(winNum);
     sortedArr.push(winNumIndex);
-    inputArr.splice(winNumIndex, 1);
+
+    inputArr.splice(winNumIndex, 1, overrideNum);
 
     loopCounter++;
   }
@@ -128,4 +136,10 @@ var main = function (input) {
     cumScore[loopPlayer] = cumScore[loopPlayer] + currentRoundScore;
     playerScore[loopPlayer] = currentRoundScore;
   }
+
+  //Generate output message
+  var outputMsgPt1 = "Current round scores as follows:<br>";
+  var outputMsgPt2 = "Cumulative scores as follows:<br>";
+
+  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {}
 };
