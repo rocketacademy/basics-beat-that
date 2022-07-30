@@ -12,9 +12,9 @@ var diceRoll = function (input) {
   var randomNum = randomInteger + 1;
   return randomNum;
 };
-/*
-// Create a helper function for the game play. Think about how to do it in a single player mode first.
 
+// Step 1 Create a helper function for the game play. Think about how to do it in a single player mode first.
+/*
 // Create a helper function for Rule number 2. When player click Submit, game rolls 2 dice and returns the results of the dice rolls.
 var firstRoll = "";
 var secondRoll = "";
@@ -67,13 +67,12 @@ var main = function (input) {
 };
 */
 
-// Now that single player mode is coded, create the gameplay for two player mode.
+// Step 2: Now that single player mode is coded, create the gameplay for two player mode.
 // Create global variable to track number of players.
-// Create a helper function so that the game stop after Player number 2 chooses the Dice order. Then reset the game after displaying results. Do this by creating a new
-/// game mode to display the results.
 // Store the dice roll results of player 1 and 2 into an array
-// Compare which number is the biggest in the array using a while loop
-// Return the corresponding winner of that biggest number
+// Create a helper function so that the game stop and show results after Player number 2 chooses the Dice order. Then reset the game after displaying results. Do this by creating a new
+/// game mode to display the results.
+
 var playerNum = 1;
 var allPlayersScore = [];
 
@@ -106,33 +105,9 @@ var chooseDiceOrder = function (input) {
   }
 };
 
-var currentGameMode = "roll 2 dices";
-
-var main = function (input) {
-  var modeResult;
-
-  if (currentGameMode == "roll 2 dices") {
-    if (input != "") {
-      modeResult = "Click the 'Submit' button to roll dice";
-    } else {
-      currentGameMode = "choose order of 2 dices";
-      modeResult = rollTwoDices(input);
-    }
-  } else if (currentGameMode == "choose order of 2 dices") {
-    if (!(input == 1 || input == 2)) {
-      modeResult = `Current Turn: PLAYER ${playerNum} <br><br> Invalid input. <br><br> First dice: ${firstRoll} and Second dice: ${secondRoll} <br><br> Choose the order of the dice by entering '1' or '2'`;
-    } else {
-      modeResult = `${chooseDiceOrder(input)} <br><br> It is PLAYER ${
-        playerNum + 1
-      }'s turn. Click 'Submit' to roll.`;
-      playerNum += 1;
-      currentGameMode = "roll 2 dices";
-    }
-  }
-  console.log("array of dice rolls:" + allPlayersScore);
-  console.log("Player number: " + playerNum);
-  return modeResult;
-};
+// Step 3:
+// Compare which number is the biggest in the array using a while loop
+// Return the corresponding winner of that biggest number
 
 var biggestNumber = function (input) {
   var largest = null;
@@ -146,4 +121,49 @@ var biggestNumber = function (input) {
   }
 
   return largest;
+};
+
+var currentGameMode = "roll 2 dices";
+
+var main = function (input) {
+  var modeResult;
+
+  if (currentGameMode == "roll 2 dices") {
+    if (input != "") {
+      modeResult = "Click the 'Submit' button to roll dice";
+    } else {
+      currentGameMode = "choose order of 2 dices";
+      modeResult = rollTwoDices(input);
+    }
+  } else if (currentGameMode == "choose order of 2 dices") {
+    if (playerNum == 1) {
+      if (!(input == 1 || input == 2)) {
+        modeResult = `Current Turn: PLAYER ${playerNum} <br><br> Invalid input. <br><br> First dice: ${firstRoll} and Second dice: ${secondRoll} <br><br> Choose the order of the dice by entering '1' or '2'`;
+      } else {
+        modeResult = `${chooseDiceOrder(input)} <br><br> It is PLAYER ${
+          playerNum + 1
+        }'s turn. Click 'Submit' to roll.`;
+        playerNum += 1;
+        currentGameMode = "roll 2 dices";
+      }
+    } else if (playerNum == 2) {
+      if (!(input == 1 || input == 2)) {
+        modeResult = `Current Turn: PLAYER ${playerNum} <br><br> Invalid input. <br><br> First dice: ${firstRoll} and Second dice: ${secondRoll} <br><br> Choose the order of the dice by entering '1' or '2'`;
+      } else {
+        modeResult = `${chooseDiceOrder(
+          input
+        )} <br><br> Click 'Submit' for the winner!`;
+        currentGameMode = "game end display winner";
+      }
+    }
+  } else if (currentGameMode == "game end display winner") {
+    currentGameMode = "roll 2 dices";
+    modeResult = `Winner(s): Player xx <br><br> Player 1: ${allPlayersScore[0]} <br> Player 2: ${allPlayersScore[1]} <br><br> Click 'Submit' to play again.`;
+    allPlayersScore = [];
+    playerNum = 1;
+  }
+
+  console.log("array of dice rolls:" + allPlayersScore);
+  console.log("Player number: " + playerNum);
+  return modeResult;
 };
