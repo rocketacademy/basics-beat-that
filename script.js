@@ -106,21 +106,36 @@ var chooseDiceOrder = function (input) {
 };
 
 // Step 3:
-// Compare which number is the biggest in the array using a while loop
+// Create a helper function to compare which number is the biggest in the array using a while loop
 // Return the corresponding winner of that biggest number
 
-var biggestNumber = function (input) {
-  var largest = null;
-  var number = null;
+var compareNum = function (input) {
   var i = 0;
+  var largestNum = 0;
   while (i < input.length) {
-    number = input[i];
-    largest = Math.max(largest, number);
+    if (input[i] > largestNum) {
+      largestNum = input[i];
+    }
     i += 1;
-    console.log("number" + number);
   }
+  return largestNum;
+};
 
-  return largest;
+var winner = function (input) {
+  var trackWinner = [];
+  var winningScore = compareNum(input);
+  var j = 0;
+  while (j < input.length) {
+    if (input[j] == winningScore) {
+      trackWinner.push(j);
+    }
+    j += 1;
+  }
+  return trackWinner.map(addOne);
+};
+
+var addOne = function (num) {
+  return num + 1;
 };
 
 var currentGameMode = "roll 2 dices";
@@ -157,10 +172,18 @@ var main = function (input) {
       }
     }
   } else if (currentGameMode == "game end display winner") {
-    currentGameMode = "roll 2 dices";
-    modeResult = `Winner(s): Player xx <br><br> Player 1: ${allPlayersScore[0]} <br> Player 2: ${allPlayersScore[1]} <br><br> Click 'Submit' to play again.`;
-    allPlayersScore = [];
-    playerNum = 1;
+    if (input != "") {
+      modeResult = "Told you to click 'Submit' tsk.";
+    } else {
+      currentGameMode = "roll 2 dices";
+      modeResult = `Winner(s): Player ${winner(
+        allPlayersScore
+      )} <br><br> Player 1: ${allPlayersScore[0]} <br> Player 2: ${
+        allPlayersScore[1]
+      } <br><br> Click 'Submit' to play again.`;
+      allPlayersScore = [];
+      playerNum = 1;
+    }
   }
 
   console.log("array of dice rolls:" + allPlayersScore);
