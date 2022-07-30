@@ -43,7 +43,7 @@ var getPlayerScore = function (playerInput) {
 
   allPlayersScore.push(playerScore);
   var counter = 0;
-  for (counter = 0; counter < 2; counter += 1) {
+  for (counter = 0; counter < currentPlayerRolls.length; counter += 1) {
     currentPlayerRolls.shift();
   }
   return `Player ${currentPlayer}, your chosen value is: ${playerScore}`;
@@ -69,7 +69,7 @@ var resetGame = function () {
   currentPlayer = 1;
   gameMode = GAME_MODE_DICE_ROLL;
   var counter = 0;
-  for (counter = 0; counter < 2; counter += 1) {
+  for (counter = 0; counter < allPlayersScore.length; counter += 1) {
     allPlayersScore.shift();
   }
 };
