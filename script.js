@@ -3,16 +3,51 @@ var diceRoll = function () {
 };
 
 var player1Result = 0;
-var player1Dice1 = 0;
-var player1Dice2 = 0;
+var player1Dice = [];
 var player1Choice = 0;
+
 var player2Result = 0;
-var player2Dice1 = 0;
-var player2Dice2 = 0;
+var player2Dice = [];
 var player2Choice = 0;
+var minMode = false;
 
 var concatNum = function (firstNum, secondNum) {
-  return firstNum * 10 + secondNum;
+  return Number(firstNum) * 10 + Number(secondNum);
+};
+
+var winNum = function (inputArr) {
+  var winNum = 0;
+  var winNumIndex = 0;
+  var sortedArr = [];
+  var outputNum = 0;
+
+  inputLength = inputArr.length;
+  var loopCounter = 0;
+
+  while (loopCounter < inputLength) {
+    //Find winning number in remainder of input array and add it to sorted list
+    if (minMode) {
+      winNum = Math.min.apply(null, inputArr);
+    } else {
+      winNum = Math.max.apply(null, inputArr);
+    }
+    sortedArr.push(winNum);
+
+    //Remove the winning number from remainder of input array list
+    winNumIndex = inputArr.indexOf(winNum);
+    inputArr.splice(winNumIndex, 1);
+
+    loopCounter++;
+  }
+
+  loopCounter = 0;
+  while (loopCounter < inputLength) {
+    outputNum = outputNum + sortedArr.pop() * 10 ** loopCounter;
+
+    loopCounter++;
+  }
+
+  return outputNum;
 };
 
 var userChoiceValidate = function (input) {
