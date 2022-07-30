@@ -70,7 +70,7 @@ var main = function (input) {
 // Step 2: Now that single player mode is coded, create the gameplay for two player mode.
 // Create global variable to track number of players.
 // Store the dice roll results of player 1 and 2 into an array
-// Create a helper function so that the game stop and show results after Player number 2 chooses the Dice order. Then reset the game after displaying results. Do this by creating a new
+// Edit game mode function so that the game stop and show results after Player number 2 chooses the Dice order. Then reset the game after displaying results. Do this by creating a new
 /// game mode to display the results.
 
 var playerNum = 1;
