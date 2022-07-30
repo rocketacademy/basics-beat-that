@@ -1,15 +1,10 @@
+var minMode = false;
+var playerNum = 0;
+var diceNum = 0;
+
 var diceRoll = function () {
   return Math.ceil(Math.random() * 6) + 1;
 };
-
-var player1Result = 0;
-var player1Dice = [];
-var player1Choice = 0;
-
-var player2Result = 0;
-var player2Dice = [];
-var player2Choice = 0;
-var minMode = false;
 
 var concatNum = function (firstNum, secondNum) {
   return Number(firstNum) * 10 + Number(secondNum);
@@ -50,30 +45,41 @@ var winNum = function (inputArr) {
   return outputNum;
 };
 
-var userChoiceValidate = function (input) {
-  if (input != 1 || input != 2) {
-    return false;
-  } else {
+var playerNumValidate = function (input) {
+  if (Number.isInteger(input) && input > 1) {
     return true;
+  } else {
+    return false;
+  }
+};
+
+var diceNumValidate = function (input) {
+  if (Number.isInteger(input) && input > 0) {
+    return true;
+  } else {
+    return false;
   }
 };
 
 var main = function (input) {
-  if (player1Dice1 == 0) {
-    player1Dice1 = diceRoll();
-    player1Dice2 = diceRoll();
-
-    return `Welcome Player 1.<br>You rolled ${player1Dice1} for Dice 1 and ${player1Dice2} for Dice 2.<br>Choose which dice goes first.`;
-  }
-  if (player1Dice1 != 0 && player1Result == 0) {
-    if (userChoiceValidate(input) == false) {
-      return "Please choose either dice 1 or dice 2 as your first dice.";
+  //Validate number of players input
+  if (playerNum == 0) {
+    if (playerNumValidate(input)) {
+      playerNum = input;
     } else {
-      if (player1Choice == 1) {
-        player1Result = concatNum(player1Dice1, player1Dice2);
-      } else {
-        player1Result = concatNum(player1Dice2, player1Dice1);
-      }
+      return "Please enter a valid number of players.";
     }
   }
+
+  if (diceNum == 0) {
+    if (diceNumValidate(input)) {
+      diceNum = input;
+    } else {
+      return "Please enter a valid number of dice you would like to play with.";
+    }
+  }
+
+  //
+
+  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {}
 };
