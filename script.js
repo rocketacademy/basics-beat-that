@@ -48,7 +48,7 @@ var winNum = function (inputArr) {
 };
 
 var playerNumValidate = function (input) {
-  if (Number.isInteger(input) && input > 1) {
+  if (Number.isInteger(input) || input > 1) {
     return true;
   } else {
     return false;
@@ -56,7 +56,7 @@ var playerNumValidate = function (input) {
 };
 
 var diceNumValidate = function (input) {
-  if (Number.isInteger(input) && input > 0) {
+  if (Number.isInteger(input) || input > 0) {
     return true;
   } else {
     return false;
