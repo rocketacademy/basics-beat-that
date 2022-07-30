@@ -93,21 +93,15 @@ var rollTwoDices = function (input) {
 var chooseDiceOrder = function (input) {
   if (input == 1) {
     var biggestNum = Number("" + firstRoll + secondRoll);
-    var myOutputValue = `Current Turn: PLAYER ${playerNum} <br><br> You chose Dice 1 first. Your number is ${biggestNum}. <br><br> It is PLAYER ${
-      playerNum + 1
-    }'s turn. Click 'Submit' to roll.`;
+    var myOutputValue = `Current Turn: PLAYER ${playerNum} <br><br> You chose Dice 1 first. Your number is ${biggestNum}.`;
     allPlayersScore.push(biggestNum);
-    playerNum += 1;
     return myOutputValue;
   }
 
   if (input == 2) {
     var biggestNum = Number("" + secondRoll + firstRoll);
-    var myOutputValue = `Current Turn: PLAYER ${playerNum} <br><br> You chose Dice 2 first. Your number is ${biggestNum}.<br><br> It is PLAYER ${
-      playerNum + 1
-    }'s turn. Click 'Submit' to roll.`;
+    var myOutputValue = `Current Turn: PLAYER ${playerNum} <br><br> You chose Dice 2 first. Your number is ${biggestNum}.`;
     allPlayersScore.push(biggestNum);
-    playerNum += 1;
     return myOutputValue;
   }
 };
@@ -128,7 +122,10 @@ var main = function (input) {
     if (!(input == 1 || input == 2)) {
       modeResult = `Current Turn: PLAYER ${playerNum} <br><br> Invalid input. <br><br> First dice: ${firstRoll} and Second dice: ${secondRoll} <br><br> Choose the order of the dice by entering '1' or '2'`;
     } else {
-      modeResult = chooseDiceOrder(input);
+      modeResult = `${chooseDiceOrder(input)} <br><br> It is PLAYER ${
+        playerNum + 1
+      }'s turn. Click 'Submit' to roll.`;
+      playerNum += 1;
       currentGameMode = "roll 2 dices";
     }
   }
