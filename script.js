@@ -46,7 +46,23 @@ var getPlayerScore = function (playerInput) {
   for (counter = 0; counter < 2; counter += 1) {
     currentPlayerRolls.shift();
   }
-  return `Player ${currentPlayer}, your chosen value is: ${playerScore}.`;
+  return `Player ${currentPlayer}, your chosen value is: ${playerScore}`;
+};
+
+var comparePlayersScores = function () {
+  var compareMessage = `Player 1's score: ${allPlayersScore[0]}.<br>Player 2's score: ${allPlayersScore[1]}.`;
+
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    return `${compareMessage}<br><br>Player 1 wins!`;
+  }
+
+  if (allPlayersScore[0] < allPlayersScore[1]) {
+    return `${compareMessage}<br><br>Player 2 wins!`;
+  }
+
+  if (allPlayersScore[0] == allPlayersScore[1]) {
+    return `${compareMessage}<br><br>It's a tie!`;
+  }
 };
 
 var main = function (input) {
@@ -58,16 +74,21 @@ var main = function (input) {
 
   if (gameMode == GAME_MODE_CHOOSE_DICE_ORDER) {
     myOutputValue = getPlayerScore(input);
+
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameMode = GAME_MODE_DICE_ROLL;
+      return `${myOutputValue}.<br><br>It is now Player 2's turn.`;
+    }
+
+    if (currentPlayer == 2) {
+      gameMode = GAME_MODE_COMPARE_SCORES;
+      return `${myOutputValue}.<br><br>Press submit to calculate scores.`;
+    }
   }
 
-  if (currentPlayer == 1) {
-    currentPlayer = 2;
-    gameMode = GAME_MODE_DICE_ROLL;
-    return `${myOutputValue}<br><br>It is now Player 2's turn.`;
+  if (gameMode == GAME_MODE_COMPARE_SCORES) {
+    myOutputValue = comparePlayersScores();
   }
-
-  if (currentPlayer == 2) {
-    gameMode = GAME_MODE_COMPARE_SCORES;
-    return `${myOutputValue}<br><br>Press submit to calculate scores.`;
-  }
+  return myOutputValue;
 };
