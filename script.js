@@ -65,6 +65,15 @@ var comparePlayersScores = function () {
   }
 };
 
+var resetGame = function () {
+  currentPlayer = 1;
+  gameMode = GAME_MODE_DICE_ROLL;
+  var counter = 0;
+  for (counter = 0; counter < 2; counter += 1) {
+    allPlayersScore.shift();
+  }
+};
+
 var main = function (input) {
   var myOutputValue = "";
   if (gameMode == GAME_MODE_DICE_ROLL) {
@@ -89,6 +98,11 @@ var main = function (input) {
 
   if (gameMode == GAME_MODE_COMPARE_SCORES) {
     myOutputValue = comparePlayersScores();
+
+    resetGame();
+    console.log("Current player after reset: ", currentPlayer);
+    console.log("Game mode after reset: ", gameMode);
+    console.log("allPlayersScore array: ", allPlayersScore);
   }
   return myOutputValue;
 };
