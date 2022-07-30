@@ -1,6 +1,12 @@
-var gameMode = "game in play";
+var GAME_MODE_DICE_ROLL = "GAME_MODE_DICE_ROLL";
+var GAME_MODE_CHOOSE_DICE_ORDER = "GAME_MODE_CHOOSE_DICE_ORDER";
+var GAME_MODE_COMPARE_SCORES = "GAME_MODE_COMPARE_SCORES";
+var gameMode = GAME_MODE_DICE_ROLL;
 
-diceRolls = [];
+var currentPlayerRolls = [];
+
+var currentPlayer = 1;
+var allPlayersScore = [];
 
 var rollDice = function () {
   var noOfDiceFaces = 6;
@@ -8,33 +14,60 @@ var rollDice = function () {
   return diceNumber;
 };
 
-var roll2Dices = function () {
-  diceRolls = [rollDice(), rollDice()];
-  gameMode = "dice order selection";
-  return `Your dice rolls:<br>Dice 1: ${diceRolls[0]} | Dice 2: ${diceRolls[1]}.<br><br>Please input either '1' or '2' to choose the corresponding dice as the first digit of your final value.`;
+var rollDiceForPlayer = function () {
+  var counter = 0;
+  while (counter < 2) {
+    currentPlayerRolls.push(rollDice());
+    counter += 1;
+  }
+  return `Welcome, Player ${currentPlayer}!<br><br>You rolled:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}.<br><br>Please input either '1' or '2' to choose the corresponding dice to be the first digit of your final value.`;
 };
 
-var selectDiceOrder = function (playerInput) {
+var getPlayerScore = function (playerInput) {
+  var playerScore;
   if (playerInput != 1 && playerInput != 2) {
-    return `Error! Please input only '1' or '2' to choose which dice to use as the first digit.<br><br>Your dice rolls:<br> Dice 1: | Dice 2: .`;
+    return `Error! Please only input '1' or '2' to choose which dice to use as the first digit.<br><br>Your dice rolls are:<br>Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}.`;
   }
 
   if (playerInput == 1) {
-    var playerScore = Number(String(diceRolls[0]) + String(diceRolls[1]));
-    return `Your chosen value is: ${playerScore}.`;
+    playerScore = Number(
+      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
+    );
   }
 
   if (playerInput == 2) {
-    var playerScore = Number(String(diceRolls[1]) + String(diceRolls[0]));
-    return `Your chosen value is: ${playerScore}.`;
+    playerScore = Number(
+      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
+    );
   }
+
+  allPlayersScore.push(playerScore);
+  var counter = 0;
+  for (counter = 0; counter < 2; counter += 1) {
+    currentPlayerRolls.shift();
+  }
+  return `Player ${currentPlayer}, your chosen value is: ${playerScore}.`;
 };
 
 var main = function (input) {
-  if (gameMode == "game in play") {
-    myOutputValue = roll2Dices();
-  } else if (gameMode == "dice order selection") {
-    myOutputValue = selectDiceOrder(input);
+  var myOutputValue = "";
+  if (gameMode == GAME_MODE_DICE_ROLL) {
+    gameMode = GAME_MODE_CHOOSE_DICE_ORDER;
+    return rollDiceForPlayer();
   }
-  return myOutputValue;
+
+  if (gameMode == GAME_MODE_CHOOSE_DICE_ORDER) {
+    myOutputValue = getPlayerScore(input);
+  }
+
+  if (currentPlayer == 1) {
+    currentPlayer = 2;
+    gameMode = GAME_MODE_DICE_ROLL;
+    return `${myOutputValue}<br><br>It is now Player 2's turn.`;
+  }
+
+  if (currentPlayer == 2) {
+    gameMode = GAME_MODE_COMPARE_SCORES;
+    return `${myOutputValue}<br><br>Press submit to calculate scores.`;
+  }
 };
