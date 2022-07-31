@@ -133,9 +133,9 @@ var main = function (input) {
     }
 
     if (minMode) {
-      return "Min mode is active.<br>Cumulative score tracking has been reset.";
+      return "Min mode is active.<br>Cumulative score tracking has been reset.<br>Enter number of dice for next round to continue playing.";
     } else {
-      return "Min mode is inactive.<br>Cumulative score tracking has been reset.";
+      return "Min mode is inactive.<br>Cumulative score tracking has been reset.<br>Enter number of dice for next round to continue playing.";
     }
   }
 
@@ -151,7 +151,7 @@ var main = function (input) {
       }
       return ` You have decided to play with ${playerNum} players.<br>Please choose the number of dice (10 or less) you would like to play with.<br><br>You can also toggle to an alternative mode where lowest number wins instead of higher number by entering 'min' into the input field.<br><b>Warning: Toggling on and off the alternative min mode will trigger a reset of cumulative score tracking.<b>`;
     } else {
-      return "Please enter a valid number of players.";
+      return "Please enter a valid number of players (2 or more).";
     }
   }
 
@@ -187,7 +187,13 @@ var main = function (input) {
   var playerResult = 0;
   var cumResult = 0;
 
-  var outputMsgPt1 = `You played with ${diceNum} dice this round.<br><br>Current round scores as follows:<br>`;
+  if (minMode) {
+    minModeText = "active";
+  } else {
+    minModeText = "inactive";
+  }
+
+  var outputMsgPt1 = `You played with ${diceNum} dice this round.<br>Min mode is ${minModeText}.<br><br>Current round scores as follows:<br>`;
   var outputMsgPt2 = `Cumulative scores as follows:<br>`;
 
   for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
@@ -214,5 +220,5 @@ var main = function (input) {
   //Reset number of dice for next round
   diceNum = 0;
 
-  return `${outputMsgPt1}<br><br>${outputMsgPt2}`;
+  return `${outputMsgPt1}<br>${outputMsgPt2}`;
 };
