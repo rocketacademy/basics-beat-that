@@ -27,6 +27,20 @@ var rollDiceForPlayer = function () {
   return `You rolled ${currentPlayerRolls[0]} and ${currentPlayerRolls[1]}.<br>Please input 1 or 2 to pick roll 1 or roll 2 respectively as the first digit of your final result.`;
 };
 
+var comparePlayersScores = function () {
+  var compareMessage = `Player 1's score: ${allPlayersScore[0]}, player 2's score: ${allPlayersScore[1]}.`;
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    compareMessage += `Player 1 wins.`;
+  }
+  if (allPlayersScore[0] < allPlayersScore[1]) {
+    compareMessage += `Player 2 wins.`;
+  }
+  if (allPlayersScore[0] == allPlayersScore[1]) {
+    compareMessage += `Tie.`;
+  }
+  return compareMessage;
+};
+
 var getPlayerScore = function (playerInput) {
   var playerScore;
   if (playerInput != 1 && playerInput != 2) {
@@ -37,6 +51,8 @@ var getPlayerScore = function (playerInput) {
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
+    allPlayersScore.push(playerScore);
+    currentPlayerRolls = [];
     return `Your chosen result is ${playerScore}`;
   }
   if (playerInput == 2) {
@@ -77,4 +93,9 @@ var main = function (input) {
       return `${myOutputMessage} <br><br> Press submit to calculate scores.`;
     }
   }
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    console.log(`gameState == GAME_STATE_COMPARE_SCORES`);
+    myOutputMessage = comparePlayersScores();
+  }
+  return myOutputMessage;
 };
