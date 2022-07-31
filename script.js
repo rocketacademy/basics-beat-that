@@ -60,7 +60,7 @@ var playerNumValidate = function (input) {
 };
 
 var diceNumValidate = function (input) {
-  if (input > 0 || input < 10) {
+  if (input > 0 && input < 11) {
     if (input % 1 == 0) {
       return true;
     } else {
@@ -152,7 +152,7 @@ var main = function (input) {
     if (diceNumValidate(input)) {
       diceNum = input;
     } else {
-      return "Please enter a valid number of dice you would like to play with.";
+      return "Please enter a valid number of dice (10 or less) you would like to play with.";
     }
   }
 
@@ -186,7 +186,7 @@ var main = function (input) {
     playerResult = Number(currentLeader.splice(0, 1));
     playerResultScore = playerScore[playerResult];
     if (playerResult == 0) {
-      outputMsgPt1 = outputMsgPt1 + `You: ${playerResultScore}<br>`;
+      outputMsgPt1 = outputMsgPt1 + `<b>You: ${playerResultScore}</b><br>`;
     } else {
       outputMsgPt1 =
         outputMsgPt1 + `Player ${playerResult + 1}: ${playerResultScore}<br>`;
@@ -195,7 +195,7 @@ var main = function (input) {
     cumResult = Number(cumLeader.splice(0, 1));
     cumResultScore = cumScore[cumResult];
     if (cumResult == 0) {
-      outputMsgPt2 = outputMsgPt2 + `You: ${cumResultScore}<br>`;
+      outputMsgPt2 = outputMsgPt2 + `<b>You: ${cumResultScore}</b><br>`;
     } else {
       outputMsgPt2 =
         outputMsgPt2 + `Player ${cumResult + 1}: ${cumResultScore}<br>`;
