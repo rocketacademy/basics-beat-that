@@ -149,7 +149,7 @@ var main = function (input) {
         cumScore.push(0);
         playerScore.push(0);
       }
-      return ` You have decided to play with ${playerNum} players.<br>Please choose the number of dice (10 or less) you would like to play with.<br><br>You can also toggle to an alternative mode where lowest number wins instead of higher number by entering 'min' into the input field.<br><b>Warning: Toggling on and off the alternative min mode will trigger a reset of cumulative score tracking.<b>`;
+      return ` You have decided to play with ${playerNum} players.<br>Please choose the number of dice (10 or less) you would like to play with.<br><br>You can also toggle to an alternative mode where lowest number wins instead of higher number by entering 'min' into the input field.<br><br><b>Warning: Toggling on and off the alternative min mode will trigger a reset of cumulative score tracking.<b>`;
     } else {
       return "Please enter a valid number of players (2 or more).";
     }
