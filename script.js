@@ -5,7 +5,7 @@ var playerScore = [];
 var cumScore = [];
 
 var diceRoll = function () {
-  return Math.ceil(Math.random() * 6) + 1;
+  return Math.floor(Math.random() * 6) + 1;
 };
 
 var concatNum = function (firstNum, secondNum) {
@@ -77,29 +77,24 @@ var leaderSort = function (input) {
   var winNumIndex = 0;
   var sortedArr = [];
 
-  var overrideNum = 0;
-  if (minMode) {
-    overrideNum = 10 ** diceNum;
-  } else {
-    overrideNum = 0;
-  }
-
   inputLength = inputArr.length;
   var loopCounter = 0;
 
   while (loopCounter < inputLength) {
     //Find winning number in remainder of input array and add it to sorted list
     if (minMode) {
-      winNum = Math.min.apply(null, inputArr);
+      //Needed to make sure that 0 is ignored as the minimum in the array
+      winNum = Math.min.apply(null, inputArr.filter(nonZeroHelper));
     } else {
       winNum = Math.max.apply(null, inputArr);
     }
 
-    //Remove the winning number from remainder of input array list
+    //Override the winning number from remainder of input array list to 0
     winNumIndex = inputArr.indexOf(winNum);
+
     sortedArr.push(winNumIndex);
 
-    inputArr.splice(winNumIndex, 1, overrideNum);
+    inputArr.splice(winNumIndex, 1, 0);
 
     loopCounter++;
   }
@@ -107,7 +102,35 @@ var leaderSort = function (input) {
   return sortedArr;
 };
 
+var nonZeroHelper = function (input) {
+  return input > 0;
+};
+
 var main = function (input) {
+  //Activation of min mode
+  if (input == "min") {
+    console.log("a");
+    if (minMode == false) {
+      minMode = true;
+    } else {
+      minMode = false;
+    }
+
+    //Resetting cumulative score
+    if (playerNum > 0) {
+      for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
+        cumScore[loopPlayer] = 0;
+        playerScore[loopPlayer] = 0;
+      }
+    }
+
+    if (minMode) {
+      return "Min mode is active.";
+    } else {
+      return "Min mode is inactive.";
+    }
+  }
+
   //Validate number of players input
   if (playerNum == 0) {
     if (playerNumValidate(input)) {
