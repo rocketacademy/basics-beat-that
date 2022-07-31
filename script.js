@@ -48,22 +48,31 @@ var winNum = function (inputArr) {
 };
 
 var playerNumValidate = function (input) {
-  if (Number.isInteger(input) || input > 1) {
-    return true;
+  if (input % 1 == 0) {
+    if (input > 1) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
 };
 
 var diceNumValidate = function (input) {
-  if (Number.isInteger(input) || input > 0) {
-    return true;
+  if (input > 0 || input < 10) {
+    if (input % 1 == 0) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
 };
 
-var leaderSort = function (inputArr) {
+var leaderSort = function (input) {
+  var inputArr = input.slice();
   var winNum = 0;
   var winNumIndex = 0;
   var sortedArr = [];
@@ -109,6 +118,7 @@ var main = function (input) {
         cumScore.push(0);
         playerScore.push(0);
       }
+      return ` You have decided to play with ${playerNum} players.`;
     } else {
       return "Please enter a valid number of players.";
     }
@@ -124,7 +134,8 @@ var main = function (input) {
   }
 
   //Generate current round score and update cumulative results
-  for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
+  var loopCounter = 0;
+  while (loopCounter < playerNum) {
     var diceResult = [];
 
     for (let loopDice = 0; loopDice < diceNum; loopDice++) {
@@ -133,17 +144,19 @@ var main = function (input) {
 
     var currentRoundScore = winNum(diceResult);
 
-    cumScore[loopPlayer] = cumScore[loopPlayer] + currentRoundScore;
-    playerScore[loopPlayer] = currentRoundScore;
+    cumScore[loopCounter] = cumScore[loopCounter] + currentRoundScore;
+    playerScore[loopCounter] = currentRoundScore;
+    loopCounter++;
   }
 
   //Generate output message
   var currentLeader = leaderSort(playerScore);
   var cumLeader = leaderSort(cumScore);
+
   var playerResult = 0;
   var cumResult = 0;
 
-  var outputMsgPt1 = `Current round scores as follows:<br>`;
+  var outputMsgPt1 = `You played with ${diceNum} dice this round.<br><br>Current round scores as follows:<br>`;
   var outputMsgPt2 = `Cumulative scores as follows:<br>`;
 
   for (let loopPlayer = 0; loopPlayer < playerNum; loopPlayer++) {
@@ -165,6 +178,8 @@ var main = function (input) {
         outputMsgPt2 + `Player ${cumResult + 1}: ${cumResultScore}<br>`;
     }
   }
+
+  diceNum = 0;
 
   return `${outputMsgPt1}<br><br>${outputMsgPt2}`;
 };
