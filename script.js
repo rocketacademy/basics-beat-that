@@ -3,6 +3,7 @@ var playerNum = 0;
 var diceNum = 0;
 var playerScore = [];
 var cumScore = [];
+var userName = "";
 
 var diceRoll = function () {
   return Math.floor(Math.random() * 6) + 1;
@@ -107,6 +108,13 @@ var nonZeroHelper = function (input) {
 };
 
 var main = function (input) {
+  if (userName == "") {
+    console.log("a");
+    userName = input;
+    console.log("b");
+    return `Hi <b>${userName}</b>, please enter the number of players (2 or more) for this game.`;
+  }
+
   //Activation of min mode
   if (input == "min") {
     console.log("a");
@@ -125,9 +133,9 @@ var main = function (input) {
     }
 
     if (minMode) {
-      return "Min mode is active.";
+      return "Min mode is active.<br>Cumulative score tracking has been reset.";
     } else {
-      return "Min mode is inactive.";
+      return "Min mode is inactive.<br>Cumulative score tracking has been reset.";
     }
   }
 
@@ -141,7 +149,7 @@ var main = function (input) {
         cumScore.push(0);
         playerScore.push(0);
       }
-      return ` You have decided to play with ${playerNum} players.`;
+      return ` You have decided to play with ${playerNum} players.<br>Please choose the number of dice (10 or less) you would like to play with.<br><br>You can also toggle to an alternative mode where lowest number wins instead of higher number by entering 'min' into the input field.<br><b>Warning: Toggling on and off the alternative min mode will trigger a reset of cumulative score tracking.<b>`;
     } else {
       return "Please enter a valid number of players.";
     }
@@ -186,7 +194,8 @@ var main = function (input) {
     playerResult = Number(currentLeader.splice(0, 1));
     playerResultScore = playerScore[playerResult];
     if (playerResult == 0) {
-      outputMsgPt1 = outputMsgPt1 + `<b>You: ${playerResultScore}</b><br>`;
+      outputMsgPt1 =
+        outputMsgPt1 + `<b>${userName}: ${playerResultScore}</b><br>`;
     } else {
       outputMsgPt1 =
         outputMsgPt1 + `Player ${playerResult + 1}: ${playerResultScore}<br>`;
@@ -195,13 +204,14 @@ var main = function (input) {
     cumResult = Number(cumLeader.splice(0, 1));
     cumResultScore = cumScore[cumResult];
     if (cumResult == 0) {
-      outputMsgPt2 = outputMsgPt2 + `<b>You: ${cumResultScore}</b><br>`;
+      outputMsgPt2 = outputMsgPt2 + `<b>${userName}: ${cumResultScore}</b><br>`;
     } else {
       outputMsgPt2 =
         outputMsgPt2 + `Player ${cumResult + 1}: ${cumResultScore}<br>`;
     }
   }
 
+  //Reset number of dice for next round
   diceNum = 0;
 
   return `${outputMsgPt1}<br><br>${outputMsgPt2}`;
