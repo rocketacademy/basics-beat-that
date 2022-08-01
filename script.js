@@ -1,6 +1,7 @@
 // mode 0 = select mode, mode 1 = normal, mode 2 = lowest combine, mode 3 = variable number of dice, mode 4 = knock out
 
 var mode = 0;
+var selectDiceMode = 0;
 player1 = [];
 player2 = [];
 // playerselected 10 = results stage
@@ -17,6 +18,10 @@ var main = function (input) {
   }
   if (mode == 2) {
     return lowestCombinedMode();
+  }
+
+  if (mode == 3) {
+    return variableDice(input);
   }
 };
 
@@ -100,6 +105,17 @@ var string2num = function (num1, num2) {
   return Number(String(num1) + String(num2));
 };
 
+var string2num1 = function (array) {
+  console.log(array + "array");
+  var i = 0;
+  var stringValue = "";
+  for (var counter = 0; counter < array.length; counter += 1) {
+    stringValue = stringValue + array[i];
+    i = i + 1;
+  }
+  return Number(stringValue);
+};
+
 var lowestCombinedMode = function () {
   noofrolls = 2;
   if (playerselected == 1) {
@@ -134,3 +150,50 @@ var lowestCombinedMode = function () {
   playerselected = 1;
   return ` Its a tie! Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
 };
+
+var variableDice = function (input) {
+  console.log(input);
+
+  if (selectDiceMode == 0 && input > 0) {
+    noofrolls = input;
+    selectDiceMode = 1;
+  } else if (selectDiceMode == 0) {
+    return `Please enter number of rolls`;
+  }
+
+  if (playerselected == 1) {
+    var diceroll = rolldice();
+    console.log("diceroll1" + diceroll);
+    var sorteddiceroll = diceroll.sort((a, b) => b - a);
+    console.log("dicerollA" + diceroll);
+    player1number = string2num1(sorteddiceroll);
+    console.log(player1number);
+    playerselected = 2;
+
+    return `🎲 PLAYER 1 🎲 you rolled ${diceroll} your number is ${player1number} <br> It is now Player 2's turn.`;
+  }
+  if (playerselected == 2) {
+    var diceroll = rolldice();
+    console.log("diceroll1" + diceroll);
+    var sorteddiceroll = diceroll.sort((a, b) => b - a);
+    console.log("dicerollA" + diceroll);
+    player2number = string2num1(sorteddiceroll);
+    console.log(player2number);
+    playerselected = 0;
+
+    //return diceroll;
+    return `🎲 PLAYER 2 🎲 you rolled ${diceroll} your number is ${player2number} <br> Press submit to see results `;
+  }
+  if (player1number > player2number) {
+    playerselected = 1;
+    return `Winner is Player 1. <br> Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
+  }
+  if (player2number > player1number) {
+    playerselected = 1;
+    return `Winner is Player 2. <br> Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
+  }
+  playerselected = 1;
+  return ` Its a tie! Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
+};
+
+//var variableDice function (input)
