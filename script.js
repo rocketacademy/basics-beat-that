@@ -23,6 +23,13 @@ var currentPlayerRolls = [];
 var currentPlayer = 1;
 var allPlayersScore = [];
 
+//Helper function for game reset
+var resetGame = function () {
+  currentPlayer = 1;
+  gameState = STATE_DICE_ROLL;
+  allPlayersScore = [];
+};
+
 //Helper Function for dice roll
 var rollDice = function () {
   console.log("Control flow: start of rollDice()");
@@ -32,7 +39,7 @@ var rollDice = function () {
   console.log("rollDice output, randomInteger:", randomInteger);
   return randomInteger;
 };
-
+//Helper function for how many dice to roll
 var rollDiceForPlayer = function () {
   console.log("Control flow: start of rollDiceForPlayer()");
   var counter = 0;
@@ -65,23 +72,22 @@ var getPlayerScore = function (playerInput) {
     var playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
-    return "Your chosen value is " + playerScore;
   }
   if (playerInput == 2) {
     console.log("Control flow: input == 2");
     var playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
-    return "Your chosen value is " + playerScore;
   }
 
   //Store playerScore in array
   allPlayersScore.push(playerScore);
-  console.log("control flow: all players score = " + allPlayersScore);
 
   //clear current player rolls array
   currentPlayerRolls = [];
-  return "Your chosen value is " + playerScore;
+  return (
+    "Hi, player " + currentPlayer + ". Your chosen value is " + playerScore
+  );
 };
 
 var main = function (playerInput) {
@@ -128,16 +134,18 @@ var main = function (playerInput) {
       allPlayersScore[1];
     //player 1 wins
     if (allPlayersScore[0] > allPlayersScore[1]) {
-      myOutputValue = myOutputValue + "<br>player 1 wins~";
+      myOutputValue = myOutputValue + "<br>Player 1 wins~";
       //player 2 wins
     }
     if (allPlayersScore[1] > allPlayersScore[0]) {
-      myOutputValue = myOutputValue + "<br>player 2 wins~";
+      myOutputValue = myOutputValue + "<br>Player 2 wins~";
     }
     //tie
     if (allPlayersScore[1] == allPlayersScore[0]) {
-      myOutputValue = myOutputValue + "<br>it's a tie!";
+      myOutputValue = myOutputValue + "<br>It's a tie!";
     }
+    resetGame();
+
     return myOutputValue;
   }
 };
