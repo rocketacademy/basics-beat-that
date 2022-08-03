@@ -27,14 +27,14 @@ var createTotal = function (numPlayers) {
 var total = "";
 
 // Create a helper function to keep adding the scores of each round to the existing player scores
-var cumulativeScore = function () {
+var cumulativeScore = function (index) {
   var i = 0;
   while (i < currentRoundScore.length) {
-    total[i] = total[i] + currentRoundScore[i];
+    index[i] = index[i] + currentRoundScore[i];
     i += 1;
   }
-  console.log("cumulative scores:", total);
-  return total;
+  //console.log("cumulative scores:", total);
+  return index;
 };
 
 // Flow:
@@ -172,7 +172,7 @@ var main = function (input) {
       playerNum += 1;
     } else if (playerNum == maxPlayerNum) {
       var outputHigh = genHighestNum();
-      total = cumulativeScore();
+      total = cumulativeScore(total);
       myOutputValue = `${outputHigh} <br><br><hr /> <span style="color:purple;font-family:Georgia">${ldbHigh(
         total
       )}</span>  <br><br>  <span style="color:blue">Player 1, hit <i>Submit</i> to roll again.</span>`;
@@ -192,7 +192,7 @@ var main = function (input) {
       playerNum += 1;
     } else if (playerNum == maxPlayerNum) {
       var outputLow = genLowestNum();
-      total = cumulativeScore();
+      total = cumulativeScore(total);
       myOutputValue = `${outputLow} <br><br><hr /> <span style="color:purple;font-family:Georgia">${ldbLow(
         total
       )}</span>  <br><br>  <span style="color:blue">Player 1, hit <i>Submit</i> to roll again.</span>`;
