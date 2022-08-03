@@ -58,12 +58,28 @@ var compareNumBig = function (input) {
   return largestNum;
 };
 
+/*
 var compareNumSmall = function (input) {
   var i = 0;
   // set iniial value as 67 because the largest possible 2-digit number is 66
   var smallestNum = 67;
   while (i < input.length) {
     if (input[i] < smallestNum) {
+      smallestNum = input[i];
+    }
+    i += 1;
+  }
+  return smallestNum;
+};
+*/
+
+// Attempt to edit compareNumSmall function from Line 62 to line 73
+var compareNumSmall = function (input) {
+  var i = 0;
+  // set iniial value as first number of the array to compare the other numbers against.
+  var smallestNum = input[0];
+  while (i < input.length) {
+    if (input[i] <= smallestNum) {
       smallestNum = input[i];
     }
     i += 1;
@@ -203,5 +219,3 @@ var main = function (input) {
   }
   return gameSelect;
 };
-
-// did i spend like 3.5h to 4h figuring out the stupid game modes??
