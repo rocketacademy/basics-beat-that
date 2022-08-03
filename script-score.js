@@ -24,7 +24,7 @@ var rollTwoDices = function (input) {
 
 // Create a helper function to concatenate the two numbers in the order chosen by the user
 // Input = 1 or 2
-
+/*
 var chooseDiceOrder = function (input) {
   if (input == 1) {
     var number = Number("" + firstRoll + secondRoll);
@@ -39,6 +39,23 @@ var chooseDiceOrder = function (input) {
     allPlayersScore.push(number);
     return myOutputValue;
   }
+};
+*/
+
+// Refactor of chooseDiceOrder function in line 28 to line 42
+var chooseDiceOrder = function (input) {
+  var number = "";
+  var myOutputValue = "";
+  if (input == 1) {
+    number = Number("" + firstRoll + secondRoll);
+    myOutputValue = `🎲 <b>PLAYER ${playerNum}</b>'s TURN 🎲 <br><br> You chose Dice 1 first. Your number is ${number}.`;
+    allPlayersScore.push(number);
+  } else if (input == 2) {
+    number = Number("" + secondRoll + firstRoll);
+    myOutputValue = `🎲 <b>PLAYER ${playerNum}</b>'s TURN 🎲 <br><br> You chose Dice 2 first. Your number is ${number}.`;
+    allPlayersScore.push(number);
+  }
+  return myOutputValue;
 };
 
 // Create a helper function to compare which number is the biggest in the array using a while loop
@@ -141,7 +158,7 @@ var main = function (input) {
   return highestCombined(input);
 };
 
-// ============== Ignore below - functions for "Lowest Combined" game mode ==============
+// ============== IGNORE BELOW - functions for "Lowest Combined" game mode ==============
 
 var lowestCombined = function (input) {
   var modeResult;
@@ -223,12 +240,28 @@ var addOne = function (num) {
   return num + 1;
 };
 
+/*
 var compareNumSmall = function (input) {
   var i = 0;
   // set iniial value as 67 because the largest possible 2-digit number is 66
   var smallestNum = 67;
   while (i < input.length) {
     if (input[i] < smallestNum) {
+      smallestNum = input[i];
+    }
+    i += 1;
+  }
+  return smallestNum;
+};
+*/
+
+// Attempt to edit compareNumSmall function from Line 244 to line 254
+var compareNumSmall = function (input) {
+  var i = 0;
+  // set iniial value as first number of the array to compare the other numbers against.
+  var smallestNum = input[0];
+  while (i < input.length) {
+    if (input[i] <= smallestNum) {
       smallestNum = input[i];
     }
     i += 1;

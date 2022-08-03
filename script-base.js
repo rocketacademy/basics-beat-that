@@ -89,6 +89,7 @@ var rollTwoDices = function (input) {
 // Create a helper function for Rule number 3. Create a function to concatenate the two numbers in the order chosen by the user
 // Input = 1 or 2
 
+/*
 var chooseDiceOrder = function (input) {
   if (input == 1) {
     var biggestNum = Number("" + firstRoll + secondRoll);
@@ -103,6 +104,23 @@ var chooseDiceOrder = function (input) {
     allPlayersScore.push(biggestNum);
     return myOutputValue;
   }
+};
+*/
+
+// Refactor of chooseDiceOrder function in line 93 to line 107
+var chooseDiceOrder = function (input) {
+  var biggestNum = "";
+  var myOutputValue = "";
+  if (input == 1) {
+    biggestNum = Number("" + firstRoll + secondRoll);
+    myOutputValue = `Current Turn: PLAYER ${playerNum} <br><br> You chose Dice 1 first. Your number is ${biggestNum}.`;
+    allPlayersScore.push(biggestNum);
+  } else if (input == 2) {
+    biggestNum = Number("" + secondRoll + firstRoll);
+    myOutputValue = `Current Turn: PLAYER ${playerNum} <br><br> You chose Dice 2 first. Your number is ${biggestNum}.`;
+    allPlayersScore.push(biggestNum);
+  }
+  return myOutputValue;
 };
 
 // Step 3:
