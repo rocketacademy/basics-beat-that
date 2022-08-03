@@ -6,7 +6,7 @@ var diceRoll = function (input) {
   return randomNum;
 };
 
-// Global variables to store no. of players, array of all player scores, cumulative player scores
+// Global variables to store current player turn, array of all player scores for the current round, and no. of player chosen by user
 var playerNum = 1;
 var currentRoundScore = [];
 var maxPlayerNum = "";
@@ -23,10 +23,10 @@ var createTotal = function (numPlayers) {
   return initial;
 };
 
-// Creates an empty array "total" e.g. total = [0,0,0] for 3 players
+// Create a global variable array to store the cumulative scores of each player across the game play. First, to create an empty array "total" accd to maxPlayerNum e.g. if user chooses 3 players, use createTotal(3) to make total = [0,0,0] for 3 players
 var total = "";
 
-// Create a helper function to accumulate all the scores for each player
+// Create a helper function to keep adding the scores of each round to the existing player scores
 var cumulativeScore = function () {
   var i = 0;
   while (i < currentRoundScore.length) {
@@ -42,7 +42,7 @@ var cumulativeScore = function () {
 // Player 2 click submit button to roll dice
 // Results are compared
 
-// ================== Variable Number of Dice (2-player) =============================
+// ================== Variable Number of Dice =============================
 // Create a new version of Beat That that rolls two or more dice per player.
 // At the beginning of each round, ask the players how many dice they would like to play with. Both players will roll the same number of dice each round.
 // Store each player's dice rolls in an array. When each player rolls dice, use a loop to place n dice roll values in that player's array, where n is the number of dice the players specified at the beginning of the round. Output each player's dice roll values.
@@ -123,6 +123,7 @@ var sortAscending = function (input) {
 };
 
 // Create main game function
+// User to input number of players
 // User to input number of dice
 // User to input which game mode - Highest or Lowest Combined mode
 
