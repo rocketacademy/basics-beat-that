@@ -134,7 +134,7 @@ var main = function (input) {
       storeDiceRolls = [];
       playerNum += 1;
     } else if (playerNum == 2) {
-      var outputHigh = showResultHighest();
+      var outputHigh = showResultHighest(); // to push the player 2's score into the allPlayerScore array so that Line 139 can run and not return NaN
       playerOneScore += allPlayersScore[0];
       playerTwoScore += allPlayersScore[1];
       myOutputValue = `${outputHigh} <br><br><hr /> <span style="color:purple;font-family:Georgia">${leaderboardBig()}</span>  <br><br>  <span style="color:blue">Player 1, hit <i>Submit</i> to roll again.</span>`;
