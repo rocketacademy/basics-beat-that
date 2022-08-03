@@ -77,6 +77,7 @@ var getPlayerScore = function (playerInput) {
 
   //Store playerScore in array
   allPlayersScore.push(playerScore);
+  console.log("control flow: all players score = " + allPlayersScore);
 
   //clear current player rolls array
   currentPlayerRolls = [];
@@ -115,5 +116,28 @@ var main = function (playerInput) {
       gameState = STATE_COMPARE_SCORES;
       return myOutputValue + "<br><br> Press submit to calculate scores!";
     }
+  }
+
+  if (gameState == STATE_COMPARE_SCORES) {
+    console.log("Control Flow: gameState == STATE_COMPARE_SCORES");
+    console.log(allPlayersScore);
+    myOutputValue =
+      "Player 1 score: " +
+      allPlayersScore[0] +
+      "<br>Player 2 Score: " +
+      allPlayersScore[1];
+    //player 1 wins
+    if (allPlayersScore[0] > allPlayersScore[1]) {
+      myOutputValue = myOutputValue + "<br>player 1 wins~";
+      //player 2 wins
+    }
+    if (allPlayersScore[1] > allPlayersScore[0]) {
+      myOutputValue = myOutputValue + "<br>player 2 wins~";
+    }
+    //tie
+    if (allPlayersScore[1] == allPlayersScore[0]) {
+      myOutputValue = myOutputValue + "<br>it's a tie!";
+    }
+    return myOutputValue;
   }
 };
