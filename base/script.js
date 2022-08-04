@@ -67,8 +67,18 @@ var main = function (input) {
 };
 
 
-
-
 var diceRoll = function () {
   return Math.ceil(Math.random() * 6);
 };
+
+var resetGame =  function () {
+  gameTurn = 'start game';
+  player = 'player1'
+}
+
+var displayLeaderBoard = function () {
+  var myOutputValue = '';
+  myOutputValue = `Player 1 score ${player1Score} <br>
+  Player 2 score ${player2Score}`;
+  return myOutputValue;
+}
