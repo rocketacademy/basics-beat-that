@@ -25,10 +25,11 @@ let diceRolledPlayer2 = [];
 let numOfWinsFor1 = 0;
 let numOfWinsFor2 = 0;
 
+// Player 1&2 highest combination numbers
 let player1Num = [];
 let player2Num = [];
 
-// Function when player1 click "submit" and generate 2 dice rolls
+// Function when player1 click "submit" and generate 2 dice rolls.
 function main(input) {
   let player1Submit = input;
   let output = "";
@@ -39,45 +40,25 @@ function main(input) {
       diceRolledPlayer1.push(diceOfPlayer1);
     }
     let player1BestCombi = player1Combi();
-    output = `Player 1 has rolled ${diceRolledPlayer1}. ${player1BestCombi}<br> It is now Player 2's turn.`;
-
     gameState = gameMode2;
-  } else {
-    output = player2(player1Submit, input);
+    return (output = `Player 1 has rolled ${diceRolledPlayer1}. ${player1BestCombi}<br> It is now Player 2's turn.`);
   }
-  return output;
-}
-
-// Function for player2 to click "submit" and generate 2 dice rolls
-function player2(player1Submit, input) {
-  let output = "";
-  let player2Submit = input;
-
+  // Function for player2 to click "submit" and generate 2 dice rolls.
   if (gameState == gameMode2) {
     for (i = 0; i < 2; i++) {
       diceOfPlayer2 = diceRoll();
       diceRolledPlayer2.push(diceOfPlayer2);
-      output = `You have rolled ${diceRolledPlayer2}.`;
     }
     let player2BestCombi = player2Combi();
-    output = `Player 2 rolled ${diceRolledPlayer2}. ${player2BestCombi}<br> Press "Submit" to check on the result`;
-
     gameState = gameModeResult;
-  } else {
-    output = results(player2Submit, input);
+    return (output = `Player 2 rolled ${diceRolledPlayer2}. ${player2BestCombi}<br> Press "Submit" to check on the result`);
   }
-  return output;
-}
 
-function results(player2Submit, input) {
-  let output = "";
-  let resultSubmit = input;
-
+  // Call function compareResults to determine winner.
   if (gameState == gameModeResult) {
     finalResult = compareResults();
-    output = `${finalResult}`;
+    return (output = `${finalResult}<br>Player 1: ${numOfWinsFor1}<br>Player 2: ${numOfWinsFor2}`);
   }
-  return output;
 }
 
 // Function to pick the highest combination for player 1
