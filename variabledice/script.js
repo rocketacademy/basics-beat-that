@@ -1,8 +1,9 @@
 var gameTurn = 'start'
 var arrPlayer1Score = [];
 var player1Score = 0;
-var arrPlayer2 = [];
-
+var arrPlayer2Score = [];
+var player2Score = 0;
+var winner = '';
 
 
 
@@ -17,11 +18,23 @@ var main = function (input) {
     gameTurn = 'player2'
     arrPlayer1Score = playGame(input);
     player1Score = convertNum(arrPlayer1Score);
+    console.log(`player1Score: ${player1Score}`)
   }
   
+  if(gameTurn == 'player2') {
+    arrPlayer2Score = playGame(input);
+    player2Score = convertNum(arrPlayer2Score);
+    console.log(`player2Score: ${player2Score}`)
+  }
 
+  if(player1Score > player2Score) {
+    winner = 'player1';
+  } else {
+    winner = 'player2';
+  }
 
-  return arrPlayer1Score;
+  myOutputValue = `${winner} wins. player1 score is ${player1Score}. player2 score is ${player2Score}`
+  return myOutputValue;
 };
 
 
