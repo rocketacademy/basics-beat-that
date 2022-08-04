@@ -106,6 +106,9 @@ var getPlayerScore = function (playerInput) {
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
+    allPlayersScore.push(playerScore);
+    currentPlayerRolls = [];
+    return `Your chosen result is ${playerScore}`;
   }
   if (playerInput == 2) {
     playerScoreMode = `valid`;
@@ -114,10 +117,14 @@ var getPlayerScore = function (playerInput) {
     playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
+    allPlayersScore.push(playerScore);
+    currentPlayerRolls = [];
+    return `Your chosen result is ${playerScore}`;
   }
-  allPlayersScore.push(playerScore);
-  currentPlayerRolls = [];
-  return `Your chosen result is ${playerScore}`;
+  if (input.length == 0 || isNaN(playerInput)) {
+    playerScoreMode = `invalid`;
+    return `Please input 1 or 2 to choose either dice 1 or dice 2 as your first digit.`;
+  }
 };
 
 var main = function (input) {
