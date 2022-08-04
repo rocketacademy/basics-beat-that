@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Basics Project 2: Beat That</title>
     <style>
       * {
         box-sizing: border-box;
@@ -18,7 +18,8 @@
       }
 
       #container {
-        background-color: pink;
+        border-radius: 25px;
+        background-image: linear-gradient(to bottom right, pink, plum);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,6 +41,7 @@
       }
 
       #output-div {
+        border-radius: 25px;
         background-color: lightgrey;
         margin: 20px auto;
         padding: 20px;
@@ -49,15 +51,28 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Beat That! 🚀</h1>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+      <div id="output-div">
+        <p style="color: blue">
+          <i>Welcome. Enter number of players to begin. </i>
+        </p>
+      </div>
     </div>
+    <h1 style="text-align: center; font-size: 150%; color: thistle">
+      💜Game Rules💜
+    </h1>
+    <p style="text-align: center">
+      This is a multi-player, multi-dice, two-mode game.
+    </p>
+    <p style="text-align: center">Follow the instructions in blue 👯‍♂️🎲🎲</p>
+    <p style="text-align: center">Each player takes turns to roll the dice.</p>
+    <p style="text-align: center"><i>(Have fun!</i> 😛🍰<i>)</i></p>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
