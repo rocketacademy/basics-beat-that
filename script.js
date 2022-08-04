@@ -40,15 +40,15 @@ var rollDiceForPlayer = function () {
     counter = counter + 1;
   }
   console.log("rollDiceForPlayer changes, playerRolls: ", currentPlayerRolls);
-  return (
+  outputMessage1 =
     "Welcome, Player " +
     currentPlayer +
     "<br><br>You rolled:<br>Dice 1: " +
     currentPlayerRolls[0] +
     " | Dice 2: " +
     currentPlayerRolls[1] +
-    ".<br><br>Now, please input either '1' or '2' to choose the corresnponding dice to be used as the first digit of your final value."
-  );
+    ".<br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value.";
+  return outputMessage1;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -59,25 +59,26 @@ var getPlayerScore = function (playerInput) {
       "Control flow: input validation, invalid input... NOT 1 AND NOT 2"
     );
     return (
-      "Error! Please only input '1' or '' to choose which dice to use as the first digit.<br><br?Your dice rolls are:<br>Dice 1: " +
+      "Error! Please only input '1' or '2' to choose which dice to use as the first digit.<br><br>. Your dice rolls are:<br>Dice 1: " +
       currentPlayerRolls[0] +
       " | Dice 2: " +
-      currentPlayerRolls[2] +
+      currentPlayerRolls[1] +
       "."
     );
   }
   //input == 1
-  if (playerInput == 1) {
+  else if (playerInput == 1) {
     console.log("Control flow: input == 1");
-    var playerScore = Number(
+    playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
+    allPlayersScore.push(playerScore);
     return "Your chosen value is: " + playerScore;
   }
   // input == 2
-  if (playerInput == 2) {
+  else if (playerInput == 2) {
     console.log("Control flow: input == 2");
-    var playerScore = Number(
+    playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
     allPlayersScore.push(playerScore);
@@ -91,7 +92,7 @@ var comparePlayersScores = function () {
   compareMessage =
     "Player 1 score: " +
     allPlayersScore[0] +
-    "<br>Player2 score: " +
+    "<br>Player 2 score: " +
     allPlayersScore[1];
 
   // player 1 wins
@@ -99,13 +100,13 @@ var comparePlayersScores = function () {
     compareMessage = compareMessage + "<br><br>Player 1 wins!";
   }
 
-  // player 2 wins//
-  if (allPlayersScore[1] > allPlayersScore[0]) {
+  // player 2 wins
+  if (allPlayersScore[0] < allPlayersScore[1]) {
     compareMessage = compareMessage + "<br><br>Player 2 wins!";
   }
   //tie
   if (allPlayersScore[0] == allPlayersScore[1]) {
-    compareMessage = compareMessage + "<br><br>Player 1 wins!";
+    compareMessage = compareMessage + "<br><br>its a tie!";
   }
   return compareMessage;
 };
@@ -114,11 +115,12 @@ var resetGame = function () {
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
   allPlayersScore = [];
+  currentPlayerRolls = [];
 };
 
 var main = function (input) {
   console.log("checking game state on submit click:", gameState);
-  console.log("Checking currentPlayer on submit click: ".currentPlayer);
+  console.log("Checking currentPlayer on submit click: ", currentPlayer);
   var outputMessage = "";
 
   if (gameState == GAME_STATE_DICE_ROLL) {
@@ -138,6 +140,9 @@ var main = function (input) {
     outputMessage = getPlayerScore(input);
 
     if (currentPlayer == 1) {
+      console.log(
+        "Control flow: end of player 1's turn, it is now player 2's turn"
+      );
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
       return outputMessage + "<br><br>It is now player 2's turn!";
