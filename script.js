@@ -9,6 +9,12 @@ playerselected = 1;
 player1number = "";
 player2number = "";
 noofrolls = 0;
+playerlist = [1, 2, 3, 4];
+knockoutround = 1;
+playerToBeElelimated = "";
+roundwinner = 0;
+currPlayer = 0;
+
 var main = function (input) {
   if (mode == 0) {
     return selectmode(input);
@@ -22,6 +28,9 @@ var main = function (input) {
 
   if (mode == 3) {
     return variableDice(input);
+  }
+  if (mode == 4) {
+    return knockout(input);
   }
 };
 
@@ -38,6 +47,7 @@ var rolldice = function () {
   }
 
   return dicerolls;
+
   //var sortedDiceRolls = dicerolls.sort((a, b) => b - a);
   //console.log(sortedDiceRolls);
 
@@ -73,7 +83,8 @@ var normalmode = function () {
     console.log("diceroll1" + diceroll);
     var sorteddiceroll = diceroll.sort((a, b) => b - a);
     console.log("dicerollA" + diceroll);
-    player1number = string2num(sorteddiceroll[0], sorteddiceroll[1]);
+    //player1number = string2num(sorteddiceroll[0], sorteddiceroll[1]);
+    player1number = string2num1(sorteddiceroll);
     console.log(player1number);
     playerselected = 2;
 
@@ -89,16 +100,27 @@ var normalmode = function () {
     //return diceroll;
     return `🎲 PLAYER 2 🎲 you rolled ${diceroll} your number is ${player2number} <br> Press submit to see results `;
   }
+
+  return winnerDecider();
+};
+
+var winnerDecider = function () {
   if (player1number > player2number) {
     playerselected = 1;
-    return `Winner is Player 1. <br> Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
+    roundwinner = playerlist[0];
+    playerToBeElelimated = playerlist[1];
+
+    return `Winner is Player ${roundwinner}. <br> First Player Number is ${player1number} <br> Second Player Number is ${player2number} <br> Press Submit to play again`;
   }
   if (player2number > player1number) {
     playerselected = 1;
-    return `Winner is Player 2. <br> Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
+    roundwinner = playerlist[1];
+    playerToBeElelimated = playerlist[0];
+
+    return `Winner is Player ${roundwinner}. <br> First Player Number is ${player1number} <br> Second Player Number is ${player2number} <br> Press Submit to play again`;
   }
   playerselected = 1;
-  return ` Its a tie! Player 1 Number is ${player1number} <br> Player 2 Number is ${player2number} <br> Press Submit to play again`;
+  return ` Its a tie! First Player  Number is ${player1number} <br> Second Player  Number is ${player2number} <br> Press Submit to play again`;
 };
 
 var string2num = function (num1, num2) {
@@ -107,11 +129,11 @@ var string2num = function (num1, num2) {
 
 var string2num1 = function (array) {
   console.log(array + "array");
-  var i = 0;
+  //var i = 0;
   var stringValue = "";
   for (var counter = 0; counter < array.length; counter += 1) {
-    stringValue = stringValue + array[i];
-    i = i + 1;
+    stringValue = stringValue + array[counter];
+    //i = i + 1;
   }
   return Number(stringValue);
 };
@@ -123,7 +145,8 @@ var lowestCombinedMode = function () {
     console.log("diceroll1" + diceroll);
     var sorteddiceroll = diceroll.sort((a, b) => a - b);
     console.log("dicerollA" + diceroll);
-    player1number = string2num(sorteddiceroll[0], sorteddiceroll[1]);
+    //player1number = string2num(sorteddiceroll[0], sorteddiceroll[1]);
+    player1number = string2num1(sorteddiceroll);
     console.log(player1number);
     playerselected = 2;
 
@@ -197,3 +220,59 @@ var variableDice = function (input) {
 };
 
 //var variableDice function (input)
+var knockout = function (input) {
+  noofrolls = 2;
+  if (playerlist.length == 1) {
+    playerlist = [1, 2, 3, 4];
+    return `Player ${roundwinner} is the winner!!!!!`;
+  }
+
+  if (playerselected == 1) {
+    currPlayer = playerlist[0];
+    var diceroll = rolldice();
+    //console.log("diceroll1" + diceroll);
+    var sorteddiceroll = diceroll.sort((a, b) => b - a);
+    //console.log("dicerollA" + diceroll);
+    //player1number = string2num(sorteddiceroll[0], sorteddiceroll[1]);
+    player1number = string2num1(sorteddiceroll);
+    //console.log(player1number);
+    playerselected = 2;
+
+    return `🎲 PLAYER ${currPlayer} 🎲 you rolled ${diceroll} your number is ${player1number} <br> It is now Player 2's turn.`;
+  }
+  if (playerselected == 2) {
+    currPlayer = playerlist[1];
+    var diceroll = rolldice();
+    var sorteddiceroll = diceroll.sort((a, b) => b - a);
+    player2number = string2num(sorteddiceroll[0], sorteddiceroll[1]);
+    console.log(player2number);
+    playerselected = 0;
+
+    //return diceroll;
+    return `🎲 PLAYER ${currPlayer} 🎲 you rolled ${diceroll} your number is ${player2number} <br> Press submit to see results `;
+  }
+
+  if (player1number > player2number) {
+    playerselected = 1;
+    roundwinner = playerlist[0];
+    playerToBeElelimated = playerlist[1];
+
+    playerlist.splice(1, 1);
+
+    playerlist.push(playerlist.shift());
+
+    return `Winner is Player ${roundwinner}. <br> First Player Number is ${player1number} <br> Second Player Number is ${player2number} <br> Press Submit to play again`;
+  }
+  if (player2number > player1number) {
+    playerselected = 1;
+    roundwinner = playerlist[1];
+    playerToBeElelimated = playerlist[0];
+    playerlist.splice(0, 1);
+
+    playerlist.push(playerlist.shift());
+
+    return `Winner is Player ${roundwinner}. <br> First Player Number is ${player1number} <br> Second Player Number is ${player2number} <br> Press Submit to play again`;
+  }
+  playerselected = 1;
+  return ` Its a tie! First Player  Number is ${player1number} <br> Second Player  Number is ${player2number} <br> Press Submit to play again`;
+};
