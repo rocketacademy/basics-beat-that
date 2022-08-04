@@ -1,9 +1,29 @@
-/* REQUIREMENTS */
+/*
+How many hours did you spend on this assignment?:
+9~10 hours
 
-// 1. There are 2 players and players take turns.
-// 2. When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
-// 3. The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
-// 4. After both players have rolled and chosen dice order, the player with the higher combined number wins.
+What part of the assignment did you spend the most time on?:
+Figuring out how to push the data and some issues with the sequence of the data collection,
+caused my end result to be NaN.
+
+How comfortable did you feel with this assignment? (1-5):
+3
+
+Is there anything in this code that you feel pleased about?:
+Managed to complete the project with what I have learned.
+
+What's one aspect of your code you would like specific, elaborate feedback on?:
+not sure if i can refactored the function to get the best combination.
+*/
+
+/* REQUIREMENTS 
+
+1. There are 2 players and players take turns.
+2. When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
+3. The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
+4. After both players have rolled and chosen dice order, the player with the higher combined number wins.
+
+*/
 
 // Function for dice roll
 function diceRoll() {
