@@ -7,6 +7,23 @@ var compareScores = "compare scores";
 
 var currentPlayerRolls = [];
 
+var comaprePlayerScores = function () {
+  var compareMessage = `Player 1 score: ${allplayersScore[0]} <br>Player 2 score: ${allplayersScore[1]}`;
+  //player 1 wins
+  if (allplayersScore[0] > allplayersScore[1]) {
+    compareMessage = compareMessage + `<br>Congrats to player 1!`;
+  }
+  //player 2 wins
+  if (allplayersScore[1] > allplayersScore[0]) {
+    compareMessage = compareMessage + `<br>Congrats to player 2!`;
+  }
+  //tie
+  if (allplayersScore[1] == allplayersScore[0]) {
+    compareMessage = compareMessage + `<br>It's a tie!`;
+  }
+  return compareMessage;
+};
+
 var getPlayerScores = function (playerInput) {
   var playerScore;
   //input validation
@@ -77,5 +94,9 @@ var main = function (input) {
         outputMessage + `<br>Click on the submit button to check the results!`
       );
     }
+  }
+  if (gameMode == compareScores) {
+    outputMessage = comaprePlayerScores();
+    return outputMessage;
   }
 };
