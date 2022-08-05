@@ -15,10 +15,20 @@ var randomNumber = function () {
   return numberRolled;
 };
 
+//create rolling dice function for player 1
+var rollDiceForPlayer1 = function () {
+  counter = 0;
+  while (counter < 2) {
+    player1Rolls.push(randomNumber());
+    counter += 1;
+    console.log(`Player 1 rolled: ${player1Rolls}`);
+  }
+};
+
 var main = function (input) {
+  console.log(`Current game mode: ${gameMode}`);
   var myOutputValue = "";
-  var gameMode = "waiting";
-  if (gameMode == "waiting") {
+  if (gameMode == "roll dice") {
     if (input == "") {
       return `Welcome! Player 1 will roll the dice first. <br>To roll the dice, please enter "start"`;
     }
