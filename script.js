@@ -1,16 +1,19 @@
 //default player game mode
-var gameMode = "waiting";
+var gameMode = "roll dice";
+var rollDice = "roll dice";
+var chooseDiceOrder = "choose dice order";
 var playerMode = "Player 1";
-
-//create random number
-var randomNumber = function () {
-  var numberRolled = Math.floor(Math.random() * 6 + 1);
-  return numberRolled;
-};
 
 //array to store dice number rolled by player 1 & player 2
 var player1Rolls = [];
 var player2Rolls = [];
+
+//create rolling dice function
+var randomNumber = function () {
+  var numberRolled = Math.floor(Math.random() * 6 + 1);
+  console.log(`number rolled: ${numberRolled}`);
+  return numberRolled;
+};
 
 var main = function (input) {
   var myOutputValue = "";
@@ -23,6 +26,7 @@ var main = function (input) {
   //player 1 roll dice
   if (input == "start") {
     gameMode = "start";
+    playerMode = "Player 1";
   }
   if (gameMode == "start") {
     var player1Dice1 = randomNumber();
@@ -48,13 +52,14 @@ var main = function (input) {
     console.log(player1Rolls[1]);
     console.log(player1Rolls[0]);
     myOutputValue = `Player 1, you chose Dice 2 first. <br>Your number is ${playerNumber}. <br>It is now Player 2's turn. Enter "start" to begin Player 2's turn.`;
+    var playerMode = "Player 2";
   }
-  // if ((playerMode = "Player 2")) {
-  //   var player2Dice1 = randomNumber();
-  //   player2Rolls.push(player2Dice1);
-  //   var player2Dice2 = randomNumber();
-  //   player2Rolls.push(player2Dice2);
-  //   myOutputValue = `You rolled ${player2Dice1} for Dice 1 and ${player2Dice2} for Dice 2.<br>Choose the order of the dice by typing "1" or "2".`;
-  // }
+  if ((playerMode = "Player 2")) {
+    var player2Dice1 = randomNumber();
+    player2Rolls.push(player2Dice1);
+    var player2Dice2 = randomNumber();
+    player2Rolls.push(player2Dice2);
+    myOutputValue = `You rolled ${player2Dice1} for Dice 1 and ${player2Dice2} for Dice 2.<br>Choose the order of the dice by typing "1" or "2".`;
+  }
   return myOutputValue;
 };
