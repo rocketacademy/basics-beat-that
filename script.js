@@ -77,7 +77,9 @@ function main(input) {
   // Call function compareResults to determine winner.
   if (gameState == gameModeResult) {
     finalResult = compareResults();
-    return (output = `${finalResult}<br>Player 1: ${numOfWinsFor1}<br>Player 2: ${numOfWinsFor2}`);
+    // Call function of leadersBoard
+    leadersBoardInfo = leadersBoard();
+    return (output = `${finalResult}<br>${leadersBoardInfo}`);
   }
 }
 
@@ -141,5 +143,15 @@ function compareResults() {
   diceRolledPlayer2 = [];
   player1Num = [];
   player2Num = [];
+  return output;
+}
+
+// Funtion to display leadersboard
+function leadersBoard() {
+  if (numOfWinsFor1 > numOfWinsFor2) {
+    output = `Leadersboard<br>Player 1: ${numOfWinsFor1}<br>Player 2: ${numOfWinsFor2}`;
+  } else {
+    output = `Leadersboard<br>Player 2: ${numOfWinsFor2}<br>Player 1: ${numOfWinsFor1}`;
+  }
   return output;
 }
