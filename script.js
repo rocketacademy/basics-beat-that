@@ -7,6 +7,12 @@ var compareScores = "compare scores";
 
 var currentPlayerRolls = [];
 
+var resetGame = function () {
+  currentPlayer = 1;
+  gameMode = diceRoll;
+  allplayersScore = [];
+};
+
 var comaprePlayerScores = function () {
   var compareMessage = `Player 1 score: ${allplayersScore[0]} <br>Player 2 score: ${allplayersScore[1]}`;
   //player 1 wins
@@ -97,6 +103,8 @@ var main = function (input) {
   }
   if (gameMode == compareScores) {
     outputMessage = comaprePlayerScores();
+    resetGame();
+
     return outputMessage;
   }
 };
