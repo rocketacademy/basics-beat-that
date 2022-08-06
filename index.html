@@ -8,6 +8,7 @@
       }
 
       body {
+        background-color: #495c83;
         font-family: sans-serif;
         margin-left: 30px;
         margin-right: 30px;
@@ -15,32 +16,41 @@
 
       #header {
         text-align: center;
+        color: #c8b6e2;
       }
 
       #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
+        background-color: #a8a4ce;
+        margin: 80px auto;
+        max-width: 1000px;
         padding: 38px 31px;
       }
 
       input {
+        background-color: linen;
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
         width: 100%;
+        border: none;
       }
 
       button {
-        font-size: 21px;
+        background-color: #495c83;
+
+        font-size: 19px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
       }
 
+      #submit-button {
+        color: white;
+      }
+
       #output-div {
-        background-color: lightgrey;
+        background-color: linen;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -49,13 +59,21 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲 Basics: Beat That!🎲</h1>
     <div id="container">
-      <p>Input:</p>
+      <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
+      <p>
+        Create a two-digit number by selecting the order of your dice rolls.
+      </p>
+      <p>Click Submit to start rolling your dices!</p>
+      <p>The player with the highest number wins! Good luck!<br /><br /></p>
+      <p></p>
+
+      <p><b>Input:</b></p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <p><b>Output:</b></p>
       <div id="output-div"></div>
     </div>
     <!-- Import program logic -->
