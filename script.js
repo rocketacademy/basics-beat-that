@@ -24,23 +24,12 @@ var main = function (input) {
     chosenArrary.push(chosenNum);
     gamemode = "roll die";
     counter = (counter + 1) % 2;
-
-    console.log("number : " + chosenNum);
-    console.log("chosenArray: " + chosenArrary);
-    console.log("gamemode: " + gamemode);
-    console.log("counter : " + counter);
-
     return `Your chosen number is ${chosenNum}.`;
   } else if (input == "Dice 2") {
     chosenNum = die2 * 10 + die1;
     chosenArrary.push(chosenNum);
     gamemode = "roll die";
-
     counter = (counter + 1) % 2;
-    console.log("number : " + chosenNum);
-    console.log("chosenArray: " + chosenArrary);
-    console.log("gamemode: " + gamemode);
-    console.log("counter : " + counter);
     return `Your chosen number is ${chosenNum}.`;
   }
 
@@ -49,9 +38,6 @@ var main = function (input) {
     var playerTurn = playerArray[counter];
     die1 = rollDice();
     die2 = rollDice();
-    console.log("die1: " + die1);
-    console.log("die2: " + die2);
-    console.log("playerTurn : " + playerTurn);
     gamemode = "choose die";
     return `Welcome ${playerTurn}. <br>
     You rolled ${die1} for Dice 1 and ${die2} for Dice 2. <br>
