@@ -13,7 +13,7 @@ var rollDice = function () {
   return resultInteger;
 };
 
-var generateDiceforplayer = function () {
+var generateDiceForPlayer = function () {
   mode += 1;
   return [rollDice(), rollDice()];
 }; // with input of current player, return the random digits generated for the player
@@ -51,7 +51,7 @@ mode 4: show the winner and leaderboard
 */
 var main = function (input) {
   if (mode == 0) {
-    player1Dice = generateDiceforplayer();
+    player1Dice = generateDiceForPlayer();
     return (
       `Player 1, you rolled ${player1Dice[0]} for Dice 1 and ${player1Dice[1]} for Dice 2` +
       chooseOrderMsg
@@ -60,7 +60,7 @@ var main = function (input) {
     player1Dice[2] = chooseDiceOrderForPlayer(player1Dice, input);
     return `Player 1, your number is ${player1Dice[2]}. <br><br> Player 2, please submit to roll your dice.`;
   } else if (mode == 2) {
-    player2Dice = generateDiceforplayer();
+    player2Dice = generateDiceForPlayer();
     return (
       `Player 2, you rolled ${player2Dice[0]} for Dice 1 and ${player2Dice[1]} for Dice 2` +
       chooseOrderMsg
