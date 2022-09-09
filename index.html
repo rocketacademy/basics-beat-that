@@ -17,11 +17,26 @@
         text-align: center;
       }
 
-      #container {
-        background-color: pink;
-        margin: 40px auto;
+      #rules {
+        background-color: whitesmoke;
+        outline: auto;
+        margin: 10px auto;
         max-width: 800px;
-        padding: 38px 31px;
+        padding: 15px 30px;
+      }
+
+      #container {
+        background-color: rgb(181, 205, 249);
+        margin: 10px auto;
+        max-width: 800px;
+        padding: 15px 30px;
+      }
+
+      #leader-board {
+        background-color: lightgray;
+        margin: 10px auto;
+        max-width: 800px;
+        padding: 15px 30px;
       }
 
       input {
@@ -40,7 +55,7 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: whitesmoke;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -50,13 +65,30 @@
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
+    <div id="rules">
+      <h3>How to play:</h3>
+      <p>
+        Welcome to Beat That! Find a buddy, enter how many dices you will each
+        roll, and click "submit" to start the round.
+      </p>
+      <p>
+        In each round, your dice rolls are combined into a number. The player
+        with the highest number wins the round.
+      </p>
+    </div>
     <div id="container">
-      <p>Input:</p>
+      <h3>Please enter the number of dices:</h3>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+    </div>
+    <div id="leader-board">
+      <h3>Which player won more?</h3>
+      <div id="player-1-wins">Player 1: 0</div>
+      <div id="player-2-wins">Player 2: 0</div>
+      <br />
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
