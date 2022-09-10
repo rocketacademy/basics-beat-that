@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Beat That!</title>
     <style>
       * {
         box-sizing: border-box;
@@ -23,6 +23,11 @@
         margin: 10px auto;
         max-width: 800px;
         padding: 15px 30px;
+        font-size: 12pt;
+      }
+
+      #game-mode {
+        font-size: 12pt;
       }
 
       #container {
@@ -30,6 +35,7 @@
         margin: 10px auto;
         max-width: 800px;
         padding: 15px 30px;
+        font-size: 12pt;
       }
 
       #leader-board {
@@ -48,9 +54,9 @@
       }
 
       button {
-        font-size: 21px;
+        font-size: 16px;
         line-height: 33px;
-        margin: 0 0 23px 0;
+        margin: 0 0 10px 0;
         padding: 0 6px;
       }
 
@@ -77,7 +83,13 @@
       </p>
     </div>
     <div id="container">
-      <h3>Please enter the number of dices:</h3>
+      <p>Please select a game mode:</p>
+      <select name="game-mode" id="game-mode">
+        <option value="highest-combined">Highest combined</option>
+        <option value="lowest-combined">Lowest combined</option>
+      </select>
+      <br />
+      <p>Please enter the number of dices:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
@@ -96,10 +108,9 @@
     <script>
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
-        // Set result to input value
+        var mode = document.querySelector("#game-mode");
         var input = document.querySelector("#input-field");
-        var result = main(input.value);
-
+        var result = main(input.value, mode.value);
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;

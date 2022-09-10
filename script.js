@@ -3,11 +3,20 @@ var leaderBoard = {
   "Player 2": 0,
 };
 
-var main = function (input) {
-  setTimeout(function () {
-    updateOutput(highestCombinedMode(input));
-  }, 1000);
-  return `Rolling...`;
+var main = function (input, mode) {
+  if (mode == "highest-combined") {
+    setTimeout(function () {
+      updateOutput(highestCombinedMode(input));
+    }, 1000);
+    return `Rolling...`;
+  }
+
+  if (mode == "lowest-combined") {
+    setTimeout(function () {
+      updateOutput(lowestCombinedMode(input));
+    }, 1000);
+    return `Rolling...`;
+  }
 };
 
 var highestCombinedMode = function (dices) {
@@ -28,6 +37,40 @@ var highestCombinedMode = function (dices) {
   // Convert player's dice rolls into the largest possible int
   player1Num = parseInt(player1Roll.sort().reverse().join(""));
   player2Num = parseInt(player2Roll.sort().reverse().join(""));
+  var playerRolls = `Player 1 rolled ${player1Num} and Player 2 rolled ${player2Num}.`;
+  if (player1Num > player2Num) {
+    var winner = "Player 1";
+  }
+  if (player1Num < player2Num) {
+    var winner = "Player 2";
+  }
+  if (player1Num == player2Num) {
+    return "It's a draw! Roll again.";
+  }
+  var result = `${playerRolls} ${winner} wins!`;
+  updateLeaderboard(winner);
+  console.log(leaderBoard);
+  return result;
+};
+
+var lowestCombinedMode = function (dices) {
+  if (!(dices > 0)) {
+    return "Cannot roll if there is no dice!";
+  }
+
+  var player1Roll = [];
+  var player2Roll = [];
+  counter = 0;
+  while (counter < dices) {
+    player1Roll.push(rollDice());
+    player2Roll.push(rollDice());
+    counter += 1;
+  }
+  console.log(`Player 1 rolled ${player1Roll}`);
+  console.log(`Player 2 rolled ${player2Roll}`);
+  // Convert player's dice rolls into the largest possible int
+  player1Num = parseInt(player1Roll.sort().join(""));
+  player2Num = parseInt(player2Roll.sort().join(""));
   var playerRolls = `Player 1 rolled ${player1Num} and Player 2 rolled ${player2Num}.`;
   if (player1Num > player2Num) {
     var winner = "Player 1";
