@@ -3,31 +3,27 @@ var leaderBoard = {
   "Player 2": 0,
 };
 
-var main = function (dices, mode) {
+var main = function (dice, mode) {
   if (mode == "highest-combined") {
     setTimeout(function () {
-      updateOutput(highestCombinedMode(dices));
+      updateOutput(highestCombinedMode(dice));
     }, 1000);
-    return `Rolling...`;
+    return `Rolling ${dice} dice...`;
   }
 
   if (mode == "lowest-combined") {
     setTimeout(function () {
-      updateOutput(lowestCombinedMode(dices));
+      updateOutput(lowestCombinedMode(dice));
     }, 1000);
-    return `Rolling...`;
+    return `Rolling ${dice} dice...`;
   }
 };
 
-var highestCombinedMode = function (dices) {
-  if (!(dices > 0)) {
-    return "Cannot roll if there is no dice!";
-  }
-
+var highestCombinedMode = function (dice) {
   var player1Roll = [];
   var player2Roll = [];
   counter = 0;
-  while (counter < dices) {
+  while (counter < dice) {
     player1Roll.push(rollDice());
     player2Roll.push(rollDice());
     counter += 1;
@@ -53,15 +49,11 @@ var highestCombinedMode = function (dices) {
   return result;
 };
 
-var lowestCombinedMode = function (dices) {
-  if (!(dices > 0)) {
-    return "Cannot roll if there is no dice!";
-  }
-
+var lowestCombinedMode = function (dice) {
   var player1Roll = [];
   var player2Roll = [];
   counter = 0;
-  while (counter < dices) {
+  while (counter < dice) {
     player1Roll.push(rollDice());
     player2Roll.push(rollDice());
     counter += 1;
