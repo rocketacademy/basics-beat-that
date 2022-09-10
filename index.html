@@ -117,10 +117,11 @@
       }
 
       #output-div {
-        background-color: whitesmoke;
+        background-color: white;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+        height: 200px;
       }
     </style>
   </head>
@@ -168,7 +169,6 @@
         <input type="radio" name="radio" value="random" />
         <span class="checkmark"></span>
       </label>
-
       <br />
       <button id="submit-button">Let's play!</button>
       <div id="output-div"></div>
@@ -187,7 +187,7 @@
       button.addEventListener("click", function () {
         var diceCount = document.querySelector("[name='radio']:checked");
         if (diceCount.value == "random") {
-          var dice = Math.ceil(Math.random() * 30);
+          var dice = Math.ceil(Math.random() * 21);
         } else {
           var dice = diceCount.value;
         }
