@@ -3,17 +3,17 @@ var leaderBoard = {
   "Player 2": 0,
 };
 
-var main = function (input, mode) {
+var main = function (dices, mode) {
   if (mode == "highest-combined") {
     setTimeout(function () {
-      updateOutput(highestCombinedMode(input));
+      updateOutput(highestCombinedMode(dices));
     }, 1000);
     return `Rolling...`;
   }
 
   if (mode == "lowest-combined") {
     setTimeout(function () {
-      updateOutput(lowestCombinedMode(input));
+      updateOutput(lowestCombinedMode(dices));
     }, 1000);
     return `Rolling...`;
   }

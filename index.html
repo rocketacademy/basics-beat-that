@@ -22,6 +22,14 @@
         outline: auto;
         margin: 10px auto;
         max-width: 800px;
+        padding: 5px 30px;
+        font-size: 12pt;
+      }
+
+      #box {
+        background-color: rgb(181, 205, 249);
+        margin: 10px auto;
+        max-width: 800px;
         padding: 15px 30px;
         font-size: 12pt;
       }
@@ -30,12 +38,68 @@
         font-size: 12pt;
       }
 
-      #container {
-        background-color: rgb(181, 205, 249);
-        margin: 10px auto;
-        max-width: 800px;
-        padding: 15px 30px;
-        font-size: 12pt;
+      .container {
+        display: inline;
+        position: relative;
+        padding-left: 30px;
+        padding-right: 20px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default radio button */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      /* Create a custom radio button */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 50%;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the radio button is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #2196f3;
+      }
+
+      /* Create the indicator (the dot/circle - hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the indicator (dot/circle) when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the indicator (dot/circle) */
+      .container .checkmark:after {
+        top: 9px;
+        left: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
       }
 
       #leader-board {
@@ -45,13 +109,13 @@
         padding: 15px 30px;
       }
 
-      input {
+      /* input {
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
         width: 100%;
-      }
+      } */
 
       button {
         font-size: 16px;
@@ -72,28 +136,45 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="rules">
-      <h3>How to play:</h3>
-      <p>
-        Welcome to Beat That! Find a buddy, enter how many dices you will each
-        roll, and click "submit" to start the round.
-      </p>
-      <p>
-        In each round, your dice rolls are combined into a number. The player
-        with the highest number wins the round.
-      </p>
+      <p>Welcome to Beat That! Highest number wins the round.</p>
     </div>
-    <div id="container">
-      <p>Please select a game mode:</p>
+    <div id="box">
+      <p>Which mode?</p>
       <select name="game-mode" id="game-mode">
         <option value="highest-combined">Highest combined</option>
         <option value="lowest-combined">Lowest combined</option>
       </select>
       <br />
-      <p>Please enter the number of dices:</p>
-      <input id="input-field" />
+      <p>How many dice throws?</p>
+      <label class="container"
+        >🎲
+        <input type="radio" checked="checked" name="radio" value="1" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🎲🎲
+        <input type="radio" name="radio" value="2" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🎲🎲🎲
+        <input type="radio" name="radio" value="3" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🎲🎲🎲🎲
+        <input type="radio" name="radio" value="4" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🎲🎲🎲🎲🎲
+        <input type="radio" name="radio" value="5" />
+        <span class="checkmark"></span>
+      </label>
+
+      <!-- <input id="input-field" /> -->
       <br />
       <button id="submit-button">Submit</button>
-      <p>Output:</p>
       <div id="output-div"></div>
     </div>
     <div id="leader-board">
@@ -108,15 +189,14 @@
     <script>
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
+        var diceCount = document.querySelector("[name='radio']:checked");
+        console.log(`no of dice ${diceCount.value}`);
         var mode = document.querySelector("#game-mode");
         var input = document.querySelector("#input-field");
-        var result = main(input.value, mode.value);
+        var result = main(diceCount.value, mode.value);
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
       });
     </script>
   </body>
