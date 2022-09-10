@@ -102,7 +102,7 @@
         background: white;
       }
 
-      #leader-board {
+      #leaderboard {
         background-color: lightgray;
         margin: 10px auto;
         max-width: 800px;
@@ -138,63 +138,101 @@
         <option value="lowest-combined">Lowest combined</option>
       </select>
       <br />
+      <p>How many players?</p>
+      <label class="container"
+        >🧍🧍
+        <input type="radio" name="radio-players" value="2" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🧍🧍🧍
+        <input type="radio" name="radio-players" value="3" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🧍🧍🧍🧍
+        <input type="radio" name="radio-players" value="4" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🧍🧍🧍🧍🧍
+        <input type="radio" name="radio-players" value="5" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="container"
+        >🧍🧍🧍🧍🧍🧍
+        <input type="radio" name="radio-players" value="6" />
+        <span class="checkmark"></span>
+      </label>
+      <br />
+      <button id="confirm-button">Confirm</button>
+      <br />
       <p>How many dice throws?</p>
       <label class="container"
         >🎲
-        <input type="radio" checked="checked" name="radio" value="1" />
+        <input type="radio" checked="checked" name="radio-dice" value="1" />
         <span class="checkmark"></span>
       </label>
       <label class="container"
         >🎲🎲
-        <input type="radio" name="radio" value="2" />
+        <input type="radio" name="radio-dice" value="2" />
         <span class="checkmark"></span>
       </label>
       <label class="container"
         >🎲🎲🎲
-        <input type="radio" name="radio" value="3" />
+        <input type="radio" name="radio-dice" value="3" />
         <span class="checkmark"></span>
       </label>
       <label class="container"
         >🎲🎲🎲🎲
-        <input type="radio" name="radio" value="4" />
+        <input type="radio" name="radio-dice" value="4" />
         <span class="checkmark"></span>
       </label>
       <label class="container"
         >🎲🎲🎲🎲🎲
-        <input type="radio" name="radio" value="5" />
+        <input type="radio" name="radio-dice" value="5" />
         <span class="checkmark"></span>
       </label>
       <label class="container"
         >❓🎲
-        <input type="radio" name="radio" value="random" />
+        <input type="radio" name="radio-dice" value="random" />
         <span class="checkmark"></span>
       </label>
       <br />
       <button id="submit-button">Let's play!</button>
       <div id="output-div"></div>
     </div>
-    <div id="leader-board">
+    <div id="leaderboard">
       <h3>Which player won more?</h3>
-      <div id="player-1-wins">Player 1: 0</div>
-      <div id="player-2-wins">Player 2: 0</div>
+      <div id="scores"></div>
       <br />
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        var diceCount = document.querySelector("[name='radio']:checked");
+      var confirmButton = document.querySelector("#confirm-button");
+      confirmButton.addEventListener("click", function () {
+        var playerCount = document.querySelector(
+          "[name='radio-players']:checked"
+        );
+        players = parseInt(playerCount.value);
+        confirmButton.disabled = true;
+        leaderBoard = generateLeaderboard(players);
+        console.log(`no of players ${players}`);
+      });
+
+      var playButton = document.querySelector("#submit-button");
+      playButton.addEventListener("click", function () {
+        var diceCount = document.querySelector("[name='radio-dice']:checked");
         if (diceCount.value == "random") {
-          var dice = Math.ceil(Math.random() * 21);
+          var dice = Math.ceil(Math.random() * 10);
         } else {
           var dice = diceCount.value;
         }
-        console.log(`no of dice ${dice}`);
         var mode = document.querySelector("#game-mode");
         var input = document.querySelector("#input-field");
-        var result = main(dice, mode.value);
+        var result = main(players, dice, mode.value);
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
