@@ -3,12 +3,48 @@ var leaderBoard = {};
 
 var main = function (players, dice, mode) {
   setTimeout(function () {
-    updateOutput(playGame(players, dice, mode));
+    updateOutput(normalGame(players, dice, mode));
   }, 1500);
-  return `Rolling ${dice} dice... <br> <img src="https://thumbs.gfycat.com/SecondTartCygnet-max-1mb.gif" alt="Something's happening, give it a sec..."  height="150" />`;
+  return `Rolling ${dice} dice for each player... <br> <img src="https://thumbs.gfycat.com/SecondTartCygnet-max-1mb.gif" alt="Something's happening, give it a sec..."  height="150" />`;
 };
 
-var playGame = function (players, dice, mode) {
+var generatePlayersArray = function (players) {
+  playersArray = [];
+  var counter = 0;
+  while (counter < players) {
+    playersArray.push(`Player ${counter + 1}`);
+    counter += 1;
+  }
+  return playersArray;
+};
+
+// var knockOutGame = function (players, dice, mode) {
+//   var playersArray = generatePlayersArray(players);
+//   shuffleArray(playersArray);
+//   // E.g. ["Player 3", "Player 1", "Player 2"]
+//   var roundCounter = 0;
+
+//   while (roundCounter < players - 1) {
+//     playGame(2, dice, mode);
+//     roundCounter += 1;
+//   }
+// };
+
+var normalGame = function (players, dice, mode) {
+  var playersArray = generatePlayersArray(players);
+  var results = getResults(players, dice, mode);
+  var winnerIndex = results[0];
+  var playersScores = results[1];
+  if (winnerIndex == 99) {
+    return `Your scores are ${playersScores}. It's a draw! Roll again. <br> <img src="https://i.gifer.com/1Jxj.gif" alt="Shrug"  height="150" />`;
+  } else {
+    updateLeaderboard(playersArray[winnerIndex]);
+    console.log(leaderBoard);
+    return `Your scores are ${playersScores}. ${playersArray[winnerIndex]} wins! <br> <img src="https://i.pinimg.com/originals/00/24/b9/0024b92df56e60d2706ed908b31ad870.gif" alt="Congrats to the winner!"  height="150" />`;
+  }
+};
+
+var getPlayersScores = function (players, dice, mode) {
   var playersRolls = [];
   var playersCounter = 0;
   while (playersCounter < players) {
@@ -19,11 +55,12 @@ var playGame = function (players, dice, mode) {
       diceCounter += 1;
     }
     playersRolls.push(playerRolls);
+    console.log(
+      `The player with index ${playersCounter} just rolled ${playerRolls}`
+    );
     playersCounter += 1;
-    console.log(`A player just rolled ${playerRolls}`);
   }
   console.log(`Dice rolls ${playersRolls}`);
-
   if (mode == "lowest-combined") {
     var playersRollsCombined = lowestCombinedMode(playersRolls);
   }
@@ -32,19 +69,24 @@ var playGame = function (players, dice, mode) {
     var playersRollsCombined = highestCombinedMode(playersRolls);
   }
   console.log(`everyone's score: ${playersRollsCombined}`);
+  return playersRollsCombined;
+};
 
+// Return results in [winnerIndex, [score, score, ...]]
+var getResults = function (players, dice, mode) {
+  var playersRollsCombined = getPlayersScores(players, dice, mode);
   var winningScore = Math.max(...playersRollsCombined);
-  winningPlayer =
-    "Player " + (playersRollsCombined.indexOf(winningScore.toString()) + 1);
+  console.log(`highest score: ${winningScore}`);
+  var results = [
+    playersRollsCombined.indexOf(winningScore.toString()),
+    playersRollsCombined,
+  ];
 
+  //draw condition
   if ([...new Set(playersRollsCombined)].length < playersRollsCombined.length) {
-    return `Your scores are ${playersRollsCombined}. It's a draw! Roll again. <br> <img src="https://i.gifer.com/1Jxj.gif" alt="Shrug"  height="150" />`;
+    results = [99, playersRollsCombined];
   }
-
-  var result = `Your scores are ${playersRollsCombined}. ${winningPlayer} wins! <br> <img src="https://i.pinimg.com/originals/00/24/b9/0024b92df56e60d2706ed908b31ad870.gif" alt="Congrats to the winner!"  height="150" />`;
-  console.log(leaderBoard);
-  updateLeaderboard(winningPlayer);
-  return result;
+  return results;
 };
 
 // Combine dice rolls into largest possible integer
@@ -98,4 +140,8 @@ var updateLeaderboard = function (winningPlayer) {
     output += `${entry}: ${leaderBoard[entry]}<br>`;
   }
   scoreSpace.innerHTML = output;
+};
+
+var shuffleArray = function (array) {
+  array.sort(() => Math.random() - 0.5);
 };

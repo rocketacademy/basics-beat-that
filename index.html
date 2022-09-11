@@ -200,7 +200,7 @@
         <span class="checkmark"></span>
       </label>
       <br />
-      <button id="submit-button">Let's play!</button>
+      <button id="submit-button" disabled="true">Let's play!</button>
       <div id="output-div"></div>
     </div>
     <div id="leaderboard">
@@ -225,7 +225,7 @@
           selections[counter].disabled = true;
           counter += 1;
         }
-
+        playButton.disabled = false;
         leaderBoard = generateLeaderboard(players);
         console.log(`no of players ${players}`);
       });
