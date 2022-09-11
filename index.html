@@ -23,7 +23,7 @@
         margin: 10px auto;
         max-width: 800px;
         padding: 5px 30px;
-        font-size: 12pt;
+        /* font-size: 12pt; */
       }
 
       #box {
@@ -31,11 +31,11 @@
         margin: 10px auto;
         max-width: 800px;
         padding: 15px 30px;
-        font-size: 12pt;
+        /* font-size: 12pt; */
       }
 
       #game-mode {
-        font-size: 12pt;
+        font-size: 14pt;
       }
 
       .container {
@@ -110,7 +110,7 @@
       }
 
       button {
-        font-size: 16px;
+        font-size: 18px;
         line-height: 33px;
         margin: 10px 0 10px 0;
         padding: 0 6px;
@@ -218,6 +218,13 @@
         );
         players = parseInt(playerCount.value);
         confirmButton.disabled = true;
+        var selections = document.querySelectorAll("[name='radio-players']");
+        var counter = 0;
+        while (counter < selections.length) {
+          selections[counter].disabled = true;
+          counter += 1;
+        }
+
         leaderBoard = generateLeaderboard(players);
         console.log(`no of players ${players}`);
       });
