@@ -14,25 +14,32 @@
         margin-right: 30px;
       }
 
+      p {
+        margin-bottom: 5px;
+      }
+
+      p > #rules {
+        margin-bottom: 10px;
+      }
+
       #header {
         text-align: center;
       }
 
       #rules {
         background-color: whitesmoke;
-        outline: auto;
         margin: 10px auto;
         max-width: 800px;
-        padding: 5px 30px;
-        /* font-size: 12pt; */
+        padding: 1px 15px;
+        font-size: 14pt;
       }
 
       #box {
         background-color: rgb(181, 205, 249);
         margin: 10px auto;
         max-width: 800px;
-        padding: 15px 30px;
-        /* font-size: 12pt; */
+        padding: 5px 30px;
+        font-size: 14pt;
       }
 
       #game-mode {
@@ -103,6 +110,74 @@
         background: white;
       }
 
+      /* The container */
+      .checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .checkbox:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .checkbox input:checked ~ .checkmark {
+        background-color: #2196f3;
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .checkbox input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .checkbox .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+
       #leaderboard {
         background-color: lightgray;
         margin: 10px auto;
@@ -112,8 +187,8 @@
 
       button {
         font-size: 18px;
-        line-height: 33px;
-        margin: 10px 0 10px 0;
+        line-height: 28px;
+        margin: 2px 0 10px 0;
         padding: 0 6px;
       }
 
@@ -122,21 +197,24 @@
         margin: 20px auto;
         padding: 20px;
         width: 100%;
-        height: 200px;
+        height: 250px;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Basics: Beat That!</h1>
     <div id="rules">
-      <p>Welcome to Beat That! Highest number wins the round.</p>
+      <p id="rules">
+        Welcome to Beat That! Highest number wins the round.<br />If you're
+        playing knockout 😳🥊, last player standing wins.
+      </p>
     </div>
     <div id="box">
-      <p>Which mode?</p>
+      <p>Combine my dice rolls to be:</p>
       <select name="game-mode" id="game-mode">
-        <option value="highest-combined">Highest combined</option>
-        <option value="lowest-combined">Lowest combined</option>
+        <option value="highest-combined">The largest possible number</option>
+        <option value="lowest-combined">The smallest possible number</option>
       </select>
       <br />
       <p>How many players?</p>
@@ -168,7 +246,7 @@
       <br />
       <button id="confirm-button">Confirm</button>
       <br />
-      <p>How many dice throws?</p>
+      <p>How many dice rolls?</p>
       <label class="container"
         >🎲
         <input type="radio" checked="checked" name="radio-dice" value="1" />
@@ -200,6 +278,12 @@
         <span class="checkmark"></span>
       </label>
       <br />
+      <p>Try knockout mode?</p>
+      <label class="checkbox"
+        >😳🥊
+        <input type="checkbox" id="knockout" />
+        <span class="checkmark"></span>
+      </label>
       <button id="submit-button" disabled="true">Let's play!</button>
       <div id="output-div"></div>
     </div>
@@ -212,12 +296,18 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
+      var knockoutCheck = document.querySelector("#knockout");
+      knockoutCheck.addEventListener("click", function () {
+        shuffleArray(playersArray);
+        console.log(`just shuffled: new order ${playersArray}`);
+      });
+
       var confirmButton = document.querySelector("#confirm-button");
       confirmButton.addEventListener("click", function () {
         var playerCount = document.querySelector(
           "[name='radio-players']:checked"
         );
-        players = parseInt(playerCount.value);
+        var players = parseInt(playerCount.value);
         confirmButton.disabled = true;
         var selections = document.querySelectorAll("[name='radio-players']");
         var counter = 0;
@@ -226,8 +316,10 @@
           counter += 1;
         }
         playButton.disabled = false;
+        generatePlayersArray(players);
         leaderBoard = generateLeaderboard(players);
         console.log(`no of players ${players}`);
+        console.log(`list of players ${playersArray}`);
       });
 
       var playButton = document.querySelector("#submit-button");
@@ -240,7 +332,8 @@
         }
         var mode = document.querySelector("#game-mode");
         var input = document.querySelector("#input-field");
-        var result = main(players, dice, mode.value);
+        var knockoutMode = document.querySelector("#knockout");
+        var result = main(playersArray, dice, mode.value, knockoutMode.checked);
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
