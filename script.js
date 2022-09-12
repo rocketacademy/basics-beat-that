@@ -41,10 +41,36 @@ var rollDiceForPlayer = function () {
   );
 };
 
+var getPlayerScore = function (playerInput) {
+  // input validation
+  if (playerInput != 1 && playerInput != 2) {
+    console.log("invalid input, NOT 1 or 2");
+    return (
+      "OOPSIE! <br><br>Please input ONLY '1' or '2'. <br><br> A gentle reminder, this will determine which dice to use as the first digit of your value. <br><br>Dice #1: " +
+      playerRolls[0] +
+      "<br><br>Dice #2: " +
+      playerRolls[1] +
+      "."
+    );
+  }
+  // input == 1
+  if (playerInput == 1) {
+    console.log("input == 1");
+    var playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
+    return "Your chose value is: " + playerScore;
+  }
+
+  // input == 2
+  if (playerInput == 2) {
+    console.log("input == 2");
+    var playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
+    return "Your chose value is: " + playerScore;
+  }
+};
 var main = function (input) {
   console.log("Checking game state on submit click", gameState);
   var myOutputMessage = "";
-  return myOutputMessage;
+
   if (gameState == diceRollStage) {
     console.log("gameState == diceRollStage");
 
@@ -53,25 +79,15 @@ var main = function (input) {
 
     //change the game state
     gameState = chooseOrderStage;
+    return myOutputMessage;
   }
-  return myOutputMessage;
 
   if (gameState == chooseOrderStage) {
     console.log("gameState == chooseOrderStage");
 
-    // input validation
-    if (input != 1 && input != 2) {
-      console.log("invalid input, NOT 1 or 2");
-      return (
-        "OOPSIE! <>br<br>Please input ONLY '1' or '2'. <br><br> A gentle reminder, this will determine which dice to use as the first digit of your value. <br><br>Dice #1: " +
-        playerRolls[0] +
-        "<br><br>Dice #2: " +
-        playerRolls[1] +
-        "."
-      );
-    }
-    // input == 1
+    // call playerScore function
+    myOutputMessage = getPlayerScore(input);
 
-    // input == 2
+    return myOutputMessage;
   }
 };
