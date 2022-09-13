@@ -13,6 +13,8 @@
 //   3. write logic for player 1 to go first then player 2
 //   4. comparing score and final winner
 
+// THIRD STEP -- Game is plating continuesly without needing to refresh the page
+
 // Global Variables
 var diceRollStage = "ROLL THE DICE";
 var chooseOrderStage = "CHOOSE THE DICE ORDER";
@@ -96,9 +98,44 @@ var getPlayerScore = function (playerInput) {
   }
 };
 
+var comparePlayersScores = function () {
+  var compareMessage =
+    "Player 1 score: " +
+    allPlayerScore[0] +
+    "<br>Player 2 score: " +
+    allPlayerScore[1];
+
+  //player 1 wins
+  if (allPlayerScore[0] > allPlayerScore[1]) {
+    compareMessage =
+      compareMessage + "<br><br> Who is the winner?<br><br>PLAYER 1!";
+  }
+
+  //player 2 wins
+  if (allPlayerScore[0] < allPlayerScore[1]) {
+    compareMessage =
+      compareMessage + "<br><br> Who is the winner?<br><br>PLAYER 2!";
+  }
+
+  //tie
+  if (allPlayerScore[0] == allPlayerScore[1]) {
+    compareMessage =
+      compareMessage + "<br><br> Who is the winner?<br><br>IT'S A TIE!";
+  }
+
+  return compareMessage;
+};
+
+var resetGame = function () {
+  currentPlayer = 1;
+  gameState = diceRollStage;
+  allPlayerScore = [];
+};
+
 var main = function (input) {
   console.log("Checking game state on submit click", gameState);
   console.log("checking currentPlayer on submit click: ", currentPlayerRolls);
+
   var myOutputMessage = "";
 
   if (gameState == diceRollStage) {
@@ -141,30 +178,18 @@ var main = function (input) {
   if (gameState == compareScoresStage) {
     console.log("gameState == compareScoreStage");
 
-    myOutputMessage =
-      "Player 1 score: " +
-      allPlayerScore[0] +
-      "<br>Player 2 score: " +
-      allPlayerScore[1];
+    myOutputMessage = comparePlayersScores();
 
-    //player 1 wins
-    if (allPlayerScore[0] > allPlayerScore[1]) {
-      myOutputMessage =
-        myOutputMessage + "<br><br> Who is the winner?<br><br>PLAYER 1!";
-    }
-
-    //player 2 wins
-    if (allPlayerScore[0] < allPlayerScore[1]) {
-      myOutputMessage =
-        myOutputMessage + "<br><br> Who is the winner?<br><br>PLAYER 2!";
-    }
-
-    //tie
-    if (allPlayerScore[0] == allPlayerScore[1]) {
-      myOutputMessage =
-        myOutputMessage + "<br><br> Who is the winner?<br><br>IT'S A TIE!";
-    }
+    resetGame();
+    console.log("current player after reset: ", currentPlayer);
+    console.log("game state after reset: ", gameState);
+    console.log("allPlayersScore array: ", allPlayerScore);
 
     return myOutputMessage;
   }
 };
+
+//WHAT ARE THE PROBLEMS?
+//1. player 1 wins, all good. player 1 looses, score for player 2 undefined.
+//2. for tie, scores also undefined.
+//3. last function to refresh automatically, displaying the same number over and over again, as if the random does not work.
