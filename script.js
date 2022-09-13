@@ -47,7 +47,7 @@ var rollDiceForPlayer = function () {
     currentPlayerRolls
   );
   return (
-    "Hi Ho " +
+    "Hi Ho Player #" +
     currentPlayer +
     "...<br><br>Dice #1: " +
     currentPlayerRolls[0] +
@@ -91,13 +91,15 @@ var getPlayerScore = function (playerInput) {
 
     // clear current player rolls array
     currentPlayerRolls = [];
+
     return "Player " + currentPlayer + ", your chosen value is: " + playerScore;
   }
 };
+
 var main = function (input) {
   console.log("Checking game state on submit click", gameState);
-  var myOutputMessage = "";
   console.log("checking currentPlayer on submit click: ", currentPlayerRolls);
+  var myOutputMessage = "";
 
   if (gameState == diceRollStage) {
     console.log("gameState == diceRollStage");
@@ -107,6 +109,7 @@ var main = function (input) {
 
     //change the game state
     gameState = chooseOrderStage;
+
     return myOutputMessage;
   }
 
@@ -117,17 +120,51 @@ var main = function (input) {
     myOutputMessage = getPlayerScore(input);
 
     if (currentPlayer == 1) {
-      console.log("gameState == diceRollStage");
+      console.log("end of player 1's turn, now player 2's turn");
       currentPlayer = 2;
       gameState = diceRollStage;
       return myOutputMessage + "<br><br>Let's take turn... Go, player 2!";
     }
+
     if (currentPlayer == 2) {
       console.log(
         "end of player 2's turn, next submit click will calculate score"
       );
       gameState = compareScoresStage;
+
+      return (
+        myOutputMessage + "<br><br> Click 'submit' to calculate the scores!"
+      );
     }
-    return myOutputMessage + "<br><br> Click 'submit' to calculate the scores!";
+  }
+
+  if (gameState == compareScoresStage) {
+    console.log("gameState == compareScoreStage");
+
+    myOutputMessage =
+      "Player 1 score: " +
+      allPlayerScore[0] +
+      "<br>Player 2 score: " +
+      allPlayerScore[1];
+
+    //player 1 wins
+    if (allPlayerScore[0] > allPlayerScore[1]) {
+      myOutputMessage =
+        myOutputMessage + "<br><br> Who is the winner?<br><br>PLAYER 1!";
+    }
+
+    //player 2 wins
+    if (allPlayerScore[0] < allPlayerScore[1]) {
+      myOutputMessage =
+        myOutputMessage + "<br><br> Who is the winner?<br><br>PLAYER 2!";
+    }
+
+    //tie
+    if (allPlayerScore[0] == allPlayerScore[1]) {
+      myOutputMessage =
+        myOutputMessage + "<br><br> Who is the winner?<br><br>IT'S A TIE!";
+    }
+
+    return myOutputMessage;
   }
 };
