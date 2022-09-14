@@ -25,6 +25,8 @@ var currentPlayerRolls = [];
 
 var currentPlayer = 1;
 var allPlayerScore = [];
+var player1Score = 0;
+var player2Score = 0;
 
 // Helper function
 var rollDice = function () {
@@ -39,6 +41,7 @@ var rollDice = function () {
 var rollDiceForPlayer = function () {
   console.log("start of rollDiceForPlayer()");
   var counter = 0;
+  currentPlayerRolls = [];
   while (counter < 2) {
     currentPlayerRolls.push(rollDice());
     counter = counter + 1;
@@ -78,6 +81,12 @@ var getPlayerScore = function (playerInput) {
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
+    if (currentPlayer === 1) {
+      player1Score = playerScore;
+    }
+    if (currentPlayer === 2) {
+      player2Score = playerScore;
+    }
     return "Your chose value is: " + playerScore;
   }
 
@@ -87,38 +96,38 @@ var getPlayerScore = function (playerInput) {
     playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
-
-    //store playerScore  in array
-    allPlayerScore.push(playerScore);
-
-    // clear current player rolls array
-    currentPlayerRolls = [];
+    if (currentPlayer === 1) {
+      player1Score = playerScore;
+    }
+    if (currentPlayer === 2) {
+      player2Score = playerScore;
+    }
 
     return "Player " + currentPlayer + ", your chosen value is: " + playerScore;
   }
 };
 
 var comparePlayersScores = function () {
+  console.log("player scores 1 and 2", allPlayerScore[0], allPlayerScore[1]);
+  console.warn("player scores 1 and 2", player1Score, player2Score);
+
   var compareMessage =
-    "Player 1 score: " +
-    allPlayerScore[0] +
-    "<br>Player 2 score: " +
-    allPlayerScore[1];
+    "Player 1 score: " + player1Score + "<br>Player 2 score: " + player2Score;
 
   //player 1 wins
-  if (allPlayerScore[0] > allPlayerScore[1]) {
+  if (player1Score > player2Score) {
     compareMessage =
       compareMessage + "<br><br> Who is the winner?<br><br>PLAYER 1!";
   }
 
   //player 2 wins
-  if (allPlayerScore[0] < allPlayerScore[1]) {
+  if (player1Score < player2Score) {
     compareMessage =
       compareMessage + "<br><br> Who is the winner?<br><br>PLAYER 2!";
   }
 
   //tie
-  if (allPlayerScore[0] == allPlayerScore[1]) {
+  if (player1Score === player2Score) {
     compareMessage =
       compareMessage + "<br><br> Who is the winner?<br><br>IT'S A TIE!";
   }
