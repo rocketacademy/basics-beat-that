@@ -24,7 +24,6 @@ var gameState = diceRollStage;
 var currentPlayerRolls = [];
 
 var currentPlayer = 1;
-var allPlayerScore = [];
 var player1Score = 0;
 var player2Score = 0;
 
@@ -108,8 +107,7 @@ var getPlayerScore = function (playerInput) {
 };
 
 var comparePlayersScores = function () {
-  console.log("player scores 1 and 2", allPlayerScore[0], allPlayerScore[1]);
-  console.warn("player scores 1 and 2", player1Score, player2Score);
+  console.log("player scores 1 and 2", player1Score, player2Score);
 
   var compareMessage =
     "Player 1 score: " + player1Score + "<br>Player 2 score: " + player2Score;
@@ -138,7 +136,6 @@ var comparePlayersScores = function () {
 var resetGame = function () {
   currentPlayer = 1;
   gameState = diceRollStage;
-  allPlayerScore = [];
 };
 
 var main = function (input) {
@@ -192,7 +189,6 @@ var main = function (input) {
     resetGame();
     console.log("current player after reset: ", currentPlayer);
     console.log("game state after reset: ", gameState);
-    console.log("allPlayersScore array: ", allPlayerScore);
 
     return myOutputMessage;
   }
