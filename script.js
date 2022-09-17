@@ -8,8 +8,14 @@
 var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
 var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
 var gameState = GAME_STATE_DICE_ROLL;
+var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES";
 
-var playerRolls = [];
+var currentPlayerRolls = [];
+
+// to account for 2 players
+
+var currentPlayer = 1;
+var allPlayersScore = [];
 
 // Function to roll dice
 var rollDice = function () {
@@ -26,36 +32,50 @@ var rollDice = function () {
 var rollDiceForPlayer = function () {
   var counter = 0;
   while (counter < 2) {
-    playerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
     counter = counter + 1;
   }
   return (
     "Hi Battle Player <br><br> You rolled <br> Dice 1: " +
-    playerRolls[0] +
+    currentPlayerRolls[0] +
     " & Dice 2: " +
-    playerRolls[1] +
+    currentPlayerRolls[1] +
     "<br><br> Please input either '1' or '2' to choose the dice for the first digit value."
   );
 };
 
 //Function to get player's score
 var getPlayerScore = function (playerInput) {
+  var playerScore;
   if (playerInput != 1 && playerInput != 2) {
     return (
       "Oops! There is an error. Please input 1 or 2 only. Your dice rolls were: <br> Dice 1: " +
-      playerRolls[0] +
+      currentPlayerRolls[0] +
       " Dice 2: " +
-      playerRolls[1]
+      currentPlayerRolls[1]
     );
   }
   if (playerInput == 1) {
-    var playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
-    return "Your chosen value is: " + playerScore;
+    playerScore = Number(
+      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
+    );
   }
   if (playerInput == 2) {
-    var playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
-    return "Your chosen value is: " + playerScore;
+    playerScore = Number(
+      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
+    );
   }
+  allPlayersScore.push(playerScore);
+  currentPlayerRolls = [];
+
+  return (
+    "Player" +
+    " " +
+    currentPlayer +
+    " " +
+    "Your chosen value is: " +
+    playerScore
+  );
 };
 
 //Main function
@@ -69,6 +89,19 @@ var main = function (input) {
 
   if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
     myOutputValue = getPlayerScore(input);
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameState = GAME_STATE_DICE_ROLL;
+      return myOutputValue + "<br><br> It is Player 2's turn now! ";
+    }
+
+    if (currentPlayer == 2) {
+      gameState = GAME_STATE_COMPARE_SCORES;
+      return (
+        myOutputValue + "<br><br> Press submit to calculate the scores :) "
+      );
+    }
+
     return myOutputValue;
   }
 };
