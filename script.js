@@ -5,10 +5,14 @@
 
 var diceRollGameMode = "diceRollGameMode";
 var chooseDiceOrderGameMode = "chooseDiceOrderGameMode";
+var compareDiceRollsGameMode = "compareDiceRollsGameMode";
 var gameMode = diceRollGameMode;
 var randomNumberOnDice = [1, 2, 3, 4, 5, 6];
 
-var playerDiceRolls = [];
+var currentPlayerDiceRolls = [];
+
+var currentPlayer = 1;
+var allPlayersScore = [];
 
 var rollDice = function () {
   var randomNumberGenerated =
@@ -20,46 +24,79 @@ var rollDice = function () {
 var rollDiceForPlayer = function () {
   var numberOfDice = 0;
   while (numberOfDice < 2) {
-    playerDiceRolls.push(rollDice());
+    currentPlayerDiceRolls.push(rollDice());
     numberOfDice = numberOfDice + 1;
   }
   return (
-    "Hello!<br><br>Your dice rolls are:<br>Dice 1: " +
-    playerDiceRolls[0] +
+    "Hello Player " +
+    currentPlayer +
+    "!<br><br>Your dice rolls are:<br>Dice 1: " +
+    currentPlayerDiceRolls[0] +
     " and Dice 2: " +
-    playerDiceRolls[1] +
+    currentPlayerDiceRolls[1] +
     ".<br><br>Please proceed to input either '1' or '2' to choose the respective dice to be used as the first digit of your final value.<br><br>Choose wisely!"
+  );
+};
+
+var getPlayerScore = function (playerInput) {
+  var playerScore;
+  if (playerInput != 1 && playerInput != 2) {
+    return (
+      "Invalid input! Please only input either '1' or '2' to choose the respective dice to be used as the first digit of your final value. Your dice rolls are:<br>Dice 1: " +
+      currentPlayerDiceRolls[0] +
+      " and Dice 2: " +
+      currentPlayerDiceRolls[1] +
+      " "
+    );
+  }
+  if (playerInput == 1) {
+    playerScore = Number(
+      String(currentPlayerDiceRolls[0]) + String(currentPlayerDiceRolls[1])
+    );
+  }
+  if (playerInput == 2) {
+    playerScore = Number(
+      String(currentPlayerDiceRolls[1]) + String(currentPlayerDiceRolls[0])
+    );
+  }
+  allPlayersScore.push(playerScore);
+  currentPlayerDiceRolls = [];
+  return (
+    "Player " +
+    currentPlayer +
+    " , you have chosen " +
+    playerScore +
+    " as your final value"
   );
 };
 
 var main = function (input) {
   console.log("Game mode when clicking submit button", gameMode);
+  console.log(
+    "Which current player when clicking submit button",
+    currentPlayer
+  );
   var myOutputMessage = "";
   if (gameMode == diceRollGameMode) {
-    gameMode = chooseDiceOrderGameMode;
     myOutputMessage = rollDiceForPlayer();
+    gameMode = chooseDiceOrderGameMode;
+    return myOutputMessage;
   }
   if (gameMode == chooseDiceOrderGameMode) {
-    if (input != 1 && input != 2) {
+    myOutputMessage = getPlayerScore(input);
+
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameMode = diceRollGameMode;
+      return myOutputMessage + "<br><br>Time for player 2 to play!";
+    }
+
+    if (currentPlayer == 2) {
+      gameMode = compareDiceRollsGameMode;
       return (
-        "Invalid input! Please only input either '1' or '2' to choose the respective dice to be used as the first digit of your final value. Your dice rolls are:<br>Dice 1: " +
-        playerDiceRolls[0] +
-        " and Dice 2: " +
-        playerDiceRolls[1] +
-        " "
+        myOutputMessage +
+        "<br><br>Go ahead and click submit to calculate the scores!"
       );
-    }
-    if (input == 1) {
-      var playerOrderDice = Number(
-        String(playerDiceRolls[0]) + String(playerDiceRolls[1])
-      );
-      return "You have chosen " + playerOrderDice + " as your final value";
-    }
-    if (input == 2) {
-      var playerOrderDice = Number(
-        String(playerDiceRolls[1]) + String(playerDiceRolls[0])
-      );
-      return "You have chosen " + playerOrderDice + " as your final value";
     }
   }
 };
