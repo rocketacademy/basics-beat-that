@@ -99,4 +99,26 @@ var main = function (input) {
       );
     }
   }
+  if (gameMode == compareDiceRollsGameMode) {
+    myOutputMessage =
+      "Player 1 score: " +
+      allPlayersScore[0] +
+      "<br>Player 2 score: " +
+      allPlayersScore[1] +
+      "";
+    if (allPlayersScore[0] > allPlayersScore[1]) {
+      myOutputMessage =
+        myOutputMessage +
+        "<br><br>Congratulations to Player 1! Better luck next round Player 2!";
+    }
+    if (allPlayersScore[1] > allPlayersScore[0]) {
+      myOutputMessage =
+        myOutputMessage +
+        "<br><br>Congratulations to Player 2! Better luck next round Player 1!";
+    }
+    if (allPlayersScore[1] == allPlayersScore[0]) {
+      myOutputMessage = myOutputMessage + "<br><br>Oops, it's a tie!";
+    }
+    return myOutputMessage;
+  }
 };
