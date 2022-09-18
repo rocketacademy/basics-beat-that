@@ -78,6 +78,7 @@ var getPlayerScore = function (playerInput) {
   );
 };
 
+// Function to compare player 1 and player 2 scores
 var comparePlayersScore = function () {
   var compareMessage =
     "Player 1 score: " +
@@ -97,7 +98,14 @@ var comparePlayersScore = function () {
   return compareMessage;
 };
 
-//Main function
+// Function to reset game
+var resetGame = function () {
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  allPlayersScore = [];
+};
+
+// Main function
 var main = function (input) {
   var myOutputValue = " ";
   if (gameState == GAME_STATE_DICE_ROLL) {
@@ -124,6 +132,7 @@ var main = function (input) {
 
   if (gameState == GAME_STATE_COMPARE_SCORES) {
     myOutputValue = comparePlayersScore();
+    resetGame(); // to reset game
     return myOutputValue;
   }
 };
