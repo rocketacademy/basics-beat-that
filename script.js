@@ -78,6 +78,25 @@ var getPlayerScore = function (playerInput) {
   );
 };
 
+var comparePlayersScore = function () {
+  var compareMessage =
+    "Player 1 score: " +
+    allPlayersScore[0] +
+    "<br> Player 2 score: " +
+    allPlayersScore[1];
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br> Player 1 wins!";
+  }
+  if (allPlayersScore[1] > allPlayersScore[0]) {
+    compareMessage = compareMessage + "<br><br> Player 2 wins!";
+  }
+  if (allPlayersScore[0] == allPlayersScore[1]) {
+    compareMessage =
+      compareMessage + "<br><br> It is a tie. You guys deserve a prize!";
+  }
+  return compareMessage;
+};
+
 //Main function
 var main = function (input) {
   var myOutputValue = " ";
@@ -101,7 +120,10 @@ var main = function (input) {
         myOutputValue + "<br><br> Press submit to calculate the scores :) "
       );
     }
+  }
 
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    myOutputValue = comparePlayersScore();
     return myOutputValue;
   }
 };
