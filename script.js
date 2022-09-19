@@ -73,7 +73,11 @@ var getPlayerScore = function (input) {
     var playerScore = Number(
       String(currentPlayerRoll[0]) + String(currentPlayerRoll[1])
     );
-
+    console.log(playerScore);
+    // store this player score to all player score
+    allPlayerScores.push(playerScore);
+    //need to clean up current player roll array
+    currentPlayerRoll = [];
     return (
       "okay, you choose 1st dice to be placed first. <br>" +
       "Your result : " +
@@ -87,20 +91,36 @@ var getPlayerScore = function (input) {
     var playerScore = Number(
       String(currentPlayerRoll[1]) + String(currentPlayerRoll[0])
     );
-
+    console.log(playerScore);
+    // store this player score to all player score
+    allPlayerScores.push(playerScore);
+    //need to clean up current player roll array
+    currentPlayerRoll = [];
     return (
       "okay, you choose 2nd dice to be placed first. <br>" +
       "Your result : " +
       playerScore
     );
   }
-  // store this player score to all player score
-  allPlayerScores.push(playerScore);
-  //need to clean up current player roll array
-  currentPlayerRoll = [];
+
   return (
     "Player" + currentPlayer + ", your final choosen value is : " + playerScore
   );
+};
+
+var getWinner = function () {
+  // winner 1
+  if (allPlayerScores[0] > allPlayerScores[1]) {
+    return "Player 1, you won";
+  }
+  // winner 2
+  if (allPlayerScores[1] > allPlayerScores[0]) {
+    return "Player 2, you won";
+  }
+  // tie
+  if (allPlayerScores[0] == allPlayerScores[1]) {
+    return "Player 1 and Player 2, you are tie!";
+  }
 };
 
 var main = function (input) {
@@ -135,6 +155,7 @@ var main = function (input) {
         currentPlayerRoll[1]
       );
     }
+
     myOutputValue = getPlayerScore(input);
 
     if (currentPlayer == 1) {
@@ -157,6 +178,23 @@ var main = function (input) {
       );
     }
   }
+  if (gameCurrentMode == gameModeCompareResult) {
+    console.log("game mode change to comparing");
 
-  return myOutputValue;
+    var winner = getWinner();
+    myOutputValue =
+      "Player 1 score : " +
+      allPlayerScores[0] +
+      "<br><br>Player 2 score : " +
+      allPlayerScores[1] +
+      "<br><br>" +
+      winner;
+
+    gameCurrentMode = gameModeDiceRoll;
+    currentPlayerRoll = [];
+    allPlayerScores = [];
+    currentPlayer = 1;
+
+    return myOutputValue;
+  }
 };
