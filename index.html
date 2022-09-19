@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lavender;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,7 +40,7 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: thistle;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -49,12 +49,27 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲 Beat That! 🎲</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <p>
+        Hello! Welcome to Beat That! Click the dice button to start the game.
+      </p>
+      <p>
+        Create a two-digit number by selecting the order of your dice rolls via
+        the button 1 and button 2.
+      </p>
+      <p>
+        To determine the winner, click on the abacus button. The player with the
+        highest number wins! Good luck!
+      </p>
+      <!-- <p>Input:</p>
+      <input id="input-field" /> -->
       <br />
-      <button id="submit-button">Submit</button>
+      <!-- <button id="submit-button">Submit</button> -->
+      <button id="roll-button">🎲</button>
+      <button id="one-button">1️⃣</button>
+      <button id="two-button">2️⃣</button>
+      <button id="calc-button">🧮</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
@@ -62,18 +77,55 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+      // var button = document.querySelector("#submit-button");
+      var rollButton = document.querySelector("#roll-button");
+      var oneButton = document.querySelector("#one-button");
+      var twoButton = document.querySelector("#two-button");
+      var calcButton = document.querySelector("#calc-button");
 
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
+      // button.addEventListener("click", function () {
+      //   // Set result to input value
+      //   var input = document.querySelector("#input-field");
+      //   var result = main(input.value);
 
-        // Reset input value
-        input.value = "";
+      //   // Display result in output element
+      //   var output = document.querySelector("#output-div");
+      //   output.innerHTML = result;
+
+      //   // Reset input value
+      //   input.value = "";
+      // });
+
+      rollButton.addEventListener("click", function () {
+        if (gameState == GAME_STATE_DICE_ROLL) {
+          var result = main(document.querySelector("#roll-button").value);
+          var output = document.querySelector("#output-div");
+          output.innerHTML = result;
+        }
+      });
+
+      oneButton.addEventListener("click", function () {
+        if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
+          var result = main("1");
+          var output = document.querySelector("#output-div");
+          output.innerHTML = result;
+        }
+      });
+
+      twoButton.addEventListener("click", function () {
+        if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
+          var result = main("2");
+          var output = document.querySelector("#output-div");
+          output.innerHTML = result;
+        }
+      });
+
+      calcButton.addEventListener("click", function () {
+        if (gameState == GAME_STATE_COMPARE_SCORES) {
+          var result = main(document.querySelector("#calc-button").value);
+          var output = document.querySelector("#output-div");
+          output.innerHTML = result;
+        }
       });
     </script>
   </body>
