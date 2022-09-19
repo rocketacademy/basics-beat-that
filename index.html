@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -51,6 +51,16 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
+      <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
+      <p>
+        Create a two-digit number by selecting the order of your dice rolls.
+      </p>
+      <p>The player with the highest number wins! Good luck!</p>
+      <p>Advanced Play Mode: Lowest Wins</p>
+      <p>Number of Dice (cannot be less than 2):</p>
+      <input id="input-dice" placeholder="2" />
+      <br />
+      <button id="set-dice-number-button">Set</button>
       <p>Input:</p>
       <input id="input-field" />
       <br />
@@ -74,6 +84,13 @@
 
         // Reset input value
         input.value = "";
+      });
+      var setDiceButton = document.querySelector("#set-dice-number-button");
+      setDiceButton.addEventListener("click", function () {
+        var input = document.querySelector("#input-dice");
+        var result = updateNumberOfDiceInGame(input.value);
+
+        input.value = result;
       });
     </script>
   </body>
