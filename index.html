@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -55,8 +55,14 @@
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
+      <button id="reset-button">Reset</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+
+      <div id="output-div">
+        <p>Hello! Welcome to Beat That!</p>
+        <p>Enter number of Players to start the game.</p>
+        <p>The player with the highest number wins! Good luck!</p>
+      </div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -71,6 +77,20 @@
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
+
+        // Reset input value
+        input.value = "";
+      });
+
+      var button = document.querySelector("#reset-button");
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var input = document.querySelector("#input-field");
+        var result = totalReset();
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = "Game Reset! How many Players are there? :D ";
 
         // Reset input value
         input.value = "";
