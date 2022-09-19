@@ -18,9 +18,13 @@
 //global variables//
 var gameModeDiceRoll = "Game Mode : Dice Roll";
 var gameModeChooseDice = "Game Mode : Choose Dice";
+var gameModeCompareResult = "Game Mode : Compare Dice Results";
 var gameCurrentMode = gameModeDiceRoll;
 
-var playerRoll = [];
+var currentPlayerRoll = [];
+
+var currentPlayer = 1;
+var allPlayerScores = [];
 
 //All functions here //
 var rollDice = function () {
@@ -39,42 +43,36 @@ var rollDiceForPlayer = function () {
   console.log("time to roll dice for player");
   var counter = 0;
   while (counter < 2) {
-    playerRoll.push(rollDice());
+    currentPlayerRoll.push(rollDice());
     counter += 1;
   }
-  console.log("played 2 times for player's dice roll data : " + playerRoll);
+  console.log(
+    "played 2 times for player's dice roll data : " + currentPlayerRoll
+  );
   return (
-    "Hello, <br><br> " +
+    "Hello player" +
+    currentPlayer +
+    ", <br><br> " +
     "You rolled <br>" +
     "Dice 1 : " +
-    playerRoll[0] +
+    currentPlayerRoll[0] +
     "<br>" +
     "Dice 2 : " +
-    playerRoll[1] +
+    currentPlayerRoll[1] +
     "<br><br>" +
     "Now, please choose which dice you want to place as your placement. Input 1 for dice 1. Input 2 for dice 2. "
   );
 };
 
 var getPlayerScore = function (input) {
-  // input validation
-  if (input != 1 && input != 2) {
-    console.log(
-      "User input neither 1 or 2, so time to show them the data invalidation"
-    );
-    return (
-      "Wrong data input! <br>" +
-      "Please input either 1 or 2. <br>" +
-      "You have rolled Dice 1 was " +
-      playerRoll[0] +
-      " and Dice 2 was " +
-      playerRoll[1]
-    );
-  }
+  var playerScore;
+
   // input == 1
   if (input == 1) {
     console.log("input == 1st dice");
-    var playerScore = Number(String(playerRoll[0]) + String(playerRoll[1]));
+    var playerScore = Number(
+      String(currentPlayerRoll[0]) + String(currentPlayerRoll[1])
+    );
 
     return (
       "okay, you choose 1st dice to be placed first. <br>" +
@@ -86,7 +84,9 @@ var getPlayerScore = function (input) {
   // input == 2
   if (input == 2) {
     console.log("playerInput == 2nd dice");
-    var playerScore = Number(String(playerRoll[1]) + String(playerRoll[0]));
+    var playerScore = Number(
+      String(currentPlayerRoll[1]) + String(currentPlayerRoll[0])
+    );
 
     return (
       "okay, you choose 2nd dice to be placed first. <br>" +
@@ -94,10 +94,19 @@ var getPlayerScore = function (input) {
       playerScore
     );
   }
+  // store this player score to all player score
+  allPlayerScores.push(playerScore);
+  //need to clean up current player roll array
+  currentPlayerRoll = [];
+  return (
+    "Player" + currentPlayer + ", your final choosen value is : " + playerScore
+  );
 };
 
 var main = function (input) {
   console.log("check / game mode : " + gameCurrentMode);
+  console.log("current player : " + currentPlayer);
+
   var myOutputValue = "";
 
   if (gameCurrentMode == gameModeDiceRoll) {
@@ -111,7 +120,43 @@ var main = function (input) {
 
   if (gameCurrentMode == gameModeChooseDice) {
     console.log("current game mode change to : choose dice mode");
+
+    // input validation
+    if (input != 1 && input != 2) {
+      console.log(
+        "User input neither 1 or 2, so time to show them the data invalidation"
+      );
+      return (
+        "Wrong data input! <br>" +
+        "Please input either 1 or 2. <br>" +
+        "You have rolled Dice 1 was " +
+        currentPlayerRoll[0] +
+        " and Dice 2 was " +
+        currentPlayerRoll[1]
+      );
+    }
     myOutputValue = getPlayerScore(input);
+
+    if (currentPlayer == 1) {
+      console.log("end of player 1's turn, change status to player 2's turn");
+      currentPlayer = 2;
+      gameCurrentMode = gameModeDiceRoll;
+      return (
+        myOutputValue + "<br><br> It is now player 2's turn to roll a dice. "
+      );
+    }
+
+    if (currentPlayer == 2) {
+      console.log(
+        "end of player 2's turn too, change status to compare the final results"
+      );
+      gameCurrentMode = gameModeCompareResult;
+      return (
+        myOutputValue +
+        "<br><Br> Press button to compare final results and see who is the winner!"
+      );
+    }
   }
+
   return myOutputValue;
 };
