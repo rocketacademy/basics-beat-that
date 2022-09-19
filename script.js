@@ -1,12 +1,11 @@
-// 2 players take turns to roll 2 dices
-// Player clicks submit to roll and show the 2 dice rolls
-// Player can pick the order of the dice they want
-// After both players have rolled and chosen the dice order, the one with the higher combined number wins
-
 var diceRollGameMode = "diceRollGameMode";
 var chooseDiceOrderGameMode = "chooseDiceOrderGameMode";
 var compareDiceRollsGameMode = "compareDiceRollsGameMode";
 var gameMode = diceRollGameMode;
+var validInput = "validInput";
+var invalidInput = "invalidInput";
+var inputValidation = validInput;
+
 var randomNumberOnDice = [1, 2, 3, 4, 5, 6];
 
 var currentPlayerDiceRolls = [];
@@ -14,6 +13,7 @@ var currentPlayerDiceRolls = [];
 var currentPlayer = 1;
 var allPlayersScore = [];
 
+//To generate a number from 1 to 6 for dice
 var rollDice = function () {
   var randomNumberGenerated =
     randomNumberOnDice[Math.floor(Math.random() * randomNumberOnDice.length)];
@@ -21,6 +21,7 @@ var rollDice = function () {
   return randomNumberGenerated;
 };
 
+// Roll for 2 numbers of dices and request for order of dices
 var rollDiceForPlayer = function () {
   var numberOfDice = 0;
   while (numberOfDice < 2) {
@@ -38,9 +39,11 @@ var rollDiceForPlayer = function () {
   );
 };
 
+//Input validation
 var getPlayerScore = function (playerInput) {
   var playerScore;
   if (playerInput != 1 && playerInput != 2) {
+    inputValidation = invalidInput;
     return (
       "Invalid input! Please only input either '1' or '2' to choose the respective dice to be used as the first digit of your final value. Your dice rolls are:<br>Dice 1: " +
       currentPlayerDiceRolls[0] +
@@ -48,13 +51,13 @@ var getPlayerScore = function (playerInput) {
       currentPlayerDiceRolls[1] +
       " "
     );
-  }
-  if (playerInput == 1) {
+  } else if (playerInput == 1) {
+    inputValidation = validInput;
     playerScore = Number(
       String(currentPlayerDiceRolls[0]) + String(currentPlayerDiceRolls[1])
     );
-  }
-  if (playerInput == 2) {
+  } else if (playerInput == 2) {
+    inputValidation = validInput;
     playerScore = Number(
       String(currentPlayerDiceRolls[1]) + String(currentPlayerDiceRolls[0])
     );
@@ -84,14 +87,13 @@ var main = function (input) {
   }
   if (gameMode == chooseDiceOrderGameMode) {
     myOutputMessage = getPlayerScore(input);
-
-    if (currentPlayer == 1) {
+    if (currentPlayer == 1 && inputValidation == validInput) {
       currentPlayer = 2;
       gameMode = diceRollGameMode;
       return myOutputMessage + "<br><br>Time for player 2 to play!";
     }
 
-    if (currentPlayer == 2) {
+    if (currentPlayer == 2 && inputValidation == validInput) {
       gameMode = compareDiceRollsGameMode;
       return (
         myOutputMessage +
@@ -121,4 +123,5 @@ var main = function (input) {
     }
     return myOutputMessage;
   }
+  return myOutputMessage;
 };
