@@ -5,7 +5,7 @@ Attempted score & lowest combined game mode
 
 How many hours did you spend on this assignment? 3
 
-Please fill in one error and/or error message you received while working on this assignment.
+Please fill in one error and/or error message you received while working on this assignment. forgot
 
 What part of the assignment did you spend the most time on? figuring out what global variables to use - especially results
 
