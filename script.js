@@ -1,8 +1,9 @@
 // Project #2 - Beat That!
 
 // Globals
-var mode = "roll";
+var state = "selection";
 var playerNumber = 1;
+var mode = "regular";
 
 // Arrays
 var playerRolls = [];
@@ -42,8 +43,8 @@ var chooseOrder = function (chosenOrder) {
     playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
   }
   if (chosenOrder != 1 && chosenOrder != 2) {
-    // Update to error mode to not allow player to continue until dice order is chosen
-    mode = "error";
+    // Update to error state to not allow player to continue until dice order is chosen
+    state = "error";
     return (
       "Woops, you did not enter a valid number. 😔 <br><br> Please key in 1 or 2 to choose the order of your dice and try again. <br><br> Your dice rolls were " +
       playerRolls[0] +
@@ -61,7 +62,7 @@ var chooseOrder = function (chosenOrder) {
   );
 };
 
-// Score Tally Function
+// Score Tally Function for normal state
 var tallyScores = function () {
   myOutputValue =
     "Player 1 score:" +
@@ -84,39 +85,86 @@ var tallyScores = function () {
 
 // Replay Function
 var restartGame = function () {
-  mode = "roll";
+  state = "roll";
   playerNumber = "1";
   totalScores = [];
+};
+
+// Selection state - choose game mode, instruction message in index.html
+var chooseGameMode = function (input) {
+  if (state == "selection") {
+    if (input == "regular") {
+      state = "roll";
+      mode = "regular";
+      return "You have chosen to play a regular game of Beat That, let's go!<br><br> Press the submit button to start playing. 🎲";
+    }
+    if (input == "reverse") {
+      state = "roll";
+      mode = "reverse";
+      return "You have chosen to play a reversed game of Beat That, wild! <br><br> Press the submit button to start playing. 🎲";
+    }
+    if (input != "reverse" || input != "regular") {
+      state = "selection";
+      return "You did not key in a valid game mode. 😔 <br><br> Please key in regular or reverse and try again!";
+    }
+  }
+};
+
+// Lowest Dice Game "reversed mode"
+var tallyReverseScores = function () {
+  myOutputValue =
+    "Player 1 score:" +
+    totalScores[0] +
+    "<br><br> Player 2 score:" +
+    totalScores[1];
+  // Player 1 Wins
+  if (totalScores[1] > totalScores[0]) {
+    return myOutputValue + "<br><br>Player 1 Wins! 💪";
+  }
+  // Player 2 Wins
+  if (totalScores[0] > totalScores[1]) {
+    return myOutputValue + "<br><br>Player 2 Wins! 💪";
+  }
+  // Tie Scenario
+  if (totalScores[0] == totalScores[1]) {
+    return myOutputValue + "<br><br>It's a tie. 😐";
+  }
 };
 
 // Main Function
 var main = function (input) {
   var myOutputValue = "";
 
-  // Start with roll dice mode, update to choose order mode after
-  if (mode == "roll") {
-    myOutputValue = rollTwoDice();
-    mode = "choose";
+  // Select game mode
+  if (state == "selection") {
+    myOutputValue = chooseGameMode(input);
     return myOutputValue;
   }
-  // Choose order mode and update to Player 2 and back to roll mode
-  if (mode == "choose") {
+
+  // Start with roll dice state, update to choose order state after
+  if (state == "roll") {
+    myOutputValue = rollTwoDice();
+    state = "choose";
+    return myOutputValue;
+  }
+  // Choose order state and update to Player 2 and back to roll state
+  if (state == "choose") {
     if (playerNumber == 1) {
       myOutputValue = chooseOrder(input);
-      if (mode != "error") {
+      if (state != "error") {
         playerNumber = 2;
-        mode = "roll";
+        state = "roll";
         return (
           myOutputValue +
           "<br><br> It is now Player 2's turn to roll. Press submit to roll!"
         );
       }
     }
-    // Update to tally score mode after player 2 chooses
+    // Update to tally score state after player 2 chooses
     if (playerNumber == 2) {
       myOutputValue = chooseOrder(input);
-      if (mode != "error") {
-        mode = "score";
+      if (state != "error") {
+        state = "score";
         return (
           myOutputValue +
           "<br><br> The scores have been tallied! Press submit to find out who won."
@@ -124,16 +172,24 @@ var main = function (input) {
       }
     }
   }
-  // Error mode
-  if (mode == "error") {
+  // Error state
+  if (state == "error") {
     myOutputValue = chooseOrder(input);
-    mode = "choose";
+    state = "choose";
     return myOutputValue;
   }
 
   // Tally score screen, restart game
-  if (mode == "score") {
+  if (state == "score" && mode == "regular") {
     myOutputValue = tallyScores();
+    restartGame();
+    return (
+      myOutputValue +
+      "<br><br>Ready for another round? Press submit to begin rolling. 🎲"
+    );
+  }
+  if (state == "score" && mode == "reverse") {
+    myOutputValue = tallyReverseScores();
     restartGame();
     return (
       myOutputValue +
