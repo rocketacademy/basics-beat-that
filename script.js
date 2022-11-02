@@ -1,10 +1,15 @@
 // Project #2 - Beat That!
 
+// Make game replayable
+// Fix error message
+
 // Globals
-var modeRoll = "roll";
-var modeChoose = "choose";
 var mode = "roll";
+var playerNumber = 1;
+
+// Arrays
 var playerRolls = [];
+var totalScores = [];
 
 // Dice Roll Function
 var rollDice = function () {
@@ -20,38 +25,61 @@ var rollTwoDice = function () {
     playerRolls.push(rollDice());
   }
   return (
-    "Player 1 rolls a " +
+    "Player " +
+    playerNumber +
+    " rolls a " +
     playerRolls[0] +
     " and a " +
     playerRolls[1] +
-    ".<br><br> Key in '1' or '2' to choose the order of your dice."
+    ".<br><br> Key in 1 or 2 to choose the order of your dice."
   );
 };
 
 // Choose Order Function
-var chooseOrder = function (chosenNumber) {
-  if (chosenNumber == 1) {
-    return (
-      "Player 1, you have chosen Dice 1 first.<br><br> Your combined number is " +
-      Number(String(playerRolls[0]) + String(playerRolls[1])) +
-      ".<br><br> It is now Player 2's turn to roll."
-    );
+var chooseOrder = function (chosenOrder) {
+  var playerScore;
+  if (chosenOrder == 1) {
+    playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
   }
-  if (chosenNumber == 2) {
-    return (
-      "Player 1, you have chosen Dice 2 first.<br><br> Your combined number is " +
-      Number(String(playerRolls[1]) + String(playerRolls[0])) +
-      ".<br><br> It is now Player 2's turn to roll."
-    );
+  if (chosenOrder == 2) {
+    playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
   }
-  if (chosenNumber != 1 && chosenNumber != 2) {
+  if (chosenOrder != 1 && chosenOrder != 2) {
     return (
-      "You did not key in a valid order. Please key in '1' or '2' to choose the order of your dice and try again. <br><br> Your dice rolls were " +
+      "Woops, you did not enter a valid number. Please key in '1' or '2' to choose the order of your dice and try again. <br><br> Your dice rolls were " +
       playerRolls[0] +
       " and " +
       playerRolls[1] +
       "."
     );
+  }
+  //Add to total scores array, clear current array for next player
+  totalScores.push(playerScore);
+  playerRolls = [];
+
+  return (
+    "Player " + playerNumber + ", your combined number is " + playerScore + "."
+  );
+};
+
+// Score Tally Function
+var tallyScores = function () {
+  myOutputValue =
+    "Player 1 score:" +
+    totalScores[0] +
+    "<br><br> Player 2 score:" +
+    totalScores[1];
+  // Player 1 Wins
+  if (totalScores[0] > totalScores[1]) {
+    return myOutputValue + "<br><br>Player 1 Wins!";
+  }
+  // Player 2 Wins
+  if (totalScores[1] > totalScores[0]) {
+    return myOutputValue + "<br><br>Player 1 Wins!";
+  }
+  // Tie Scenario
+  if (totalScores[0] == totalScores[1]) {
+    return myOutputValue + "<br><br>It's a tie.";
   }
 };
 
@@ -59,14 +87,34 @@ var chooseOrder = function (chosenNumber) {
 var main = function (input) {
   var myOutputValue = "";
 
-  // Roll mode + update to choose after
+  // Roll mode + update to choose mode after
   if (mode == "roll") {
     myOutputValue = rollTwoDice();
     mode = "choose";
     return myOutputValue;
   }
+  // Choose order mode + udpate to Player 2
   if (mode == "choose") {
-    myOutputValue = chooseOrder(input);
+    if (playerNumber == 1) {
+      myOutputValue = chooseOrder(input);
+      playerNumber = 2;
+      mode = "roll";
+      return (
+        myOutputValue +
+        "<br><br> It is now Player 2's turn to roll. Press submit to roll!"
+      );
+    }
+    if (playerNumber == 2) {
+      myOutputValue = chooseOrder(input);
+      mode = "score";
+      return (
+        myOutputValue +
+        "<br><br> The scores have been tallied! Press submit to find out who won."
+      );
+    }
+  }
+  if (mode == "score") {
+    myOutputValue = tallyScores();
     return myOutputValue;
   }
 
