@@ -1,8 +1,5 @@
 // Project #2 - Beat That!
 
-// Make game replayable
-// Fix error message
-
 // Globals
 var mode = "roll";
 var playerNumber = 1;
@@ -45,8 +42,10 @@ var chooseOrder = function (chosenOrder) {
     playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
   }
   if (chosenOrder != 1 && chosenOrder != 2) {
+    // Update to error mode to not allow player to continue until dice order is chosen
+    mode = "error";
     return (
-      "Woops, you did not enter a valid number. Please key in '1' or '2' to choose the order of your dice and try again. <br><br> Your dice rolls were " +
+      "Woops, you did not enter a valid number. 😔 <br><br> Please key in 1 or 2 to choose the order of your dice and try again. <br><br> Your dice rolls were " +
       playerRolls[0] +
       " and " +
       playerRolls[1] +
@@ -71,51 +70,75 @@ var tallyScores = function () {
     totalScores[1];
   // Player 1 Wins
   if (totalScores[0] > totalScores[1]) {
-    return myOutputValue + "<br><br>Player 1 Wins!";
+    return myOutputValue + "<br><br>Player 1 Wins! 💪";
   }
   // Player 2 Wins
   if (totalScores[1] > totalScores[0]) {
-    return myOutputValue + "<br><br>Player 1 Wins!";
+    return myOutputValue + "<br><br>Player 2 Wins! 💪";
   }
   // Tie Scenario
   if (totalScores[0] == totalScores[1]) {
-    return myOutputValue + "<br><br>It's a tie.";
+    return myOutputValue + "<br><br>It's a tie. 😐";
   }
+};
+
+// Replay Function
+var restartGame = function () {
+  mode = "roll";
+  playerNumber = "1";
+  totalScores = [];
 };
 
 // Main Function
 var main = function (input) {
   var myOutputValue = "";
 
-  // Roll mode + update to choose mode after
+  // Start with roll dice mode, update to choose order mode after
   if (mode == "roll") {
     myOutputValue = rollTwoDice();
     mode = "choose";
     return myOutputValue;
   }
-  // Choose order mode + udpate to Player 2
+  // Choose order mode and update to Player 2 and back to roll mode
   if (mode == "choose") {
     if (playerNumber == 1) {
       myOutputValue = chooseOrder(input);
-      playerNumber = 2;
-      mode = "roll";
-      return (
-        myOutputValue +
-        "<br><br> It is now Player 2's turn to roll. Press submit to roll!"
-      );
+      if (mode != "error") {
+        playerNumber = 2;
+        mode = "roll";
+        return (
+          myOutputValue +
+          "<br><br> It is now Player 2's turn to roll. Press submit to roll!"
+        );
+      }
     }
+    // Update to tally score mode after player 2 chooses
     if (playerNumber == 2) {
       myOutputValue = chooseOrder(input);
-      mode = "score";
-      return (
-        myOutputValue +
-        "<br><br> The scores have been tallied! Press submit to find out who won."
-      );
+      if (mode != "error") {
+        mode = "score";
+        return (
+          myOutputValue +
+          "<br><br> The scores have been tallied! Press submit to find out who won."
+        );
+      }
     }
   }
+  // Error mode
+  if (mode == "error") {
+    myOutputValue = chooseOrder(input);
+    mode = "choose";
+    return myOutputValue;
+  }
+
+  // Tally score screen, restart game
   if (mode == "score") {
     myOutputValue = tallyScores();
-    return myOutputValue;
+    restartGame();
+    return (
+      myOutputValue +
+      "<br><br>Ready for another round? Press submit to begin rolling. 🎲"
+    );
   }
 
   return myOutputValue;
