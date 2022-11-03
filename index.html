@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -45,18 +45,33 @@
         padding: 20px;
         width: 100%;
       }
+      .instructions p {
+        color: black;
+      }
     </style>
   </head>
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
+      <div class="instructions">
+        <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
+        <p>
+          Create a two-digit number by selecting the order of your dice rolls.
+        </p>
+        <p>The player with the highest number wins! Good luck!</p>
+      </div>
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+      <div class="score-leaderboard">
+        <p>Leaderboard</p>
+        <p class="score"></p>
+        <p class="score"></p>
+      </div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
