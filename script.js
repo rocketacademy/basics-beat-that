@@ -83,7 +83,8 @@ const winnerNumber = function (gameMode) {
     return combinedNumbers.indexOf(Math.max(...combinedNumbers)) + 1;
   else return combinedNumbers.indexOf(Math.min(...combinedNumbers)) + 1;
 };
-const result = function () {
+const gameResult = function () {
+  // the same variable name as the dictionary
   const winner = winnerNumber();
   results[winner].score += 1;
   results.gameState = GAME_STATES[0]; // reset the game
@@ -131,5 +132,5 @@ const main = function (input) {
       return specifyDiceOrder(input);
     else if (results.gameState === GAME_STATES[2]) setGameMode();
   }
-  return result();
+  return gameResult();
 };
