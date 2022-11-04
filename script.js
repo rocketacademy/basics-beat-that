@@ -34,10 +34,10 @@ var generateDetermineOrderMessage = function () {
 //input validation whether dice 1 or 2 as first integer
 var determineNumberOrder = function (playerInput) {
   console.log("Control flow: start of determineNumberOrder()");
-
   if (playerInput != 1 && playerInput != 2) {
     console.log("INVALID INPUT");
-    return "Invalid input. Please input either '1' or '2' to determine which number to be the first number.";
+    MODE = "error";
+    return `Invalid input! Please input either '1' or '2' to determine which number to be the first number. You rolled a ${currentPlayerNumbers[0]} & ${currentPlayerNumbers[1]}`;
   }
   if (playerInput == 1) {
     finalValue = Number(
@@ -57,6 +57,7 @@ var determineNumberOrder = function (playerInput) {
 };
 
 var compareNumbers = function () {
+  console.log("Control flow: start of compareNumbers()");
   compareMessage = `Player 1 number - ${allPlayersNumbers[0]} | Player 2 number -  ${allPlayersNumbers[1]} `;
   if (allPlayersNumbers[0] == allPlayersNumbers[1]) {
     compareMessage = compareMessage + `It's a tie!`;
@@ -85,20 +86,37 @@ var main = function (input) {
     return myOutputMessage;
   }
   if (MODE == MODE_DETERMINE_ORDER) {
-    myOutputMessage = determineNumberOrder(input);
     if (currentPlayer == 1) {
-      currentPlayer = 2;
-      MODE = MODE_DICE_ROLL;
-      return myOutputMessage + `<br><br> It is now Player 2's turn!`;
+      myOutputMessage = determineNumberOrder(input);
+      if (MODE != "error") {
+        currentPlayer = 2;
+        MODE = MODE_DICE_ROLL;
+        return (
+          myOutputMessage +
+          `<br><br> It is now Player 2's turn to roll. Press submit to roll!`
+        );
+      }
     }
     if (currentPlayer == 2) {
-      MODE = MODE_COMPARE_NUMBERS;
-      return myOutputMessage + ` Press submit to calculate score`;
+      myOutputMessage = determineNumberOrder(input);
+      if (MODE != "error") {
+        MODE = MODE_COMPARE_NUMBERS;
+        console.log(allPlayersNumbers);
+        return myOutputMessage + ` Press submit to calculate score!`;
+      }
+    }
+    if (MODE == "error") {
+      myOutputMessage = determineNumberOrder(input);
+      MODE = MODE_DETERMINE_ORDER;
+      return myOutputMessage;
     }
   }
   if (MODE == MODE_COMPARE_NUMBERS) {
     myOutputMessage = compareNumbers();
     restartGame();
-    return myOutputMessage;
+    return (
+      myOutputMessage +
+      " Press submit to go for another round! Player 1 will start!"
+    );
   }
 };
