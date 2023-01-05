@@ -39,7 +39,7 @@ randomize another pair of players to play
 //global constant initialisation
 
 //mode values
-const HIGHEST_MODE = "highest";
+const HIGHEST = "highest";
 const LOWEST_MODE = "lowest";
 const STANDARD_MODE = "standard";
 const KNOCKOUT_MODE = "knockout";
