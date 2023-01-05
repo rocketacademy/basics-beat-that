@@ -90,6 +90,27 @@ var getPlayerScore = function (playerInput) {
   );
 };
 
+var comparePlayerScores = function () {
+  compareMessage =
+    "Player 1 Score: " +
+    allPlayersScore[0] +
+    "<br>Player 2 Score: " +
+    allPlayersScore[1];
+  // player 1 wins
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 1 wins!";
+  }
+  // player 2 wins
+  if (allPlayersScore[0] < allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 2 wins!";
+  }
+  // tie
+  if (allPlayersScore[0] == allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>It's a tie!";
+  }
+  return compareMessage;
+};
+
 var main = function (input) {
   console.log("Check game state on submit click: " + gameState);
   console.log("Checking currentPlayer on submit click: " + currentPlayer);
@@ -126,7 +147,11 @@ var main = function (input) {
         "<br><br>Click submit to calculate scores and see who won!"
       );
     }
+  }
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    console.log("Control Flow: gameState == GAME_STATE_COMPARE_SCORES");
 
+    outputMessage = comparePlayerScores();
     return outputMessage;
   }
 };
