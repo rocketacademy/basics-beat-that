@@ -49,6 +49,7 @@ const RESET_MSG = "Game is reset! <br> If you want to play again, press start!";
 
 //global variable initialisation
 //values to take from the html
+//adding a comment
 var playerNum = "";
 var diceNum = "";
 var diceMode = "";
@@ -191,8 +192,8 @@ var scoreRolls = function (diceRollArray) {
   }
 
   //assigns the current player's score to the resultArray, storing them as numbers
-  currentPlayerIndex = playerArray.indexOf(currentPlayer);
-  resultArray[currentPlayerIndex] = Number(playerScore);
+  currentPlayer = playerArray.indexOf(currentPlayer);
+  resultArray[currentPlayer] = Number(playerScore);
 
   rollDisplay += `<br> The ${diceMode} possible score is ${playerScore}`;
 
