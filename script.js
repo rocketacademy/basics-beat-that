@@ -67,12 +67,29 @@ var main = function (input) {
   if (currentPlayer == 1){
     currentPlayer = 2;
     gameState = GAME_STATE_ROLL_DICE;
-    return myOutputValue + "<br><br>It is time for Player 2's turn!"
+    return myOutputValue + "<br><br>It is time for Player 2's turn!";
   }
   if (currentPlayer ==2){
     console.log("End of player 2's turn. Next submit click will compare scores.")
     gameState = GAME_STATE_COMPARE_SCORES;
-     return myOutputValue + "<br><br>Click Submit again to calculate the scores!"
+     return myOutputValue + "<br><br>Click Submit again to calculate the scores!";
   }
   }
+  if (gameState == GAME_STATE_COMPARE_SCORES){
+    console.log("gamestate is COMPARE SCORES")
+    myOutputValue = "Player 1's score is: " + allPlayersScore[0] + "<br>Player 2's score is: " + allPlayersScore[1];
+    // Player 1 wins
+    if (allPlayersScore[0] > allPlayersScore[1]){
+      myOutputValue = myOutputValue + "<br><br>Player 1 wins!!";
+    }
+    // Player 2 wins
+    if (allPlayersScore[0] < allPlayersScore[1]){
+      myOutputValue = myOutputValue + "<br><br>Player 2 wins!!";
+    }
+    // Draw
+    if (allPlayersScore[0] == allPlayersScore[1]){
+      myOutputValue = myOutputValue + "<br><br>It's a draw!!";
+  }
+  return myOutputValue;
+  };
 };
