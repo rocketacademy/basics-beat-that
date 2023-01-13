@@ -6,8 +6,12 @@
 var GAME_STATE_ROLL_DICE = 'GAME_STATE_ROLL_DICE';
 var GAME_STATE_CHOOSE_ORDER = 'GAME_STATE_CHOOSE_ORDER';
 var gameState = GAME_STATE_ROLL_DICE;
+var GAME_STATE_COMPARE_SCORES = 'GAME_STATE_COMPARE_SCORES';
 
-var playerRolls = [];
+var currentPlayerRolls = [];
+
+var currentPlayer = 1;
+var allPlayersScore = [];
 
 //Roll dice helper function
 var rollDice = function(){
@@ -20,30 +24,33 @@ var rollDice = function(){
 var rollDiceForPlayer = function(){
   var counter = 0;
   while(counter < 2){
-    playerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
     counter ++;
   }
-  return "Hello! You rolled:<br><br>Dice 1 with value of " + playerRolls[0] + " and Dice 2 with value of " + playerRolls[1] + ".<br><br>Now please choose '1' or '2' to determine the order of your rolls and also your final score."
+  return "Hello! Player " + currentPlayer + ", you rolled:<br><br>Dice 1 with value of " + currentPlayerRolls[0] + " and Dice 2 with value of " + currentPlayerRolls[1] + ".<br><br>Now please choose '1' or '2' to determine the order of your rolls and also your final score."
 }
 
 var getPlayerScore = function(playerInput){
+  var playerScore;
   if (playerInput != 1 && playerInput != 2){
-      return "Invalid input! Please enter either '1' or '2' to choose determine your final score. Your dice rolls are<br><br>Dice 1: " + playerRolls[0] + " and Dice 2: " + playerRolls[1] +"."
+      return "Invalid input! Please enter either '1' or '2' to choose determine your final score. Your dice rolls are<br><br>Dice 1: " + currentPlayerRolls[0] + " and Dice 2: " + currentPlayerRolls[1] +"."
     }
     // player choose '1'
     if (playerInput == 1){
-      var playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
-      return "Your final chosen score is: ", playerScore;
+      playerScore = Number(String(currentPlayerRolls[0]) + String(currentPlayerRolls[1]));
     }
     // player choose '2'
     if (playerInput == 2){
-      var playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
-      return "Your final chosen score is: ", playerScore;
+      playerScore = Number(String(currentPlayerRolls[1]) + String(currentPlayerRolls[0]));
     }
+    allPlayersScore.push(playerScore);
+    currentPlayerRolls = [];
+    return "Player " + currentPlayer + " your final chosen score is: " + playerScore;
 }
 
 var main = function (input) {
-  console.log('Game state is: ', gameState)
+  console.log('Game state is: ', gameState);
+  console.log('Checking on the current player: ', currentPlayer);
   var myOutputValue = '';
   if (gameState == GAME_STATE_ROLL_DICE){
     console.log('Game State is GAME_STATE_ROLL_DICE')
@@ -56,6 +63,16 @@ var main = function (input) {
   if (gameState == GAME_STATE_CHOOSE_ORDER){
     console.log('GAME_STATE_CHOOSE_ORDER');
     myOutputValue = getPlayerScore(input);
-    return myOutputValue;
+
+  if (currentPlayer == 1){
+    currentPlayer = 2;
+    gameState = GAME_STATE_ROLL_DICE;
+    return myOutputValue + "<br><br>It is time for Player 2's turn!"
+  }
+  if (currentPlayer ==2){
+    console.log("End of player 2's turn. Next submit click will compare scores.")
+    gameState = GAME_STATE_COMPARE_SCORES;
+     return myOutputValue + "<br><br>Click Submit again to calculate the scores!"
+  }
   }
 };
