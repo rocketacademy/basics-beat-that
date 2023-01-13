@@ -48,6 +48,12 @@ var getPlayerScore = function(playerInput){
     return "Player " + currentPlayer + " your final chosen score is: " + playerScore;
 }
 
+var resetGame = function(){
+  currentPlayer = 1;
+  gameState = GAME_STATE_ROLL_DICE;
+  allPlayersScore = [];
+}
+
 var main = function (input) {
   console.log('Game state is: ', gameState);
   console.log('Checking on the current player: ', currentPlayer);
@@ -90,6 +96,8 @@ var main = function (input) {
     if (allPlayersScore[0] == allPlayersScore[1]){
       myOutputValue = myOutputValue + "<br><br>It's a draw!!";
   }
+
+  resetGame();
   return myOutputValue;
   };
 };
