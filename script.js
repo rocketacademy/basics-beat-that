@@ -1,6 +1,4 @@
 /*
-foo-bar
-pseudocode
 
 dice rolls:
 loop for how many dice rolls are available - done
