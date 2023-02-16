@@ -7,18 +7,23 @@ operators such as < > =
 This will be the final value. Convert this value back to int or use Number()
 Repeat the functions for the following player.
 
+Array should only be used when you want to generate a list and iterate it over and over again with loops.
 */
 
 var number = [];
+var gameStatus = "Number Of Players";
+var currentPlayer = 1;
+var totalNumberOfPlayers = 0;
+var numberOfDices = 0;
 
 var rollDice = function () {
-  var generatedNumber = Math.random() * 7;
+  var generatedNumber = Math.random() * 6;
   var rolledNumber = Math.floor(generatedNumber) + 1;
   return rolledNumber;
 };
 
 var numberOfRolls = function (input) {
-  var myOutputValue = "Player is rolling ...<br><br>";
+  var myOutputValue = `Player ${currentPlayer} is rolling ...<br><br>`;
 
   for (var counter = 1; counter <= input; counter += 1) {
     var diceRolls = rollDice();
@@ -40,13 +45,45 @@ var diceRolledHighest = function (input) {
     });
     string += number[counter];
   }
+  number.length = 0;
+  myOutputValue = myOutputValue + `<br> Your number is ${string}.`;
+  return myOutputValue;
+};
 
-  return (myOutputValue = myOutputValue + `<br> Your number is ${string}.`);
+var numberOfPlayers = function (numberOfDices) {
+  
+  if (currentPlayer <= totalNumberOfPlayers) {
+    rollResults = diceRolledHighest(numberOfDices);
+    currentPlayer += 1;
+  } else {
+    currentPlayer = 1;
+    rollResults = diceRolledHighest(numberOfDices);
+    currentPlayer += 1;
+  }
+
+  return rollResults;
 };
 
 var main = function (input) {
-  var rollResults = diceRolledHighest(input);
+  var myOutputValue = "";
+  if (gameStatus == "Number Of Players") {
+    var NUMBEROFPLAYERS = input;
+    if (NUMBEROFPLAYERS < 2) {
+      myOutputValue = `Please input more than 2.`;
+    } else {
+      totalNumberOfPlayers = NUMBEROFPLAYERS;
+      myOutputValue = `${NUMBEROFPLAYERS} players are playing.`;
+    }
+    gameStatus = "Number Of Dices";
+    return myOutputValue;
+  } else if (gameStatus == "Number Of Dices") {
+    numberOfDices = input;
+    myOutputValue = `Number of dices are ${numberOfDices}.`;
+    gameStatus = "Start rolling"
+    return myOutputValue;
+  } else if (gameStatus == "Start rolling") {
+    myOutputValue = numberOfPlayers(numberOfDices);
+  }
 
-  var myOutputValue = rollResults;
   return myOutputValue;
 };
