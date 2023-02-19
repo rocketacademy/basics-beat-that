@@ -24,6 +24,13 @@
         padding: 38px 31px;
       }
 
+      #containerScore {
+        background-color: lightsalmon;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+      }
+
       input {
         font-size: 21px;
         line-height: 33px;
@@ -45,6 +52,13 @@
         padding: 20px;
         width: 100%;
       }
+
+      #scoreTable {
+        background-color: lightgrey;
+        margin: 20px auto;
+        padding: 20px;
+        width: 100%;
+      }
     </style>
   </head>
 
@@ -57,6 +71,9 @@
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+    </div>
+    <div id="containerScore">
+      <div id="scoreTable"></table>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -74,6 +91,7 @@
 
         // Reset input value
         input.value = "";
+
       });
     </script>
   </body>

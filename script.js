@@ -15,6 +15,8 @@ var gameStatus = "Number Of Players";
 var currentPlayer = 1;
 var totalNumberOfPlayers = 0;
 var numberOfDices = 0;
+var highscore = [];
+var sortedList = [];
 
 var rollDice = function () {
   var generatedNumber = Math.random() * 6;
@@ -35,6 +37,8 @@ var numberOfRolls = function (input) {
   return myOutputValue;
 };
 
+var index = 0;
+
 var diceRolledHighest = function (input) {
   var myOutputValue = numberOfRolls(input);
   var string = "";
@@ -45,13 +49,22 @@ var diceRolledHighest = function (input) {
     });
     string += number[counter];
   }
+
+  if (totalNumberOfPlayers > index) {
+    highscore[index++] = string;
+  } else {
+    index = 0;
+    highscore[index++] = string;
+  }
+
   number.length = 0;
+
   myOutputValue = myOutputValue + `<br> Your number is ${string}.`;
+
   return myOutputValue;
 };
 
 var numberOfPlayers = function (numberOfDices) {
-  
   if (currentPlayer <= totalNumberOfPlayers) {
     rollResults = diceRolledHighest(numberOfDices);
     currentPlayer += 1;
@@ -64,8 +77,41 @@ var numberOfPlayers = function (numberOfDices) {
   return rollResults;
 };
 
+var highscoreTable = function () {
+  var outputScore = "";
+
+  for (var x = 1; x <= totalNumberOfPlayers; x++) {
+    /*
+    highscore.sort(function (a, b) {
+      return b - a;
+    });
+    outputScore += `${highscore[x - 1]} </br>`;
+    */
+    var object = {};
+    object[`Player`] = x;
+    object[`Score`] = highscore[x - 1];
+
+    sortedList.push(object);
+    sortedList.sort(function (a, b) {
+      return b.Score - a.Score;
+    });
+    var reducedList = sortedList.reduce(
+      (acc, curr) => `${acc}Player ${curr.Player} : ${curr.Score}<br>`,
+      ""
+    );
+  }
+
+  console.log(sortedList);
+  outputScore = reducedList;
+  sortedList.length = 0;
+
+  return outputScore;
+};
+
 var main = function (input) {
   var myOutputValue = "";
+  var scoreOutput = "";
+
   if (gameStatus == "Number Of Players") {
     var NUMBEROFPLAYERS = input;
     if (NUMBEROFPLAYERS < 2) {
@@ -79,11 +125,15 @@ var main = function (input) {
   } else if (gameStatus == "Number Of Dices") {
     numberOfDices = input;
     myOutputValue = `Number of dices are ${numberOfDices}.`;
-    gameStatus = "Start rolling"
+    gameStatus = "Start rolling";
     return myOutputValue;
   } else if (gameStatus == "Start rolling") {
     myOutputValue = numberOfPlayers(numberOfDices);
+    scoreOutput = highscoreTable();
   }
+
+  var scoreTable = document.querySelector("#scoreTable");
+  scoreTable.innerHTML = scoreOutput
 
   return myOutputValue;
 };
