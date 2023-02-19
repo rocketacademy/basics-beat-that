@@ -1,4 +1,11 @@
-var gameMode = "rolling dice";
+var gameMode_DiceRoll = "gameMode_DiceRoll";
+var gameMode_DiceOrder = "gameMode_DiceOrder";
+var gameMode = gameMode_DiceRoll;
+var player = 1;
+var dice1 = [];
+var dice2 = [];
+var player1Choice = [];
+var player2Choice = [];
 
 var diceRoll = function () {
   var randomNumber = Math.random() * 6;
@@ -6,28 +13,34 @@ var diceRoll = function () {
   return randomRoll;
 };
 
-var main = function (input) {
-  var dice1;
-  var dice2;
-  var player1Choice;
-  var player2Choice;
-  if (gameMode == "rolling dice") {
-    if (!input) {
-      dice1 = diceRoll();
-      dice2 = diceRoll();
-      gamemode = "choose order 1";
-      return `you rolled ${dice1} and ${dice2}`;
-    }
-  }
-
-  if (gameMode == "choose order 1") {
-    if (!input && input != 1 && input != 2) {
-      return `Please ONLY enter 1 or 2!😡`;
-    }
-    player1Choice = input;
-  }
+var diceRollTwice = function () {
+  var diceRolls = [diceRoll(), diceRoll()];
+  return diceRolls;
 };
 
-//global: game mode, player1/2 scores
+var joinNumber = function (digit1, digit2) {
+  return Number(String(digit1) + String(digit2));
+};
 
-//dice roll function
+var numberOrder = function (firstDigit) {
+  if (firstDigit == 1) {
+    return `joinNumber(dice[0], dice[1])`;
+  }
+  return `joinNumber(dice[1], dice[0])`;
+};
+
+var main = function (input) {
+  if (gameMode == gameMode_DiceRoll) {
+    gameMode = gameMode_DiceOrder;
+    var dice = diceRollTwice();
+    return `Player ${player}! <br><br> You rolled Dice 1: ${dice[0]} and Dice 2 ${dice[1]}. <br> Choose the order by entering 1 or 2 for thr first digit.`;
+  }
+
+  if (gameMode == gameMode_DiceOrder) {
+    var firstDigit = input;
+    if (input != 1 && input != 2) {
+      return `Please ONLY enter 1 or 2!😡`;
+    }
+    var number = numberOrder(firstDigit);
+  }
+};
