@@ -76,6 +76,16 @@ var main = function (input) {
   // game outcome state //
 
   if (gameState == "game outcome") {
+    // if player 1's dice roll equals to player 2's
+    if (playersDiceRollArray[0] == playersDiceRollArray[1]) {
+      storeScoresAndResetGame();
+
+      return (
+        `It's a tie!! 
+      <br><br>Click Roll to play again!` + generateLeaderboardMessage()
+      );
+    }
+
     // if player 1's dice roll is bigger than player 2
     if (playersDiceRollArray[0] > playersDiceRollArray[1]) {
       storeScoresAndResetGame();
