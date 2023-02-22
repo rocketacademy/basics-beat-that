@@ -2,14 +2,21 @@ let noOfPlayers, noOfDice;
 let diceRolls = [];
 let optimumNumbers = [];
 let mode = "playerCount";
+changeInstructions(mode);
 
 function main(input) {
   let outputValue = "";
   if (mode === "playerCount") {
+    if (!isValid(input)) {
+      return `Please enter a valid number!`;
+    }
     noOfPlayers = input;
     outputValue = `Chosen number of players: ${noOfPlayers}`;
     mode = "diceCount";
   } else if (mode === "diceCount") {
+    if (!isValid(input)) {
+      return `Please enter a valid number!`;
+    }
     noOfDice = input;
     outputValue = `Chosen number of dice: ${noOfDice}. Click "Submit" to roll!`;
     mode = "rollDice";
@@ -25,7 +32,25 @@ function main(input) {
     outputValue = winStatement(optimumNumbers) + restartStatement();
     mode = "playerCount";
   }
+  changeInstructions(mode);
   return outputValue;
+}
+
+function isValid(input) {
+  return Number(input) >= 0 && input !== "";
+}
+
+function changeInstructions(mode) {
+  let inputInstructions = document.getElementById("input-header");
+  let instruction = "";
+  if (mode === "playerCount") {
+    instruction = "Input Player Count:";
+  } else if (mode === "diceCount") {
+    instruction = "Input No. of Dice:";
+  } else {
+    instruction = "Click Submit!";
+  }
+  inputInstructions.innerText = instruction;
 }
 
 function generateDiceRolls(players, dice) {
