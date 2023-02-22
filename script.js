@@ -3,6 +3,7 @@ var gameMode = "rollDice"; //3 modes, get number, combine number, find winner
 var diceNumbers = []; //for each set of 2 dice rolls
 var chosenNumbersInARound = []; //for all players
 var allChosenNumbers = [];
+// var playerScore = 0;
 var player1Score = 0;
 var player2Score = 0;
 var playerNumber = 1;
@@ -37,10 +38,33 @@ function arrangeSequence(firstChosenDice) {
   return combinedNumber;
 }
 
+function findWinner() {
+  for (i = 0; i < 2; i += 1) {
+    if (chosenNumbersInARound[i] === largerNumber) {
+      output = `It's a draw!`;
+    } else if (chosenNumbersInARound[i] > largerNumber) {
+      largerNumber = chosenNumbersInARound[i];
+      var winner = i + 1;
+      output = `The two numbers are ${chosenNumbersInARound}. Player ${winner} wins this round. Congratulations!`;
+    }
+  }
+  return `${output} <br><br>Score Board:<br>Player 1 score: ${player1Score}<br>Player 2 score: ${player2Score}`;
+}
+
+//without resetting winning statistics
 function restartGame() {
   gameMode = "rollDice";
   chosenNumbersInARound = [];
   playerNumber = 1;
+}
+
+//not used yet
+function keepScore(playerNumber, numberOfPlayers) {
+  var startingIndex = playerNumber - 1;
+  for (i = startingIndex; i < allChosenNumbers.length; i += numberOfPlayers) {
+    playerScore = playerScore + allChosenNumbers[i];
+  }
+  return playerScore;
 }
 
 var main = function (input) {
@@ -55,7 +79,6 @@ var main = function (input) {
       var chosenFirstDice = input; //function here to play game
 
       var chosenNumber = arrangeSequence(chosenFirstDice);
-      console.log(chosenNumbersInARound);
       if (playerNumber === 1) {
         player1Score = Number(player1Score) + Number(chosenNumber);
         output = `The number chosen by player ${playerNumber} is ${chosenNumber}. Player ${
@@ -70,16 +93,7 @@ var main = function (input) {
       }
     }
   } else if (gameMode === "findWinner") {
-    for (i = 0; i < 2; i += 1) {
-      console.log("inside loop");
-      if (chosenNumbersInARound[i] === largerNumber) {
-        output = `it's a draw!`;
-      } else if (chosenNumbersInARound[i] > largerNumber) {
-        largerNumber = chosenNumbersInARound[i];
-        var winner = i + 1;
-        output = `The two numbers are ${chosenNumbersInARound}. Player ${winner} wins. Congratulations!<br>Player 1 score: ${player1Score}<br>Player 2 score: ${player2Score}`;
-      }
-    }
+    output = findWinner();
     restartGame();
   }
   return output;
