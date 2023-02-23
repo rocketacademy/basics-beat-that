@@ -204,7 +204,7 @@ var setTotalPlayers = function () {
 };
 
 var randomPlayer = function () {
-  var playerChosen = Math.floor(Math.random() * knockoutPlayers.length) + 1;
+  var playerChosen = Math.floor(Math.random() * knockoutPlayers.length);
   return playerChosen;
 };
 
@@ -213,12 +213,22 @@ var fightString = [];
 var playerString = function (input) {
   var myOutputValue = numberOfRolls(input);
   var string = "";
-  for (var counter = 0; counter < number.length; counter += 1) {
-    //Sort function for array in a descending order with b - a
-    number.sort(function (a, b) {
-      return b - a;
-    });
-    string += number[counter];
+  if (scoreMode == "Highest") {
+    for (var counter = 0; counter < number.length; counter += 1) {
+      //Sort function for array in a descending order with b - a
+      number.sort(function (a, b) {
+        return b - a;
+      });
+      string += number[counter];
+    }
+  } else {
+    for (var counter = 0; counter < number.length; counter += 1) {
+      //Sort function for array in a descending order with b - a
+      number.sort(function (a, b) {
+        return a - b;
+      });
+      string += number[counter];
+    }
   }
 
   fightString.push(string);
@@ -258,8 +268,6 @@ function removeItemByIndex(array, value) {
 
 var onePlayer = 0;
 var twoPlayer = 0;
-var oneString = "";
-var twoString = "";
 
 var knockOut = function () {
   var myOutputValue = "";
@@ -268,12 +276,14 @@ var knockOut = function () {
     if (knockoutPlayers.length == 0) {
       setTotalPlayers();
     }
-    
+
     console.log(knockoutPlayers);
-    onePlayer = randomPlayer();
-    twoPlayer = randomPlayer();
+    onePlayer = knockoutPlayers[randomPlayer()];
+    twoPlayer = knockoutPlayers[randomPlayer()];
+    console.log(onePlayer);
+    console.log(twoPlayer);
     while (onePlayer == twoPlayer) {
-      twoPlayer = randomPlayer();
+      twoPlayer = knockoutPlayers[randomPlayer()];
     }
     knockoutStatus = "One Rolling";
     myOutputValue = `Player ${onePlayer} and Player ${twoPlayer} are selected to play. Player ${onePlayer} starts first.`;
@@ -286,22 +296,42 @@ var knockOut = function () {
     myOutputValue = playerString(numberOfDices);
     var results = `<br><br>Player ${onePlayer}'s number is ${fightString[0]}.<br>Player ${twoPlayer}'s number is ${fightString[1]}.`;
     console.log(fightString);
-    var winner = indexOfMax(fightString) + 1;
-
+    var winner = 0;
+    var loser = 0;
+    if (scoreMode == "Highest") {
+      if (fightString[0] > fightString[1]) {
+        winner = onePlayer;
+        loser = twoPlayer;
+      } else {
+        winner = twoPlayer;
+        loser = onePlayer;
+      }
+    } else {
+      if (fightString[0] > fightString[1]) {
+        winner = twoPlayer;
+        loser = onePlayer;
+      } else {
+        winner = onePlayer;
+        loser = twoPlayer;
+      }
+    }
     myOutputValue =
       myOutputValue + results + `<br><br>The winner is Player ${winner}.`;
 
-    removeItemByIndex(knockoutPlayers, winner);
+    removeItemByIndex(knockoutPlayers, loser);
 
     if (knockoutPlayers.length == 1) {
       myOutputValue =
         myOutputValue +
         `<br><br> Last player standing is ${knockoutPlayers[0]}`;
+        gameStatus = "Number Of Players"
+        knockoutStatus = "Matchup"
     } else {
       knockoutStatus = "Matchup";
       onePlayer = 0;
       twoPlayer = 0;
       fightString.length = 0;
+      
     }
   }
 
@@ -369,17 +399,8 @@ var main = function (input) {
   ) {
     myOutputValue = numberOfPlayers(numberOfDices);
     scoreOutput = lowscoreTable();
-  } else if (
-    gameStatus == "Start Rolling" &&
-    scoreMode == "Highest" &&
-    gameMode == "Knockout"
-  ) {
+  } else if (gameStatus == "Start Rolling" && gameMode == "Knockout") {
     myOutputValue = knockOut();
-  } else if (
-    gameStatus == "Start Rolling" &&
-    scoreMode == "Lowest" &&
-    gameMode == "Knockout"
-  ) {
   }
 
   var scoreTable = document.querySelector("#scoreTable");
