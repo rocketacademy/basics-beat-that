@@ -75,6 +75,7 @@ var chooseWinnerReversed = function (dice1, dice2) {
 //-----------MAIN------------
 var main = function (input) {
   var number;
+  var winner;
 
   //ask for game
   if (gameMode == gameMode_ChooseGame) {
@@ -117,7 +118,6 @@ var main = function (input) {
     }
 
     number = numberOrder(firstDigit, dice1, dice2);
-    var promptFinalNumber = `Player ${player} final number is ${number}.`;
 
     if (player == 1) {
       //switch player
@@ -128,14 +128,12 @@ var main = function (input) {
       gameMode = gameMode_DiceRoll;
 
       //prompt player2 to roll dice
-      return `${promptFinalNumber} <br> Player 2, please press submit to roll the dice.`;
+      return `Player 1 final number is ${number} <br> Player 2, please press submit to roll the dice.`;
     }
   }
 
   dice2 = number;
   console.log(dice1, dice2);
-
-  var winner;
 
   //determine winner normal
   if (currentGame == normalGame) {
