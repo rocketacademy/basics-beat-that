@@ -36,7 +36,9 @@ var main = function (input) {
         return outputValue;
       case 0:
         var maxValue = Math.max(...playerNumbers);
-        var maxIndex = playerNumbers.indexOf(Math.max(...playerNumbers));
+        var maxIndex = playerNumbers.indexOf(
+          String(Math.max(...playerNumbers))
+        );
         console.log(maxIndex);
         var playingPlayer = [3, 2, 1];
         console.log(playingPlayer);
