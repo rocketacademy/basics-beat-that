@@ -1,8 +1,12 @@
 //-----------BEAT-THAT------------
 //globals
+var gameMode_ChooseGame = "gameMode_ChooseGame";
 var gameMode_DiceRoll = "gameMode_DiceRoll";
 var gameMode_DiceOrder = "gameMode_DiceOrder";
-var gameMode = gameMode_DiceRoll;
+var normalGame = "higher winner";
+var reversedGame = "lower winner";
+var gameMode = gameMode_ChooseGame;
+var currentGame = "";
 var player = 1;
 var dice = [];
 var dice1 = [];
@@ -48,9 +52,19 @@ var numberOrder = function (firstDigit, dice1, dice2) {
   return playerNum;
 };
 
-//determine who is winner
+//determine who is winner normal
 var chooseWinner = function (dice1, dice2) {
   if (dice1 > dice2) {
+    return 1;
+  } else if (dice1 == dice2) {
+    return 0;
+  }
+  return 2;
+};
+
+//determine who is winner reversed
+var chooseWinnerReversed = function (dice1, dice2) {
+  if (dice1 < dice2) {
     return 1;
   } else if (dice1 == dice2) {
     return 0;
@@ -61,6 +75,21 @@ var chooseWinner = function (dice1, dice2) {
 //-----------MAIN------------
 var main = function (input) {
   var number;
+
+  //ask for game
+  if (gameMode == gameMode_ChooseGame) {
+    if (input != `1` && input != `2`) {
+      return `Please ONLY enter 1 or 2!😡`;
+    }
+    if (input == `1`) {
+      currentGame = normalGame;
+    }
+    if (input == `2`) {
+      currentGame = reversedGame;
+    }
+    gameMode = gameMode_DiceRoll;
+    return `Player 1, please press submit to roll the dice`;
+  }
 
   //gameMode - roll dice
   if (gameMode == gameMode_DiceRoll) {
@@ -106,8 +135,17 @@ var main = function (input) {
   dice2 = number;
   console.log(dice1, dice2);
 
-  //determine winner
-  var winner = chooseWinner(dice1, dice2);
+  var winner;
+
+  //determine winner normal
+  if (currentGame == `1`) {
+    winner = chooseWinner(dice1, dice2);
+  }
+
+  //determine winner reversed
+  if (currentGame == `2`) {
+    winner = chooseWinnerReversed(dice1, dice2);
+  }
 
   //restart another round
   player = 1;
