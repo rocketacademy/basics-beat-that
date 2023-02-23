@@ -138,12 +138,12 @@ var main = function (input) {
   var winner;
 
   //determine winner normal
-  if (currentGame == `1`) {
+  if (currentGame == normalGame) {
     winner = chooseWinner(dice1, dice2);
   }
 
   //determine winner reversed
-  if (currentGame == `2`) {
+  if (currentGame == reversedGame) {
     winner = chooseWinnerReversed(dice1, dice2);
   }
 
