@@ -18,10 +18,19 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: slategray;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+        border-radius: 10px;
+      }
+
+      #container2 {
+        background-color: rosybrown;
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+        border-radius: 10px;
       }
 
       input {
@@ -40,7 +49,7 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: linen;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -49,7 +58,19 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Project: Beat That! 🚀</h1>
+
+    
+    <div id="container2">
+      <p>
+        <h2> Welcome to the game!</h2>
+      </p>
+      <p>
+        <br> Start the game by rolling the dice. Then select the order of your dice to create the highest combination!
+        <br> Good luck!
+      </p>
+    </div>
+
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
@@ -58,6 +79,7 @@
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
+
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
