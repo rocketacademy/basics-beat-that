@@ -40,11 +40,11 @@ var main = function (input) {
           String(Math.max(...playerNumbers))
         );
         console.log(maxIndex);
-        var playingPlayer = [3, 2, 1];
+        var playingPlayer = [1, 2, 3];
         console.log(playingPlayer);
         console.log(playerNumbers);
         var winningPlayer = playingPlayer[maxIndex];
-        outputValue = `The winning number is ${maxValue} by ${winningPlayer}`;
+        outputValue = `The winning number is ${maxValue} by player ${winningPlayer}`;
         return outputValue;
     }
   }
