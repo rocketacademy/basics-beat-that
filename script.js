@@ -59,6 +59,24 @@ var obtainPlayerScore = function (playerInput) {
   return `Player ${existingPlayer}, your chosen  value is: ${playerScore}`;
 };
 
+var comparingPlayersScores = function () {
+  compareMessage = `Player 1 score: ${allPlayersScore[0]} <br> Player 2 score: ${allPlayersScore[1]}`;
+  //player 1 wins
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 1 wins!";
+  }
+
+  // player 2 wins
+  if (allPlayersScore[1] > allPlayersScore[0]) {
+    compareMessage = compareMessage + "<br><br>Player 2 wins!";
+  }
+  // if tie happens
+  if (allPlayersScore[1] == allPlayersScore[0]) {
+    compareMessage = compareMessage + "<br><br>It's a tie!";
+  }
+  return compareMessage;
+};
+
 var main = function (input) {
   console.log("Checking game state on submit click: ", gameState);
   console.log("Checking existingPlayer on submit click:", existingPlayer);
@@ -85,7 +103,10 @@ var main = function (input) {
       gameState = gameStateCompareScores;
       return `${myOutputValue} <br><br> Please hit on submit to calculate your scores!`;
     }
-
+  }
+  if (gameState == gameStateCompareScores) {
+    console.log("Control flow: gameState == gameStateCompareScore");
+    myOutputValue = comparingPlayersScores();
     return myOutputValue;
   }
 };
