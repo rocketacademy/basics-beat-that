@@ -77,6 +77,12 @@ var comparingPlayersScores = function () {
   return compareMessage;
 };
 
+var restartGame = function () {
+  existingPlayer = 1;
+  gameState = gameStateDiceRoll;
+  allPlayersScore = [];
+};
+
 var main = function (input) {
   console.log("Checking game state on submit click: ", gameState);
   console.log("Checking existingPlayer on submit click:", existingPlayer);
@@ -107,6 +113,12 @@ var main = function (input) {
   if (gameState == gameStateCompareScores) {
     console.log("Control flow: gameState == gameStateCompareScore");
     myOutputValue = comparingPlayersScores();
+
+    restartGame();
+    console.log("Existing player after rest: ", existingPlayer);
+    console.log("Game state post reset: ", gameState);
+    console.log("allPlayersScore array: ", allPlayersScore);
+
     return myOutputValue;
   }
 };
