@@ -87,4 +87,4 @@ var determineWinner = function (player1Choice, player2Choice) {
     return `Player 1's number was ${player1Choice}, Player 2's number was ${player2Choice}. <br><br><b>It's a draw!</b> <br><br>Press "Submit" to play again!`;
   }
 };
-//made changes in script.js
+//made changes in script.js -- make changes
