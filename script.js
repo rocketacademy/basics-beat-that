@@ -13,10 +13,10 @@ var rollOneDice = function () {
 };
 
 var rollTwoDice = function () {
-  counter = 0;
-  while (counter < 2) {
+  i = 0;
+  while (i < 2) {
     currentPlayerDiceNumbers.push(rollOneDice());
-    counter += 1;
+    i += 1;
   }
   return `Player ${currentPlayer}'s turn: <br>
     You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
@@ -82,7 +82,6 @@ var resetGame = function () {
 };
 
 var main = function (input) {
-  console.log(`when button clicked ${mode}`);
   var myOutputValue;
   if (mode == ROLL) {
     myOutputValue = rollTwoDice();
@@ -97,6 +96,7 @@ var main = function (input) {
         currentPlayerDiceNumbers = [];
       } else if (currentPlayer == 2) {
         mode = RESULT;
+        return `${myOutputValue} <br> Let's see who the winner is!!!`;
       }
     }
   } else if (mode == RESULT) {
