@@ -78,11 +78,11 @@ var main = function (input) {
     var player2Choice = getPlayer2Choice(input);
     if (player1Choice > player2Choice) {
       return `Player 1, your number is ${player1Choice}. Player 2, your number is ${player2Choice}.
-    <br> Player 1 has won!
+    <br> Player 1 has won!!
     <br><br>Please click roll to restart game.`;
     } else
       return `Player 1, your number is ${player1Choice}. Player 2, your number is ${player2Choice}.
-  <br> Player 2 has won!
+  <br> Player 2 has won!!
   <br><br>Please click roll to restart game.`;
   }
 };
