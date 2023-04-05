@@ -1,57 +1,110 @@
 // --- SECOND ATTEMPT ---
 var ROLL = "ROLL";
 var CHOOSE = "CHOOSE";
+var RESULT = "RESULT";
 var mode = ROLL;
-var playerDiceNumbers = [];
+var currentPlayerDiceNumbers = [];
+var currentPlayer = 1;
+var player1FinalNum = 0;
+var player2FinalNum = 0;
 
 var rollOneDice = function () {
-  var diceNumberRolled = Math.floor(Math.random() * 6) + 1;
-  return diceNumberRolled;
+  return Math.floor(Math.random() * 6) + 1;
 };
 
 var rollTwoDice = function () {
   counter = 0;
   while (counter < 2) {
-    playerDiceNumbers.push(rollOneDice());
+    currentPlayerDiceNumbers.push(rollOneDice());
     counter += 1;
   }
-  return `Player 1's turn: <br>
-    You rolled ${playerDiceNumbers[0]} for Dice 1 and ${playerDiceNumbers[1]} for Dice 2. <br>
+  return `Player ${currentPlayer}'s turn: <br>
+    You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
     You are about to concatenate the two digits rolled to create the largest possible number. <br>
     Enter '1' if you would like the digit in Dice 1 to be in the tens place. <br>
     Enter '2' if you would like the digit in Dice 2 to be in the tens place. <br>`;
 };
 
 var chooseDiceMode = function (playerChoice) {
-  var player1FinalNum;
+  var currentPlayerFinalNum;
   if (playerChoice != 1 && playerChoice != 2) {
-    return `Please enter '1' if you want ${playerDiceNumbers[0]} or enter '2' if you want ${playerDiceNumbers[1]} to be in the tens place.`;
+    return `Please enter '1' if you want ${currentPlayerDiceNumbers[0]} or enter '2' if you want ${currentPlayerDiceNumbers[1]} to be in the tens place.`;
   } else if (playerChoice == 1) {
-    player1FinalNum =
-      String(playerDiceNumbers[0]) + String(playerDiceNumbers[1]);
-    return `Player 1, you choose Dice 1 first. <br>
-          Your number is ${player1FinalNum}. <br>
+    currentPlayerFinalNum =
+      String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
+    // transfer the final num to another variable for each player separately for result mode later
+    if (currentPlayer == 1) {
+      player1FinalNum = Number(currentPlayerFinalNum);
+    } else if (currentPlayer == 2) {
+      player2FinalNum = Number(currentPlayerFinalNum);
+    }
+    return `Player ${currentPlayer}, you choose Dice 1 first. <br>
+          Your number is ${currentPlayerFinalNum}. <br>
           Player 2's turn now! <br>
           Please hit the "Submit" button to continue.`;
-  } else {
-    player1FinalNum =
-      String(playerDiceNumbers[1]) + String(playerDiceNumbers[0]);
-    return `Player 1, you choose Dice 2 first. <br>
-          Your number is ${player1FinalNum}. <br>
+  } else if (playerChoice == 2) {
+    currentPlayerFinalNum =
+      String(currentPlayerDiceNumbers[1]) + String(currentPlayerDiceNumbers[0]);
+    // transfer the final num to another variable for each player separately for result mode later
+    if (currentPlayer == 1) {
+      player1FinalNum = Number(currentPlayerFinalNum);
+    } else if (currentPlayer == 2) {
+      player2FinalNum = Number(currentPlayerFinalNum);
+    }
+    return `Player ${currentPlayer}, you choose Dice 2 first. <br>
+          Your number is ${currentPlayerFinalNum}. <br>
           Player 2's turn now! <br>
           Please hit the "Submit" button to continue.`;
   }
 };
 
+var enterResultMode = function () {
+  if (player1FinalNum > player2FinalNum) {
+    myOutputValue = `Player 1 has won. <br>
+      Player 1's number: ${player1FinalNum} | Player 2's number: ${player2FinalNum} <br>
+      Press Submit to play again.`;
+  } else if (player1FinalNum < player2FinalNum) {
+    myOutputValue = `Player 2 has won. <br>
+          Player 1's number: ${player1FinalNum} | Player 2's number: ${player2FinalNum} <br>
+          Press Submit to play again.`;
+  } else {
+    myOutputValue = `DRAW!!! <br>
+          Player 1's number: ${player1FinalNum} | Player 2's number: ${player2FinalNum} <br>
+          Press Submit to play again.`;
+  }
+  return myOutputValue;
+};
+
+var resetGame = function () {
+  mode = ROLL;
+  currentPlayerDiceNumbers = [];
+  currentPlayer = 1;
+};
+
 var main = function (input) {
+  console.log(`when button clicked ${mode}`);
   var myOutputValue;
   if (mode == ROLL) {
     myOutputValue = rollTwoDice();
     mode = CHOOSE;
   } else if (mode == CHOOSE) {
-    console.log(input);
     myOutputValue = chooseDiceMode(input);
+    // switch to player 2's roll dice mode only after user has entered 1 or 2
+    if (input == 1 || input == 2) {
+      if (currentPlayer == 1) {
+        currentPlayer = 2;
+        mode = ROLL;
+        currentPlayerDiceNumbers = [];
+      } else if (currentPlayer == 2) {
+        mode = RESULT;
+      }
+    }
+  } else if (mode == RESULT) {
+    myOutputValue = enterResultMode();
+    // AFTER showing the result, game resets continuously without refreshing the browser
+    resetGame();
   }
+
   return myOutputValue;
 };
 
