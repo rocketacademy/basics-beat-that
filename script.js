@@ -13,16 +13,16 @@
 // 6) reset the game so that the players can play the game continuously
 
 // Global variables
-var gameStateDiceRoll = "Dice Roll";
-var gameStateChooseDiceOrder = "Choose Dice Order";
-var gameStateComparePlayerScores = "Compare Player Scores";
+var gameStateDiceRoll = "Player roll dice";
+var gameStateChooseDiceOrder = "Player choose Dice Order";
+var gameStateComparePlayerScores = "Compare player scores";
 var gameCounter = 0;
 var gameState = gameStateDiceRoll;
 var playerDiceRollValue = [];
 var currentPlayer = 1;
 var allPlayerScores = [];
 
-//Generate random dice numbers
+// Generate random dice number from 1 to 6
 var diceRandom = function () {
   var randomDiceNo = Math.random() * 6;
   var resultInteger = Math.floor(randomDiceNo) + 1;
@@ -30,6 +30,7 @@ var diceRandom = function () {
   return randomGenerated;
 };
 
+// Player roll the 2 dice and return dice number
 var playerRollDice = function () {
   var gameCounter = 0;
   while (gameCounter < 2) {
@@ -39,6 +40,8 @@ var playerRollDice = function () {
   return `Player ${currentPlayer} rolled: <br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]} <br> Please input your choice of dice order :<br> - 1 if you want Dice 1 to be the first digit of your final value or, <br> - 2 if you want Dice 2 to be the first digit of your final value`;
 };
 
+// Player choose dice order and return combined dice value.
+// Player score is recorded
 var recordPlayerScore = function (playerInput) {
   var playerScore;
   if (playerInput != 1 && playerInput != 2) {
@@ -47,37 +50,76 @@ var recordPlayerScore = function (playerInput) {
   if (playerInput == 1) {
     var playerScore =
       String(playerDiceRollValue[0]) + String(playerDiceRollValue[1]);
-    return `You choose Dice no. ${playerInput} as your first digit and your final value is ${playerScore}`;
+    return `You choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}`;
   }
   if (playerInput == 2) {
     var playerScore =
       String(playerDiceRollValue[1]) + String(playerDiceRollValue[0]);
-    return `You choose Dice no. ${playerInput} as your first digit and your final value is ${playerScore}`;
+    return `You choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}`;
   }
+
   allPlayerScores.push(playerScore);
   playerDiceRollValue = [];
   return `Player ${currentPlayer}, you choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}.`;
 };
 
+// Compare both player scores. Player with higher combined number wins
+var comparePlayerScores = function () {
+  var scoreRecord =
+    "Player 1 score: " +
+    allPlayerScores[0] +
+    "Player 2 score: " +
+    allPlayerScores[1];
+  if (allPlayerScores[0] > allPlayerScores[1]) {
+    return `${scoreRecord} <br> Player 1 wins!`;
+  }
+  if (allPlayerScores[0] < allPlayerScores[1]) {
+    return `${scoreRecord} <br> Player 2 wins!`;
+  }
+  if (allPlayerScores == allPlayerScores[1]) {
+    return `${scoreRecord} <br> It's a Draw!`;
+  }
+  return scoreRecord;
+};
+
+// Restart the game
+var restartBTGame = function () {
+  currentPlayer = 1;
+  gameState = gameStateDiceRoll;
+  allPlayerScores = [];
+};
+
 var main = function (input) {
-  var myOutputMessage = "";
+  console.log("Checking game state on submit click: ", gameState);
+  console.log("Checking current player on submit click: ", currentPlayer);
+  var outputMessage = "";
+
   if (gameState == gameStateDiceRoll) {
-    myOutputMessage = playerRollDice();
+    outputMessage = playerRollDice();
 
     gameState = gameStateChooseDiceOrder;
   }
 
   if (gameState == gameStateChooseDiceOrder) {
-    myOutputMessage = recordPlayerScore(input);
+    outputMessage = recordPlayerScore(input);
 
     if (currentPlayer == 1) {
+      console.log("Player 1 done, it's Player 2 turn now");
       currentPlayer == 2;
       gameState = gameStateDiceRoll;
-      return `${myOutputMessage} <br> Current Player: Player ${currentPlayer}`;
+      return `${outputMessage} <br> Current Player: Player 2`;
     }
     if (currentPlayer == 2) {
       gameState = gameStateComparePlayerScores;
-      return `${myOutputMessage} <br> Click on 'Submit' to calculate scores`;
+      return `${outputMessage} <br> Click on 'Submit' to calculate scores`;
     }
+  }
+
+  if (gameState == gameStateComparePlayerScores) {
+    outputMessage = comparePlayerScores();
+
+    restartBTGame();
+
+    return outputMessage;
   }
 };
