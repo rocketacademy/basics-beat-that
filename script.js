@@ -1,19 +1,19 @@
 // --- SECOND ATTEMPT ---
-var ROLL = "ROLL";
-var CHOOSE = "CHOOSE";
-var RESULT = "RESULT";
-var mode = ROLL;
-var currentPlayerDiceNumbers = [];
-var currentPlayer = 1;
-var player1FinalNum = 0;
-var player2FinalNum = 0;
+const ROLL = "ROLL";
+const CHOOSE = "CHOOSE";
+const RESULT = "RESULT";
+let mode = ROLL;
+let currentPlayerDiceNumbers = [];
+let currentPlayer = 1;
+let player1FinalNum = 0;
+let player2FinalNum = 0;
 
-var rollOneDice = function () {
+const rollOneDice = function () {
   return Math.floor(Math.random() * 6) + 1;
 };
 
-var rollTwoDice = function () {
-  i = 0;
+const rollTwoDice = function () {
+  let i = 0;
   while (i < 2) {
     currentPlayerDiceNumbers.push(rollOneDice());
     i += 1;
@@ -25,8 +25,8 @@ var rollTwoDice = function () {
     Enter '2' if you would like the digit in Dice 2 to be in the tens place. <br>`;
 };
 
-var chooseDiceMode = function (playerChoice) {
-  var currentPlayerFinalNum;
+const chooseDiceMode = function (playerChoice) {
+  let currentPlayerFinalNum;
   if (playerChoice != 1 && playerChoice != 2) {
     return `Please enter '1' if you want ${currentPlayerDiceNumbers[0]} or enter '2' if you want ${currentPlayerDiceNumbers[1]} to be in the tens place.`;
   } else if (playerChoice == 1) {
@@ -58,7 +58,7 @@ var chooseDiceMode = function (playerChoice) {
   }
 };
 
-var enterResultMode = function () {
+const enterResultMode = function () {
   if (player1FinalNum > player2FinalNum) {
     myOutputValue = `Player 1 has won. <br>
       Player 1's number: ${player1FinalNum} | Player 2's number: ${player2FinalNum} <br>
@@ -75,14 +75,14 @@ var enterResultMode = function () {
   return myOutputValue;
 };
 
-var resetGame = function () {
+const resetGame = function () {
   mode = ROLL;
   currentPlayerDiceNumbers = [];
   currentPlayer = 1;
 };
 
-var main = function (input) {
-  var myOutputValue;
+const main = function (input) {
+  let myOutputValue;
   if (mode == ROLL) {
     myOutputValue = rollTwoDice();
     mode = CHOOSE;
@@ -95,8 +95,8 @@ var main = function (input) {
         mode = ROLL;
         currentPlayerDiceNumbers = [];
       } else if (currentPlayer == 2) {
+        myOutputValue = `${myOutputValue} <br> Let's see who the winner is!!!`;
         mode = RESULT;
-        return `${myOutputValue} <br> Let's see who the winner is!!!`;
       }
     }
   } else if (mode == RESULT) {
