@@ -1,9 +1,10 @@
 // More Comfortable
+// Include base, score, leaderboard, lowest combined number mode, auto-generate combined number features
 
 // GLOBAL VARIABLES
 const ROLL = "ROLL";
-const CHOOSE = "CHOOSE";
-const RESULT = "RESULT";
+const AUTO_GENERATE_NUMBER = "AUTO_GENERATE_NUMBER";
+const LEADERBOARD = "LEADERBOARD";
 const HIGHEST_COMBINED_NUMBER_MODE = "1";
 const LOWEST_COMBINED_NUMBER_MODE = "2";
 let programState = ROLL;
@@ -23,47 +24,66 @@ const rollTwoDice = function () {
     currentPlayerDiceNumbers.push(rollOneDice());
     i += 1;
   }
-  return `Player ${currentPlayer}'s turn: <br>
+  if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
+    return `Player ${currentPlayer}'s turn: <br>
     You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
-    You are about to concatenate the two digits rolled to create the largest possible number. <br>
-    Enter '1' if you would like the digit in Dice 1 to be in the tens place. <br>
-    Enter '2' if you would like the digit in Dice 2 to be in the tens place. <br>`;
-};
-
-const chooseDiceState = function (playerChoice) {
-  let currentPlayerFinalNum;
-  if (playerChoice != 1 && playerChoice != 2) {
-    return `Please enter '1' if you want ${currentPlayerDiceNumbers[0]} or enter '2' if you want ${currentPlayerDiceNumbers[1]} to be in the tens place.`;
-  } else if (playerChoice == 1) {
-    currentPlayerFinalNum =
-      String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
-    // transfer the final num to another variable for each player separately for result mode later
-    if (currentPlayer == 1) {
-      player1FinalNumEachRound.push(Number(currentPlayerFinalNum));
-    } else if (currentPlayer == 2) {
-      player2FinalNumEachRound.push(Number(currentPlayerFinalNum));
-    }
-    return `Player ${currentPlayer}, you choose Dice 1 first. <br>
-          Your number is ${currentPlayerFinalNum}. <br>
-          Player 2's turn now! <br>
-          Please hit the "Submit" button to continue.`;
-  } else if (playerChoice == 2) {
-    currentPlayerFinalNum =
-      String(currentPlayerDiceNumbers[1]) + String(currentPlayerDiceNumbers[0]);
-    // transfer the final num to another variable for each player separately for result mode later
-    if (currentPlayer == 1) {
-      player1FinalNumEachRound.push(Number(currentPlayerFinalNum));
-    } else if (currentPlayer == 2) {
-      player2FinalNumEachRound.push(Number(currentPlayerFinalNum));
-    }
-    return `Player ${currentPlayer}, you choose Dice 2 first. <br>
-          Your number is ${currentPlayerFinalNum}. <br>
-          Player 2's turn now! <br>
-          Please hit the "Submit" button to continue.`;
+    Computer is about to concatenate the two digits rolled to create the <b> largest </b> possible number. <br>
+    Please hit the "Submit" button to continue.`;
+  } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
+    return `Player ${currentPlayer}'s turn: <br>
+    You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
+    Computer is about to concatenate the two digits rolled to create the <b> smallest </b> possible number. <br>
+    Please hit the "Submit" button to continue.`;
   }
 };
 
-const enterResultState = function () {
+const autoGenerateNumber = function () {
+  let currentPlayerFinalNum;
+  if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
+    if (currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) {
+      currentPlayerFinalNum =
+        String(currentPlayerDiceNumbers[0]) +
+        String(currentPlayerDiceNumbers[1]);
+    } else if (currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) {
+      currentPlayerFinalNum =
+        String(currentPlayerDiceNumbers[1]) +
+        String(currentPlayerDiceNumbers[0]);
+    }
+    // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL. OR ELSE, currentPlayerFinalNum WILL BE NAN.
+    else if ((currentPlayerDiceNumbers[1] = currentPlayerDiceNumbers[0])) {
+      currentPlayerFinalNum =
+        String(currentPlayerDiceNumbers[1]) +
+        String(currentPlayerDiceNumbers[0]);
+    }
+  } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
+    if (currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) {
+      currentPlayerFinalNum =
+        String(currentPlayerDiceNumbers[1]) +
+        String(currentPlayerDiceNumbers[0]);
+    } else if (currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) {
+      currentPlayerFinalNum =
+        String(currentPlayerDiceNumbers[0]) +
+        String(currentPlayerDiceNumbers[1]);
+    }
+    // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL. OR ELSE, currentPlayerFinalNum WILL BE NAN.
+    else if ((currentPlayerDiceNumbers[1] = currentPlayerDiceNumbers[0])) {
+      currentPlayerFinalNum =
+        String(currentPlayerDiceNumbers[1]) +
+        String(currentPlayerDiceNumbers[0]);
+    }
+  }
+  // transfer the final num to another variable for each player separately for LEADERBOARD later
+  if (currentPlayer == 1) {
+    player1FinalNumEachRound.push(Number(currentPlayerFinalNum));
+  } else if (currentPlayer == 2) {
+    player2FinalNumEachRound.push(Number(currentPlayerFinalNum));
+  }
+  return `Player ${currentPlayer}, your number is ${currentPlayerFinalNum}. <br>
+          Player 2's turn now! <br>
+          Please hit the "Submit" button to continue.`;
+};
+
+const showLeaderboard = function () {
   let player1Sum = 0;
   let i = 0;
   while (i < player1FinalNumEachRound.length) {
@@ -140,22 +160,19 @@ const main = function (input) {
   }
   if (programState == ROLL) {
     myOutputValue = rollTwoDice();
-    programState = CHOOSE;
-  } else if (programState == CHOOSE) {
-    myOutputValue = chooseDiceState(input);
-    // switch to player 2's roll dice mode only after user has entered 1 or 2
-    if (input == 1 || input == 2) {
-      if (currentPlayer == 1) {
-        currentPlayer = 2;
-        programState = ROLL;
-        currentPlayerDiceNumbers = [];
-      } else if (currentPlayer == 2) {
-        myOutputValue = `${myOutputValue} <br> Let's see who the winner is!!!`;
-        programState = RESULT;
-      }
+    programState = AUTO_GENERATE_NUMBER;
+  } else if (programState == AUTO_GENERATE_NUMBER) {
+    myOutputValue = autoGenerateNumber();
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      programState = ROLL;
+      currentPlayerDiceNumbers = [];
+    } else if (currentPlayer == 2) {
+      myOutputValue = `${myOutputValue} <br> Let's see who the winner is!!!`;
+      programState = LEADERBOARD;
     }
-  } else if (programState == RESULT) {
-    myOutputValue = enterResultState();
+  } else if (programState == LEADERBOARD) {
+    myOutputValue = showLeaderboard();
     // AFTER showing the result, game resets continuously without refreshing the browser
     resetGame();
   }
