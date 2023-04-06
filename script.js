@@ -1,57 +1,67 @@
-var gameMode = "Player One";
-var numberlist = [];
+var gameMode = "Number of players";
+var numPlayers = 0;
+var numDices = 0;
+var numberList = [];
 
-var main = function () {
+var main = function (input) {
   var myOutputValue = "";
 
-  if (gameMode == "Player One") {
-    var diceOne = diceRoll();
-    var diceTwo = diceRoll();
-    var diceCombin = diceCompute(diceOne, diceTwo);
-
-    numberlist.push(diceCombin);
-    console.log(numberlist);
-    gameMode = "Player Two";
-
-    myOutputValue =
-      "Welcome Player 1. <br><br> You rolled " +
-      diceOne +
-      " for Dice 1 and " +
-      diceTwo +
-      " for Dice 2.<br><br>" +
-      "Your max number combination is " +
-      diceCombin +
-      ".<br><br>" +
-      "It is now Player 2's turn.";
-
+  if (gameMode == "Number of players") {
+    numPlayers = input;
+    gameMode = "Number of dices";
+    myOutputValue = "Please enter the number of dice for the play.";
     return myOutputValue;
   }
 
-  if (gameMode == "Player Two") {
-    var diceOne = diceRoll();
-    var diceTwo = diceRoll();
-    var diceCombin = diceCompute(diceOne, diceTwo);
+  if (gameMode == "Number of dices") {
+    numDices = input;
+    gameMode = "Players roll dice";
+    myOutputValue = "Press submit for all players to roll dice.";
+    return myOutputValue;
+  }
 
-    numberlist.push(diceCombin);
-    console.log(numberlist);
+  if (gameMode == "Players roll dice") {
+    for (let i = 0; i < numPlayers; i += 1) {
+      var diceList = [];
+      var maxNum = "";
+      for (let j = 0; j < numDices; j += 1) {
+        diceNum = diceRoll();
+        diceList.push(diceNum);
+        console.log("dice" + j + ": " + diceNum);
+      }
 
-    var outcome = combinCompare();
+      diceList.sort((a, b) => b - a);
+      console.log(diceList);
 
+      for (let k = 0; k < diceList.length; k += 1) {
+        maxNum = maxNum + "" + diceList[k];
+      }
+      console.log(maxNum);
+      numberList.push(Number(maxNum));
+    }
+    console.log(numberList);
+    gameMode = "Which player win";
+    myOutputValue = "Press submit to see which player win.";
+    return myOutputValue;
+  }
+
+  if (gameMode == "Which player win") {
+    var playerNum = numberList.indexOf(Math.max(...numberList)) + 1;
+    console.log("player " + playerNum);
     myOutputValue =
-      "Welcome Player 2. <br><br> You rolled " +
-      diceOne +
-      " for Dice 1 and " +
-      diceTwo +
-      " for Dice 2.<br><br>" +
-      "Your max number combination is " +
-      diceCombin +
-      ".<br><br>" +
-      outcome +
-      "<br><br> Press submit to play again.";
+      "Player 1 to " +
+      numPlayers +
+      " max combination are " +
+      numberList +
+      " respectively.<br><br>" +
+      "Player " +
+      playerNum +
+      " wins! <br><br> Please enter the number of players for the next round.";
 
-    gameMode = "Player One";
-    numberlist = [];
-
+    gameMode = "Number of players";
+    numPlayers = 0;
+    numDices = 0;
+    numberList = [];
     return myOutputValue;
   }
 };
@@ -59,24 +69,4 @@ var main = function () {
 var diceRoll = function () {
   var randomNumber = Math.floor(Math.random() * 6) + 1;
   return randomNumber;
-};
-
-var diceCompute = function (diceOne, diceTwo) {
-  if (diceOne >= diceTwo) {
-    var numCombin = "" + diceOne + diceTwo;
-  } else {
-    numCombin = "" + diceTwo + diceOne;
-  }
-  return Number(numCombin);
-};
-
-var combinCompare = function () {
-  if (numberlist[0] > numberlist[1]) {
-    result = "Player 1 wins!";
-  } else if (numberlist[0] < numberlist[1]) {
-    result = "Player 2 wins!";
-  } else {
-    result = "Its a draw.";
-  }
-  return result;
 };
