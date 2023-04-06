@@ -4,7 +4,10 @@
 const ROLL = "ROLL";
 const CHOOSE = "CHOOSE";
 const RESULT = "RESULT";
-let mode = ROLL;
+const HIGHEST_COMBINED_NUMBER_MODE = "1";
+const LOWEST_COMBINED_NUMBER_MODE = "2";
+let programState = ROLL;
+let gameMode = "";
 let currentPlayerDiceNumbers = [];
 let currentPlayer = 1;
 let player1FinalNumEachRound = [];
@@ -27,7 +30,7 @@ const rollTwoDice = function () {
     Enter '2' if you would like the digit in Dice 2 to be in the tens place. <br>`;
 };
 
-const chooseDiceMode = function (playerChoice) {
+const chooseDiceState = function (playerChoice) {
   let currentPlayerFinalNum;
   if (playerChoice != 1 && playerChoice != 2) {
     return `Please enter '1' if you want ${currentPlayerDiceNumbers[0]} or enter '2' if you want ${currentPlayerDiceNumbers[1]} to be in the tens place.`;
@@ -60,7 +63,7 @@ const chooseDiceMode = function (playerChoice) {
   }
 };
 
-const enterResultMode = function () {
+const enterResultState = function () {
   let player1Sum = 0;
   let i = 0;
   while (i < player1FinalNumEachRound.length) {
@@ -73,49 +76,86 @@ const enterResultMode = function () {
     player2Sum += player2FinalNumEachRound[j];
     j += 1;
   }
-  if (player1Sum > player2Sum) {
-    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+  if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
+    if (player1Sum > player2Sum) {
+      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br>
           <b> ------ LEADERBOARD ------ </b> <br>
           Player 1 is temporarily winning!!! <br>
           Player 1: ${player1Sum} <br>
           Player 2: ${player2Sum}`;
-  } else {
-    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+    } else if (player1Sum < player2Sum) {
+      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br> 
           <b> ------ LEADERBOARD ------ </b> <br>
           Player 2 is temporarily winning!!! <br>
           Player 2: ${player2Sum} <br>
           Player 1: ${player1Sum}`;
+    } else {
+      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+          Press Submit to play again. <br> <br> 
+          <b> ------ LEADERBOARD ------ </b> <br>
+          No one is temporarily winning!!!`;
+    }
+  } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
+    if (player1Sum < player2Sum) {
+      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+          Press Submit to play again. <br> <br>
+          <b> ------ LEADERBOARD ------ </b> <br>
+          Player 1 is temporarily winning!!! <br>
+          Player 1: ${player1Sum} <br>
+          Player 2: ${player2Sum}`;
+    } else if (player1Sum > player2Sum) {
+      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+          Press Submit to play again. <br> <br> 
+          <b> ------ LEADERBOARD ------ </b> <br>
+          Player 2 is temporarily winning!!! <br>
+          Player 2: ${player2Sum} <br>
+          Player 1: ${player1Sum}`;
+    } else {
+      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+          Press Submit to play again. <br> <br> 
+          <b> ------ LEADERBOARD ------ </b> <br>
+          No one is temporarily winning!!!`;
+    }
   }
 };
 
 const resetGame = function () {
-  mode = ROLL;
+  programState = ROLL;
   currentPlayerDiceNumbers = [];
   currentPlayer = 1;
 };
 
 const main = function (input) {
   let myOutputValue;
-  if (mode == ROLL) {
+  if (!gameMode) {
+    if (input != "1" && input != "2") {
+      return `Please choose a game mode: enter '1' for highest combined number mode or '2' for lowest combined number mode.`;
+    } else if (input == "1") {
+      gameMode = HIGHEST_COMBINED_NUMBER_MODE;
+    } else if (input == "2") {
+      gameMode = LOWEST_COMBINED_NUMBER_MODE;
+    }
+  }
+  if (programState == ROLL) {
     myOutputValue = rollTwoDice();
-    mode = CHOOSE;
-  } else if (mode == CHOOSE) {
-    myOutputValue = chooseDiceMode(input);
+    programState = CHOOSE;
+  } else if (programState == CHOOSE) {
+    myOutputValue = chooseDiceState(input);
     // switch to player 2's roll dice mode only after user has entered 1 or 2
     if (input == 1 || input == 2) {
       if (currentPlayer == 1) {
         currentPlayer = 2;
-        mode = ROLL;
+        programState = ROLL;
         currentPlayerDiceNumbers = [];
       } else if (currentPlayer == 2) {
         myOutputValue = `${myOutputValue} <br> Let's see who the winner is!!!`;
-        mode = RESULT;
+        programState = RESULT;
       }
     }
-  } else if (mode == RESULT) {
-    myOutputValue = enterResultMode();
+  } else if (programState == RESULT) {
+    myOutputValue = enterResultState();
     // AFTER showing the result, game resets continuously without refreshing the browser
     resetGame();
   }
