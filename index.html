@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -29,7 +29,7 @@
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
-        width: 100%;
+        width: 20%;
       }
 
       button {
@@ -49,14 +49,20 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Fundamentals: Beat That! 🚀</h1>
     <div id="container">
+      <p>Hello! Welcome to Beat That!</p>
+      <p>
+        A max number combination will be auto-generated for you based on the
+        number of dice at play.
+      </p>
+      <p>The player with the highest number wins!</p>
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+      <div id="output-div"><p>Press enter the number of players.</p></div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
