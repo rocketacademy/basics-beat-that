@@ -13,13 +13,14 @@
 // 6) reset the game so that the players can play the game continuously
 
 // Global variables
-var gameStateDiceRoll = "Game State Dice Roll";
-var gameStateChooseDiceOrder = "Game State Choose Dice Order";
+var gameStateDiceRoll = "Dice Roll";
+var gameStateChooseDiceOrder = "Choose Dice Order";
+var gameStateComparePlayerScores = "Compare Player Scores";
 var gameCounter = 0;
 var gameState = gameStateDiceRoll;
-var player1DiceRollValue = [];
-var player2DiceRollValue = [];
+var playerDiceRollValue = [];
 var currentPlayer = 1;
+var allPlayerScores = [];
 
 //Generate random dice numbers
 var diceRandom = function () {
@@ -29,50 +30,54 @@ var diceRandom = function () {
   return randomGenerated;
 };
 
-var player1RollDice = function () {
+var playerRollDice = function () {
   var gameCounter = 0;
   while (gameCounter < 2) {
-    player1DiceRollValue.push(diceRandom());
+    playerDiceRollValue.push(diceRandom());
     gameCounter += 1;
   }
-  return `Player 1 rolled: <br> Dice 1 : ${player1DiceRollValue[0]} <br> Dice 2 : ${player1DiceRollValue[1]} <br> Please input your choice of dice order :<br> - 1 if you want Dice 1 to be the first digit of your final value or, <br> - 2 if you want Dice 2 to be the first digit of your final value`;
+  return `Player ${currentPlayer} rolled: <br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]} <br> Please input your choice of dice order :<br> - 1 if you want Dice 1 to be the first digit of your final value or, <br> - 2 if you want Dice 2 to be the first digit of your final value`;
 };
 
-//var player2RollDice = function () {
-//  var gameCounter = 0;
-//  while (gameCounter < 2) {
-//    player2DiceRollValue.push(diceRandom());
-//    gameCounter += 1;
-//   }
-//   return `Player 2 rolled: <br> Dice 1 : ${player2DiceRollValue[0]} <br> Dice 2 : ${player2DiceRollValue[1]} <br> Please input your choice of dice order :<br> - 1 if you want Dice 1 to be the first digit of your final value or, <br> - 2 if you want Dice 2 to be the first digit of your final value`;
-// };
-
-var player1Score = function (playerInput) {
+var recordPlayerScore = function (playerInput) {
+  var playerScore;
   if (playerInput != 1 && playerInput != 2) {
-    return `Invalid input! Please only enter 1 or 2 to choose which dice to use as first digit of your final value. <br> Here is your dice rolled: <br> Dice 1 : ${player1RollDice[0]} <br> Dice 2 : ${player1RollDice[1]}`;
+    return `Invalid input! Please only enter 1 or 2 to choose which dice to use as first digit of your final value. <br> Here is your dice rolled: <br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]}`;
   }
   if (playerInput == 1) {
-    var player1Score =
-      String(player1DiceRollValue[0]) + String(player1DiceRollValue[1]);
-    return `You choose Dice no. ${playerInput} as your first digit and your final value is ${player1Score}`;
+    var playerScore =
+      String(playerDiceRollValue[0]) + String(playerDiceRollValue[1]);
+    return `You choose Dice no. ${playerInput} as your first digit and your final value is ${playerScore}`;
   }
   if (playerInput == 2) {
-    var player1Score =
-      String(player1DiceRollValue[1]) + String(player1DiceRollValue[0]);
-    return `You choose Dice no. ${playerInput} as your first digit and your final value is ${player1Score}`;
+    var playerScore =
+      String(playerDiceRollValue[1]) + String(playerDiceRollValue[0]);
+    return `You choose Dice no. ${playerInput} as your first digit and your final value is ${playerScore}`;
   }
+  allPlayerScores.push(playerScore);
+  playerDiceRollValue = [];
+  return `Player ${currentPlayer}, you choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}.`;
 };
 
 var main = function (input) {
   var myOutputMessage = "";
   if (gameState == gameStateDiceRoll) {
-    myOutputMessage = player1RollDice();
+    myOutputMessage = playerRollDice();
 
     gameState = gameStateChooseDiceOrder;
   }
 
   if (gameState == gameStateChooseDiceOrder) {
-    myOutputMessage = player1Score(input);
-    return myOutputMessage;
+    myOutputMessage = recordPlayerScore(input);
+
+    if (currentPlayer == 1) {
+      currentPlayer == 2;
+      gameState = gameStateDiceRoll;
+      return `${myOutputMessage} <br> Current Player: Player ${currentPlayer}`;
+    }
+    if (currentPlayer == 2) {
+      gameState = gameStateComparePlayerScores;
+      return `${myOutputMessage} <br> Click on 'Submit' to calculate scores`;
+    }
   }
 };
