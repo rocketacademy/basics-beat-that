@@ -30,14 +30,15 @@ var diceRandom = function () {
   return randomGenerated;
 };
 
-// Player roll the 2 dice and return dice number
+// Player roll 2 dice and return dice number
 var playerRollDice = function () {
   var gameCounter = 0;
+  playerDiceRollValue = [];
   while (gameCounter < 2) {
     playerDiceRollValue.push(diceRandom());
     gameCounter += 1;
   }
-  return `Player ${currentPlayer} rolled: <br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]} <br> Please input your choice of dice order :<br> - 1 if you want Dice 1 to be the first digit of your final value or, <br> - 2 if you want Dice 2 to be the first digit of your final value`;
+  return `Player ${currentPlayer} rolled: <br><br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]} <br><br> Please input your choice of dice order :<br> - '1' for dice no. 1 <br> - '2' for dice no. 2`;
 };
 
 // Player choose dice order and return combined dice value.
@@ -45,81 +46,77 @@ var playerRollDice = function () {
 var recordPlayerScore = function (playerInput) {
   var playerScore;
   if (playerInput != 1 && playerInput != 2) {
-    return `Invalid input! Please only enter 1 or 2 to choose which dice to use as first digit of your final value. <br> Here is your dice rolled: <br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]}`;
+    return `Invalid input!<br> Please enter '1' or '2' to choose the order of dicenb <br><br> Here is your dice rolled: <br> Dice 1 : ${playerDiceRollValue[0]} <br> Dice 2 : ${playerDiceRollValue[1]}<br>`;
   }
   if (playerInput == 1) {
-    var playerScore =
-      String(playerDiceRollValue[0]) + String(playerDiceRollValue[1]);
-    return `You choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}`;
+    playerScore = Number(
+      String(playerDiceRollValue[0]) + String(playerDiceRollValue[1])
+    );
+    return `Player ${currentPlayer} choose dice no. ${playerInput} as first digit | Combined dice number: ${playerScore}`;
   }
   if (playerInput == 2) {
-    var playerScore =
-      String(playerDiceRollValue[1]) + String(playerDiceRollValue[0]);
-    return `You choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}`;
+    playerScore = Number(
+      String(playerDiceRollValue[1]) + String(playerDiceRollValue[0])
+    );
+    return `Player ${currentPlayer} choose dice no. ${playerInput} as first digit | Combined dice number: ${playerScore}`;
   }
-
   allPlayerScores.push(playerScore);
-  playerDiceRollValue = [];
-  return `Player ${currentPlayer}, you choose Dice no. ${playerInput} as your first digit and your combined dice number is ${playerScore}.`;
+  return `Player ${currentPlayer} choose dice no. ${playerInput} as first digit | Combined dice number: ${playerScore}.`;
 };
 
 // Compare both player scores. Player with higher combined number wins
 var comparePlayerScores = function () {
-  var scoreRecord =
+  var compareScore =
     "Player 1 score: " +
     allPlayerScores[0] +
-    "Player 2 score: " +
+    "<br>Player 2 score: " +
     allPlayerScores[1];
   if (allPlayerScores[0] > allPlayerScores[1]) {
-    return `${scoreRecord} <br> Player 1 wins!`;
+    compareScore += "<br><br>Player 1 wins!";
+  } else if (allPlayerScores[0] < allPlayerScores[1]) {
+    compareScore += "<br><br>Player 2 wins!";
+  } else {
+    compareScore += "<br><br>It's a tie!";
   }
-  if (allPlayerScores[0] < allPlayerScores[1]) {
-    return `${scoreRecord} <br> Player 2 wins!`;
-  }
-  if (allPlayerScores == allPlayerScores[1]) {
-    return `${scoreRecord} <br> It's a Draw!`;
-  }
-  return scoreRecord;
+  return compareScore;
 };
 
 // Restart the game
-var restartBTGame = function () {
+var restartGame = function () {
   currentPlayer = 1;
   gameState = gameStateDiceRoll;
   allPlayerScores = [];
+  playerDiceRollValue = [];
 };
 
 var main = function (input) {
-  console.log("Checking game state on submit click: ", gameState);
-  console.log("Checking current player on submit click: ", currentPlayer);
-  var outputMessage = "";
-
+  var outputMessage;
   if (gameState == gameStateDiceRoll) {
-    outputMessage = playerRollDice();
-
+    if (currentPlayer == 1) {
+      outputMessage = playerRollDice();
+    } else if (currentPlayer == 2) {
+      outputMessage = playerRollDice();
+    }
     gameState = gameStateChooseDiceOrder;
+    return outputMessage;
   }
 
   if (gameState == gameStateChooseDiceOrder) {
     outputMessage = recordPlayerScore(input);
-
     if (currentPlayer == 1) {
-      console.log("Player 1 done, it's Player 2 turn now");
-      currentPlayer == 2;
+      currentPlayer = 2;
       gameState = gameStateDiceRoll;
-      return `${outputMessage} <br> Current Player: Player 2`;
+      return `${outputMessage} <br><br> It's now Player 2 turn, click on 'Submit' to roll dice`;
     }
     if (currentPlayer == 2) {
       gameState = gameStateComparePlayerScores;
-      return `${outputMessage} <br> Click on 'Submit' to calculate scores`;
+      return `${outputMessage} <br><br> Click on 'Submit' to calculate scores`;
     }
   }
 
   if (gameState == gameStateComparePlayerScores) {
     outputMessage = comparePlayerScores();
-
-    restartBTGame();
-
+    restartGame();
     return outputMessage;
   }
 };
