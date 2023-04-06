@@ -1,6 +1,6 @@
 // Project 2 - Beat That
 // There are 2 players and players take turns.
-/* When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
+/* When a Player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
 The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
 After both players have rolled and chosen dice order, the player with the higher combined number wins.
 */
@@ -8,7 +8,7 @@ After both players have rolled and chosen dice order, the player with the higher
 // output: combined number and winner
 
 // declaring global variables
-let currentPlayer = "player 1";
+let currentPlayer = "Player 1";
 let gameStatus = "roll dice";
 let noOfPlayers = 2;
 let player1dice = 0;
@@ -25,31 +25,31 @@ let rollDice = function () {
 };
 
 let checkDiceOrder = function () {
-  if (currentPlayer == "player 1") {
+  if (currentPlayer == "Player 1") {
     for (let diceNo = 0; diceNo < diceRollTimes; diceNo += 1) {
       diceRollResult1[diceNo] = rollDice();
     }
     gameStatus = "choose combi";
-    return `Welcome Player 1. <br>You rolled ${diceRollResult1[0]} for Dice 1 and ${diceRollResult1[1]} for Dice 2. Enter the number of the dice you would like to put first.`;
+    return `Welcome Player 1.<br><br>You rolled ${diceRollResult1[0]} for Dice 1 and ${diceRollResult1[1]} for Dice 2. Enter the number of the dice you would like to put first.`;
   } else {
     for (let diceNo = 0; diceNo < diceRollTimes; diceNo += 1) {
       diceRollResult2[diceNo] = rollDice();
     }
     gameStatus = "choose combi";
-    return `Welcome Player 2. <br>You rolled ${diceRollResult2[0]} for Dice 1 and ${diceRollResult2[1]} for Dice 2. Enter the number of the dice you would like to put first.`;
+    return `Welcome Player 2. <br><br>You rolled ${diceRollResult2[0]} for Dice 1 and ${diceRollResult2[1]} for Dice 2. Enter the number of the dice you would like to put first.`;
   }
 };
 
 let sumDice = function (input) {
   let outputValue = "";
-  if (currentPlayer == "player 1") {
+  if (currentPlayer == "Player 1") {
     if (input == 1) {
       player1dice = "" + diceRollResult1[0] + diceRollResult1[1];
     } else {
       player1dice = "" + diceRollResult1[1] + diceRollResult1[0];
     }
     outputValue = `Player 1 you have chosen to put Dice ${input} first, so your total number is ${player1dice}. Now click submit to roll the dice for Player 2.`;
-    currentPlayer = "player 2";
+    currentPlayer = "Player 2";
     gameStatus = "roll dice";
   } else {
     if (input == 1) {
@@ -59,15 +59,15 @@ let sumDice = function (input) {
     }
 
     if (player1dice == player2dice) {
-      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total nunber is ${player2dice}. <br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> This round is a draw! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
+      outputValue = `<b>Player 2</b><br>You have chosen to put Dice ${input} first, so your total number is ${player2dice}. <br><br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> This round is a draw! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
     } else if (player1dice > player2dice) {
       winner = "Player 1";
-      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total nunber is ${player2dice}. <br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> The winner for this round is ${winner}! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
+      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total number is ${player2dice}. <br><br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> The winner for this round is ${winner}! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
     } else {
       winner = "Player 2";
-      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total nunber is ${player2dice}. <br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> The winner for this round is ${winner}! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
+      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total number is ${player2dice}. <br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> The winner for this round is ${winner}! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
     }
-    currentPlayer = "player 1";
+    currentPlayer = "Player 1";
     gameStatus = "roll dice";
   }
   return outputValue;
