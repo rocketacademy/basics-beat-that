@@ -21,6 +21,8 @@ var gameState = gameStateDiceRoll;
 var playerDiceRollValue = [];
 var currentPlayer = 1;
 var allPlayerScores = [];
+var player1score = 0;
+var player2score = 0;
 
 // Generate random dice number from 1 to 6
 var diceRandom = function () {
@@ -52,16 +54,16 @@ var recordPlayerScore = function (playerInput) {
     playerScore = Number(
       String(playerDiceRollValue[0]) + String(playerDiceRollValue[1])
     );
+    allPlayerScores.push(playerScore);
     return `Player ${currentPlayer} choose dice no. ${playerInput} as first digit | Combined dice number: ${playerScore}`;
   }
   if (playerInput == 2) {
     playerScore = Number(
       String(playerDiceRollValue[1]) + String(playerDiceRollValue[0])
     );
+    allPlayerScores.push(playerScore);
     return `Player ${currentPlayer} choose dice no. ${playerInput} as first digit | Combined dice number: ${playerScore}`;
   }
-  allPlayerScores.push(playerScore);
-  return `Player ${currentPlayer} choose dice no. ${playerInput} as first digit | Combined dice number: ${playerScore}.`;
 };
 
 // Compare both player scores. Player with higher combined number wins
