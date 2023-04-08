@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Beat That by Farhan</title>
     <style>
       * {
         box-sizing: border-box;
@@ -15,13 +15,25 @@
 
       #header {
         text-align: center;
+        color: white;
       }
-
+      #instructions {
+        text-align: center;
+        color: white;
+      }
       #container {
-        background-color: rgb(192, 246, 255);
+        background-color: pink;
         margin: 40px auto;
         max-width: 800px;
-        padding: 38px 31px;
+        padding: 10px 31px;
+      }
+
+      #details {
+        text-align: center;
+        background-color: pink;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 10px 31px;
       }
 
       input {
@@ -40,27 +52,63 @@
       }
 
       #output-div {
-        background-color: rgb(234, 227, 227);
+        background-color: lightgrey;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+      }
+
+      .background {
+        background-color: rgb(29, 27, 27);
+        height: 100%;
+        width: 100vw;
+        margin: none;
+        padding: 20px;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
-    <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+    <div class="background">
+      <h1 id="header">Beat That!🚀</h1>
+      <h2 id="instructions">by Farhan</h2>
+      <div id="details">
+        <p>
+          How to play:
+          <br />
+          1) Enter names for player 1 & 2.
+          <br />
+          2) Select mode
+        </p>
+
+        <div>
+          <p>
+            normal: The player with the highest number combination wins.
+            (highest number auto-generated)
+          </p>
+          <p>
+            score: The running sum of all numbers each player is generated and
+            scores are tracked accumulatively
+          </p>
+          <p>
+            lowest: The player with the lower number combination wins. (lowest
+            number auto-generated)
+          </p>
+        </div>
+      </div>
+      <div id="container">
+        <p>Input:</p>
+        <input id="input-field" />
+        <br />
+        <button id="submit-button">Submit</button>
+        <p>Output:</p>
+        <div id="output-div"></div>
+      </div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
+
     <script>
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
