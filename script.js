@@ -28,7 +28,7 @@ var main = function (input) {
     gameState = "keyInPlayer1Name";
     console.log("pageload " + gameState);
     console.log(myOutputValue + 2);
-    myOutputValue = "Key in player 1's name";
+    myOutputValue = "Hello stranger! Key in player 1's name";
   } else if (gameState == "keyInPlayer1Name") {
     player1Name = input;
     gameState = "keyInPlayer2Name";
@@ -47,8 +47,7 @@ var main = function (input) {
       gameState = "scoreMode";
     } else if (input == "lowest") {
       gameState = "lowestMode";
-    } else
-      return `Please select mode by keying in normal, score or lowest mode`;
+    } else return `Please select mode by keying in normal, score or lowest`;
     console.log("Game State: " + gameState);
   }
 
@@ -60,9 +59,7 @@ var main = function (input) {
     player1DiceRoll = getEachPlayerRolls();
     player2DiceRoll = getEachPlayerRolls();
     player1Num = Number(concatToBiggerNum(player1DiceRoll));
-    console.log(player1Num);
     player2Num = Number(concatToBiggerNum(player2DiceRoll));
-    console.log(player2Num);
     if (player1Num > player2Num) {
       player1TotalWins += 1;
       message = `${player1Name} wins!`;
@@ -70,7 +67,7 @@ var main = function (input) {
       player2TotalWins += 1;
       message = `${player2Name} wins!`;
     }
-    var myOutputValue =
+    myOutputValue =
       message +
       "<br>" +
       `${player1Name} rolled ${player1DiceRoll} while ${player2Name} rolled ${player2DiceRoll}` +
@@ -88,9 +85,7 @@ var main = function (input) {
     player1DiceRoll = getEachPlayerRolls();
     player2DiceRoll = getEachPlayerRolls();
     player1Num = Number(concatToSmallerNum(player1DiceRoll));
-    console.log(player1Num);
     player2Num = Number(concatToSmallerNum(player2DiceRoll));
-    console.log(player2Num);
     if (player1Num < player2Num) {
       player1TotalWins += 1;
       message = `${player1Name} wins!`;
@@ -98,7 +93,7 @@ var main = function (input) {
       player2TotalWins += 1;
       message = `${player2Name} wins!`;
     }
-    var myOutputValue =
+    myOutputValue =
       message +
       "<br>" +
       `${player1Name} rolled ${player1DiceRoll} while ${player2Name} rolled ${player2DiceRoll}` +
@@ -109,6 +104,33 @@ var main = function (input) {
   }
 
   // Score
+  if (gameState == "scoreMode") {
+    var player1Num = "";
+    var player2Num = "";
+    var message = "";
+    player1DiceRoll = getEachPlayerRolls();
+    player2DiceRoll = getEachPlayerRolls();
+    player1Num = Number(concatToBiggerNum(player1DiceRoll));
+    player1TotalScore = player1TotalScore += player1Num;
+    player2Num = Number(concatToBiggerNum(player2DiceRoll));
+    player2TotalScore = player2TotalScore += player2Num;
+    console.log(player2Num);
+    if (player1TotalScore > player2TotalScore) {
+      player1TotalWins += 1;
+      message = `${player1Name} is winning!`;
+    } else {
+      player2TotalWins += 1;
+      message = `${player2Name} is winning!`;
+    }
+    myOutputValue =
+      message +
+      "<br>" +
+      `${player1Name} rolled ${player1DiceRoll} while ${player2Name} rolled ${player2DiceRoll}` +
+      "<br>" +
+      `Highest number for each player - ${player1Name}: ${player1Num} ${player2Name}: ${player2Num}` +
+      "<br>" +
+      `Total accumulative score - ${player1Name}: ${player1TotalScore} ${player2Name}: ${player2TotalScore}`;
+  }
   return myOutputValue;
 };
 
