@@ -25,9 +25,9 @@ const rollTwoDice = function () {
   let rollStateMessage = `Player ${currentPlayer}'s turn: <br>
     You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
     Please hit the "Submit" button to continue. <br>`;
-  if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
+  if (gameMode === HIGHEST_COMBINED_NUMBER_MODE) {
     rollStateMessage += `Computer is about to automatically concatenate the two digits rolled to create the <b> largest </b> possible number.`;
-  } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
+  } else if (gameMode === LOWEST_COMBINED_NUMBER_MODE) {
     rollStateMessage += `Computer is about to automatically concatenate the two digits rolled to create the <b> smallest </b> possible number.`;
   }
   return rollStateMessage;
@@ -37,9 +37,9 @@ const autoGenerateNumber = function () {
   let currentPlayerFinalNum;
   // First digit is greater
   if (
-    (gameMode == HIGHEST_COMBINED_NUMBER_MODE &&
+    (gameMode === HIGHEST_COMBINED_NUMBER_MODE &&
       currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) ||
-    (gameMode == LOWEST_COMBINED_NUMBER_MODE &&
+    (gameMode === LOWEST_COMBINED_NUMBER_MODE &&
       currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0])
   ) {
     currentPlayerFinalNum =
@@ -48,9 +48,9 @@ const autoGenerateNumber = function () {
 
   // Second digit is greater
   else if (
-    (gameMode == HIGHEST_COMBINED_NUMBER_MODE &&
+    (gameMode === HIGHEST_COMBINED_NUMBER_MODE &&
       currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) ||
-    (gameMode == LOWEST_COMBINED_NUMBER_MODE &&
+    (gameMode === LOWEST_COMBINED_NUMBER_MODE &&
       currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1])
   ) {
     currentPlayerFinalNum =
@@ -58,15 +58,15 @@ const autoGenerateNumber = function () {
   }
 
   // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL IN ANY MODE. OR ELSE, currentPlayerFinalNum MAY BE NAN.
-  else if (currentPlayerDiceNumbers[0] == currentPlayerDiceNumbers[1]) {
+  else if (currentPlayerDiceNumbers[0] === currentPlayerDiceNumbers[1]) {
     currentPlayerFinalNum =
       String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
   }
 
   // Transfer the final num to another variable for each player separately for LEADERBOARD later
-  if (currentPlayer == 1) {
+  if (currentPlayer === 1) {
     player1FinalNumEachRound.push(Number(currentPlayerFinalNum));
-  } else if (currentPlayer == 2) {
+  } else if (currentPlayer === 2) {
     player2FinalNumEachRound.push(Number(currentPlayerFinalNum));
   }
   return `Player ${currentPlayer}, your number is ${currentPlayerFinalNum}. <br>
@@ -89,8 +89,8 @@ const showLeaderboard = function () {
 
   // Player 1 is leading
   if (
-    (gameMode == HIGHEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum) ||
-    (gameMode == LOWEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum)
+    (gameMode === HIGHEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum) ||
+    (gameMode === LOWEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum)
   ) {
     return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br>
@@ -102,8 +102,8 @@ const showLeaderboard = function () {
 
   // Player 2 is leading
   else if (
-    (gameMode == HIGHEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum) ||
-    (gameMode == LOWEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum)
+    (gameMode === HIGHEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum) ||
+    (gameMode === LOWEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum)
   ) {
     return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br> 
@@ -114,7 +114,7 @@ const showLeaderboard = function () {
   }
 
   // Draw condition for any mode
-  else if (player1Sum == player2Sum) {
+  else if (player1Sum === player2Sum) {
     return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br> 
           <b> ------ LEADERBOARD ------ </b> <br>
@@ -133,26 +133,26 @@ const main = function (input) {
   if (!gameMode) {
     if (input != "1" && input != "2") {
       return `Please choose a game mode: enter '1' for highest combined number mode or '2' for lowest combined number mode.`;
-    } else if (input == "1") {
+    } else if (input === "1") {
       gameMode = HIGHEST_COMBINED_NUMBER_MODE;
-    } else if (input == "2") {
+    } else if (input === "2") {
       gameMode = LOWEST_COMBINED_NUMBER_MODE;
     }
   }
-  if (programState == ROLL) {
+  if (programState === ROLL) {
     myOutputValue = rollTwoDice();
     programState = AUTO_GENERATE_NUMBER;
-  } else if (programState == AUTO_GENERATE_NUMBER) {
+  } else if (programState === AUTO_GENERATE_NUMBER) {
     myOutputValue = autoGenerateNumber();
-    if (currentPlayer == 1) {
+    if (currentPlayer === 1) {
       currentPlayer = 2;
       programState = ROLL;
       currentPlayerDiceNumbers = [];
-    } else if (currentPlayer == 2) {
+    } else if (currentPlayer === 2) {
       myOutputValue = `${myOutputValue} <br> Let's see who the winner is!!!`;
       programState = LEADERBOARD;
     }
-  } else if (programState == LEADERBOARD) {
+  } else if (programState === LEADERBOARD) {
     myOutputValue = showLeaderboard();
     // AFTER showing the result, game resets continuously without refreshing the browser
     resetGame();
