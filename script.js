@@ -19,60 +19,51 @@ const rollOneDice = function () {
 };
 
 const rollTwoDice = function () {
-  let i = 0;
-  while (i < 2) {
+  for (i = 0; i < 2; i += 1) {
     currentPlayerDiceNumbers.push(rollOneDice());
-    i += 1;
   }
+  let rollStateMessage = `Player ${currentPlayer}'s turn: <br>
+    You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
+    Please hit the "Submit" button to continue. <br>`;
   if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
-    return `Player ${currentPlayer}'s turn: <br>
-    You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
-    Computer is about to concatenate the two digits rolled to create the <b> largest </b> possible number. <br>
-    Please hit the "Submit" button to continue.`;
+    rollStateMessage += `Computer is about to automatically concatenate the two digits rolled to create the <b> largest </b> possible number.`;
   } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
-    return `Player ${currentPlayer}'s turn: <br>
-    You rolled ${currentPlayerDiceNumbers[0]} for Dice 1 and ${currentPlayerDiceNumbers[1]} for Dice 2. <br>
-    Computer is about to concatenate the two digits rolled to create the <b> smallest </b> possible number. <br>
-    Please hit the "Submit" button to continue.`;
+    rollStateMessage += `Computer is about to automatically concatenate the two digits rolled to create the <b> smallest </b> possible number.`;
   }
+  return rollStateMessage;
 };
 
 const autoGenerateNumber = function () {
   let currentPlayerFinalNum;
-  if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
-    if (currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) {
-      currentPlayerFinalNum =
-        String(currentPlayerDiceNumbers[0]) +
-        String(currentPlayerDiceNumbers[1]);
-    } else if (currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) {
-      currentPlayerFinalNum =
-        String(currentPlayerDiceNumbers[1]) +
-        String(currentPlayerDiceNumbers[0]);
-    }
-    // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL. OR ELSE, currentPlayerFinalNum WILL BE NAN.
-    else if ((currentPlayerDiceNumbers[1] = currentPlayerDiceNumbers[0])) {
-      currentPlayerFinalNum =
-        String(currentPlayerDiceNumbers[1]) +
-        String(currentPlayerDiceNumbers[0]);
-    }
-  } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
-    if (currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) {
-      currentPlayerFinalNum =
-        String(currentPlayerDiceNumbers[1]) +
-        String(currentPlayerDiceNumbers[0]);
-    } else if (currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) {
-      currentPlayerFinalNum =
-        String(currentPlayerDiceNumbers[0]) +
-        String(currentPlayerDiceNumbers[1]);
-    }
-    // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL. OR ELSE, currentPlayerFinalNum WILL BE NAN.
-    else if ((currentPlayerDiceNumbers[1] = currentPlayerDiceNumbers[0])) {
-      currentPlayerFinalNum =
-        String(currentPlayerDiceNumbers[1]) +
-        String(currentPlayerDiceNumbers[0]);
-    }
+  // First digit is greater
+  if (
+    (gameMode == HIGHEST_COMBINED_NUMBER_MODE &&
+      currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) ||
+    (gameMode == LOWEST_COMBINED_NUMBER_MODE &&
+      currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0])
+  ) {
+    currentPlayerFinalNum =
+      String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
   }
-  // transfer the final num to another variable for each player separately for LEADERBOARD later
+
+  // Second digit is greater
+  else if (
+    (gameMode == HIGHEST_COMBINED_NUMBER_MODE &&
+      currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) ||
+    (gameMode == LOWEST_COMBINED_NUMBER_MODE &&
+      currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1])
+  ) {
+    currentPlayerFinalNum =
+      String(currentPlayerDiceNumbers[1]) + String(currentPlayerDiceNumbers[0]);
+  }
+
+  // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL IN ANY MODE. OR ELSE, currentPlayerFinalNum MAY BE NAN.
+  else if (currentPlayerDiceNumbers[0] == currentPlayerDiceNumbers[1]) {
+    currentPlayerFinalNum =
+      String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
+  }
+
+  // Transfer the final num to another variable for each player separately for LEADERBOARD later
   if (currentPlayer == 1) {
     player1FinalNumEachRound.push(Number(currentPlayerFinalNum));
   } else if (currentPlayer == 2) {
@@ -84,60 +75,50 @@ const autoGenerateNumber = function () {
 };
 
 const showLeaderboard = function () {
+  // Calculate the sum of all player 1 scores
   let player1Sum = 0;
-  let i = 0;
-  while (i < player1FinalNumEachRound.length) {
+  for (i = 0; i < player1FinalNumEachRound.length; i += 1) {
     player1Sum += player1FinalNumEachRound[i];
-    i += 1;
   }
+
+  // Calculate the sum of all player 2 scores
   let player2Sum = 0;
-  let j = 0;
-  while (j < player2FinalNumEachRound.length) {
-    player2Sum += player2FinalNumEachRound[j];
-    j += 1;
+  for (i = 0; i < player2FinalNumEachRound.length; i += 1) {
+    player2Sum += player2FinalNumEachRound[i];
   }
-  if (gameMode == HIGHEST_COMBINED_NUMBER_MODE) {
-    if (player1Sum > player2Sum) {
-      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+
+  // Player 1 is leading
+  if (
+    (gameMode == HIGHEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum) ||
+    (gameMode == LOWEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum)
+  ) {
+    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br>
           <b> ------ LEADERBOARD ------ </b> <br>
-          Player 1 is temporarily winning!!! <br>
+          Player 1 is currently winning!!! <br>
           Player 1: ${player1Sum} <br>
           Player 2: ${player2Sum}`;
-    } else if (player1Sum < player2Sum) {
-      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+  }
+
+  // Player 2 is leading
+  else if (
+    (gameMode == HIGHEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum) ||
+    (gameMode == LOWEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum)
+  ) {
+    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br> 
           <b> ------ LEADERBOARD ------ </b> <br>
-          Player 2 is temporarily winning!!! <br>
+          Player 2 is currently winning!!! <br>
           Player 2: ${player2Sum} <br>
           Player 1: ${player1Sum}`;
-    } else {
-      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+  }
+
+  // Draw condition for any mode
+  else if (player1Sum == player2Sum) {
+    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
           Press Submit to play again. <br> <br> 
           <b> ------ LEADERBOARD ------ </b> <br>
-          No one is temporarily winning!!!`;
-    }
-  } else if (gameMode == LOWEST_COMBINED_NUMBER_MODE) {
-    if (player1Sum < player2Sum) {
-      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
-          Press Submit to play again. <br> <br>
-          <b> ------ LEADERBOARD ------ </b> <br>
-          Player 1 is temporarily winning!!! <br>
-          Player 1: ${player1Sum} <br>
-          Player 2: ${player2Sum}`;
-    } else if (player1Sum > player2Sum) {
-      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
-          Press Submit to play again. <br> <br> 
-          <b> ------ LEADERBOARD ------ </b> <br>
-          Player 2 is temporarily winning!!! <br>
-          Player 2: ${player2Sum} <br>
-          Player 1: ${player1Sum}`;
-    } else {
-      return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
-          Press Submit to play again. <br> <br> 
-          <b> ------ LEADERBOARD ------ </b> <br>
-          No one is temporarily winning!!!`;
-    }
+          DRAW! No one is currently winning!!!`;
   }
 };
 
