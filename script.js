@@ -15,7 +15,7 @@ var gameMode = "PLAYER 1 ROLLS DICE";
 var diceRolled = [];
 var myOutputValue = "";
 
-// Players' Guesses
+// Player's Chosen Numbers
 var playerOneNum = 0;
 var playerTwoNum = 0;
 var allPlayerScores = [];
