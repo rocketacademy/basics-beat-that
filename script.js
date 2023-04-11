@@ -42,10 +42,7 @@ var rollTwoDice = function (input) {
     diceRolled.push(input);
     counter += 1;
   }
-  //if (counter == 1) {
-  //diceRolled = [];
-  //}
-}; //dk how to reset counter
+};
 
 // Helper Function #3: Player 1 Score
 var playerOneScore = function (playerInput) {
@@ -97,16 +94,23 @@ var playerTwoScore = function (playerInput) {
 var playerScores = function (playerScore) {
   if (allPlayerScores[0] > allPlayerScores[1]) {
     numPlayerOneWins += 1;
-    myOutputValue = `Player 1: ${allPlayerScores[0]}. <br>Player 2: ${allPlayerScores[1]}. <br><br> THE WINNER IS..... PLAYER 1 🎉 <br><br> Scoreboard: <br>Player 1: ${numPlayerOneWins} <br>Player 2: ${numPlayerTwoWins} <br> Draw: ${numDraws}`;
+    myOutputValue = `Player 1: ${allPlayerScores[0]} 👑 <br>Player 2: ${allPlayerScores[1]} <br><br> THE WINNER IS..... PLAYER 1 🎉 <br><br>📌 Scoreboard<br>Player 1: ${numPlayerOneWins} <br>Player 2: ${numPlayerTwoWins} <br> Draw: ${numDraws}`;
   }
   if (allPlayerScores[0] < allPlayerScores[1]) {
     numPlayerTwoWins += 1;
-    myOutputValue = `Player 1: ${allPlayerScores[0]}. <br>Player 2: ${allPlayerScores[1]}. <br><br> THE WINNER IS..... PLAYER 2 🎉 <br><br> Scoreboard: <br>Player 1: ${numPlayerOneWins} <br>Player 2: ${numPlayerTwoWins} <br> Draw: ${numDraws}`;
-  } else if ((allPlayerScores[0] = allPlayerScores[1])) {
+    myOutputValue = `Player 1: ${allPlayerScores[0]} <br>Player 2: ${allPlayerScores[1]} 👑 <br><br> THE WINNER IS..... PLAYER 2 🎉 <br><br>📌 Scoreboard<br>Player 1: ${numPlayerOneWins} <br>Player 2: ${numPlayerTwoWins} <br> Draw: ${numDraws}`;
+  } else if (allPlayerScores[0] == allPlayerScores[1]) {
     numDraws += 1;
-    myOutputValue = `Player 1: ${allPlayerScores[0]}. <br>Player 2: ${allPlayerScores[1]}. <br><br> IT'S A TIE! PLAY AGAIN! <br><br> Scoreboard: <br>Player 1: ${numPlayerOneWins} <br>Player 2: ${numPlayerTwoWins} <br> Draw: ${numDraws}`;
+    myOutputValue = `Player 1: ${allPlayerScores[0]}. <br>Player 2: ${allPlayerScores[1]}. <br><br> IT'S A TIE 🤝 <br>Play Again!<br><br>📌 Scoreboard<br>Player 1: ${numPlayerOneWins} <br>Player 2: ${numPlayerTwoWins} <br> Draw: ${numDraws}`;
   }
   return myOutputValue;
+};
+
+// Helper Function #6: Reset Game
+var resetGame = function () {
+  gameMode = "PLAYER 1 ROLLS DICE";
+  allPlayerScores = [];
+  diceRolled = [];
 };
 
 var main = function (input) {
@@ -127,7 +131,8 @@ var main = function (input) {
     return playerTwoScore(input);
   }
   if (gameMode == "ANNOUNCE WINNER") {
-    return playerScores(input);
+    playerScores(input);
+    resetGame();
   }
   return myOutputValue;
 };
