@@ -33,11 +33,9 @@ let randomDiceNumGenerator = function () {
 let concatenatingDigit = function (input) {
   if (input == number1) {
     let playerDigit = number1.toString() + number2.toString();
-    console.log(playerDigit);
     return `${playerDigit}`;
   } else {
     let playerDigit = number2.toString() + number1.toString();
-    console.log(playerDigit);
     return `${playerDigit}`;
   }
 };
@@ -84,18 +82,19 @@ var main = function (input) {
     myOutputValue = `== Beat That == <br><br> 
     Each player will take turns to generate a two-digit number. The player with the higher number wins <br><br> 
     Step 1: Click on the submit button to start the game! <br>
-    Step 2: Click on the Submit button to generate two random dice number. <br>
-    Step 3: Input the number you want as the first digit. The second number will be defaulted as the second digit`;
+    Step 2: Click on the Submit button again to generate two random dice number. <br>
+    Step 3: Input the number you want as the first digit. The second number will be defaulted as the second digit.`;
     gameMode = "playerOne";
   } else if (gameMode == "playerOne") {
+    // player one's turn. Two dice numbers are generated. Player is asked to choose one of the number ask the first digit
     number1 = randomDiceNumGenerator();
     number2 = randomDiceNumGenerator();
-    console.log(number1, number2);
     myOutputValue = `Round ${round} <br>
     Welcome Player 1! <br><br>
     You rolled ${number1} and ${number2}. Now, input one of the number as the first digit. The number not chosen will be the second digit.`;
     gameMode = "playerOneConcatenating";
   } else if (gameMode == "playerOneConcatenating") {
+    // player one's choice is concatenated with the non-chosen number to form a 2-digit number. Outputs the 2-digit number.
     if (input != number1 && input != number2) {
       myOutputValue = `Please input either ${number1} or ${number2}`;
     } else {
@@ -105,14 +104,15 @@ var main = function (input) {
       It is now Player 2's turn.`;
     }
   } else if (gameMode == "playerTwo") {
+    // player two's turn. Two dice numbers are generated. Player is asked to choose one of the number ask the first digit
     number1 = randomDiceNumGenerator();
     number2 = randomDiceNumGenerator();
-    console.log(number1, number2);
     myOutputValue = `Round ${round} <br>
     Welcome Player 2! <br><br>
     You rolled ${number1} and ${number2}. Now, input one of the number as the first digit. The number not chosen will be the second digit.`;
     gameMode = "playerTwoConcatenating";
   } else if (gameMode == "playerTwoConcatenating") {
+    // player two's choice is concatenated with the non-chosen number to form a 2-digit number. Outputs the 2-digit number. gameMode is then changed to numberComparsion.
     if (input != number1 && input != number2) {
       myOutputValue = `Please input either ${number1} or ${number2}`;
     } else {
@@ -122,17 +122,24 @@ var main = function (input) {
       Click Submit to compare the results`;
     }
   } else {
+    // Outputs winner at the end of each round. When round reached 3, the game ends, and outputs the total score and overall winner. The game returns to the original state and game restarts.
     myOutputValue = numberComparer(playerOneDigit, playerTwoDigit);
     boardOne.push(playerOneDigit);
     boardTwo.push(playerTwoDigit);
     gameMode = "playerOne";
     sumOne = arraySum(boardOne);
     sumTwo = arraySum(boardTwo);
+    overallWinner = overallScoreComparer(sumOne, sumTwo);
     myOutputValue += `<br><br> Total score of Player1: ${sumOne} <br> Total score of Player2: ${sumTwo}`;
     myOutputValue += `<br><br> End of round ${round}`;
-    overallWinner = overallScoreComparer(sumOne, sumTwo);
     if (round == 3) {
-      myOutputValue += `<br><br> ${overallWinner} <br><br> The game has ended`;
+      myOutputValue += `<br><br> ${overallWinner} <br><br> The game has ended. Click Submit to restart the game`;
+      gameMode = "preGame";
+      boardOne = [];
+      boardTwo = [];
+      sumOne = 0;
+      sumTwo = 0;
+      round = 1;
       return myOutputValue;
     }
     round += 1;
