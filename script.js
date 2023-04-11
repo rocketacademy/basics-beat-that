@@ -1,14 +1,20 @@
 /*
-Basic
-There are 2 players and players take turns
-.
-When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
+How many hours did you spend on this assignment?:
+4 hours +
 
-The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
+What part of the assignment did you spend the most time on?:
+Making sure each function worked well
 
-After both players have rolled and chosen dice order, the player with the higher combined number wins.
+How comfortable did you feel with this assignment? (1-5):
+4
+
+Is there anything in this code that you feel pleased about?:
+Breaking up the game into functions then reading the winner or loswer based on function outputs of each player
+
+What's one aspect of your code you would like specific, elaborate feedback on?:
+Is it ok? Not really sure what is considered good code, or if anything that could be improved on.
+
 */
-
 var gameState = "pageLoad";
 var player1DiceRoll = [];
 var player2DiceRoll = [];
@@ -27,7 +33,6 @@ var main = function (input) {
   } else if (gameState == "firstClick") {
     gameState = "keyInPlayer1Name";
     console.log("pageload " + gameState);
-    console.log(myOutputValue + 2);
     myOutputValue = "Hello stranger! Key in player 1's name";
   } else if (gameState == "keyInPlayer1Name") {
     player1Name = input;
