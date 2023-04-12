@@ -18,6 +18,7 @@ let diceRollResult = [];
 let player1total = 0;
 let player2total = 0;
 
+// rolling one dice
 let rollOneDice = function () {
   let randomDecimal = Math.random() * 6;
   let randomInteger = Math.floor(randomDecimal) + 1;
@@ -25,6 +26,7 @@ let rollOneDice = function () {
   return randomInteger;
 };
 
+// to find winner of each round
 let findWinner = function () {
   let winner = "";
   if (player1dice[gameCtr] == player2dice[gameCtr]) {
@@ -37,6 +39,7 @@ let findWinner = function () {
   return winner;
 };
 
+// to find winner for Leaderboard
 let findGrandWinner = function () {
   let grandWinner = "";
   if (player1total == player2total) {
@@ -49,6 +52,7 @@ let findGrandWinner = function () {
   return grandWinner;
 };
 
+// roll no of Dice specified by user
 let rollTotalDice = function () {
   let outputValue = "";
   let winner = "";
@@ -86,28 +90,29 @@ let rollTotalDice = function () {
     outputValue =
       outputValue +
       `Your optimal combination is ${player2dice[gameCtr]}. 💪 <br><br>The winner for this round is ${winner}! 🎉
-      <br>Click "Submit" to start a new round! <br><br> ` +
-      displayScoreBoard();
+      <br>Click "Submit" to start a new round! <br><br> `;
     gameCtr += 1;
+    outputValue = outputValue + displayScoreBoard();
   }
   return outputValue;
 };
 
+// to display the Scoreboard
 let displayScoreBoard = function () {
   if (grandWinner == "Draw") {
     return `<div id="scoreboard"><center>
       <hr style="width:50%">
-        <br>🏆 Leaderboard 🏆
+        <br>🏆 Scoreboard 🏆
         <br>
         <br>There are currently no grand winners. It is a draw! 🤗
-        <br><br>Player 1 Grand Total: ${player1total}<br>Player 2 Grand Total: ${player2total}</center></div>`;
+        <br><br>Player 1 Grand Total: ${player1total}<br>Player 2 Grand Total: ${player2total}<br>Total Rounds: ${gameCtr}</center></div>`;
   } else {
     return `<div id="scoreboard"><center>
       <hr style="width:50%">
         <br>🏆 Leaderboard 🏆
         <br>
         <br>${grandWinner} is leading! 🎊
-        <br><br>Player 1 Grand Total: ${player1total}<br>Player 2 Grand Total: ${player2total}</center></div>`;
+        <br><br>Player 1 Grand Total: ${player1total}<br>Player 2 Grand Total: ${player2total}<br>Total Rounds: ${gameCtr}</center></div>`;
   }
 };
 
