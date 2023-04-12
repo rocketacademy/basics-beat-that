@@ -6,25 +6,85 @@ Auto-generate the optimal combined number based on each player's dice rolls to d
 // input : no of dice -> rollDice -> output : dice roll values and optimal combined no for each player -> shows winner of that round + leaderboard
 
 // declaring global variables
-let currentPlayer = "Player 1";
-let gameStatus = "numPlayers";
+let gameStatus = "numDice";
 let gameCtr = 0;
 let noOfPlayers = 2;
+let currentPlayer = "Player ";
+let PlayerCtr = 0;
 let player1dice = [];
 let player2dice = [];
 let numDice = 2;
-let diceRollTimes = 2;
-let diceRollResult1 = [];
-let diceRollResult2 = [];
+//let diceRollTimes = 2;
+let diceRollResult = [];
+let player1win = 0;
+let player2win = 0;
+//let diceRollResult2 = [];
 
-let rollDice = function () {
+let rollOneDice = function () {
   let randomDecimal = Math.random() * 6;
   let randomInteger = Math.floor(randomDecimal) + 1;
   console.log(randomInteger);
   return randomInteger;
 };
 
-let checkDiceOrder = function () {
+let findWinner = function () {
+  let winner = "";
+  if (player1dice[gameCtr] == player2dice[gameCtr]) {
+    winner = "Draw";
+  } else if (player1dice[gameCtr] < player2dice[gameCtr]) {
+    winner = "Player 2";
+    player2win += 1;
+  } else {
+    winner = "Player 1";
+    player1win += 1;
+  }
+  return winner;
+};
+
+let rollTotalDice = function () {
+  let outputValue = `Welcome ${currentPlayer}. 🤩 <br><br> You have rolled`;
+  let winner = "";
+  console.log(`${gameStatus}`);
+  console.log(`${gameCtr}`);
+  for (let diceNo = 0; diceNo < numDice; diceNo += 1) {
+    diceRollResult[diceNo] = rollOneDice();
+    console.log(`Dice ${diceNo}: ${diceRollResult[diceNo]}<br>`);
+  }
+
+  for (let arrayPos = 0; arrayPos < numDice; arrayPos += 1) {
+    if (arrayPos < numDice - 1) {
+      outputValue = outputValue + ` ${diceRollResult[arrayPos]},`;
+    } else {
+      outputValue = outputValue + ` ${diceRollResult[arrayPos]}. `;
+    }
+  }
+  diceRollResult.sort();
+  diceRollResult.reverse();
+  if (currentPlayer == "Player 1") {
+    player1dice.push(diceRollResult.join(""));
+    outputValue =
+      outputValue +
+      `Your optimal combination is ${player1dice[gameCtr]}. 💪 <br>Click "Submit" to roll the dice for the next player.`;
+  } else {
+    player2dice.push(diceRollResult.join(""));
+    winner = findWinner();
+    outputValue =
+      outputValue +
+      `Your optimal combination is ${player2dice[gameCtr]}. 💪 <br><br>The winner is ${winner}! 🎉
+      <br>Click "Submit" to start a new round! <br><br> `;
+    gameCtr += 1;
+  }
+  return outputValue;
+};
+
+let displayScoreBoard = function () {
+  <div id="scoreboard">
+    <hr style="width:50%"></hr>
+    <br></br>
+  </div>;
+};
+
+/*let checkDiceOrder = function (input) {
   if (currentPlayer == "Player 1") {
     for (let diceNo = 0; diceNo < diceRollTimes; diceNo += 1) {
       diceRollResult1[diceNo] = rollDice();
@@ -72,23 +132,22 @@ let sumDice = function (input) {
   }
   return outputValue;
 };
-
+*/
 let main = function (input) {
   let myOutputValue = "";
-  if (gameStatus == "numPlayers" && input == isNaN(input)) {
-    console.log(isNaN(input));
-    myOutputValue = `You have keyed in an invalid choice. Please key in the number of dice you wish to use. Then click submit to roll the dice.`;
-  } else if (gameStatus == "numPlayers" && input != isNaN(input)) {
-    console.log(isNaN(input));
-    numPlayers = input;
-    gameStatus = "rollDice";
+  if (Number.isNaN(Number(input))) {
+    return `You have keyed in an invalid choice. Please key in the number of dice you wish to use. Then click submit to roll the dice.`;
+  } else {
+    PlayerCtr += 1;
+    currentPlayer = `Player ${PlayerCtr}`;
+    if (gameStatus == "numDice") {
+      numDice = input;
+      gameStatus = "rollDice";
+    }
   }
-  /*} else if (gameStatus == "numDice" && input != Number.isNaN(input)) {
-    numDice = input;
-    gameStatus = "rollDice";
-  } */
+
   if (gameStatus == "rollDice") {
-    myOutputValue = checkDiceOrder();
+    myOutputValue = rollTotalDice();
   } else if (gameStatus == "choose combi" && input != "1" && input != "2") {
     myOutputValue = `You have keyed in an invalid choice. Please key in "1" to put Dice 1 first or "2" to put Dice 2 first.`;
   } else if (gameStatus == "choose combi") {
