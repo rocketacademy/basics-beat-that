@@ -20,23 +20,28 @@ let main = function (input) {
   let output = "";
 
   if (gameState == "PLAYER ENTER THE NUMBER OF DICE.") {
-    for (let i = 0; i < input; i += 1) {
-      let randomDiceNumberOfPlayer1 = rollDice();
-      let randomDiceNumberOfPlayer2 = rollDice();
-      randomDiceNumberOfPlayer1inArray.push(randomDiceNumberOfPlayer1);
-      randomDiceNumberOfPlayer2inArray.push(randomDiceNumberOfPlayer2);
-      console.log(
-        "randomDiceNumberOfPlayer1inArray",
-        randomDiceNumberOfPlayer1inArray
-      );
-      console.log(
-        "randomDiceNumberOfPlayer2inArray",
-        randomDiceNumberOfPlayer2inArray
-      );
-      output = `Hi, Player 1! Your dice number are: ${randomDiceNumberOfPlayer1inArray} <br> Player 2, your dice number are: ${randomDiceNumberOfPlayer2inArray} <br> Please click submit to determine which player is winner.`;
+    //ADD INPUT VALIDATION
+    if (Number.isNaN(Number(input))) {
+      output = `Sorry, please enter a number.`;
+    } else {
+      for (let i = 0; i < input; i += 1) {
+        let randomDiceNumberOfPlayer1 = rollDice();
+        let randomDiceNumberOfPlayer2 = rollDice();
+        randomDiceNumberOfPlayer1inArray.push(randomDiceNumberOfPlayer1);
+        randomDiceNumberOfPlayer2inArray.push(randomDiceNumberOfPlayer2);
+        console.log(
+          "randomDiceNumberOfPlayer1inArray",
+          randomDiceNumberOfPlayer1inArray
+        );
+        console.log(
+          "randomDiceNumberOfPlayer2inArray",
+          randomDiceNumberOfPlayer2inArray
+        );
+        output = `Hi, Player 1! Your dice number are: ${randomDiceNumberOfPlayer1inArray} <br> Player 2, your dice number are: ${randomDiceNumberOfPlayer2inArray} <br> Please click submit to determine which player is winner.`;
+      }
+      gameState =
+        "GAME STATE_COMPARE THE COMBINED DICE NUMBER BETWEEN TWO PLAYER";
     }
-    gameState =
-      "GAME STATE_COMPARE THE COMBINED DICE NUMBER BETWEEN TWO PLAYER";
   }
 
   //Auto-generate the optimal combined number based on each player's dice rolls to determine the winner of that round.
