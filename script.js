@@ -50,13 +50,17 @@ let findGrandWinner = function () {
 };
 
 let rollTotalDice = function () {
-  let outputValue = `Welcome ${currentPlayer}. 🤩 <br><br> You have rolled`;
+  let outputValue = "";
   let winner = "";
+  if (gameCtr == 0) {
+    outputValue = `Welcome ${currentPlayer}. 🤩 <br><br> You have rolled`;
+  } else {
+    outputValue = `${currentPlayer}, you have rolled`;
+  }
   for (let diceNo = 0; diceNo < numDice; diceNo += 1) {
     diceRollResult[diceNo] = rollOneDice();
     console.log(`Dice ${diceNo}: ${diceRollResult[diceNo]}<br>`);
   }
-
   for (let arrayPos = 0; arrayPos < numDice; arrayPos += 1) {
     if (arrayPos < numDice - 1) {
       outputValue = outputValue + ` ${diceRollResult[arrayPos]},`;
@@ -76,7 +80,6 @@ let rollTotalDice = function () {
       `Your optimal combination is ${player1dice[gameCtr]}. 💪 <br>Click "Submit" to roll the dice for the next player.`;
   } else {
     player2dice.push(diceRollResult.join(""));
-
     player2total = player2total + Number(player2dice[gameCtr]);
     winner = findWinner();
     grandWinner = findGrandWinner();
@@ -110,20 +113,24 @@ let displayScoreBoard = function () {
 
 let main = function (input) {
   let myOutputValue = "";
-  if (Number.isNaN(Number(input))) {
+  if (Number.isNaN(Number(input)) && gameStatus == "numDice") {
     myOutputValue = `You have keyed in an invalid choice. Please key in the number of dice you wish to use. Then click submit to roll the dice.`;
-  } else {
+  } else if (gameStatus == "rollDice" && input != "") {
+    myOutputValue = `You don't need to key in anything. Please click 'Submit' to roll the dice.`;
+  } else if (gameStatus == "numDice") {
     PlayerCtr += 1;
     currentPlayer = `Player ${PlayerCtr}`;
-    if (gameStatus == "numDice") {
-      numDice = input;
-      gameStatus = "rollDice";
-    }
-  }
-
-  if (gameStatus == "rollDice") {
+    numDice = input;
+    gameStatus = "rollDice";
+    myOutputValue = rollTotalDice();
+  } else if (gameStatus == "rollDice" && currentPlayer == "Player 1") {
+    PlayerCtr += 1;
+    currentPlayer = `Player ${PlayerCtr}`;
+    myOutputValue = rollTotalDice();
+  } else {
+    PlayerCtr -= 1;
+    currentPlayer = `Player ${PlayerCtr}`;
     myOutputValue = rollTotalDice();
   }
-
   return myOutputValue;
 };
