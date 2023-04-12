@@ -2,105 +2,106 @@ var rollDice = function () {
   var randomDiceNumber = Math.floor(Math.random() * 6 + 1);
   return randomDiceNumber;
 };
-var player1Dice1 = 0;
-var player1Dice2 = 0;
-var player2Dice1 = 0;
-var player2Dice2 = 0;
+
 var player1Score = 0;
 var player2Score = 0;
+var diceNumber = 0;
+var generatedPlayer1Number = [];
+var generatedPlayer2Number = [];
+var generatedHighest = [];
+var generated2Highest = [];
+var rollcombination1 = [];
+var rollcombination2 = [];
 var gameMode = "start";
+
+var convertArrayToNumber = function (diceNumber, array) {
+  var myOutputValue = "";
+  for (var i = 0; i < diceNumber; i += 1) {
+    var number = array[i];
+    var myOutputValue = myOutputValue + number;
+  }
+  var convertToNumber = Number(myOutputValue);
+  return convertToNumber;
+};
 
 var main = function (input) {
   if (gameMode == "start") {
-    var myOutputValue = ` Game involves 2 players. player 1 will go first.
-  Rules of the game: click start to initiate the roll of 2 dice. Then choose your first number from the random roll of the 2 dice to form a 2 digit number. player with the highest value will win. Click submit to continue.`;
-    gameMode = "player1roll";
+    generatedPlayer1Number = [];
+    generatedPlayer2Number = [];
+    generatedHighest = [];
+    generated2Highest = [];
+    rollcombination1 = [];
+    rollcombination2 = [];
+    var myOutputValue = ` Enter the number of dice you want for the game.`;
+    gameMode = "number of dice";
+    return myOutputValue;
+  }
+  if (gameMode == "number of dice") {
+    diceNumber = input;
+    if (isNaN(input) || Number(input) <= 0) {
+      var myOutputValue = `Please enter a valid input number.`;
+    } else {
+      gameMode = "player1roll";
+      var myOutputValue = `There will be ${input} dice for each player in this game. Good luck.`;
+    }
     return myOutputValue;
   }
   if (gameMode == "player1roll") {
-    player1Dice1 = rollDice();
-    player1Dice2 = rollDice();
-    var myOutputValue = `Welcome Player 1. <br>You rolled ${player1Dice1} for Dice 1 and ${player1Dice2} for Dice 2. <br>Choose the order of your dice by keying in the number of the dice you want to be the first.`;
-    gameMode = "player1ToChoose";
-    return myOutputValue;
-  }
-  if (gameMode == "player1ToChoose") {
-    if (Number(input) !== player1Dice1 && Number(input) !== player1Dice2) {
-      var myOutputValue = `Please key in a valid number that you rolled. Either ${player1Dice1} or ${player1Dice2}.`;
-      return myOutputValue;
+    for (var n = diceNumber; n > 0; n -= 1) {
+      var randomDice = rollDice();
+      generatedPlayer1Number.push(randomDice);
+      rollcombination1.push(randomDice);
     }
-    if (Number(input) == player1Dice1) {
-      var myOutputValue = `Player 1, you chose Dice 1 first.
-Your number is ${
-        player1Dice1.toString() + player1Dice2.toString()
-      }. <br>It is now Player 2's turn. Click submit to continue.`;
-      player1Score = Number(player1Dice1.toString() + player1Dice2.toString());
-      console.log(player1Score);
-      gameMode = "player2roll";
-      return myOutputValue;
-    }
-    if (Number(input) == player1Dice2) {
-      var myOutputValue = `Player 1, you chose Dice 2 first.
-Your number is ${
-        player1Dice2.toString() + player1Dice1.toString()
-      }. <br>It is now Player 2's turn. Click submit to continue.`;
-      player1Score = Number(player1Dice2.toString() + player1Dice1.toString());
-      console.log(player1Score);
-      gameMode = "player2roll";
-      return myOutputValue;
-    }
-  }
-  if (gameMode == "player2roll") {
-    player2Dice1 = rollDice();
-    player2Dice2 = rollDice();
-    var myOutputValue = `Welcome Player 2. <br>You rolled ${player2Dice1} for Dice 1 and ${player2Dice2} for Dice 2. <br>Choose the order of your dice by keying in the number of the dice you want to be first.`;
-    gameMode = "player2ToChoose";
-    return myOutputValue;
-  }
-  if (gameMode == "player2ToChoose") {
-    if (Number(input) !== player2Dice1 && Number(input) !== player2Dice2) {
-      var myOutputValue = `Please key in a valid number that you rolled. Either ${player2Dice1} or ${player2Dice2}.`;
-      return myOutputValue;
-    }
-    if (Number(input) == player2Dice1) {
-      var myOutputValue = `Player 2, you chose Dice 1 first.
-Your number is ${player2Dice1.toString() + player2Dice2.toString()}. `;
-      player2Score = Number(player2Dice1.toString() + player2Dice2.toString());
-      console.log(player1Score);
-      console.log(player2Score);
-      if (player2Score > player1Score) {
-        var statement = `Since Player 1 Number is ${player1Score}, Player 2 wins. `;
-      }
-      if (player1Score > player2Score) {
-        var statement = `Since Player 1 Number is ${player1Score}, Player 1 wins. `;
-      }
-      if (player1Score == player2Score) {
-        var statement = `Since Player 1 Number is ${player1Score}, It's a draw. `;
-      }
-      gameMode = "start";
-      return myOutputValue + statement;
-    }
-    if (Number(input) == player2Dice2) {
-      var myOutputValue = `Player 2, you chose Dice 2 first.
-Your number is ${player2Dice2.toString() + player2Dice1.toString()}. `;
-      player2Score = Number(player2Dice2.toString() + player2Dice1.toString());
-      console.log(player1Score);
-      console.log(player2Score);
-      if (player2Score > player1Score) {
-        var statement = `Since Player 1 Number is ${player1Score}, Player 2 wins. `;
-      }
-      if (player1Score > player2Score) {
-        var statement = `Since Player 1 Number is ${player1Score}, Player 1 wins. `;
-      }
-      if (player1Score == player2Score) {
-        var statement = `Since Player 1 Number is ${player1Score}, It's a draw. `;
-      }
-      gameMode = "start";
-      return (
-        myOutputValue +
-        statement +
-        `To restart the game, click submit to continue.`
+    console.log(generatedPlayer1Number);
+    for (var n = diceNumber; n > 0; n -= 1) {
+      var largestNumber = Number(Math.max(...generatedPlayer1Number));
+      generatedPlayer1Number.splice(
+        generatedPlayer1Number.indexOf(largestNumber),
+        1
       );
+      generatedHighest.push(largestNumber);
     }
+    console.log(generatedHighest);
+    var myOutputValue = `Welcome Player 1. <br>You rolled ${rollcombination1}. <br>Your auto-generated highest combination for the numbers is ${generatedHighest}`;
+    gameMode = "player2roll";
+    return myOutputValue;
+  }
+
+  if (gameMode == "player2roll") {
+    for (var n = diceNumber; n > 0; n -= 1) {
+      var randomDice = rollDice();
+      generatedPlayer2Number.push(randomDice);
+      rollcombination2.push(randomDice);
+    }
+    console.log(generatedPlayer2Number);
+    for (var n = diceNumber; n > 0; n -= 1) {
+      var largestNumber = Number(Math.max(...generatedPlayer2Number));
+      generatedPlayer2Number.splice(
+        generatedPlayer2Number.indexOf(largestNumber),
+        1
+      );
+      generated2Highest.push(largestNumber);
+    }
+    console.log(generated2Highest);
+    var myOutputValue = `Welcome Player 2. <br>You rolled ${rollcombination2}. <br>Your auto-generated highest combination for the numbers is ${generated2Highest}`;
+    gameMode = "conclusion";
+    return myOutputValue;
+  }
+  if (gameMode == "conclusion") {
+    player1Score = convertArrayToNumber(diceNumber, generatedHighest);
+    player2Score = convertArrayToNumber(diceNumber, generated2Highest);
+    console.log(player1Score);
+    console.log(player2Score);
+    if (player2Score > player1Score) {
+      var statement = `Since Player 1 Number is ${player1Score}, and Player 2 number is ${player2Score}. Player 2 wins. `;
+    }
+    if (player1Score > player2Score) {
+      var statement = `Since Player 1 Number is ${player1Score}, and Player 2 number is ${player2Score}. Player 1 wins. `;
+    }
+    if (player1Score == player2Score) {
+      var statement = `Since Player 1 Number is ${player1Score}, and Player 2 number is ${player2Score}. It's a draw. `;
+    }
+    gameMode = "start";
+    return statement + `To restart the game, click submit to continue.`;
   }
 };
