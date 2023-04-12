@@ -16,8 +16,8 @@ let player2dice = [];
 let numDice = 2;
 //let diceRollTimes = 2;
 let diceRollResult = [];
-let player1win = 0;
-let player2win = 0;
+let player1total = 0;
+let player2total = 0;
 //let diceRollResult2 = [];
 
 let rollOneDice = function () {
@@ -33,19 +33,27 @@ let findWinner = function () {
     winner = "Draw";
   } else if (player1dice[gameCtr] < player2dice[gameCtr]) {
     winner = "Player 2";
-    player2win += 1;
   } else {
     winner = "Player 1";
-    player1win += 1;
   }
   return winner;
+};
+
+let findGrandWinner = function () {
+  let grandWinner = "";
+  if (player1total == player2total) {
+    grandWinner = "Draw";
+  } else if (player1total < player2total) {
+    grandWinner = "Player 2";
+  } else {
+    grandWinner = "Player 1";
+  }
+  return grandWinner;
 };
 
 let rollTotalDice = function () {
   let outputValue = `Welcome ${currentPlayer}. 🤩 <br><br> You have rolled`;
   let winner = "";
-  console.log(`${gameStatus}`);
-  console.log(`${gameCtr}`);
   for (let diceNo = 0; diceNo < numDice; diceNo += 1) {
     diceRollResult[diceNo] = rollOneDice();
     console.log(`Dice ${diceNo}: ${diceRollResult[diceNo]}<br>`);
@@ -58,30 +66,48 @@ let rollTotalDice = function () {
       outputValue = outputValue + ` ${diceRollResult[arrayPos]}. `;
     }
   }
+
   diceRollResult.sort();
   diceRollResult.reverse();
+
   if (currentPlayer == "Player 1") {
     player1dice.push(diceRollResult.join(""));
+    player1total = player1total + Number(player1dice[gameCtr]);
     outputValue =
       outputValue +
       `Your optimal combination is ${player1dice[gameCtr]}. 💪 <br>Click "Submit" to roll the dice for the next player.`;
   } else {
     player2dice.push(diceRollResult.join(""));
+
+    player2total = player2total + Number(player2dice[gameCtr]);
     winner = findWinner();
+    grandWinner = findGrandWinner();
     outputValue =
       outputValue +
-      `Your optimal combination is ${player2dice[gameCtr]}. 💪 <br><br>The winner is ${winner}! 🎉
-      <br>Click "Submit" to start a new round! <br><br> `;
+      `Your optimal combination is ${player2dice[gameCtr]}. 💪 <br><br>The winner for this round is ${winner}! 🎉
+      <br>Click "Submit" to start a new round! <br><br> ` +
+      displayScoreBoard();
     gameCtr += 1;
   }
   return outputValue;
 };
 
 let displayScoreBoard = function () {
-  <div id="scoreboard">
-    <hr style="width:50%"></hr>
-    <br></br>
-  </div>;
+  if (grandWinner == "Draw") {
+    return `<div id="scoreboard"><center>
+      <hr style="width:50%">
+        <br>🏆 Leaderboard 🏆
+        <br>
+        <br>There are currently no grand winners. It is a draw! 🤗
+        <br><br>Player 1: ${player1total}<br>Player 2: ${player2total}</center></div>`;
+  } else {
+    return `<div id="scoreboard"><center>
+      <hr style="width:50%">
+        <br>🏆 Leaderboard 🏆
+        <br>
+        <br>${grandWinner} is leading! 🎊
+        <br><br>Player 1: ${player1total}<br>Player 2: ${player2total}</center></div>`;
+  }
 };
 
 /*let checkDiceOrder = function (input) {
@@ -136,7 +162,7 @@ let sumDice = function (input) {
 let main = function (input) {
   let myOutputValue = "";
   if (Number.isNaN(Number(input))) {
-    return `You have keyed in an invalid choice. Please key in the number of dice you wish to use. Then click submit to roll the dice.`;
+    myOutputValue = `You have keyed in an invalid choice. Please key in the number of dice you wish to use. Then click submit to roll the dice.`;
   } else {
     PlayerCtr += 1;
     currentPlayer = `Player ${PlayerCtr}`;
@@ -148,10 +174,7 @@ let main = function (input) {
 
   if (gameStatus == "rollDice") {
     myOutputValue = rollTotalDice();
-  } else if (gameStatus == "choose combi" && input != "1" && input != "2") {
-    myOutputValue = `You have keyed in an invalid choice. Please key in "1" to put Dice 1 first or "2" to put Dice 2 first.`;
-  } else if (gameStatus == "choose combi") {
-    myOutputValue = sumDice(input);
   }
+
   return myOutputValue;
 };
