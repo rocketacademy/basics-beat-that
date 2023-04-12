@@ -35,34 +35,23 @@ const rollMultipleDice = function (diceCount) {
   return rollStateMessage;
 };
 
-const autoGenerateNumber = function () {
-  let currentPlayerFinalNum;
-  // First digit is greater
-  if (
-    (gameMode === HIGHEST_COMBINED_NUMBER_MODE &&
-      currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1]) ||
-    (gameMode === LOWEST_COMBINED_NUMBER_MODE &&
-      currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0])
-  ) {
-    currentPlayerFinalNum =
-      String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
-  }
+const autoGenerateOptimalCombinedNumber = function () {
+  // MUST initialize this as an empty string or else the value will be undefined during reassignment later
+  let currentPlayerFinalNum = "";
 
-  // Second digit is greater
-  else if (
-    (gameMode === HIGHEST_COMBINED_NUMBER_MODE &&
-      currentPlayerDiceNumbers[1] > currentPlayerDiceNumbers[0]) ||
-    (gameMode === LOWEST_COMBINED_NUMBER_MODE &&
-      currentPlayerDiceNumbers[0] > currentPlayerDiceNumbers[1])
-  ) {
-    currentPlayerFinalNum =
-      String(currentPlayerDiceNumbers[1]) + String(currentPlayerDiceNumbers[0]);
+  // Arrange digits from big to small in the array, convert each of them to string and keep them in currentPlayerFinalNum variable
+  if (gameMode === HIGHEST_COMBINED_NUMBER_MODE) {
+    currentPlayerDiceNumbers.sort((a, b) => b - a);
+    for (i = 0; i < currentPlayerDiceNumbers.length; i += 1) {
+      currentPlayerFinalNum += String(currentPlayerDiceNumbers[i]);
+    }
   }
-
-  // NEED TO ACCOUNT FOR THE CHANCES THAT THE DIGITS MAY BE EQUAL IN ANY MODE. OR ELSE, currentPlayerFinalNum MAY BE NAN.
-  else if (currentPlayerDiceNumbers[0] === currentPlayerDiceNumbers[1]) {
-    currentPlayerFinalNum =
-      String(currentPlayerDiceNumbers[0]) + String(currentPlayerDiceNumbers[1]);
+  // Arrange digits from small to big in the array, etc..
+  else if (gameMode === LOWEST_COMBINED_NUMBER_MODE) {
+    currentPlayerDiceNumbers.sort((a, b) => a - b);
+    for (i = 0; i < currentPlayerDiceNumbers.length; i += 1) {
+      currentPlayerFinalNum += String(currentPlayerDiceNumbers[i]);
+    }
   }
 
   // Transfer the final num to another variable for each player separately for LEADERBOARD later
@@ -77,27 +66,28 @@ const autoGenerateNumber = function () {
 };
 
 const showLeaderboard = function () {
-  // Calculate the sum of all player 1 scores
+  // Calculate the sum of all player 1 optimal combined numbers
   let player1Sum = 0;
   for (i = 0; i < player1FinalNumEachRound.length; i += 1) {
     player1Sum += player1FinalNumEachRound[i];
   }
 
-  // Calculate the sum of all player 2 scores
+  // Calculate the sum of all player 2 optimal combined numbers
   let player2Sum = 0;
   for (i = 0; i < player2FinalNumEachRound.length; i += 1) {
     player2Sum += player2FinalNumEachRound[i];
   }
+
+  let leaderboardMessage = `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
+          Press Submit to play again. <br> <br>
+          <b> ------ LEADERBOARD ------ </b> <br>`;
 
   // Player 1 is leading
   if (
     (gameMode === HIGHEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum) ||
     (gameMode === LOWEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum)
   ) {
-    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
-          Press Submit to play again. <br> <br>
-          <b> ------ LEADERBOARD ------ </b> <br>
-          Player 1 is currently winning!!! <br>
+    leaderboardMessage += `Player 1 is currently winning!!! <br>
           Player 1: ${player1Sum} <br>
           Player 2: ${player2Sum}`;
   }
@@ -107,21 +97,16 @@ const showLeaderboard = function () {
     (gameMode === HIGHEST_COMBINED_NUMBER_MODE && player1Sum < player2Sum) ||
     (gameMode === LOWEST_COMBINED_NUMBER_MODE && player1Sum > player2Sum)
   ) {
-    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
-          Press Submit to play again. <br> <br> 
-          <b> ------ LEADERBOARD ------ </b> <br>
-          Player 2 is currently winning!!! <br>
+    leaderboardMessage += `Player 2 is currently winning!!! <br>
           Player 2: ${player2Sum} <br>
           Player 1: ${player1Sum}`;
   }
 
   // Draw condition for any mode
   else if (player1Sum === player2Sum) {
-    return `Player 1's score: ${player1Sum} | Player 2's score: ${player2Sum} <br>
-          Press Submit to play again. <br> <br> 
-          <b> ------ LEADERBOARD ------ </b> <br>
-          DRAW! No one is currently winning!!!`;
+    leaderboardMessage += `DRAW! No one is currently winning!!!`;
   }
+  return leaderboardMessage;
 };
 
 const resetGame = function () {
@@ -146,14 +131,17 @@ const main = function (input) {
       return `Please enter a number to choose how many dice to roll.`;
     } else {
       diceCount = input;
-      myOutputValue = `You have chosen to roll ${diceCount} dice.`;
+      myOutputValue = `You have chosen to roll ${diceCount} dice. <br> Please hit the "Submit" button to continue.`;
       programState = ROLL;
     }
   } else if (programState === ROLL) {
     myOutputValue = rollMultipleDice(diceCount);
+    console.log(`currentPlayerDiceNumbers: ` + currentPlayerDiceNumbers);
+    console.log(`player1FinalNumEachRound: ` + player1FinalNumEachRound);
+
     programState = AUTO_GENERATE_NUMBER;
   } else if (programState === AUTO_GENERATE_NUMBER) {
-    myOutputValue = autoGenerateNumber();
+    myOutputValue = autoGenerateOptimalCombinedNumber();
     if (currentPlayer === 1) {
       currentPlayer = 2;
       programState = ROLL;
