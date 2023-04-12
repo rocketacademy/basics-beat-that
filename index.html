@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>SWE Fundamentals</title>
     <style>
       * {
         box-sizing: border-box;
@@ -18,9 +18,9 @@
       }
 
       #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
+        background-color: orange;
+        margin: 60px auto;
+        max-width: 700px;
         padding: 38px 31px;
       }
 
@@ -49,30 +49,39 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">SWE Fundamentals! 🚀</h1>
+
     <div id="container">
-      <p>Click submit to start the game:</p>
+      <p>Hello! Welcome to Beat that! Click submit to start the game.</p>
+      <p>
+        Create a two-digit number by selecting the order of your dice rolls.
+      </p>
+      <p>The player with the highest number wins! Good luck!</p>
+
+      <p>Input:</p>
+
       <input id="input-field" />
+
       <br />
-      <button id="submit-button">Submit</button>
+
+      <button id="submit-button">Press Me!</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
-    <!-- Import program logic -->
+
     <script src="script.js"></script>
-    <!-- Define button click functionality -->
+
     <script>
       var button = document.querySelector("#submit-button");
+
       button.addEventListener("click", function () {
-        // Set result to input value
         var input = document.querySelector("#input-field");
+
         var result = main(input.value);
 
-        // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
 
-        // Reset input value
         input.value = "";
       });
     </script>
