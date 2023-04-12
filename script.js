@@ -136,9 +136,6 @@ const main = function (input) {
     }
   } else if (programState === ROLL) {
     myOutputValue = rollMultipleDice(diceCount);
-    console.log(`currentPlayerDiceNumbers: ` + currentPlayerDiceNumbers);
-    console.log(`player1FinalNumEachRound: ` + player1FinalNumEachRound);
-
     programState = AUTO_GENERATE_NUMBER;
   } else if (programState === AUTO_GENERATE_NUMBER) {
     myOutputValue = autoGenerateOptimalCombinedNumber();
