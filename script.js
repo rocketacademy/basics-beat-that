@@ -14,11 +14,9 @@ let PlayerCtr = 0;
 let player1dice = [];
 let player2dice = [];
 let numDice = 2;
-//let diceRollTimes = 2;
 let diceRollResult = [];
 let player1total = 0;
 let player2total = 0;
-//let diceRollResult2 = [];
 
 let rollOneDice = function () {
   let randomDecimal = Math.random() * 6;
@@ -99,66 +97,17 @@ let displayScoreBoard = function () {
         <br>🏆 Leaderboard 🏆
         <br>
         <br>There are currently no grand winners. It is a draw! 🤗
-        <br><br>Player 1: ${player1total}<br>Player 2: ${player2total}</center></div>`;
+        <br><br>Player 1 Grand Total: ${player1total}<br>Player 2 Grand Total: ${player2total}</center></div>`;
   } else {
     return `<div id="scoreboard"><center>
       <hr style="width:50%">
         <br>🏆 Leaderboard 🏆
         <br>
         <br>${grandWinner} is leading! 🎊
-        <br><br>Player 1: ${player1total}<br>Player 2: ${player2total}</center></div>`;
+        <br><br>Player 1 Grand Total: ${player1total}<br>Player 2 Grand Total: ${player2total}</center></div>`;
   }
 };
 
-/*let checkDiceOrder = function (input) {
-  if (currentPlayer == "Player 1") {
-    for (let diceNo = 0; diceNo < diceRollTimes; diceNo += 1) {
-      diceRollResult1[diceNo] = rollDice();
-    }
-    gameStatus = "choose combi";
-    return `Welcome Player 1.<br><br>You rolled ${diceRollResult1[0]} for Dice 1 and ${diceRollResult1[1]} for Dice 2. Enter the number of the dice you would like to put first.`;
-  } else {
-    for (let diceNo = 0; diceNo < diceRollTimes; diceNo += 1) {
-      diceRollResult2[diceNo] = rollDice();
-    }
-    gameStatus = "choose combi";
-    return `Welcome Player 2. <br><br>You rolled ${diceRollResult2[0]} for Dice 1 and ${diceRollResult2[1]} for Dice 2. Enter the number of the dice you would like to put first.`;
-  }
-};
-
-let sumDice = function (input) {
-  let outputValue = "";
-  if (currentPlayer == "Player 1") {
-    if (diceRollResult1[0] > diceRollResult1[1]) {
-      player1dice = "" + diceRollResult1[0] + diceRollResult1[1];
-    } else {
-      player1dice = "" + diceRollResult1[1] + diceRollResult1[0];
-    }
-    outputValue = `Player 1 you have chosen to put Dice ${input} first, so your total number is ${player1dice}. Now click submit to roll the dice for Player 2.`;
-    currentPlayer = "Player 2";
-    gameStatus = "rollDice";
-  } else {
-    if (input == 1) {
-      player2dice = "" + diceRollResult2[0] + diceRollResult2[1];
-    } else {
-      player2dice = "" + diceRollResult2[1] + diceRollResult2[0];
-    }
-
-    if (player1dice == player2dice) {
-      outputValue = `<b>Player 2</b><br>You have chosen to put Dice ${input} first, so your total number is ${player2dice}. <br><br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> This round is a draw! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
-    } else if (player1dice > player2dice) {
-      winner = "Player 1";
-      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total number is ${player2dice}. <br><br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> The winner for this round is ${winner}! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
-    } else {
-      winner = "Player 2";
-      outputValue = `Player 2 you have chosen to put Dice ${input} first, so your total number is ${player2dice}. <br> Player 1's combined number: ${player1dice} <br> Player 2's combined number: ${player2dice} <br> The winner for this round is ${winner}! <br><br>Now click submit to start a new round and roll the dice for Player 1.`;
-    }
-    currentPlayer = "Player 1";
-    gameStatus = "rollDice";
-  }
-  return outputValue;
-};
-*/
 let main = function (input) {
   let myOutputValue = "";
   if (Number.isNaN(Number(input))) {
