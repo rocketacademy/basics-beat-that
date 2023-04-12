@@ -29,14 +29,6 @@ let main = function (input) {
         let randomDiceNumberOfPlayer2 = rollDice();
         randomDiceNumberOfPlayer1inArray.push(randomDiceNumberOfPlayer1);
         randomDiceNumberOfPlayer2inArray.push(randomDiceNumberOfPlayer2);
-        console.log(
-          "randomDiceNumberOfPlayer1inArray",
-          randomDiceNumberOfPlayer1inArray
-        );
-        console.log(
-          "randomDiceNumberOfPlayer2inArray",
-          randomDiceNumberOfPlayer2inArray
-        );
         output = `Hi, Player 1! Your dice number are: ${randomDiceNumberOfPlayer1inArray} <br> Player 2, your dice number are: ${randomDiceNumberOfPlayer2inArray} <br> Please click submit to determine which player is winner.`;
       }
       gameState =
@@ -64,14 +56,11 @@ let main = function (input) {
       (acc, curr) => acc + curr,
       ""
     );
-    console.log("combinedNoOfPlayer1InString:", combinedNoOfPlayer1InString);
-    console.log("combinedNoOfPlayer2InString:", combinedNoOfPlayer2InString);
+
     //Convert combined dice number in string to number
     //Create if.else statement to compare combined dice number btw 2 player
     let combinedNoOfPlayer1 = Number(combinedNoOfPlayer1InString);
     let combinedNoOfPlayer2 = Number(combinedNoOfPlayer2InString);
-    console.log(combinedNoOfPlayer1);
-    console.log(combinedNoOfPlayer2);
     if (combinedNoOfPlayer1 > combinedNoOfPlayer2) {
       output = `Player 1, you won!. Since Player 1's combined number is ${combinedNoOfPlayer1}, player 2's combined number is ${combinedNoOfPlayer2}.<br>Please click submit to reset the game.`;
     } else if (combinedNoOfPlayer2 > combinedNoOfPlayer1) {
@@ -84,11 +73,11 @@ let main = function (input) {
   else if (gameState == "RESET MODE") {
     randomDiceNumberOfPlayer1inArray.length = 0;
     randomDiceNumberOfPlayer2inArray.length = 0;
-    gameState = "PLAYER ENTER THE NUMBER OF DICE.";
     output = `Hi, Player! Please enter the number of dice you want to
         play with.<br />
         This game will auto-generate the optimal combined number.<br />
         The player with the highest combined number wins! Good luck!`;
+    gameState = "PLAYER ENTER THE NUMBER OF DICE.";
   }
   return output;
 };
