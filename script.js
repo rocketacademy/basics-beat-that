@@ -6,6 +6,7 @@
 
 let randomDiceNumberOfPlayer1inArray = [];
 let randomDiceNumberOfPlayer2inArray = [];
+let gameState = "PLAYER ENTER THE NUMBER OF DICE.";
 
 let rollDice = function () {
   let randomDecimal = Math.random() * 6;
@@ -14,31 +15,32 @@ let rollDice = function () {
 };
 
 //Create for loop to place n dice roll values in that player's array. Output each player's dice roll values.
+
 let main = function (input) {
   let output = "";
-  let gameState = "";
-  for (let i = 0; i < input; i += 1) {
-    let randomDiceNumberOfPlayer1 = rollDice();
-    let randomDiceNumberOfPlayer2 = rollDice();
-    randomDiceNumberOfPlayer1inArray.push(randomDiceNumberOfPlayer1);
-    randomDiceNumberOfPlayer2inArray.push(randomDiceNumberOfPlayer2);
-    console.log(
-      "randomDiceNumberOfPlayer1inArray",
-      randomDiceNumberOfPlayer1inArray
-    );
-    console.log(
-      "randomDiceNumberOfPlayer2inArray",
-      randomDiceNumberOfPlayer2inArray
-    );
-    output = `Hi, Player 1! Your dice number are: ${randomDiceNumberOfPlayer1inArray} <br> Player 2, your dice number are: ${randomDiceNumberOfPlayer2inArray} <br> Please enter "c" to determine which player is winner.`;
-  }
-  //when user enter "c", it will determine which player is winner.
-  //Auto-generate the optimal combined number based on each player's dice rolls to determine the winner of that round.
-  if (input == "c") {
+
+  if (gameState == "PLAYER ENTER THE NUMBER OF DICE.") {
+    for (let i = 0; i < input; i += 1) {
+      let randomDiceNumberOfPlayer1 = rollDice();
+      let randomDiceNumberOfPlayer2 = rollDice();
+      randomDiceNumberOfPlayer1inArray.push(randomDiceNumberOfPlayer1);
+      randomDiceNumberOfPlayer2inArray.push(randomDiceNumberOfPlayer2);
+      console.log(
+        "randomDiceNumberOfPlayer1inArray",
+        randomDiceNumberOfPlayer1inArray
+      );
+      console.log(
+        "randomDiceNumberOfPlayer2inArray",
+        randomDiceNumberOfPlayer2inArray
+      );
+      output = `Hi, Player 1! Your dice number are: ${randomDiceNumberOfPlayer1inArray} <br> Player 2, your dice number are: ${randomDiceNumberOfPlayer2inArray} <br> Please click submit to determine which player is winner.`;
+    }
     gameState =
       "GAME STATE_COMPARE THE COMBINED DICE NUMBER BETWEEN TWO PLAYER";
   }
-  if (
+
+  //Auto-generate the optimal combined number based on each player's dice rolls to determine the winner of that round.
+  else if (
     gameState ==
     "GAME STATE_COMPARE THE COMBINED DICE NUMBER BETWEEN TWO PLAYER"
   ) {
@@ -46,6 +48,9 @@ let main = function (input) {
     randomDiceNumberOfPlayer1inArray.sort((a, b) => b - a);
     randomDiceNumberOfPlayer2inArray.sort((a, b) => b - a);
     //Combine dice no into a single string using reduce method
+    // reduce() method is being used to sum all the elements in an array. The first argument passed to reduce() is a function that takes two arguments: the accumulator acc and the current element curr.
+    //In this case, the function adds the current element curr to the accumulator acc. The second argument passed to reduce() is the initial value of the accumulator, which in this case is an empty string "".
+    //So, this line will iterate over all elements in an array, add them up, and return the sum as a single value. In this specific case, since the initial value of the accumulator is an empty string "", the method will concatenate all elements in the array into a single string.
     let combinedNoOfPlayer1InString = randomDiceNumberOfPlayer1inArray.reduce(
       (acc, curr) => acc + curr,
       ""
@@ -65,10 +70,20 @@ let main = function (input) {
     if (combinedNoOfPlayer1 > combinedNoOfPlayer2) {
       output = `Player 1, you won!. Since Player 1's combined number is ${combinedNoOfPlayer1}, player 2's combined number is ${combinedNoOfPlayer2}.<br>Please click submit to reset the game.`;
     } else if (combinedNoOfPlayer2 > combinedNoOfPlayer1) {
-      output = `Player 2, you won!. Since Player 1's combined number is ${combinedNoOfPlayer2}, player 2's combined number is ${combinedNoOfPlayer1}.<br>Please click submit to reset the game.`;
+      output = `Player 2, you won!. Since Player 1's combined number is ${combinedNoOfPlayer1}, player 2's combined number is ${combinedNoOfPlayer2}.<br>Please click submit to reset the game.`;
     }
+    gameState = "RESET MODE";
   }
+
   //Create if statement for reset mode
-  //ADD INPUT VALIDATION LATER
+  else if (gameState == "RESET MODE") {
+    randomDiceNumberOfPlayer1inArray.length = 0;
+    randomDiceNumberOfPlayer2inArray.length = 0;
+    gameState = "PLAYER ENTER THE NUMBER OF DICE.";
+    output = `Hi, Player! Please enter the number of dice you want to
+        play with.<br />
+        This game will auto-generate the optimal combined number.<br />
+        The player with the highest combined number wins! Good luck!`;
+  }
   return output;
 };
