@@ -5,20 +5,26 @@ var player2Number1 = "";
 var player2Number2 = "";
 var player2NumberCombined = "";
 var gameMode = "selection";
-var genericDice1 = "";
-var genericDice2 = "";
-var player1Score = Number(0);
-var player2Score = Number(0);
+var player1Score = 0;
+var player2Score = 0;
+var numPlayers = 0;
+var numDices = 0;
+var numberList = [];
 
 var main = function (input) {
   if (gameMode == "selection") {
     gameMode = "chooseSelection";
-    return `Please type in "Normal" or "Lowest" to select the game mode.`;
+    return `Please type in "Normal" or "Lowest" or "Variable" to select the game mode.`;
   }
   if (gameMode == "chooseSelection") {
     input = input.toLowerCase();
-    if (input !== "normal" && input !== "lowest" && input !== "reset") {
-      return `Please type in "Normal" or "Lowest" to select the game mode.`;
+    if (
+      input !== "normal" &&
+      input !== "lowest" &&
+      input !== "reset" &&
+      input !== "variable"
+    ) {
+      return `Please type in "Normal" or "Lowest" or "Variable" to select the game mode.`;
     }
     if (input == "normal") {
       gameMode = "p1turn";
@@ -30,9 +36,15 @@ Please press submit to continue as player 1.`;
       return `You have selected lowest mode. <br> 
   Please press submit to continue as player 1.`;
     }
-    if (input == "reset") player1Score = Number(0);
-    player2Score = Number(0);
-    return `The scores have been reset. Please type in "Normal" or "Lowest" to select the game mode.`;
+    if (input == "variable") {
+      gameMode = "Number of players";
+      return `You have selected variable mode. Please continue to select your number of players.`;
+    }
+    if (input == "reset") {
+      player1Score = Number(0);
+      player2Score = Number(0);
+      return `The scores have been reset. Please type in "Normal" or "Lowest" to select the game mode.`;
+    }
   }
 
   if (gameMode == "p1turn") {
@@ -152,7 +164,7 @@ Please press submit to continue as player 1.`;
     }
     if (player2Number1 > player2Number2) {
       gameMode = "winnerLowest";
-      player2NumberCombined = `${player2Number1}${player2Number2}`;
+      player2NumberCombined = `${player2Number2}${player2Number1}`;
       return `Player 2's dice roll generated from ${player2Number1} and ${player2Number2} is <br>
         ${player2NumberCombined}`;
     }
@@ -189,6 +201,54 @@ Please press submit to continue as player 1.`;
     }
   }
 
+  //var player&dice
+
+  if (gameMode == "Number of players") {
+    if (input == isNaN(input) && input !== 0 && input !== 1) {
+      return `Please input a number higher than 1.`;
+    }
+    numPlayers = Number(input);
+    gameMode = "Number of dices";
+    return `Please continue to select the number of dices`;
+  }
+  if (gameMode == "Number of dices") {
+    if (input == isNaN(input) && input !== 0 && input !== 1) {
+      return `Please input a number higher than 1.`;
+    }
+    numDices = Number(input);
+    gameMode = "Players roll dice";
+    return `Please continue to generate dice values`;
+  }
+  if (gameMode == "Players roll dice") {
+    for (let i = 0; i < numPlayers; i++) {
+      var diceList = [];
+      var maxNum = "";
+      for (let j = 0; j < numDices; j++) {
+        diceNum = diceGenerator();
+        diceList.push(diceNum);
+        console.log(`Dice ${j}: ${diceNum}`);
+      }
+      diceList.sort((a, b) => b - a);
+      console.log(diceList, "Dice List");
+
+      for (let k = 0; k < diceList.length; k++) {
+        maxNum = maxNum + "" + diceList[k];
+      }
+      console.log(maxNum, "Max Number");
+      numberList.push(Number(maxNum));
+    }
+    console.log(numberList, "Number List");
+    gameMode = "Variable Winner";
+    return `Continue to see who won`;
+  }
+  if (gameMode == "Variable Winner") {
+    var playerNum = numberList.indexOf(Math.max(...numberList)) + 1;
+    console.log(`Player ${playerNum}`);
+    gameMode = "restart";
+    return `Player 1 to Player ${numPlayers} max combination are ${numberList} respectively. <br> <br>
+  Player ${playerNum} wins!`;
+  }
+
   if (gameMode == "restart") {
     player1Number1 = "";
     player1Number2 = "";
@@ -196,6 +256,9 @@ Please press submit to continue as player 1.`;
     player2Number1 = "";
     player2Number2 = "";
     player2NumberCombined = "";
+    numPlayers = 0;
+    numDices = 0;
+    numberList = [];
     gameMode = "chooseSelection";
     return `The game has been reset. Please type "Normal" or "Lowest" to play again. <br>
     Type "Reset" to reset the score. `;
@@ -203,6 +266,6 @@ Please press submit to continue as player 1.`;
 };
 //Dice Generator (1-6)
 var diceGenerator = function () {
-  var diceValueGenerated = Math.floor(Math.random() * 6) + 1;
+  var diceValueGenerated = Math.ceil(Math.random() * 6);
   return diceValueGenerated;
 };
