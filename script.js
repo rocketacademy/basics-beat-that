@@ -212,7 +212,9 @@ var getPlayerScore = function (playerInput) {
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
-    return `Your chosen value is : ${playerScore}`;
+    allPlayersScore.push(playerScore); // This line was missing
+    currentPlayerRolls = [];
+    return `Player ${currentPlayer}, your chosen value is : ${playerScore}`;
   }
   if (playerInput == 2) {
     playerScore = Number(
@@ -222,6 +224,20 @@ var getPlayerScore = function (playerInput) {
     currentPlayerRolls = [];
     return `Player ${currentPlayer}, your chosen value is : ${playerScore}`;
   }
+};
+
+var comparePlayersScores = function () {
+  var compareMessage = `Player 1 score: ${allPlayersScore[0]}<br>Player 2 score: ${allPlayersScore[1]}`;
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    compareMessage = compareMessage + `<br><br>Player 1 wins!`;
+  }
+  if (allPlayersScore[0] < allPlayersScore[1]) {
+    compareMessage = compareMessage + `<br><br>Player 2 wins!`;
+  }
+  if (allPlayersScore[0] == allPlayersScore[1]) {
+    compareMessage = compareMessage + `<br><br>It's a draw!`;
+  }
+  return compareMessage;
 };
 var main = function (input) {
   console.log(`Current Player = ${currentPlayer}`);
@@ -244,9 +260,12 @@ var main = function (input) {
     if (currentPlayer == 2) {
       console.log(`End of P2 turn. Submit will now calculate scores`);
       gameState = GAME_STATE_CHOOSE_COMPARE_SCORES;
-
       return outputMessage + `<br><br>Press submit to calculate scores!`;
     }
+  }
+  if (gameState == GAME_STATE_CHOOSE_COMPARE_SCORES) {
+    console.log(`Game mode is comparing scores now `);
+    outputMessage = comparePlayersScores();
     return outputMessage;
   }
 };
