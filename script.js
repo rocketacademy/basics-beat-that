@@ -239,6 +239,13 @@ var comparePlayersScores = function () {
   }
   return compareMessage;
 };
+
+var resetGame = function () {
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  allPlayersScore = [];
+};
+
 var main = function (input) {
   console.log(`Current Player = ${currentPlayer}`);
   var outputMessage = "";
@@ -266,6 +273,7 @@ var main = function (input) {
   if (gameState == GAME_STATE_CHOOSE_COMPARE_SCORES) {
     console.log(`Game mode is comparing scores now `);
     outputMessage = comparePlayersScores();
+    resetGame();
     return outputMessage;
   }
 };
