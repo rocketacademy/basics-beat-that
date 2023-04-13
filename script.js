@@ -19,6 +19,9 @@ var myOutputValue = "";
 var playerOneNum = 0;
 var playerTwoNum = 0;
 var allPlayerScores = [];
+var lowestNum1 = 0;
+var lowestNum2 = 0;
+var lowestArray = [];
 
 // Scoreboard
 var numPlayerOneWins = 0;
@@ -46,10 +49,6 @@ var rollTwoDice = function (input) {
 
 // Helper Function #3: Player 1 Score
 var playerOneScore = function (playerInput) {
-  // input validation NOT WORKING!!! //
-  // if (playerInput != 1 || playerInput != 2) {
-  //   myOutputValue = `Error! Please enter either '1' or '2' to proceed wiht the game!`;
-  // }
   // if Player 1 input '1'
   if (playerInput == 1) {
     playerOneNum = Number(String(diceRolled[0]) + String(diceRolled[1]));
@@ -69,10 +68,6 @@ var playerOneScore = function (playerInput) {
 
 // Helper Function #4: Player 2 Score
 var playerTwoScore = function (playerInput) {
-  // input validation NOT WORKING!!!//
-  // if (playerInput != 1 || playerInput != 2) {
-  //   myOutputValue = `Error! Please enter either '1' or '2' to proceed wiht the game!`;
-  // }
   // if Player 2 input '1'
   if (playerInput == 1) {
     playerTwoNum = Number(String(diceRolled[2]) + String(diceRolled[3]));
@@ -112,6 +107,18 @@ var resetGame = function () {
   allPlayerScores = [];
   diceRolled = [];
 };
+
+// // Game Mode: Lowest
+// var lowestGameMode = function (input) {
+//   lowestNum1 = rollDice();
+//   lowestNum2 = rollDice();
+//   if (lowestNum1 > lowestNum2) {
+//     return `Current Game Mode: Lowest <br>Welcome to the game! <br>Your number is ${lowestNum2}${lowestNum1}.`;
+//   }
+//   if (lowestNum1 < lowestNum2) {
+//     return `Current Game Mode: Lowest <br>Welcome to the game! <br>Your number is ${lowestNum1}${lowestNum2}.`;
+//   }
+// };
 
 var main = function (input) {
   if (gameMode == "PLAYER 1 ROLLS DICE") {
