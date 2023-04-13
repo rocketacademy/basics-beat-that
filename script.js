@@ -1,12 +1,14 @@
 let GAME_ROLL_DICE = "GAME_ROLL_DICE";
 let GAME_CHOSE_DICE = "GAME_CHOSE_DICE";
+let GAME_COMPARE = "GAME_COMPARE";
 let game = GAME_ROLL_DICE;
+let choice1 = "";
+let playerDice = [];
 
-let player1Dice = [];
-let player2Dice = [];
-let currentPlayer = 0;
-
+let currentPlayer = 1;
+let allPlayerScore = [];
 let output = "";
+
 //Dice roll function
 let diceRoll = function () {
   let randomNumber = Math.random() * 6;
@@ -20,61 +22,79 @@ let diceRoll = function () {
 
 let playerRollDice = function () {
   for (let i = 0; i < 2; i += 1) {
-    player1Dice.push(diceRoll());
-    console.log(player1Dice);
+    playerDice.push(diceRoll());
+    console.log(playerDice);
   }
-  return `Welcome Player 1.<br/> You rolled (${player1Dice[0]}) for 🎲 Dice 1 and (${player1Dice[1]}) for 🎲Dice 2.<br/> Choose the order of the dice.`;
+  return `Welcome Player ${currentPlayer}.<br/> You rolled (${playerDice[0]}) for 🎲 Dice 1 and (${playerDice[1]}) for 🎲Dice 2.<br/> Choose the order of the dice.`;
+};
+
+// Get player score
+
+let getPlayerScore = function (playerinput) {
+  let choice1;
+  if (playerinput != 1 && playerinput != 2) {
+    return `Please input only 1 or 2`;
+  }
+  if (playerinput == 1) {
+    choice1 = `${playerDice[0]}${playerDice[1]}`;
+    Number(choice1);
+  }
+  if (playerinput == 2) {
+    choice1 = `${playerDice[1]}${playerDice[0]}`;
+    Number(choice1);
+  }
+  allPlayerScore.push(choice1);
+  playerDice = [];
+  return `Player ${currentPlayer}, yr score is ${choice1}`;
+};
+
+//Compare results
+let compareResult = function () {
+  let compare = `Player 1 score = ${allPlayerScore[0]} <br>Player 2 score = ${allPlayerScore[1]}<br><br>`;
+  //Player 1 win
+  if (allPlayerScore[0] > allPlayerScore[1]) {
+    compare = compare + "Player 1 wins";
+    console.log(compare);
+  }
+
+  //Player 2 win
+  if (allPlayerScore[0] < allPlayerScore[1]) {
+    compare = compare + "Player 2 wins";
+    console.log(compare);
+  }
+
+  //Tie
+  if (allPlayerScore[0] == allPlayerScore[1]) {
+    compare = compare + `Tie`;
+    console.log(compare);
+  }
+  return compare;
 };
 
 let main = function (input) {
   if (game == GAME_ROLL_DICE) {
     output = playerRollDice();
     game = GAME_CHOSE_DICE;
+    console.log(output);
     return output;
   }
   if (game == GAME_CHOSE_DICE) {
-    if (input != 1 && input != 2) {
-      return `Please input only 1 or 2`;
+    output = getPlayerScore(input);
+    console.log(output);
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      game = GAME_ROLL_DICE;
+      console.log(output);
+      return output + ` <br><br>It is now Player 2 turn`;
     }
-    if (input == 1) {
-      let choice1 = `${player1Dice[0]}${player1Dice[1]}`;
-      Number(choice1);
-      return `Player 1, you chose Dice 1 first. <br/> Your number is ${choice1}.<br/>It is now Player 2's turn.`;
-    }
-    if (input == 2) {
-      let choice1 = `${player1Dice[1]}${player1Dice[0]}`;
-      Number(choice1);
-      return `Player 1, you chose Dice 1 first. <br/> Your number is ${choice1}.<br/>It is now Player 2's turn.`;
+    if (currentPlayer == 2) {
+      game = GAME_COMPARE;
+      return output + `<br><br>Tabulating score, Click submit`;
     }
   }
 
-  //+++++Player 2 code++++++++
-  currentPlayer = 2;
-  if (currentPlayer == 2) {
-    for (let i = 0; i < 2; i += 1) {
-      player2Dice.push(diceRoll());
-      console.log(player2Dice);
-      dice1 = player2Dice[0];
-      dice2 = player2Dice[1];
-      console.log(dice1);
-      console.log(dice2);
-    }
-    return `Welcome Player 2.<br/> You rolled (${dice1}) for 🎲 Dice 1 and (${dice2}) for 🎲Dice 2.<br/> Choose the order of the dice.`;
+  if (game == GAME_COMPARE) {
+    output = compareResult();
+    return output;
   }
-  console.log(player2Dice);
-  dice1 = player2Dice[0];
-  dice2 = player2Dice[1];
-  if (input == 1) {
-    let choice2 = `${dice1}${dice2}`;
-    Number(choice2);
-    return `Player 2, you chose Dice 1 first. <br/> Your number is ${choice2}.<br/>`;
-  }
-
-  if (input == 2) {
-    let choice2 = `${dice2}${dice1}`;
-    Number(choice2);
-    return `Player 2, you chose Dice 1 first. <br/> Your number is ${choice2}.<br/>`;
-  }
-  let myOutputValue = `Do not enter any value and click submit to play the game 🎲`;
-  return myOutputValue;
 };
