@@ -1,9 +1,3 @@
-//prompt user to imput number of playesrs
-//prompt user to decide number of dices to roll
-//player click submit, dices are rolled and display the number of dices for players
-//player input answer
-//go back to line 3, repeat until last player
-//compare result from all players
 
 var gameMode = "Lets start the game";
 var numberOfPlayers = 0;
@@ -33,6 +27,9 @@ var main = function (input) {
   }
   if (gameMode == "Input number of dice") {
     numberOfDice = input;
+    if (Number.isNaN(Number(input))){
+      return `Sorry please enter a number`;
+    } else {
     gameMode = "Roll the dice";
     console.log(gameMode);
     console.log(numberOfDice);
@@ -78,7 +75,6 @@ for (var i = 0; i < sumOfPlayerScore.length; i += 1){
     var largestNumber = sumOfPlayerScore[i + 1];
     return `Player ${i + 2} is leading with ${largestNumber}`;
   }
-  return `Player ${i + 1} has the `
 }
 
 var displayRolledResult = function () {
