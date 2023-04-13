@@ -70,6 +70,11 @@ let compareResult = function () {
   }
   return compare;
 };
+// rest game
+let resetGame = function () {
+  currentPlayer = 1;
+  game = GAME_ROLL_DICE;
+};
 
 let main = function (input) {
   if (game == GAME_ROLL_DICE) {
@@ -95,6 +100,7 @@ let main = function (input) {
 
   if (game == GAME_COMPARE) {
     output = compareResult();
+    resetGame();
     return output;
   }
 };
