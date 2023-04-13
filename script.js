@@ -41,6 +41,7 @@ const HIGHEST_MODE = "highest";
 const LOWEST_MODE = "lowest";
 const STANDARD_MODE = "standard";
 const KNOCKOUT_MODE = "knockout";
+const NEW_MODE = "new mode";
 
 //return messages
 const RESET_MSG = "Game is reset! <br> If you want to play again, press start!";
