@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<!--Hello all-->
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Beat it - Dice Game</title>
     <style>
       * {
         box-sizing: border-box;
@@ -19,13 +18,24 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: #e3b000;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
       }
 
-      input {
+      div.dice {
+        float: left;
+        width: 32px;
+        background: #f5f5f5f5;
+        border: #999 1px solid;
+        padding: 10px;
+        font-size: 24px;
+        text-align: center;
+        margin: 5px;
+      }
+
+      radiobutton {
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
@@ -34,14 +44,12 @@
       }
 
       button {
-        font-size: 21px;
-        line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: lightyellow;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -52,12 +60,52 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <p>
+        -----------------------------------------------------------------------------------------------------
+      </p>
+      <p>Hello! Welcome to Beat That!</p>
+      <p>Select Game Mode - LARGEST or SMALLEST.</p>
+      <p>Each Player to roll Dice.</p>
+      <p>Create a two-digit number by selecting the order of the dice rolls.</p>
+      <p>The player with the highest number wins! Good luck!</p>
+
+      <p>
+        -----------------------------------------------------------------------------------------------------
+      </p>
+      <p>Select Game Mode</p>
+      <input type="radio" id="gamemodebtn1" name="gamebtn" />
+      <label> Largest Score Wins </label>
+      <input type="radio" id="gamemodebtn2" name="gamebtn" />
+      <label> Smallest Score Wins </label>
+      <br /><br />
+      <p>Player 1: Dice Roll</p>
+
+      <div id="dice1" class="dice">0</div>
+      <div id="dice2" class="dice">0</div>
+
+      <button onclick="getPlayer1DiceRoll()" id="rolldice1">Roll</button>
+      <input type="radio" id="radiobutton1" name="button1" />
+      <label>Num1 - Num2</label>
+
+      <input type="radio" id="radiobutton2" name="button1" />
+      <label>Num2 - Num1</label>
+      <br /><br />
+      <p>Player 2: Dice Roll</p>
+      <div id="dice3" class="dice">0</div>
+      <div id="dice4" class="dice">0</div>
+      <button onclick="getPlayer2DiceRoll()" id="rolldice2">Roll</button>
+      <input type="radio" id="radiobutton3" name="button2" />
+      <label>Num1 - Num2</label>
+
+      <input type="radio" id="radiobutton4" name="button2" />
+      <label>Num2 - Num1</label>
+
       <br />
-      <button id="submit-button">Submit</button>
+      <br />
+
       <p>Output:</p>
       <div id="output-div"></div>
+      <button id="submit-button">Compare Outcome</button>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -66,15 +114,15 @@
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        //var input = document.querySelector("#input-field");
+        var result = main();
 
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
 
         // Reset input value
-        input.value = "";
+        //input.value = "";
       });
     </script>
   </body>
