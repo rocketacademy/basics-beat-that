@@ -1,4 +1,3 @@
-
 var gameMode = "Lets start the game";
 var numberOfPlayers = 0;
 var numberOfDice = 0;
@@ -15,25 +14,26 @@ var main = function (input) {
   }
   if (gameMode == "Input number of players") {
     numberOfPlayers = input;
-    if (Number.isNaN(Number(input))){
+    if (Number.isNaN(Number(input))) {
       return `Sorry please enter a number`;
     } else {
-    getPlayerArray();
-    console.log(numberOfPlayers);
-    gameMode = "Input number of dice";
-    console.log(gameMode);
-    return "Please input number of dice want to play.";
+      getPlayerArray();
+      console.log(numberOfPlayers);
+      gameMode = "Input number of dice";
+      console.log(gameMode);
+      return "Please input number of dice want to play.";
     }
   }
   if (gameMode == "Input number of dice") {
     numberOfDice = input;
-    if (Number.isNaN(Number(input))){
+    if (Number.isNaN(Number(input))) {
       return `Sorry please enter a number`;
     } else {
-    gameMode = "Roll the dice";
-    console.log(gameMode);
-    console.log(numberOfDice);
-    return "Press continue to roll the dice";
+      gameMode = "Roll the dice";
+      console.log(gameMode);
+      console.log(numberOfDice);
+      return "Press continue to roll the dice";
+    }
   }
   if (gameMode == "Roll the dice") {
     var diceResult = displayRolledResult();
@@ -64,18 +64,19 @@ var rollDice = function () {
   return randomInteger;
 };
 
-//compare the number to the next number in the same row, repeat until the last number
-
 var findLargestScore = function () {
-for (var i = 0; i < sumOfPlayerScore.length; i += 1){
-  if (sumOfPlayerScore[i] > sumOfPlayerScore[i + 1]){
-    var largestNumber = sumOfPlayerScore[i];
-    return `Player ${i + 1} is leading with ${largestNumber}.`;
-  } else
-    var largestNumber = sumOfPlayerScore[i + 1];
-    return `Player ${i + 2} is leading with ${largestNumber}`;
+  var j = 1;
+  var largestNumber = sumOfPlayerScore[0];
+  var largestNumberPlayer = 1;
+  while (j < sumOfPlayerScore.length) {
+    if (largestNumber > sumOfPlayerScore[j]) {
+    } else {largestNumber = sumOfPlayerScore[j];
+    largestNumberPlayer = j + 1;
+    }
+    j += 1;
   }
-}
+  return `Player ${largestNumberPlayer} is leading with ${largestNumber}`;
+};
 
 var displayRolledResult = function () {
   var rolledResults = [];
@@ -112,4 +113,4 @@ var resetGame = function () {
   curPlayer = 1;
   gameMode = "Roll the dice";
   return curPlayer;
-}
+};
