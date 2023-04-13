@@ -28,15 +28,13 @@ let rollDicePlayer = function () {
         playerDice.push(rollDice());
         counter = counter + 1;
     }
-    return `Player ${currentPlayer}'s turn. <br> Your numbers are ${playerDice[0]} and ${playerDice[1]}. Please type '1' or '2' to select the respective number as the first digit.`;
+    return `<b>Player ${currentPlayer}'s turn. </b><br> Your numbers are <b>${playerDice[0]}</b> and <b>${playerDice[1]}</b>. Please type '1' or '2' to select the respective number as the first digit.`;
 };
 
 let chooseDiceChoice = function (input) {
     // Choose order of numbers
     input = Number(input);
-    if (input !== 1 && input !== 2) {
-        return `Please only type '1' or '2'.Your numbers are ${playerDice[0]} and ${playerDice[1]}.`;
-    } else if (input == 1) {
+    if (input == 1) {
         playerChoice = Number(String(playerDice[0]) + String(playerDice[1]));
     } else {
         playerChoice = Number(String(playerDice[1]) + String(playerDice[0]));
@@ -46,17 +44,21 @@ let chooseDiceChoice = function (input) {
 
     //clear current player's selection in the array
     playerDice = [];
-    return `Player ${currentPlayer} chose ${playerChoice}.`;
+    return `<b>Player ${currentPlayer}</b> chose <b>${playerChoice}</b>.`;
 };
 
 let main = function (input) {
     if (currentGameState == "Game State Dice Roll") {
-        outputMessage = rollDicePlayer();
+        let outputMessage = rollDicePlayer();
         currentGameState = "Choose Order";
         return outputMessage;
     }
     if (currentGameState == "Choose Order") {
-        outputMessage = chooseDiceChoice(input);
+        //input validation
+        if (input != 1 && input != 2) {
+            return `Please only type '1' or '2'.Your numbers are <b>${playerDice[0]}</b> and <b>${playerDice[1]}.</b>`;
+        }
+        let outputMessage = chooseDiceChoice(input);
 
         if (currentPlayer == 1) {
             currentPlayer = 2;
@@ -72,11 +74,13 @@ let main = function (input) {
         currentGameState = "Game State Dice Roll";
         currentPlayer = 1;
         if (allPlayersChoices[0] > allPlayersChoices[1]) {
-            outputMessage = `Player 1's choice is ${allPlayersChoices[0]}.<br> Player 2's choice is ${allPlayersChoices[1]}. <br> Player 1 wins! <br> Click Submit to start a new round.`;
+            outputMessage = `Player 1's choice is ${allPlayersChoices[0]}.<br> Player 2's choice is ${allPlayersChoices[1]}. <br> <b>Player 1 wins!🎉</b> <br> Click Submit to start a new round.`;
         }
         if (allPlayersChoices[0] < allPlayersChoices[1]) {
-            outputMessage = `Player 1's choice is ${allPlayersChoices[0]}.<br> Player 2's choice is ${allPlayersChoices[1]}. <br>Player 2 wins! <br> Click Submit to start a new round.`;
+            outputMessage = `Player 1's choice is ${allPlayersChoices[0]}.<br> Player 2's choice is ${allPlayersChoices[1]}. <br><b>Player 2 wins!🎉</b> <br> Click Submit to start a new round.`;
         }
+
+        //Reset player's choices in array
         allPlayersChoices = [];
         return outputMessage;
     }
