@@ -187,6 +187,8 @@ var currentPlayerRolls = [];
 var currentPlayer = 1;
 var allPlayersScore = [];
 
+var playerWins = [0, 0, 0];
+
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal) + 1;
@@ -204,10 +206,6 @@ var rollDiceForPlayer = function () {
 
 var getPlayerScore = function (playerInput) {
   var playerScore;
-  if (playerInput != 1 && playerInput != 2) {
-    console.log("Invalid enter for changing order");
-    return `Error! Please enter only '1' or '2' to choose your order.<br>Your dice rolls are<br>Dice 1: ${currentPlayerRolls[0]}| Dice 2: ${currentPlayerRolls[1]}.`;
-  }
   if (playerInput == 1) {
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
@@ -229,21 +227,28 @@ var getPlayerScore = function (playerInput) {
 var comparePlayersScores = function () {
   var compareMessage = `Player 1 score: ${allPlayersScore[0]}<br>Player 2 score: ${allPlayersScore[1]}`;
   if (allPlayersScore[0] > allPlayersScore[1]) {
+    playerWins[0]++;
     compareMessage = compareMessage + `<br><br>Player 1 wins!`;
   }
   if (allPlayersScore[0] < allPlayersScore[1]) {
+    playerWins[1]++;
     compareMessage = compareMessage + `<br><br>Player 2 wins!`;
   }
   if (allPlayersScore[0] == allPlayersScore[1]) {
+    playerWins[2]++;
     compareMessage = compareMessage + `<br><br>It's a draw!`;
   }
-  return compareMessage;
+  return compareMessage + "<br><br>" + displayLeaderboard();
 };
 
 var resetGame = function () {
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
   allPlayersScore = [];
+};
+
+var displayLeaderboard = function () {
+  return `Leaderboard:<br>Player 1: ${playerWins[0]} wins<br>Player 2: ${playerWins[1]} wins<br>Ties: ${playerWins[2]}`;
 };
 
 var main = function (input) {
@@ -257,6 +262,9 @@ var main = function (input) {
   }
   if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
     console.log("Game state change to choosing dice order");
+    if (input != "1" && input != "2") {
+      return `Error! Please enter only '1' or '2' to choose your order.<br>Your dice rolls are<br>Dice 1: ${currentPlayerRolls[0]}| Dice 2: ${currentPlayerRolls[1]}.`;
+    }
     outputMessage = getPlayerScore(input);
     if (currentPlayer == 1) {
       console.log(`End of P1 turn, P2 turn now`);
