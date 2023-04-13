@@ -38,7 +38,7 @@ var rollDiceForPlayer = function () {
     counter = counter + 1;
   }
 
-  console.log("rollDiceForPlayer changes,playerRolls: " + currentPlayerRolls);
+  console.log("rollDiceForPlayer changes, playerRolls: " + currentPlayerRolls);
   return (
     "Welcome, Player " +
     currentPlayer +
@@ -69,16 +69,23 @@ var getPlayerScore = function (playerInput) {
   //input == 1
   if (playerInput == 1) {
     console.log("Control flow: input == 1");
-    var playerScore = Number(
+    playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
-    return "Your chosen value is: " + playerScore;
+
+    //Store playerScore in array
+    allPlayersScore.push(playerScore);
+
+    //clear current player rolls array
+    currentPlayerRolls = [];
+
+    return "Player " + currentPlayer + ", your chosen value is " + playerScore;
   }
 
   //input == 2
   if (playerInput == 2) {
     console.log("Control flow: input == 2");
-    var playerScore = Number(
+    playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
 
@@ -87,7 +94,8 @@ var getPlayerScore = function (playerInput) {
 
     //clear current player rolls array
     currentPlayerRolls = [];
-    return "Player " + currentPlayer + "Your chosen value is " + playerScore;
+
+    return "Player " + currentPlayer + ", your chosen value is " + playerScore;
   }
 };
 
@@ -132,6 +140,8 @@ var main = function (input) {
 
     //Change the game state
     gameState = GAME_STATE_CHOOSE_DICE_ORDER;
+
+    return outputMessage;
   }
 
   if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
@@ -144,7 +154,7 @@ var main = function (input) {
       console.log("Control flow: end of player 1's turn, now player 2's turn");
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
-      return outputMessage + "<br><br>It is now player 2's turn!";
+      return outputMessage + "<br><br>It is now Player 2's turn!";
     }
 
     if (currentPlayer == 2) {
