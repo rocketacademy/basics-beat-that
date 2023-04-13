@@ -21,8 +21,6 @@ var gameState = gameStateDiceRoll;
 var playerDiceRollValue = [];
 var currentPlayer = 1;
 var allPlayerScores = [];
-var player1score = 0;
-var player2score = 0;
 
 // Generate random dice number from 1 to 6
 var diceRandom = function () {
