@@ -19,9 +19,6 @@ var myOutputValue = "";
 var playerOneNum = 0;
 var playerTwoNum = 0;
 var allPlayerScores = [];
-var lowestNum1 = 0;
-var lowestNum2 = 0;
-var lowestArray = [];
 
 // Scoreboard
 var numPlayerOneWins = 0;
@@ -36,7 +33,7 @@ var rollDice = function (input) {
   return randomDiceNumber;
 };
 
-// Helper Function #2: Run Dice Twice w WHILE Loop
+// Helper Function #2: Roll 2 Dice
 var rollTwoDice = function (input) {
   var counter = 0;
   while (counter < 2) {
@@ -107,18 +104,6 @@ var resetGame = function () {
   allPlayerScores = [];
   diceRolled = [];
 };
-
-// // Game Mode: Lowest
-// var lowestGameMode = function (input) {
-//   lowestNum1 = rollDice();
-//   lowestNum2 = rollDice();
-//   if (lowestNum1 > lowestNum2) {
-//     return `Current Game Mode: Lowest <br>Welcome to the game! <br>Your number is ${lowestNum2}${lowestNum1}.`;
-//   }
-//   if (lowestNum1 < lowestNum2) {
-//     return `Current Game Mode: Lowest <br>Welcome to the game! <br>Your number is ${lowestNum1}${lowestNum2}.`;
-//   }
-// };
 
 var main = function (input) {
   if (gameMode == "PLAYER 1 ROLLS DICE") {
