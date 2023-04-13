@@ -24,7 +24,7 @@ var player1TotalWins = 0;
 var player2TotalWins = 0;
 var player1Name = "Player 1";
 var player2Name = "Player 2";
-var myOutputValue = "Please key in Player 1's name";
+var myOutputValue = "";
 
 var main = function (input) {
   // Naming players
