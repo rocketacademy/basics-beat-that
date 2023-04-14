@@ -22,6 +22,15 @@ step 5: create a reset game mode
 // ==== GLOBAL VARIABLE ==== //
 
 let diceRollData = [];
+let playersChosenNumber = [];
+
+// game modes
+let GAME_STATE_DICE_ROLL = `player rolls dice`;
+let GAME_STATE_CHOOSE_NUMBER = `player chooses number`;
+let gameState = GAME_STATE_DICE_ROLL;
+let PLAYER_1 = `player 1 turn`;
+let PLAYER_2 = `player 2 turn`;
+let currentPlayer = PLAYER_1;
 
 // ==== HELPER FUNCTION ==== //
 
@@ -46,41 +55,46 @@ let randomDiceRoll = function () {
   }
   let diceNum1 = diceRollData[0];
   let diceNum2 = diceRollData[1];
-  diceRollData = [];
-  return `You have rolled Dice Number ${diceNum1} and ${diceNum2}.`;
+  return `Hey Player 1! 👋<br /><br />Here are the numbers you got!<br /><br />🎲 Dice 1 = ${diceNum1}<br />🎲 Dice 2 = ${diceNum2}<br /><br />Choose which dice to form the first number "1" or "2".<br />Remember, you want to have the biggest value possible! 💪`;
 };
 
 // player chosen number
 
 let playersSelectedNum = function (playersInput) {
   let playersNumber = ``;
-  // if player does not enter the right input
-  if (playersInput != 1 && playersInput != 2) {
-    return `Please enter either "1" or "2" to decide which dice number comes first.`;
-  }
+
   if (playersInput == 1) {
-    playersNumber = Number(
-      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
-    );
+    playersNumber = Number(String(diceRollData[0]) + String(diceRollData[1]));
   }
   if (playersInput == 2) {
-    playersNumber = Number(
-      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
-    );
+    playersNumber = Number(String(diceRollData[1]) + String(diceRollData[0]));
   }
-  combinedPlayersNumber.push(playersNumber);
-  currentPlayerRolls = [];
-  return `Interesting... 👀 <br /><br />Player ${currentPlayer}, you have chosen to form the number: ${playersNumber}`;
+  playersChosenNumber.push(playersNumber);
+  diceRollData = [];
+  return playersNumber;
 };
 
 // compare players chosen number
 
 // ==== MAIN FUNCTION ==== //
 
-let main = function () {
-  // run dice roll twice
-  let diceRollResult = randomDiceRoll();
+let main = function (input) {
+  let output = ``;
+  if (gameState == GAME_STATE_DICE_ROLL) {
+    // run dice roll twice
+    output = randomDiceRoll();
+    gameState = GAME_STATE_CHOOSE_NUMBER;
+    return output;
+  } else if (gameState == GAME_STATE_CHOOSE_NUMBER) {
+    // if player does not enter the right input
+    if (input != 1 && input != 2) {
+      return `Please enter either "1" or "2" to decide which dice number comes first.`;
+    } else {
+      let playersChoice = playersSelectedNum(input);
+      output = `Interesting... 👀 <br /><br />Player 1, you have chosen to form the number: ${playersChoice}`;
 
-  let output = diceRollResult;
+      console.log(`chosen number order:`, playersChoice);
+    }
+  }
   return output;
 };
