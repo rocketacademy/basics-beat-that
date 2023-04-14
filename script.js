@@ -134,6 +134,8 @@ let checkNumPlayers = function (input) {
   let outputValue = "";
   if (Number.isNaN(Number(input))) {
     outputValue = `You have keyed in an invalid choice. Please key in the number of players.`;
+  } else if (input == 1) {
+    outputValue = `You need a minimum of 2 players to play this game. Please key in a number greater than 1.`;
   } else {
     noOfPlayers = input;
     for (let ctr = 1; ctr <= noOfPlayers; ctr += 1) {
