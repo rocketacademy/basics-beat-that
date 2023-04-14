@@ -42,12 +42,36 @@ let randomDiceRoll = function () {
     diceRollData.push(diceNum);
 
     console.log(`dice roll date:`, diceRollData);
-    output = diceRollData;
+    output = diceNum;
   }
-  return output;
+  let diceNum1 = diceRollData[0];
+  let diceNum2 = diceRollData[1];
+  diceRollData = [];
+  return `You have rolled Dice Number ${diceNum1} and ${diceNum2}.`;
 };
 
 // player chosen number
+
+let playersSelectedNum = function (playersInput) {
+  let playersNumber = ``;
+  // if player does not enter the right input
+  if (playersInput != 1 && playersInput != 2) {
+    return `Please enter either "1" or "2" to decide which dice number comes first.`;
+  }
+  if (playersInput == 1) {
+    playersNumber = Number(
+      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
+    );
+  }
+  if (playersInput == 2) {
+    playersNumber = Number(
+      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
+    );
+  }
+  combinedPlayersNumber.push(playersNumber);
+  currentPlayerRolls = [];
+  return `Interesting... 👀 <br /><br />Player ${currentPlayer}, you have chosen to form the number: ${playersNumber}`;
+};
 
 // compare players chosen number
 
