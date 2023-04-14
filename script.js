@@ -15,23 +15,17 @@ var getDiceNumber4;
 var playerNumberCombination1;
 var playerNumberCombination2;
 
-//generate random number
-var generateRandomNumber = function () {
+//generate random dicenumber
+var generateRandomDiceNumber = function () {
   var randomDecimal = Math.random() * 6;
-  var randomNumber = Math.ceil(randomDecimal);
-  return randomNumber;
-};
-
-//get dice number
-var getDiceNumber = function () {
-  var diceNumber = generateRandomNumber();
+  var diceNumber = Math.ceil(randomDecimal);
   return diceNumber;
 };
 
 //player 1 get two dice numbers
 var getTwoDiceRollResult1 = function () {
-  getDiceNumber1 = getDiceNumber();
-  getDiceNumber2 = getDiceNumber();
+  getDiceNumber1 = generateRandomDiceNumber();
+  getDiceNumber2 = generateRandomDiceNumber();
   var twoDiceRollResult = `The dice rolls are ${getDiceNumber1} and ${getDiceNumber2} respectively. <br><br> 
   You now pick the order of the dice you want so as to make a higher combination to win. <br>
   Insert <b>'1'</b> to go with the first number first and <b>'2'</b> to go the the second number first.`;
@@ -57,8 +51,8 @@ var pickNumberToGoFirst1 = function (input) {
 
 //player 2 get two dice numbers
 var getTwoDiceRollResult2 = function () {
-  getDiceNumber3 = getDiceNumber();
-  getDiceNumber4 = getDiceNumber();
+  getDiceNumber3 = generateRandomDiceNumber();
+  getDiceNumber4 = generateRandomDiceNumber();
   var twoDiceRollResult = `The dice rolls are ${getDiceNumber3} and ${getDiceNumber4} respectively. <br><br> 
   You now pick the order of the dice you want so as to make a higher combination to win. <br>
   Insert <b>'1'</b> to go with the first number first and <b>'2'</b> to go the the second number first.`;
@@ -104,10 +98,7 @@ var main = function (input) {
   }
   // if two dice rolls has generated, pick which number to go first
   else if (gameMode == "pickNumberToGoFirst") {
-    if (input == 1) {myOutputValue = `Your number is ${pickNumberToGoFirst1(input)}.
-        Press <b>'Submit'</b> to generate Player TWO's number.`;
-      gameMode = "getSecondPlayerTwoDiceRoll";}
-    else if (input == 2) {myOutputValue = `Your number is ${pickNumberToGoFirst1(input)}.
+    if (input == 1 || input == 2) {myOutputValue = `Your number is ${pickNumberToGoFirst1(input)}.
         Press <b>'Submit'</b> to generate Player TWO's number.`;
       gameMode = "getSecondPlayerTwoDiceRoll";
     }
@@ -120,11 +111,7 @@ var main = function (input) {
   }
   // if second player two dice results has generated, second player pick which number to go first
   else if (gameMode == "pickSecondPlayerNumberToGoFirst") {
-    if (input == 1) {myOutputValue = `Your number is ${pickNumberToGoFirst2(input)}.<br>
-      Press <b>'Submit'</b> to compare result.`;
-      gameMode = "compareNumbers";
-    }
-    else if (input == 2) {myOutputValue = `Your number is ${pickNumberToGoFirst2(input)}.<br>
+    if (input == 1 || input == 2) {myOutputValue = `Your number is ${pickNumberToGoFirst2(input)}.<br>
       Press <b>'Submit'</b> to compare result.`;
       gameMode = "compareNumbers";
     }
@@ -150,61 +137,33 @@ var main = function (input) {
 
 var arrayOfPastNumbers1 = [];
 var arrayOfPastNumbers2 = [];
-var sumOfPastNumbers1;
-var sumOfPastNumbers2;
+var sumOfPastNumbers1 = 0;
+var sumOfPastNumbers2 = 0;
 
 // array of player ONE past numbers
 var addPastNumbers1 = function () {
   arrayOfPastNumbers1.push(playerNumberCombination1);
+  sumOfPastNumbers1 += playerNumberCombination1;
   return arrayOfPastNumbers1;
 };
 
 // array of player TWO past numbers
 var addPastNumbers2 = function () {
   arrayOfPastNumbers2.push(playerNumberCombination2);
+  sumOfPastNumbers2 += playerNumberCombination2;
   return arrayOfPastNumbers2;
-};
-
-// sum of array of player ONE past numbers
-var getSumOfPastNumbers1 = function () {
-  var counter;
-  for (counter = 0; counter < arrayOfPastNumbers1.length; counter += 1) {
-    sumOfPastNumbers1 = sumOfPastNumbers1 + arrayOfPastNumbers1[counter];
-    console.log("sum of part numbers 1: " + sumOfPastNumbers1)
-    // problem: sum of past numbers not showing
-    return sumOfPastNumbers1;
-  }
-};
-
-// sum of array of player TWO past numbers
-var getSumOfPastNumbers2 = function () {
-  var counter;
-  for (counter = 0; counter < arrayOfPastNumbers2.length; counter += 1) {
-    sumOfPastNumbers2 = sumOfPastNumbers2 + arrayOfPastNumbers2[counter];
-    console.log("sum of part numbers 2: " + sumOfPastNumbers2)
-    // problem: sum of past numbers not showing
-    return sumOfPastNumbers2;
-  }
 };
 
 // show leader board larger sum of array will show first
 var showLeaderBoard = function () {
   var myOutputValue;
-  if (!getSumOfPastNumbers1()) {
-    if (playerNumberCombination1 > playerNumberCombination2) {
-      myOutputValue = `LEADER BOARD <br> Sum of Player ONE is ${playerNumberCombination1}. <br> Sum of Player TWO is ${playerNumberCombination2}.`
-    }
-    else if (playerNumberCombination2 > playerNumberCombination1){
-      myOutputValue = `LEADER BOARD <br> Sum of Player ONE is ${playerNumberCombination2}. <br> Sum of Player TWO is ${playerNumberCombination1}.`
-    }
+  if (sumOfPastNumbers1 > sumOfPastNumbers2) {
+    myOutputValue = `LEADER BOARD <br> Sum of Player ONE is ${sumOfPastNumbers1}. <br> Sum of Player TWO is ${sumOfPastNumbers2}. <br> Player ONE is leading.`
   }
-  if (getSumOfPastNumbers1() > getSumOfPastNumbers2()) {
-    myOutputValue = `LEADER BOARD <br> Sum of Player ONE is ${getSumOfPastNumbers1()}. <br> Sum of Player TWO is ${getSumOfPastNumbers2()}. <br> Player ONE is leading.`
+  else if (sumOfPastNumbers2 > sumOfPastNumbers1) { 
+    myOutputValue = `LEADER BOARD <br> Sum of Player TWO is ${sumOfPastNumbers2}. <br> Sum of Player ONE is ${sumOfPastNumbers1}. <br> Player TWO is leading.`
   }
-  else if (getSumOfPastNumbers2() > getSumOfPastNumbers1()) { 
-    myOutputValue = `LEADER BOARD <br> Sum of Player TWO is ${getSumOfPastNumbers2()}. <br> Sum of Player ONE is ${getSumOfPastNumbers1()}. <br> Player TWO is leading.`
-  }
-  console.log(getSumOfPastNumbers1(), getSumOfPastNumbers2())
+  console.log(sumOfPastNumbers1, sumOfPastNumbers2)
   // problem: sum of past numbers not showing
   return myOutputValue;
 };
