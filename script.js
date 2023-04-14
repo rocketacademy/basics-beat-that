@@ -96,7 +96,6 @@ let winningNumber = function () {
 
 let main = function (input) {
   let output = ``;
-  console.log(`current player:`, currentPlayer);
   if (gameState == GAME_STATE_DICE_ROLL) {
     // run dice roll twice
     output = randomDiceRoll();
@@ -106,22 +105,25 @@ let main = function (input) {
     // player choose number order
   }
   if (gameState == GAME_STATE_CHOOSE_NUMBER) {
-    let playersChoice = playersSelectedNum(input);
-    console.log(`current player:`, currentPlayer);
-    console.log(`player number order:`, playersChoice);
-
+    output = playersSelectedNum(input);
     // change player
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
-      return (
-        playersChoice + `<br /><br />Get ready Player 2! It's your turn now.`
-      );
+      return output + `<br /><br />Get ready Player 2! It's your turn now.`;
     }
 
     if (currentPlayer == 2) {
       gameState = GAME_STATE_WINNER;
+      return (
+        output +
+        `<br /><br />Now that you both have your number, press submit to see who is the winner! 👀`
+      );
     }
-    return playersChoice;
+  }
+  if (gameState == GAME_STATE_WINNER) {
+    console.log(`game state: winner`);
+    output = winningNumber();
+    return output;
   }
 };
