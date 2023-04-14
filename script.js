@@ -62,16 +62,20 @@ let randomDiceRoll = function () {
 
 let playersSelectedNum = function (playersInput) {
   let playersNumber = ``;
-
-  if (playersInput == 1) {
-    playersNumber = Number(String(diceRollData[0]) + String(diceRollData[1]));
+  // if player does not enter the right input
+  if (playersInput != 1 && playersInput != 2) {
+    return `Please enter either "1" or "2" to decide which dice number comes first.`;
+  } else {
+    if (playersInput == 1) {
+      playersNumber = Number(String(diceRollData[0]) + String(diceRollData[1]));
+    }
+    if (playersInput == 2) {
+      playersNumber = Number(String(diceRollData[1]) + String(diceRollData[0]));
+    }
+    playersChosenNumber.push(playersNumber);
+    diceRollData = [];
+    return `Interesting... 👀 <br /><br />Player 1, you have chosen to form the number: ${playersNumber}`;
   }
-  if (playersInput == 2) {
-    playersNumber = Number(String(diceRollData[1]) + String(diceRollData[0]));
-  }
-  playersChosenNumber.push(playersNumber);
-  diceRollData = [];
-  return playersNumber;
 };
 
 // compare players chosen number
@@ -86,15 +90,9 @@ let main = function (input) {
     gameState = GAME_STATE_CHOOSE_NUMBER;
     return output;
   } else if (gameState == GAME_STATE_CHOOSE_NUMBER) {
-    // if player does not enter the right input
-    if (input != 1 && input != 2) {
-      return `Please enter either "1" or "2" to decide which dice number comes first.`;
-    } else {
-      let playersChoice = playersSelectedNum(input);
-      output = `Interesting... 👀 <br /><br />Player 1, you have chosen to form the number: ${playersChoice}`;
-
-      console.log(`chosen number order:`, playersChoice);
-    }
+    let playersChoice = playersSelectedNum(input);
+    console.log(`chosen number order:`, playersChoice);
+    return playersChoice;
   }
   return output;
 };
