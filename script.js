@@ -10,87 +10,53 @@
 // compare both dice value from each player, the higher number wins
 // reset the game
 
+/*
+step 1: create a dice roll function (output only 2 number)
+step 2: create a select number function (input the result into an array to compare with next player's choice)
+step 3: create a second player game mode
+step 4: create a game result function (compare both player's results, the number with the bigger value wins)
+step 5: create a reset game mode
+
+*/
+
 // ==== GLOBAL VARIABLE ==== //
 
-let gameState = `player dice roll`;
-
-let currentPlayerRolls = [];
-
-let currentPlayer = 1;
-let combinedPlayerNumber = [];
+let diceRollData = [];
 
 // ==== HELPER FUNCTION ==== //
 
-// random dice number from 1-6
+// random dice number from 1-6 twice
 let randomDiceRoll = function () {
-  let randomNum = Math.random() * 6;
-  let randomInteger = Math.floor(randomNum);
-  let diceNum = randomInteger + 1;
-  console.log(`DiceRoll outout:`, diceNum);
-  return diceNum;
-};
+  let output = ``;
 
-// rolled dice twice
-let rollDiceTwice = function () {
+  // counter to run dice roll twice
   for (let i = 0; i < 2; i = i += 1) {
-    let DiceNum = randomDiceRoll();
-    // push dice numbers in player array
-    currentPlayerRolls.push(DiceNum);
+    // dice roll function
+    let randomNum = Math.random() * 6;
+    let randomInteger = Math.floor(randomNum);
+    let diceNum = randomInteger + 1;
+
+    console.log(`Dice roll function result:`, diceNum);
+
+    // add dice roll results into dice roll data array
+    diceRollData.push(diceNum);
+
+    console.log(`dice roll date:`, diceRollData);
+    output = diceRollData;
   }
-  console.log(`player rolls:`, currentPlayerRolls);
-  return `✨ Hey Player ${currentPlayer}! Here are the numbers you got! ✨ <br /><br />🎲 Dice 1 = ${currentPlayerRolls[0]} <br />🎲 Dice 2 = ${currentPlayerRolls[1]} <br /><br />Choose which dice to form the first number "1" or "2".`;
+  return output;
 };
 
 // player chosen number
 
-let playerChosenNumber = function (playerInput) {
-  let playerNumber = ``;
-  // if player does not enter the right input
-  if (playerInput != 1 && playerInput != 2) {
-    return `Please enter either "1" or "2" to decide which dice number comes first.`;
-  }
-  if (playerInput == 1) {
-    playerNumber = Number(
-      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
-    );
-  }
-  if (playerInput == 2) {
-    playerNumber = Number(
-      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
-    );
-  }
-  combinedPlayerNumber.push(playerNumber);
-  currentPlayerRolls = [];
-  return `Interesting... 👀 <br /><br />Player ${currentPlayer}, you have chosen to form the number: ${playerNumber}`;
-};
-
 // compare players chosen number
-let chooseWinner = function () {};
 
 // ==== MAIN FUNCTION ==== //
-let main = function (input) {
-  let output = ``;
-  if (gameState == `player dice roll`) {
-    // roll dice twice
-    output = rollDiceTwice();
 
-    // change game mode
-    if (currentPlayer == 1) {
-      gameState = `player 1 choose number`;
-    } else {
-      gameState = `player 2 choose number`;
-    }
-    return output;
-  }
-  if (gameState == `player 1 choose number`) {
-    // if input is correct, output player chosen number
-    output = playerChosenNumber(input);
-    currentPlayer = 2;
-    gameState = `player dice roll`;
-    return output + `<br /><br />Player 2, you're up next!`;
-  }
-  if (currentPlayer == 2) {
-    gameState = `compare dice number`;
-    return `<br /><br /> Who is the winner?`;
-  }
+let main = function () {
+  // run dice roll twice
+  let diceRollResult = randomDiceRoll();
+
+  let output = diceRollResult;
+  return output;
 };
