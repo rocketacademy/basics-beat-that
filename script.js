@@ -22,15 +22,14 @@ step 5: create a reset game mode
 // ==== GLOBAL VARIABLE ==== //
 
 let diceRollData = [];
-let playersChosenNumber = [];
+let currentPlayerNumber = [];
+let allPlayersNumber = [];
 
 // game modes
 let GAME_STATE_DICE_ROLL = `player rolls dice`;
 let GAME_STATE_CHOOSE_NUMBER = `player chooses number`;
 let gameState = GAME_STATE_DICE_ROLL;
-let PLAYER_1 = `player 1 turn`;
-let PLAYER_2 = `player 2 turn`;
-let currentPlayer = PLAYER_1;
+let currentPlayer = 1;
 
 // ==== HELPER FUNCTION ==== //
 
@@ -50,12 +49,12 @@ let randomDiceRoll = function () {
     // add dice roll results into dice roll data array
     diceRollData.push(diceNum);
 
-    console.log(`dice roll date:`, diceRollData);
+    console.log(`current player dice roll date:`, diceRollData);
     output = diceNum;
   }
   let diceNum1 = diceRollData[0];
   let diceNum2 = diceRollData[1];
-  return `Hey Player 1! 👋<br /><br />Here are the numbers you got!<br /><br />🎲 Dice 1 = ${diceNum1}<br />🎲 Dice 2 = ${diceNum2}<br /><br />Choose which dice to form the first number "1" or "2".<br />Remember, you want to have the biggest value possible! 💪`;
+  return `Hey Player ${currentPlayer}! 👋<br /><br />Here are the numbers you got!<br /><br />🎲 Dice 1 = ${diceNum1}<br />🎲 Dice 2 = ${diceNum2}<br /><br />Choose which dice to form the first number "1" or "2".<br />Remember, you want to have the biggest value possible! 💪`;
 };
 
 // player chosen number
@@ -72,9 +71,11 @@ let playersSelectedNum = function (playersInput) {
     if (playersInput == 2) {
       playersNumber = Number(String(diceRollData[1]) + String(diceRollData[0]));
     }
-    playersChosenNumber.push(playersNumber);
+    currentPlayerNumber.push(playersNumber);
+    allPlayersNumber.push(playersNumber);
     diceRollData = [];
-    return `Interesting... 👀 <br /><br />Player 1, you have chosen to form the number: ${playersNumber}`;
+    console.log(`all players number log:`, allPlayersNumber);
+    return `Interesting... 👀 <br /><br />Player ${currentPlayer}, you have chosen to form the number: ${playersNumber}`;
   }
 };
 
@@ -84,15 +85,26 @@ let playersSelectedNum = function (playersInput) {
 
 let main = function (input) {
   let output = ``;
+  console.log(`current player:`, currentPlayer);
   if (gameState == GAME_STATE_DICE_ROLL) {
     // run dice roll twice
     output = randomDiceRoll();
     gameState = GAME_STATE_CHOOSE_NUMBER;
     return output;
-  } else if (gameState == GAME_STATE_CHOOSE_NUMBER) {
-    let playersChoice = playersSelectedNum(input);
-    console.log(`chosen number order:`, playersChoice);
-    return playersChoice;
+
+    // player choose number order
   }
-  return output;
+  if (gameState == GAME_STATE_CHOOSE_NUMBER) {
+    let output = playersSelectedNum(input);
+    console.log(`current player:`, currentPlayer);
+
+    // change player
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameState = GAME_STATE_DICE_ROLL;
+      console.log(playersSelectedNum);
+      return output;
+    }
+    return output;
+  }
 };
