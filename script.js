@@ -17,9 +17,9 @@ let diceRollResult = [];
 let playersArray = [];
 
 // position of nested array column
-const playerName = Number(0);
-const diceResult = 1;
-const playerTotal = 2;
+const PLAYER_NAME = Number(0);
+const DICE_RESULT = 1;
+const PLAYER_TOTAL = 2;
 
 // rolling one dice
 let rollOneDice = function () {
@@ -30,37 +30,37 @@ let rollOneDice = function () {
 };
 
 // to find winner of each round
-let findWinner = function () {
+let findWinner = function (arrayIndex) {
   let winner = "";
   for (let row = 0, greatest = 0; row < playersArray.length; row += 1) {
-    if (playersArray[row][diceResult] > greatest) {
-      greatest = playersArray[row][diceResult];
-      winner = `The winner for this round is ${playersArray[row][playerName]}!`;
-    } else if (playersArray[row][diceResult] == greatest) {
-      winner = `${winner} and ${playersArray[row][playerName]} had a draw! `;
+    if (playersArray[row][arrayIndex] > greatest) {
+      greatest = playersArray[row][arrayIndex];
+      winner = `The winner for this round is ${playersArray[row][PLAYER_NAME]}!`;
+    } else if (playersArray[row][arrayIndex] == greatest) {
+      winner = `${winner} and ${playersArray[row][PLAYER_NAME]} had a draw! `;
     }
   }
   return winner;
 };
-
+/*
 // to find winner for Scoreboard
 let findGrandWinner = function () {
   let grandWinner = "";
   for (let row = 0, greatest = 0; row < playersArray.length; row += 1) {
-    if (playersArray[row][playerTotal] > greatest) {
-      greatest = playersArray[row][playerTotal];
-      grandWinner = playersArray[row][playerName];
-    } else if (playersArray[row][playerTotal] == greatest) {
-      grandWinner = `${grandWinner} and ${playersArray[row][playerName]} had a draw!`;
+    if (playersArray[row][PLAYER_TOTAL] > greatest) {
+      greatest = playersArray[row][PLAYER_TOTAL];
+      grandWinner = playersArray[row][PLAYER_NAME];
+    } else if (playersArray[row][PLAYER_TOTAL] == greatest) {
+      grandWinner = `${grandWinner} and ${playersArray[row][PLAYER_NAME]} had a draw!`;
     }
   }
   return grandWinner;
 };
-
+*/
 // to find index of array match for current player
 let matchingArray = function () {
   for (let row = 0; row <= noOfPlayers; row += 1) {
-    if (playersArray[row][playerName] == currentPlayer) {
+    if (playersArray[row][PLAYER_NAME] == currentPlayer) {
       return row;
     }
   }
@@ -91,20 +91,21 @@ let rollTotalDice = function () {
   diceRollResult.reverse();
   let numOfPlayers = "Player " + noOfPlayers;
   let arrayIndex = matchingArray();
-  playersArray[arrayIndex][diceResult] = Number(diceRollResult.join(""));
-  playersArray[arrayIndex][playerTotal] += playersArray[arrayIndex][diceResult];
+  playersArray[arrayIndex][DICE_RESULT] = Number(diceRollResult.join(""));
+  playersArray[arrayIndex][PLAYER_TOTAL] +=
+    playersArray[arrayIndex][DICE_RESULT];
 
   if (currentPlayer != numOfPlayers) {
     outputValue =
       outputValue +
-      `<br>Your optimal combination is ${playersArray[arrayIndex][diceResult]}. 💪 <br>Click "Submit" to roll the dice for the next player.`;
+      `<br>Your optimal combination is ${playersArray[arrayIndex][DICE_RESULT]}. 💪 <br>Click "Submit" to roll the dice for the next player.`;
     currentPlayer;
   } else {
-    winner = findWinner();
-    grandWinner = findGrandWinner();
+    winner = findWinner(DICE_RESULT);
+    grandWinner = findWinner(PLAYER_TOTAL);
     outputValue =
       outputValue +
-      `<br>${playersArray[arrayIndex][playerName]}, your optimal combination is ${playersArray[arrayIndex][diceResult]}. 💪 <br><br> ${winner} 🎉
+      `<br>${playersArray[arrayIndex][PLAYER_NAME]}, your optimal combination is ${playersArray[arrayIndex][DICE_RESULT]}. 💪 <br><br> ${winner} 🎉
       <br>Click "Submit" to start a new round! <br><br> `;
     gameCtr += 1;
     let scoreboardDisplay = displayScoreBoard();
@@ -124,7 +125,7 @@ let displayScoreBoard = function () {
   for (let row = 0; row < playersArray.length; row += 1) {
     outputValue =
       outputValue +
-      `${playersArray[row][playerName]} Grand Total: ${playersArray[row][playerTotal]} <br>`;
+      `${playersArray[row][PLAYER_NAME]} Grand Total: ${playersArray[row][PLAYER_TOTAL]} <br>`;
   }
   return outputValue;
 };
