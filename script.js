@@ -28,6 +28,7 @@ let allPlayersNumber = [];
 // game modes
 let GAME_STATE_DICE_ROLL = `player rolls dice`;
 let GAME_STATE_CHOOSE_NUMBER = `player chooses number`;
+let GAME_STATE_WINNER = `find the winning number`;
 let gameState = GAME_STATE_DICE_ROLL;
 let currentPlayer = 1;
 
@@ -81,6 +82,16 @@ let playersSelectedNum = function (playersInput) {
 
 // compare players chosen number
 
+let winningNumber = function () {
+  if (allPlayersNumber[0] < allPlayersNumber[1]) {
+    return `🎆Congratulations Player 2 you won!🎆`;
+  } else if (allPlayersNumber[0] > allPlayersNumber[1]) {
+    return `🎆Congratulations Player 1 you won!🎆`;
+  } else {
+    return `Wow this is quite rare... But it's a draw!`;
+  }
+};
+
 // ==== MAIN FUNCTION ==== //
 
 let main = function (input) {
@@ -95,16 +106,22 @@ let main = function (input) {
     // player choose number order
   }
   if (gameState == GAME_STATE_CHOOSE_NUMBER) {
-    let output = playersSelectedNum(input);
+    let playersChoice = playersSelectedNum(input);
     console.log(`current player:`, currentPlayer);
+    console.log(`player number order:`, playersChoice);
 
     // change player
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
-      console.log(playersSelectedNum);
-      return output;
+      return (
+        playersChoice + `<br /><br />Get ready Player 2! It's your turn now.`
+      );
     }
-    return output;
+
+    if (currentPlayer == 2) {
+      gameState = GAME_STATE_WINNER;
+    }
+    return playersChoice;
   }
 };
