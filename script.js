@@ -29,6 +29,7 @@ let allPlayersNumber = [];
 let GAME_STATE_DICE_ROLL = `player rolls dice`;
 let GAME_STATE_CHOOSE_NUMBER = `player chooses number`;
 let GAME_STATE_WINNER = `find the winning number`;
+let GAME_STATE_RESET = `game restarts`;
 let gameState = GAME_STATE_DICE_ROLL;
 let currentPlayer = 1;
 
@@ -84,6 +85,26 @@ let winningNumber = function () {
   }
 };
 
+// reset game function
+
+let resetGame = function () {
+  gameState = GAME_STATE_DICE_ROLL;
+  currentPlayer = 1;
+  allPlayersNumber = [];
+  return `Welcome to Beat That! 🎮
+        <br />
+        <br />
+        📢 How to play 📢
+        <br />
+        <br />
+        Create a two-digit number by selecting the order of your dice rolls.
+        <br />
+        The player with the highest number wins. Good luck!
+        <br />
+        <br />
+        Awesome! Click submit to start playing. 🙌`;
+};
+
 // ==== MAIN FUNCTION ==== //
 
 let main = function (input) {
@@ -120,6 +141,11 @@ let main = function (input) {
   }
   if (gameState == GAME_STATE_WINNER) {
     output = winningNumber();
+    gameState = GAME_STATE_RESET;
+    return output + `<br /><br />Press submit to restart the game!`;
+  }
+  if (gameState == GAME_STATE_RESET) {
+    output = resetGame();
     return output;
   }
 };
