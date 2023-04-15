@@ -45,12 +45,9 @@ let randomDiceRoll = function () {
     let randomInteger = Math.floor(randomNum);
     let diceNum = randomInteger + 1;
 
-    console.log(`Dice roll function result:`, diceNum);
-
     // add dice roll results into dice roll data array
     diceRollData.push(diceNum);
 
-    console.log(`current player dice roll date:`, diceRollData);
     output = diceNum;
   }
   let diceNum1 = diceRollData[0];
@@ -62,22 +59,17 @@ let randomDiceRoll = function () {
 
 let playersSelectedNum = function (playersInput) {
   let playersNumber = ``;
-  // if player does not enter the right input
-  if (playersInput != 1 && playersInput != 2) {
-    return `Please enter either "1" or "2" to decide which dice number comes first.`;
-  } else {
-    if (playersInput == 1) {
-      playersNumber = Number(String(diceRollData[0]) + String(diceRollData[1]));
-    }
-    if (playersInput == 2) {
-      playersNumber = Number(String(diceRollData[1]) + String(diceRollData[0]));
-    }
-    currentPlayerNumber.push(playersNumber);
-    allPlayersNumber.push(playersNumber);
-    diceRollData = [];
-    console.log(`all players number log:`, allPlayersNumber);
-    return `Interesting... 👀 <br /><br />Player ${currentPlayer}, you have chosen to form the number: ${playersNumber}`;
+
+  if (playersInput == 1) {
+    playersNumber = Number(String(diceRollData[0]) + String(diceRollData[1]));
   }
+  if (playersInput == 2) {
+    playersNumber = Number(String(diceRollData[1]) + String(diceRollData[0]));
+  }
+  currentPlayerNumber.push(playersNumber);
+  allPlayersNumber.push(playersNumber);
+  diceRollData = [];
+  return `Interesting... 👀 <br /><br />Player ${currentPlayer}, you have chosen to form the number: ${playersNumber}`;
 };
 
 // compare players chosen number
@@ -105,24 +97,28 @@ let main = function (input) {
     // player choose number order
   }
   if (gameState == GAME_STATE_CHOOSE_NUMBER) {
-    output = playersSelectedNum(input);
-    // change player
-    if (currentPlayer == 1) {
-      currentPlayer = 2;
-      gameState = GAME_STATE_DICE_ROLL;
-      return output + `<br /><br />Get ready Player 2! It's your turn now.`;
-    }
+    // if player does not enter the right input
+    if (input != 1 && input != 2) {
+      return `Please enter either "1" or "2" to decide which dice number comes first.`;
+    } else {
+      output = playersSelectedNum(input);
+      // change player
+      if (currentPlayer == 1) {
+        currentPlayer = 2;
+        gameState = GAME_STATE_DICE_ROLL;
+        return output + `<br /><br />Get ready Player 2! It's your turn now.`;
+      }
 
-    if (currentPlayer == 2) {
-      gameState = GAME_STATE_WINNER;
-      return (
-        output +
-        `<br /><br />Now that you both have your number, press submit to see who is the winner! 👀`
-      );
+      if (currentPlayer == 2) {
+        gameState = GAME_STATE_WINNER;
+        return (
+          output +
+          `<br /><br />Now that you both have your number, press submit to see who is the winner! 👀`
+        );
+      }
     }
   }
   if (gameState == GAME_STATE_WINNER) {
-    console.log(`game state: winner`);
     output = winningNumber();
     return output;
   }
