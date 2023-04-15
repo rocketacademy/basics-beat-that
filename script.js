@@ -77,11 +77,11 @@ let playersSelectedNum = function (playersInput) {
 
 let winningNumber = function () {
   if (allPlayersNumber[0] < allPlayersNumber[1]) {
-    return `🎆Congratulations Player 2 you won!🎆`;
+    return `🎆Congratulations Player 2 you won! 🎆 <br /><br />${allPlayersNumber[1]} is bigger than ${allPlayersNumber[0]}.`;
   } else if (allPlayersNumber[0] > allPlayersNumber[1]) {
-    return `🎆Congratulations Player 1 you won!🎆`;
+    return `🎆Congratulations Player 1 you won!🎆 <br /><br />${allPlayersNumber[0]} is bigger than ${allPlayersNumber[1]}.`;
   } else {
-    return `Wow this is quite rare... But it's a draw!`;
+    return `Wow this is quite rare... But it's a draw! <br /><br />You both got ${allPlayersNumber[0]}.`;
   }
 };
 
