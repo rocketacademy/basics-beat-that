@@ -8,9 +8,10 @@
       }
 
       body {
-        font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
+        font-size: 18px;
+        color: rgb(76, 26, 141);
+        font-family: monospace;
+        text-align: center
       }
 
       #header {
@@ -18,7 +19,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: rgb(228, 116, 181);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -34,13 +35,16 @@
 
       button {
         font-size: 21px;
+        font-family: monospace;
+        color: rgb(253, 181, 223);
+        background-color: rgb(89, 18, 95);
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: rgb(245, 206, 222);
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -49,15 +53,27 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">👾 Beat That Game! 👾</h1>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
-    </div>
+      <div id="output-div">
+        Welcome to Beat That! 🎮
+        <br />
+        <br />
+        📢 How to play 📢
+        <br />
+        <br />
+        Create a two-digit number by selecting the order of your dice rolls.
+        <br />
+        The player with the highest number wins. Good luck!
+        <br />
+        <br />
+        Awesome! Click submit to start playing. 🙌
+      </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
