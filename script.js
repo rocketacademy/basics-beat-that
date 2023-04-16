@@ -134,7 +134,7 @@ let main = function (input) {
         gameState = GAME_STATE_WINNER;
         return (
           output +
-          `<br /><br />Now that you both have your number, press submit to see who is the winner! 👀`
+          `<br /><br />Now that you both have your number, click submit to see who is the winner! 👀`
         );
       }
     }
@@ -142,7 +142,7 @@ let main = function (input) {
   if (gameState == GAME_STATE_WINNER) {
     output = winningNumber();
     gameState = GAME_STATE_RESET;
-    return output + `<br /><br />Press submit to restart the game!`;
+    return output + `<br /><br />Press click to restart the game!`;
   }
   if (gameState == GAME_STATE_RESET) {
     output = resetGame();
