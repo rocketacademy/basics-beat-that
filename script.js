@@ -9,6 +9,10 @@ let diceRoll = function () {
 //to store the dice numbers, and other global variables 
 let numOfPlayers = 2; // min num of players 
 let currentPlayer; 
+
+let turns; 
+let rounds; 
+
 let rolledNums = []; // for each player
 let playerNum;
 let playerNumCombo = []; // index 0 and 1 reserved for player 1, 2. use push to add player 3 or 4
