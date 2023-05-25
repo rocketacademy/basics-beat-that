@@ -1,4 +1,4 @@
-var main = function (input) {
+var main = function (input) { 
   var myOutputValue = initiate(input);
   return myOutputValue;
 };
@@ -34,7 +34,6 @@ let initiate = function(input){
   else if (gameState == "player choose"){
     gameState = "player2 roll"
     document.getElementById("submit-button").innerHTML = "Continue";
-    document.getElementById("input-field").disabled = true;
     input = Number(input)
     if (input == 2){
       playerNum = [rolledNums[1], rolledNums[0]].join(""); //FLIP
@@ -44,8 +43,8 @@ let initiate = function(input){
       playerNum = rolledNums.join("");
       return `Your rolls combined is ${playerNum}.`;//NO FLIP
     }
-    else{ return `That is not a valid input`}
-  }
+    else{ return `That is not a valid input, please choose a number either 1 or 2`}
+  } // need to move this to the beginning of the if statement 
 }
 
 
