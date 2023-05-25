@@ -6,13 +6,10 @@ let diceRoll = function () {
   return Math.floor(Math.random() * 6 + 1);
 };
 //to store the dice numbers, and other global variables 
-let rolledNums1 = [];
-let player1Num;
-let player1Score;
+let rolledNums = [];
+let playerNum;
+let playerScore;
 
-let rolledNums2 = [];
-let player2Num;
-let player2Score;
 
 let gameState = "";
 
@@ -24,49 +21,33 @@ let initiate = function(input){
   document.getElementById("input-field").disabled = false;
   if(gameState == ""){
   for (i = 0; i < 2; i++){
-    rolledNums1.push(diceRoll())
-    console.log(rolledNums1)
+    rolledNums.push(diceRoll())
+    console.log(rolledNums)
   }
-  let rolledNums1Index0 = rolledNums1[0];
-  let rolledNums1Index1 = rolledNums1[1];
-  gameState = "player1 choose" 
+  let rolledNums1Index0 = rolledNums[0];
+  let rolledNums1Index1 = rolledNums[1];
+  gameState = "player choose" 
   document.getElementById("submit-button").innerHTML = "Submit";
-  return `The numbers you rolled are ${rolledNums1[0]} and ${rolledNums1[1]} 
+  return `The numbers you rolled are ${rolledNums[0]} and ${rolledNums[1]} 
   <br> Choose which of the numbers is to go first`;
   }
-  else if (gameState == "player1 choose"){
+  else if (gameState == "player choose"){
     gameState = "player2 roll"
     document.getElementById("submit-button").innerHTML = "Continue";
     document.getElementById("input-field").disabled = true;
     input = Number(input)
     if (input == 2){
-      player1Num = [rolledNums1[1], rolledNums1[0]].join(""); //FLIP
-      return`Your rolls combined is ${player1Num}.`
+      playerNum = [rolledNums[1], rolledNums[0]].join(""); //FLIP
+      return`Your rolls combined is ${playerNum}.`
     }
     else if (input == 1){
-      player1Num = rolledNums1.join("");
-      return `Your rolls combined is ${player1Num}.`;//NO FLIP
+      playerNum = rolledNums.join("");
+      return `Your rolls combined is ${playerNum}.`;//NO FLIP
     }
     else{ return `That is not a valid input`}
   }
-  else if (gameState == "player2 roll"){
-    document.getElementById("input-field").disabled = true;
-    document.getElementById("submit-button").innerHTML = "ROLL";
-    return `roll time baby`
-  }
 }
 
-let winnerOfRound = function (){
-  if (player1Num == player2Num) {
-    return `your numbers are the same, it's a draw`
-  }
-  else if (player1Num > player2Num) {
-    player1Score++
-    return `Player 1 wins`
-  }
-  else{
-    player2Score++
-    return `Player 2 wins`
-  }
-}
 
+// will need a while = True loop to keep store of highscores, and stats of each player
+// within that while loop, will do a for loop to loop each iteration of the game and store data for each iteration. Will need to store data for names as well for the sake of the leader board 
