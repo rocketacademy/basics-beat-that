@@ -1,5 +1,5 @@
 var main = function (input) { 
-  var myOutputValue = initiate(input);
+  var myOutputValue = oneTurnEvents(input);
   return myOutputValue;
 };
 let diceRoll = function () {
@@ -10,8 +10,7 @@ let diceRoll = function () {
 let numOfPlayers = 2; // min num of players 
 let currentPlayer; 
 
-let turns; 
-let rounds; 
+let turns = 0; 
 
 let rolledNums = []; // for each player
 let playerNum;
@@ -21,11 +20,25 @@ let playerScore = []; //store player scores.
 let gameState = "";
 
 document.getElementById("output-div").innerHTML = "Player 1, roll the dice";
-document.getElementById("submit-button").innerHTML = "ROLL";
-document.getElementById("input-field").disabled = true;
+// document.getElementById("submit-button").innerHTML = "ROLL";
+// document.getElementById("input-field").disabled = true;
 
-let initiate = function(input){
-  document.getElementById("input-field").disabled = false;
+let initiate = function (input){
+  if (gameState == ""){
+    input = Number(input)
+    if (numOfPlayers == input){
+      return `You chose to play a ${numOfPlayers}-player game. <br><br> 
+      Please input Player 1's name`
+    }
+    else if (input == 3 )
+    numOfPlayers++
+    return `You chose to play a ${numOfPlayers}-player game. <br><br> 
+    Please input Player 1's name`
+  }
+}
+
+let oneTurnEvents = function(input){
+  // document.getElementById("input-field").disabled = false;
   if (gameState == "") {
     rolledNums = [];
     for (let j = 0; j < 2; j++) {
@@ -38,11 +51,10 @@ let initiate = function(input){
     <br> Choose which of the numbers is to go first`
   } 
   else if (gameState == "player choose") {
-    gameState = "";
-    document.getElementById("submit-button").innerHTML = "Continue";
+    // document.getElementById("submit-button").innerHTML = "Continue";
     input = Number(input);
     if (input == 2) {
-      playerNum = [rolledNums[1], rolledNums[0]].join("");
+      playerNum = [rolledNums[1], rolledNums[0]].join("");//FLIP
       console.log(playerNum)
       playerNumCombo.push(playerNum);
       console.log(playerNumCombo)
@@ -57,7 +69,6 @@ let initiate = function(input){
       return `That is not a valid input, please choose a number either 1 or 2`;
     }
   } // need to move this to the beginning of the if statement
-  return `1 round has finished`
   }
 
 
