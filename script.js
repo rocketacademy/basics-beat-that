@@ -25,6 +25,10 @@ let gameFlow = function (input){
   if (gameState == "start"){
     return initiate(input)
   }
+  else if (input == "quit"){
+    gameState = "start"
+    return `please tell me how many players`;
+  }
   else if (gameState == "input name"){
     return storeNames(input);
   }
@@ -116,7 +120,8 @@ let endOfTurn = function (){
   }
   else if (currentPlayer == numOfPlayers){
     gameState = "round end"
-    return `hit submit to end this round`
+    let winner = playerNames[playerNumCombo.lastIndexOf(String(Math.max(...playerNumCombo)))] //takes the index of the max number, finds it's index equivalent in playerNames, and declares that as the winner
+    return `the winner is ${winner}, hit submit to end this round`
   }
 }
 
@@ -127,7 +132,4 @@ let endOfRound = function(){
   round++ 
   return `game loop ends. to play the next round, hit Submit`
 }
-// will need a while = True loop to keep store of highscores, and stats of each player
-// within that while loop, will do a for loop to loop each iteration of the game for each player and store data for each iteration. Will need to store data for names as well for the sake of the leader board 
-// need to make a for loop for all the players stats as they need to be generative, according to numbers of players input at the start 
 
