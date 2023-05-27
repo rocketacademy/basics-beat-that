@@ -7,21 +7,19 @@ let diceRoll = function () {
 };
 
 //to store the dice numbers, and other global variables 
-let numOfPlayers = 0; // min num of players 
+let numOfPlayers = 0; 
 let currentPlayer = 0; 
 
 let round = 1;
 
 let rolledNums = []; // for each player
 let playerNum;
-let playerNumCombo = []; // index 0 and 1 reserved for player 1, 2. use push to add player 3 or 4
+let playerNumCombo = []; 
 let playerScore = [0,0,0,0]; //store player scores. 
 let playerNames =[];
 let gameState = "start";
 
 document.getElementById("output-div").innerHTML = "please tell me how many players";
-// document.getElementById("submit-button").innerHTML = "ROLL";
-// document.getElementById("input-field").disabled = true;
 
 let gameFlow = function (input){
   if (gameState == "start"){
