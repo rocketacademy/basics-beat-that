@@ -9,7 +9,6 @@ let diceRoll = function () {
 //to store the dice numbers, and other global variables 
 let numOfPlayers = 0; // min num of players 
 let currentPlayer = 0; 
-let roundMaxNumber;
 
 let turns = 0; 
 
@@ -38,19 +37,24 @@ let gameFlow = function (input){
   else if (gameState == "player choose"){
     return decideDiceOrder(input)
   }
-  else if (gameState == "end"){
+  else if (gameState == "turn end"){
+    return endOfTurn();
+  }
+  else if (gameState == "round end"){
     return endOfRound();
   }
 }
 
 let initiate = function (input){
   input = Number(input)
-  if (input < 2 || input > 4){
-    return `Please input a number between 2-4`
-  }
+  if (input >= 2 && input <= 4){
   numOfPlayers = input;
   gameState = "input name"
   return `You have chosen a ${numOfPlayers}-player game. Please input player 1's name.`
+  }
+  else{
+    return `Please input a number between 2-4`
+  }
 }
 
 let storeNames = function (input){
@@ -59,7 +63,7 @@ let storeNames = function (input){
  if (currentPlayer == numOfPlayers){
   gameState = "roll"
   currentPlayer = 0
-  return `Everyone has entered their names. Press the submit button to roll the dice.`
+  return `Everyone has entered their names. ${playerNames[currentPlayer]} press the submit button to roll the dice.`
  }
  else{return `Player ${currentPlayer+1} please enter your name.`}
 }
@@ -78,29 +82,41 @@ let roll2Dice = function(input){
  }  
 let decideDiceOrder = function (input){
   input = Number(input);
-  if (input == 2 && currentPlayer+1 != numOfPlayers) {
+  if (input == 2 && currentPlayer != numOfPlayers) {
     playerNum = [rolledNums[1], rolledNums[0]].join("");//FLIP
     console.log(playerNum)
     playerNumCombo.push(playerNum);
     console.log("playernumcombo:",playerNumCombo)
     currentPlayer++
-    gameState = "roll"
-    return `Your rolls combined is ${playerNum}.`;
-  } else if (input == 1 && currentPlayer+1 != numOfPlayers) {
+    gameState = "turn end"
+    return `${playerNames[currentPlayer-1]}'s number for this round is ${playerNum}.`;
+  } else if (input == 1 && currentPlayer != numOfPlayers) {
     playerNum = rolledNums.join("");
     console.log(playerNum);
     playerNumCombo.push(playerNum);
     console.log("playernumcombo:",playerNumCombo);
     currentPlayer++
-    gameState = "roll"
-    return `Your rolls combined is ${playerNum}.`; //NO FLIP
+    gameState = "turn end"
+    return `${playerNames[currentPlayer-1]}'s number for this round is ${playerNum}.`; //NO FLIP
   } 
-  else if (currentPlayer+1 == numOfPlayers){
+  else if (currentPlayer == numOfPlayers){
     gameState = "end";
-    return `each player has rolled and chosen their number. press submit to end the game`
+    console.log("playernumcombo:",playerNumCombo)
+    return `${playerNames[currentPlayer-1]}'s number for this round is ${playerNum}.`
   }
   else {
     return `That is not a valid input, please choose a number either 1 or 2`;
+  }
+}
+
+let endOfTurn = function (){
+  if (currentPlayer != numOfPlayers){
+    gameState = "roll"
+    return `${playerNames[currentPlayer]}'s turn. hit submit to roll.`
+  }
+  else if (currentPlayer == numOfPlayers){
+    gameState = "round end"
+    return `hit submit to end this round`
   }
 }
 
