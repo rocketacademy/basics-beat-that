@@ -10,12 +10,12 @@ let diceRoll = function () {
 let numOfPlayers = 0; // min num of players 
 let currentPlayer = 0; 
 
-let turns = 0; 
+let round = 1;
 
 let rolledNums = []; // for each player
 let playerNum;
 let playerNumCombo = []; // index 0 and 1 reserved for player 1, 2. use push to add player 3 or 4
-let playerScore = []; //store player scores. 
+let playerScore = [0,0,0,0]; //store player scores. 
 let playerNames =[];
 let gameState = "start";
 
@@ -31,7 +31,9 @@ let gameFlow = function (input){
     return storeNames(input);
   }
   else if (gameState == "roll"){
+    console.log("round:",round)
     console.log(playerNames) // want to check if player names are properly registered. 
+    console.log("currentPlayer:",currentPlayer)
     return roll2Dice(input)
   }
   else if (gameState == "player choose"){
@@ -121,7 +123,11 @@ let endOfTurn = function (){
 }
 
 let endOfRound = function(){
-  return `game loop ends`
+  playerNumCombo = [];
+  currentPlayer = 0;
+  gameState = "roll"
+  round++ 
+  return `game loop ends. to play the next round, hit Submit`
 }
 // will need a while = True loop to keep store of highscores, and stats of each player
 // within that while loop, will do a for loop to loop each iteration of the game for each player and store data for each iteration. Will need to store data for names as well for the sake of the leader board 
