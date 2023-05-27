@@ -19,7 +19,7 @@ let playerScore = [0,0,0,0]; //store player scores.
 let playerNames =[];
 let gameState = "start";
 
-document.getElementById("output-div").innerHTML = "please tell me how many players";
+document.getElementById("output-div").innerHTML = "please tell me how many players (2-4)";
 
 let gameFlow = function (input){
   if (gameState == "start"){
@@ -27,7 +27,7 @@ let gameFlow = function (input){
   }
   else if (input == "quit"){
     gameState = "start"
-    return `please tell me how many players`;
+    return `please tell me how many players (2-4)`;
   }
   else if (gameState == "input name"){
     return storeNames(input);
