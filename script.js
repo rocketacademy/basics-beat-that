@@ -85,30 +85,44 @@ var main = function (input) {
     Choose the bigger roll for a higher winning chance!`;
     return myOutputValue;
     //if block to get second player to choose the order of dice
-    //mode also changes to blank string for now
     //based on player's input of '1' or '2',
     //code will calculate and save the final score to global variable playerTwoScore
-    //code will output the choice of score of second player and should display results of game
   } else if (stateManager == "playerTwoOrder") {
-    stateManager = "";
     if (input == 1) {
       playerTwoScore = playerTwoResults[0] * 10 + playerTwoResults[1];
-      myOutputValue = `🎲 PLAYER 2 🎲<br><br>
+      //if else block for input == 1 to check if player 1 is winner and output dice choice 1 of player 2 and the winner
+      if (playerOneScore > playerTwoScore) {
+        myOutputValue = `🎲 PLAYER 2 🎲<br><br>
           
-      You chose Dice 1 first. Your score is ${playerTwoScore}.<br><br><hr>
+      You chose Dice 1 first. Your score is ${playerTwoScore}.<br><br><hr><br>
 
-      The winner is`;
-      return myOutputValue;
+      The winner is Player One!`;
+      } else {
+        myOutputValue = `🎲 PLAYER 2 🎲<br><br>
+          
+      You chose Dice 1 first. Your score is ${playerTwoScore}.<br><br><hr><br>
+
+      The winner is Player Two!`;
+      }
     }
     if (input == 2) {
       playerTwoScore = playerTwoResults[1] * 10 + playerTwoResults[0];
-      myOutputValue = `🎲 PLAYER 2 🎲<br><br>
+      //if else block for input == 2 to check if player 1 is winner and output dice choice 2 of player 2 and the winner
+      if (playerOneScore > playerTwoScore) {
+        myOutputValue = `🎲 PLAYER 2 🎲<br><br>
           
-      You chose Dice 2 first. Your score is ${playerOneScore}.<br><br><hr>
+      You chose Dice 2 first. Your score is ${playerTwoScore}.<br><br><hr><br>
 
-      The winner is`;
-      return myOutputValue;
+      The winner is Player One!`;
+      } else {
+        myOutputValue = `🎲 PLAYER 2 🎲<br><br>
+          
+      You chose Dice 2 first. Your score is ${playerTwoScore}.<br><br><hr><br>
+
+      The winner is Player Two!`;
+      }
     }
+    return myOutputValue;
   }
 };
 
