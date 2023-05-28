@@ -27,7 +27,12 @@ let gameFlow = function (input){
   }
   else if (input == "quit"){
     gameState = "start"
-    return `please tell me how many players (2-4)`;
+	playerScore =[0,0,0,0];
+	playerNames =[];
+	playerNumCombo = [];
+	currentPlayer = 0;
+	round =1;
+    return `please tell me how many players (2-42)`;
   }
   else if (gameState == "input name"){
     return storeNames(input);
@@ -120,7 +125,10 @@ let endOfTurn = function (){
   }
   else if (currentPlayer == numOfPlayers){
     gameState = "round end"
-    let winner = playerNames[playerNumCombo.lastIndexOf(String(Math.max(...playerNumCombo)))] //takes the index of the max number, finds it's index equivalent in playerNames, and declares that as the winner
+	let indexOfWinner = playerNumCombo.lastIndexOf(String(Math.max(...playerNumCombo))) //takes the index of the max number, so i can find it's index equivalent in playerNames, and playerScore, to declare winner of round and modify the score.
+	console.log("indexOfWinner:", indexOfWinner)
+    let winner = playerNames[indexOfWinner]	
+	playerScore[indexOfWinner]++
     return `the winner is ${winner}, hit submit to end this round`
   }
 }
@@ -130,6 +138,7 @@ let endOfRound = function(){
   currentPlayer = 0;
   gameState = "roll"
   round++ 
-  return `game loop ends. to play the next round, hit Submit`
+  return `The scores are: <br><br>To play the next round, hit Submit`
 }
+
 
