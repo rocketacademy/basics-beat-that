@@ -77,7 +77,6 @@ let storeNames = function (input){
  else{return `Player ${currentPlayer+1} please enter your name.`}
 }
 
-
 let roll2Dice = function(input){
   rolledNums = [];
   for (let j = 0; j < 2; j++) {
@@ -89,6 +88,7 @@ let roll2Dice = function(input){
   return `The numbers you rolled are ${rolledNums[0]} and ${rolledNums[1]} 
   <br> Choose which of the numbers is to go first`
  }  
+
 let decideDiceOrder = function (input){
   input = Number(input);
   if (input == 2 && currentPlayer != numOfPlayers) {
@@ -134,11 +134,17 @@ let endOfTurn = function (){
 }
 
 let endOfRound = function(){
+  let scoreBoardDisplay = "";
   playerNumCombo = [];
   currentPlayer = 0;
   gameState = "roll"
   round++ 
-  return `The scores are: <br><br>To play the next round, hit Submit`
+  for (let i =0; i < numOfPlayers; i++){
+  scoreBoardDisplay += ` ${playerNames[i]}: ${playerScore[i]} `;
+  console.log(scoreBoardDisplay);
+  }
+  
+  return `The scores are: <br><br>${scoreBoardDisplay} <br><br>To play the next round, hit Submit`
 }
 
 
