@@ -4,6 +4,8 @@
 stateManager = "instructions";
 //Store first player's dice rolls
 playerOneResults = [];
+//Store first player's score
+playerOneScore = 0;
 
 var main = function (input) {
   //Local Variable to output instructions of the game upon first click of submit
@@ -24,6 +26,7 @@ var main = function (input) {
   }
   //if block to roll dice 2 times and save it to playerOneResults global variable
   else if (stateManager == "playerOne") {
+    stateManager = "playerOneOrder";
     for (counter = 0; counter < 2; counter += 1) {
       rollDice = diceRoll();
       playerOneResults.push(rollDice);
@@ -34,6 +37,25 @@ var main = function (input) {
     Hint:<br>
     Choose the bigger roll for a higher winning chance!`;
     return myOutputValue;
+  } else if (stateManager == "playerOneOrder") {
+    if (input == 1) {
+      playerOneScore = playerOneResults[0] * 10 + playerOneResults[1];
+      myOutputValue = `🎲 PLAYER 1 🎲<br><br>
+          
+      You chose Dice 1 first. Your score is ${playerOneScore}.<br><br>
+
+      It is now Player 2's turn.`;
+      return myOutputValue;
+    }
+    if (input == 2) {
+      playerOneScore = playerOneResults[1] * 10 + playerOneResults[0];
+      myOutputValue = `🎲 PLAYER 1 🎲<br><br>
+          
+      You chose Dice 2 first. Your score is ${playerOneScore}.<br><br>
+
+      It is now Player 2's turn.`;
+      return myOutputValue;
+    }
   }
 };
 
