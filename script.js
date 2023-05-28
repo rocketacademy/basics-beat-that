@@ -1,4 +1,13 @@
+//Global Variable to control game modes
+stateManager = "instructions";
+
 var main = function (input) {
+  //if block to give instruction to player and change the mode to player one
+  if (stateManager == "instructions") {
+    stateManager == "playerOne";
+    return `Please click submit to roll the dice`;
+  }
+
   var myOutputValue = "hello world";
   return myOutputValue;
 };
