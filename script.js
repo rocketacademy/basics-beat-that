@@ -10,7 +10,7 @@ let diceRoll = function () {
 let numOfPlayers = 0; 
 let currentPlayer = 0; 
 
-let round = 1;
+let round = 0;
 
 let rolledNums = []; // for each player
 let playerNum;
@@ -20,6 +20,8 @@ let playerNames =[];
 let gameState = "start";
 
 document.getElementById("output-div").innerHTML = "please tell me how many players (2-4)";
+
+//MAIN GAME LOOP
 
 let gameFlow = function (input){
   if (gameState == "start"){
@@ -31,7 +33,7 @@ let gameFlow = function (input){
 	playerNames =[];
 	playerNumCombo = [];
 	currentPlayer = 0;
-	round =1;
+	round =0;
     return `please tell me how many players (2-4)`;
   }
   else if (gameState == "input name"){
@@ -54,6 +56,8 @@ let gameFlow = function (input){
   }
 }
 
+// STARTS THE GAME MODE (2-4 PLAYER MODES)
+
 let initiate = function (input){
   input = Number(input)
   if (input >= 2 && input <= 4){
@@ -65,6 +69,8 @@ let initiate = function (input){
     return `Please input a number between 2-4`
   }
 }
+
+// STORE NAME TO GLOBAL VARIABLE
 
 let storeNames = function (input){
  input = input.trim()[0].toUpperCase() + input.trim().slice(1)
@@ -89,6 +95,8 @@ let roll2Dice = function(input){
   return `Your rolls are: <br><br> Roll 1: [${rolledNums[0]}] <br>Roll 2: [${rolledNums[1]}] <br>
   <br> Choose which of the rolls is to go first, 1 or 2?`
  }  
+
+//PLAYER CHOOSE DICE ORDER
 
 let decideDiceOrder = function (input){
   input = Number(input);
@@ -119,6 +127,8 @@ let decideDiceOrder = function (input){
   }
 }
 
+//TO EXECUTE AT END OF EACH PLAYER'S TURN
+
 let endOfTurn = function (){
   if (currentPlayer != numOfPlayers){
     gameState = "roll"
@@ -133,6 +143,8 @@ let endOfTurn = function (){
     return `The winner is ${winner}, hit submit to end this round`
   }
 }
+
+//TO EXECUTE AT END OF EACH ROUND
 
 let endOfRound = function(){
   let scoreBoardDisplay = [];
@@ -149,9 +161,9 @@ let endOfRound = function(){
 	const b = Number(y.split(":")[1])
 	return b-a;
   }
-  scoreBoardDisplay.sort(descendingSort)//tried everything but this is NOT working, initially made descendingSort a normal function, now it's a callback function and it still DOES NOT WORK.
+  scoreBoardDisplay.sort(descendingSort)//tried everything but this is NOT working, initially made descendingSort a normal function, now it's a callback function and it still DOES NOT WORK. UPDATE: maybe i didnt test it right, but it works now. 
   
-  return `The scores are: <br><br>${scoreBoardDisplay.join(`<br>`)} <br><br>To play the next round, hit Submit <br><br>${playerNames[0]} will go first`
+  return `|-------------Round ${round}-------------| <br><br> The scores are: <br><br>${scoreBoardDisplay.join(`<br>`)} <br><br>To play the next round, hit Submit <br><br>${playerNames[0]} will go first`
 };
 
 
