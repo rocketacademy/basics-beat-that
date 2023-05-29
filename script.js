@@ -32,7 +32,7 @@ let gameFlow = function (input){
 	playerNumCombo = [];
 	currentPlayer = 0;
 	round =1;
-    return `please tell me how many players (2-42)`;
+    return `please tell me how many players (2-4)`;
   }
   else if (gameState == "input name"){
     return storeNames(input);
@@ -67,6 +67,7 @@ let initiate = function (input){
 }
 
 let storeNames = function (input){
+ input = input.trim()[0].toUpperCase() + input.trim().slice(1)
  playerNames.push(input);
  currentPlayer++;
  if (currentPlayer == numOfPlayers){
@@ -85,8 +86,8 @@ let roll2Dice = function(input){
   }
   gameState = "player choose";
   document.getElementById("submit-button").innerHTML = "Submit";
-  return `The numbers you rolled are ${rolledNums[0]} and ${rolledNums[1]} 
-  <br> Choose which of the numbers is to go first`
+  return `Your rolls are: <br><br> Roll 1: [${rolledNums[0]}] <br>Roll 2: [${rolledNums[1]}] <br>
+  <br> Choose which of the rolls is to go first, 1 or 2?`
  }  
 
 let decideDiceOrder = function (input){
@@ -129,22 +130,28 @@ let endOfTurn = function (){
 	console.log("indexOfWinner:", indexOfWinner)
     let winner = playerNames[indexOfWinner]	
 	playerScore[indexOfWinner]++
-    return `the winner is ${winner}, hit submit to end this round`
+    return `The winner is ${winner}, hit submit to end this round`
   }
 }
 
 let endOfRound = function(){
-  let scoreBoardDisplay = "";
+  let scoreBoardDisplay = [];
   playerNumCombo = [];
   currentPlayer = 0;
   gameState = "roll"
   round++ 
   for (let i =0; i < numOfPlayers; i++){
-  scoreBoardDisplay += ` ${playerNames[i]}: ${playerScore[i]} `;
+  scoreBoardDisplay.push(`${playerNames[i]}: ${playerScore[i]}`);
   console.log(scoreBoardDisplay);
   }
+  function descendingSort(x,y){
+	const a  = Number(x.split(":")[1]);
+	const b = Number(y.split(":")[1])
+	return b-a;
+  }
+  scoreBoardDisplay.sort(descendingSort)//tried everything but this is NOT working, initially made descendingSort a normal function, now it's a callback function and it still DOES NOT WORK.
   
-  return `The scores are: <br><br>${scoreBoardDisplay} <br><br>To play the next round, hit Submit`
-}
+  return `The scores are: <br><br>${scoreBoardDisplay.join(`<br>`)} <br><br>To play the next round, hit Submit <br><br>${playerNames[0]} will go first`
+};
 
 
