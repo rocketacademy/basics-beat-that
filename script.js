@@ -1,3 +1,9 @@
+// requirements
+// 1. there are 2 players and players take turn
+// 2. when a player clicks submit, the game rolls 2 dice and shows the dice roll, for example 1 and 2
+// 3. the player picks the order of the dice they want. For example, if they want 21, they specify that Dice 2 goes 1st
+// 4. After both players rolled and chose the dice order, the player with the higher combined number wins
+
 var myOutputValue = "";
 var playerTurn = 1;
 var gameMode = "generate number";
@@ -20,12 +26,16 @@ var main = function (input) {
 
     if (gameMode == "pick order") {
       console.log(gameMode);
-      myOutputValue = sortOrder(input);
-      player1Number = playerNumber;
-      playerTurn = 2;
-      gameMode = "generate number";
-      console.log(gameMode);
-      return myOutputValue;
+      if (input != 1 && input != 2) {
+        return diceOrderErrorMessage();
+      } else {
+        myOutputValue = sortOrder(input) + player2TurnMessage();
+        player1Number = playerNumber;
+        playerTurn = 2;
+        gameMode = "generate number";
+        console.log(gameMode);
+        return myOutputValue;
+      }
     }
   }
 
@@ -37,19 +47,38 @@ var main = function (input) {
       return myOutputValue;
     }
     if (gameMode == "pick order") {
-      myOutputValue = sortOrder(input);
-      player2Number = playerNumber;
-      gameMode = "compare results";
-      return myOutputValue;
+      if (input != 1 && input != 2) {
+        return diceOrderErrorMessage();
+      } else {
+        myOutputValue = sortOrder(input) + compareResultsTurnMessage();
+        player2Number = playerNumber;
+        gameMode = "compare results";
+        return myOutputValue;
+      }
     }
   }
 
   if (gameMode == "compare results") {
     if (player1Number > player2Number) {
-      // winner is player 1
+      myOutputValue =
+        "Player 1, you won.<br><br>Player 1's number: " +
+        player1Number +
+        "<br><br>Player 2's number: " +
+        player2Number;
+    } else if (player2Number > player1Number) {
+      myOutputValue =
+        "Player 2, you won.<br><br>Player 1's number: " +
+        player1Number +
+        "<br><br>Player 2's number: " +
+        player2Number;
     } else {
-      // winner is player 2
+      myOutputValue =
+        "Surprise! Surprise! It's a draw.<br><br>Player 1's number: " +
+        player1Number +
+        "<br><br>Player 2's number: " +
+        player2Number;
     }
+    return myOutputValue;
   }
 };
 
@@ -96,6 +125,26 @@ var sortOrder = function (whichIsFirst) {
     whichIsFirst +
     " first.<br><br>Your number is " +
     playerNumber +
-    ".<br><br>It is now Player 2's turn. Player 2, pease click Submit to roll your dices."
+    "."
+  );
+};
+
+var player2TurnMessage = function () {
+  return "<br><br>It is now Player 2's turn. Player 2, please click Submit to roll your dices.";
+};
+
+var compareResultsTurnMessage = function () {
+  return "<br><br>Let's find out who won. Please click Submit to know the winner.";
+};
+
+var diceOrderErrorMessage = function () {
+  return (
+    "Error, Player " +
+    playerTurn +
+    "!<br><br>Please input only 1 or 2.<br><br>You rolled " +
+    valueOfDice1 +
+    " for Dice 1 and " +
+    valueOfDice2 +
+    " for Dice 2.<br><br>Choose the order of the dice again."
   );
 };
