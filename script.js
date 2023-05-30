@@ -14,47 +14,31 @@ var player1Number = 0;
 var player2Number = 0;
 
 var main = function (input) {
+  // if input isn't blank
+  if (gameMode == "generate number" && input != "") {
+    return "What are you doing? Please follow instructions and just click Submit without filling in anything.";
+  }
+
   // for Player 1
   if (playerTurn == 1) {
-    console.log(gameMode);
     if (gameMode == "generate number") {
-      myOutputValue = randomNumbers();
-      gameMode = "pick order";
       console.log(gameMode);
-      return myOutputValue;
+      return playerGenerateTheirNumber();
     }
 
     if (gameMode == "pick order") {
       console.log(gameMode);
-      if (input != 1 && input != 2) {
-        return diceOrderErrorMessage();
-      } else {
-        myOutputValue = sortOrder(input) + player2TurnMessage();
-        player1Number = playerNumber;
-        playerTurn = 2;
-        gameMode = "generate number";
-        console.log(gameMode);
-        return myOutputValue;
-      }
+      return playerPickTheirOrder(input);
     }
   }
 
   // for Player 2
   if (playerTurn == 2) {
     if (gameMode == "generate number") {
-      myOutputValue = randomNumbers();
-      gameMode = "pick order";
-      return myOutputValue;
+      return playerGenerateTheirNumber();
     }
     if (gameMode == "pick order") {
-      if (input != 1 && input != 2) {
-        return diceOrderErrorMessage();
-      } else {
-        myOutputValue = sortOrder(input) + compareResultsTurnMessage();
-        player2Number = playerNumber;
-        gameMode = "compare results";
-        return myOutputValue;
-      }
+      return playerPickTheirOrder(input);
     }
   }
 
@@ -64,25 +48,46 @@ var main = function (input) {
         "Player 1, you won.<br><br>Player 1's number: " +
         player1Number +
         "<br><br>Player 2's number: " +
-        player2Number;
+        player2Number +
+        resetGameMessage();
     } else if (player2Number > player1Number) {
       myOutputValue =
         "Player 2, you won.<br><br>Player 1's number: " +
         player1Number +
         "<br><br>Player 2's number: " +
-        player2Number;
+        player2Number +
+        resetGameMessage();
     } else {
       myOutputValue =
         "Surprise! Surprise! It's a draw.<br><br>Player 1's number: " +
         player1Number +
         "<br><br>Player 2's number: " +
-        player2Number;
+        player2Number +
+        resetGameMessage();
     }
+    gameMode = "ready for reset";
     return myOutputValue;
+  }
+
+  if (gameMode == "ready for reset") {
+    myOutputValue = "";
+    playerTurn = 1;
+    gameMode = "generate number";
+    valueOfDice1 = 0;
+    valueOfDice2 = 0;
+    playerNumber = 0;
+    player1Number = 0;
+    player2Number = 0;
+    return "Game has been reset. Player 1 can start first by clicking Submit.";
   }
 };
 
-var randomNumbers = function () {
+var playerGenerateTheirNumber = function () {
+  gameMode = "pick order";
+  return randomDiceNumbers();
+};
+
+var randomDiceNumbers = function () {
   valueOfDice1 = generateRandomNumber();
   valueOfDice2 = generateRandomNumber();
   return (
@@ -108,6 +113,43 @@ var generateRandomNumber = function () {
   var randomNumber = randomInteger + 1;
 
   return randomNumber;
+};
+
+var playerPickTheirOrder = function (input) {
+  if (playerTurn == 1) {
+    if (input != 1 && input != 2) {
+      return diceOrderErrorMessage();
+    } else {
+      myOutputValue = sortOrder(input) + player2TurnMessage();
+      player1Number = playerNumber;
+      playerTurn = 2;
+      gameMode = "generate number";
+      return myOutputValue;
+    }
+  }
+
+  if (playerTurn == 2) {
+    if (input != 1 && input != 2) {
+      return diceOrderErrorMessage();
+    } else {
+      myOutputValue = sortOrder(input) + compareResultsTurnMessage();
+      player2Number = playerNumber;
+      gameMode = "compare results";
+      return myOutputValue;
+    }
+  }
+};
+
+var diceOrderErrorMessage = function () {
+  return (
+    "Error, Player " +
+    playerTurn +
+    "!<br><br>Please input only 1 or 2.<br><br>You rolled " +
+    valueOfDice1 +
+    " for Dice 1 and " +
+    valueOfDice2 +
+    " for Dice 2.<br><br>Choose the order of the dice again."
+  );
 };
 
 var sortOrder = function (whichIsFirst) {
@@ -137,14 +179,6 @@ var compareResultsTurnMessage = function () {
   return "<br><br>Let's find out who won. Please click Submit to know the winner.";
 };
 
-var diceOrderErrorMessage = function () {
-  return (
-    "Error, Player " +
-    playerTurn +
-    "!<br><br>Please input only 1 or 2.<br><br>You rolled " +
-    valueOfDice1 +
-    " for Dice 1 and " +
-    valueOfDice2 +
-    " for Dice 2.<br><br>Choose the order of the dice again."
-  );
+var resetGameMessage = function () {
+  return "<br><br>Want to play again? Simply click Submit for another round!";
 };
