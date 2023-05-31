@@ -8,17 +8,23 @@
 
 //==== problem breakdown and planning =====//
 //ver 1. rolls 2 dice and turns the output for 1 player. That player chooses the dice order and gets the correct return output.
-// ver 2. refactored code to include Player 2
+// ver 2. refactored code to include Player 2 
+//    - need global variables to keep track of the current player
+//    - refactor outputMessages to interact with each player, 1 and 2, and finally point towards comparing score
+//    - write logic for player 1 to go first then player 2
 //ver 3. implementing comparing dice scores and declare the winner
 // ver 4. reset the game so that the players can play continually without refreshing the browser page
 
 
 var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
-var GAME_STATE_CHOOSE_DICE_ROLL = "GAME_STATE_CHOOSE_DICE_ROLL";
-var GAME_STATE_CHOOSE_DICE_ORDER;
+var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ROLL";
+var GAME_STATE_COMPARE_SCORES;
 var gamestate = GAME_STATE_DICE_ROLL;
 
 var playerRolls = [];
+
+var currentPlayer = 1;
+var allPlayerScore = [];
 
 //Helper function to roll dice
 var rollDice = function () {
@@ -40,11 +46,12 @@ var rollDiceForPlayer = function() {
     playerRolls.push(rollDice());
     counter ++;
   }
-  return `Welcome!<br><br>You have rolled:<br>Dice 1: ${playerRolls[0]}<br>Dice 2: ${playerRolls[1]}<br><br>Now input either '1' or '2' to choose the corresponding dice to coose the corresponding dice to be used as the first digit of your final value.`
+  return `Welcome ${currentPlayer}!<br><br>You have rolled:<br>Dice 1: ${playerRolls[0]}<br>Dice 2: ${playerRolls[1]}<br><br>Now input either '1' or '2' to choose the corresponding dice to coose the corresponding dice to be used as the first digit of your final value.`
 }
 
 //get player's input and output the appropriate message
 var getPlayerScore = function (playerInput) {
+  var playerScore;
   //input validation
   if (playerInput != 1 && playerInput != 2) {
     return `Error! Please only input either '1' or '2' to choose which dice to use as the first digit. <br><br>Your dice rolls are:<br>Dice 1: ${playerRolls[0]}<br>Dice 2: ${playerRolls[1]}.`;
@@ -58,6 +65,12 @@ var getPlayerScore = function (playerInput) {
     var playerScore2 = Number(String(playerRolls[1]) + String(playerRolls[0]));
     return `Your chose value is: ${playerScore2}`;
   }
+
+  //store playerScore in array
+  allPlayerScore.push(playerScore);
+  //clear current player rolls array
+  playerRolls = [];
+  return `Player ${currentPlayer}, your chosen value is ${playerScore}`;
 }
 
 function main(input) {
@@ -79,7 +92,17 @@ function main(input) {
 
     //call playerScore function
     outputMessage = getPlayerScore(input);    
-    return outputMessage;
+
+if (currentPlayer ==1) {
+  currentPlayer = 2;
+  gamestate = GAME_STATE_DICE_ROLL;
+
+  return outputMessage + `<br><br>It is now player 2's turn!`;
+}
+    if (currentPlayer == 2) {
+      gamestate = GAME_STATE_COMPARE_SCORES;
+    }
+    return outputMessage + `<br><br>Press Submit again to calculate scores.`;
   }
 
 }
