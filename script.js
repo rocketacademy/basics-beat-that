@@ -50,25 +50,29 @@ var main = function (input) {
   //code will calculate and save the final score to global variable playerOneScore
   //code will output the choice of score of first player and prompt second player's turn
   else if (stateManager == "playerOneOrder") {
-    stateManager = "playerTwo";
     if (input == 1) {
+      stateManager = "playerTwo";
       playerOneScore = playerOneResults[0] * 10 + playerOneResults[1];
       myOutputValue = `🎲 PLAYER 1 🎲<br><br>
           
       You chose Dice 1 first. Your score is ${playerOneScore}.<br><br>
 
       It is now Player 2's turn.`;
-      return myOutputValue;
-    }
-    if (input == 2) {
+    } else if (input == 2) {
+      stateManager = "playerTwo";
       playerOneScore = playerOneResults[1] * 10 + playerOneResults[0];
       myOutputValue = `🎲 PLAYER 1 🎲<br><br>
           
       You chose Dice 2 first. Your score is ${playerOneScore}.<br><br>
 
       It is now Player 2's turn.`;
-      return myOutputValue;
+    } else if (input != 1 || input != 2) {
+      playerOneScore = playerOneResults[1] * 10 + playerOneResults[0];
+      myOutputValue = `🎲 <strong>PLAYER 1</strong> 🎲<br><br>
+      You rolled ${playerOneResults[0]} for dice one and ${playerOneResults[1]} for dice two.<br><br>    
+      Please enter either 1 or 2 to choose the order of your dice rolls.`;
     }
+    return myOutputValue;
     //if block to roll dice 2 times and save it to playerTwoResults global variable
     //mode also changes to second player's choice of order
     //will output results of rolls and further instructions to the game
@@ -87,8 +91,10 @@ var main = function (input) {
     //if block to get second player to choose the order of dice
     //based on player's input of '1' or '2',
     //code will calculate and save the final score to global variable playerTwoScore
-  } else if (stateManager == "playerTwoOrder") {
+  }
+  if (stateManager == "playerTwoOrder") {
     if (input == 1) {
+      stateManager = "instructions";
       playerTwoScore = playerTwoResults[0] * 10 + playerTwoResults[1];
       //if else block for input == 1 to check if player 1 is winner and output dice choice 1 of player 2 and the winner
       if (playerOneScore > playerTwoScore) {
@@ -96,16 +102,16 @@ var main = function (input) {
           
       You chose Dice 1 first. Your score is ${playerTwoScore}.<br><br><hr><br>
 
-      The winner is Player One!`;
-      } else {
+      The winner is Player One(${playerOneScore})!`;
+      } else if (playerOneScore < playerTwoScore) {
         myOutputValue = `🎲 PLAYER 2 🎲<br><br>
           
       You chose Dice 1 first. Your score is ${playerTwoScore}.<br><br><hr><br>
 
       The winner is Player Two!`;
       }
-    }
-    if (input == 2) {
+    } else if (input == 2) {
+      stateManager = "instructions";
       playerTwoScore = playerTwoResults[1] * 10 + playerTwoResults[0];
       //if else block for input == 2 to check if player 1 is winner and output dice choice 2 of player 2 and the winner
       if (playerOneScore > playerTwoScore) {
@@ -113,14 +119,18 @@ var main = function (input) {
           
       You chose Dice 2 first. Your score is ${playerTwoScore}.<br><br><hr><br>
 
-      The winner is Player One!`;
-      } else {
-        myOutputValue = `🎲 PLAYER 2 🎲<br><br>
+      The winner is Player One(${playerOneScore})!`;
+      }
+    } else if (playerOneScore < playerTwoScore) {
+      myOutputValue = `🎲 PLAYER 2 🎲<br><br>
           
       You chose Dice 2 first. Your score is ${playerTwoScore}.<br><br><hr><br>
 
       The winner is Player Two!`;
-      }
+    } else if (input != 1 || input != 2) {
+      myOutputValue = `🎲<strong>WELCOME PLAYER 2</strong>🎲<br><br>
+    You rolled ${playerTwoResults[0]} for dice one and ${playerTwoResults[1]} for dice two.<br><br>
+    Please enter either 1 or 2 to choose the order of your dice rolls.`;
     }
     return myOutputValue;
   }
