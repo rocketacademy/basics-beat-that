@@ -1,0 +1,194 @@
+<!--  All HTML files begin with the following line: -->
+<!DOCTYPE html>
+<!-- This indicates that the rest of the lines that follow are to be interpreted as HTML. It tells the browser about what document type to expect. -->
+
+<!-- All text enclosed in angled brackets are known as HTML element tags. There are usually, but not always, starting and closing element "tags", each representing a HTML element.
+The <html> element is known as the root element of a HTML page. All other elements are encased within it. -->
+<html>
+  <!-- The <head> element contains meta information about the HTML page, information that is not rendered or displayed by the browser -->
+  <head>
+    <!-- The <title> element specifies a title for the HTML page (which is shown in the browser's title bar or in the page's tab) and is the default name given to a bookmark of a webpage. -->
+    <title>SWE Testing That</title>
+    <!-- The <style> element contains information relating to the layout and style of the webpage. The syntax within a <style> tag is referred to as CSS - Cascading Style Sheets. -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: sans-serif;
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+
+      .centralize {
+        text-align: center;
+      }
+
+      a:link {
+        text-decoration: none;
+      }
+
+      #container {
+        margin: 40px auto;
+        max-width: 70%;
+        border: solid 3px;
+      }
+
+      input {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 100%;
+      }
+
+      button {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 6px;
+      }
+
+      #output-div {
+        margin: 20px auto;
+        padding: 20px;
+        width: 100%;
+        border: solid 2px lightgrey;
+        background-color: yellow;
+      }
+      .backgroundPic {
+        background-image: url(https://img.freepik.com/premium-vector/cartoon-pattern-playing-dice-yellow-background-printing-design-vector-clipart_200484-575.jpg?w=996);
+        background-size: 100%;
+      }
+
+      #instructions {
+        border: solid 2px white;
+        background-color: yellow;
+        float: left;
+        max-width: 15%;
+      }
+
+      h1 span {
+        font-size: 300%;
+        background-color: yellow;
+      }
+      p span {
+        font-size: 120%;
+        font-weight: bold;
+      }
+      #leaderboard {
+        border: solid 2px white;
+        background-color: yellow;
+        float: right;
+        width: 250px;
+      }
+    </style>
+  </head>
+
+  <!-- The <body> element defines the document's body, and is a container for all the visible contents that will be rendered by the browser.  -->
+  <body class="backgroundPic">
+    <!-- The <h1> element defines a large heading. There are 6 pre-set header elements, <h1> to <h6> -->
+    <!-- <div class="backgroundPic"> -->
+    <h1 class="centralize" ><span><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Testing That!🎲</a></span></h1>
+    <!-- </div> -->
+    <!-- The <div> tag defines a division or a section in an HTML document, and is commonly use as a "container" for nested HTML elements. -->
+    <!-- These are the instructions for 🎲Beat That!🎲-->
+    <div id="instructions">
+      <h3 class="centralize"><u>Instructions</u></h3>
+      <p class="bold">
+        1. This is a 2 player game. Both players will input their names.<br /><br />
+        2. For each round, you can choose how many dice you want to play
+        with.<br /><br />
+        3. Using the numbers on their dice, Player 1 will form the greatest
+        possible number.<br /><br />
+        4. Player 2 will then roll the dice and form their greatest possible
+        number.<br /><br />
+        5. At the end of the game, the Player with the greater number will win
+        the round.🎲
+      </p>
+    </div>
+    <!-- These is the LEADERBOARD-->
+    <div id="leaderboard">
+      <h3 class="centralize"><u><b>🏆LEADERBOARD🏆</u></b></h3>
+      <div id="leaderboard-div" ></div>
+    </div>
+    <div id="container">
+      <p class="centralize"><span>Input:</span></p>
+      <!-- The self-closing <input /> tag represents a field for a user to enter input. -->
+      <input id="input-field" class="centralize" />
+      <!-- The self-closing <br /> tag represents a line break - a line's worth of spacing before dispalying the next element. -->
+      <br />
+      <!-- The <button> tag represents.. you guessed it! a button. -->
+      <button id="submit-button">Roll</button>
+      <p class="centralize"><span>Results:</span></p>
+      <div id="output-div" class="centralize"></div>
+    </div>
+
+    <!-- Everything below this is incorporating JavaScript programming logic into the webpage. -->
+    <!-- The script tag encloses JavaScript syntax for the browser to interpret programtically -->
+    <!-- The following line imports all code written in the script.js file -->
+    <script src="script.js"></script>
+    <!-- Define button click functionality -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+        
+        // Store the output of leaderboard() in a new variable
+        var leader = leaderboard();
+
+        // Display result in output element
+        var board = document.querySelector("#leaderboard-div");
+        board.innerHTML = leader;
+      })
+      // Declare and define a variable that represents the Submit Button
+      var button = document.querySelector("#submit-button");
+      // When the submit button is clicked, access the text entered by the user in the input field
+      // And pass it as an input parameter to the main function as defined in script.js
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var input = document.querySelector("#input-field");
+        // Store the output of main() in a new variable
+        var result = main(input.value);
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+
+        // Store the output of leaderboard() in a new variable
+        var leader = leaderboard();
+
+         // Display result in output element
+        var board = document.querySelector("#leaderboard-div");
+        board.innerHTML = leader;
+
+        // Reset input value
+        input.value = "";
+      });
+      // Execute a function when the user presses a key on the keyboard
+      input = document.addEventListener("keypress", function () {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+          // Set result to input value
+          var input = document.querySelector("#input-field");
+          // Store the output of main() in a new variable
+          var result = main(input.value);
+
+          // Display result in output element
+          var output = document.querySelector("#output-div");
+          output.innerHTML = result;
+
+          // Store the output of leaderboard() in a new variable
+        var leader = leaderboard();
+
+         // Display result in output element
+        var board = document.querySelector("#leaderboard-div");
+        board.innerHTML = leader;
+
+          // Reset input value
+          input.value = "";
+        }
+      });
+      
+    </script>
+  </body>
+</html>
