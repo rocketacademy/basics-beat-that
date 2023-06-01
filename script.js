@@ -1,13 +1,15 @@
-var gameModeRollDice = "Game_Mode_Roll_Dice";
-var gameModeOrderOfDice = "Game_Mode_Choose_Order_Of_Dice";
-var gameMode = gameModeRollDice; //initialize to gameStart from Start
+var gameMode = "gameModeRollDice"; //initialize to gameStart from Start
 var userDiceRoll1;
 var userDiceRoll2;
-var playerRollDiceResult = [];
-var playScore = [];
+var playerOneRollDiceResult = [];
+var playerTwoRollDiceResult = [];
+var playerOneFinalScore = "";
+var playerTwoFinalScore = "";
+var playerOneScore = [];
+var playerTwoScore = [];
 var finalPlayScore = [];
-var input;
-var setCurrentPlayer = 1;
+var errorMessage = "";
+var outPutMessage = "";
 
 //GetRandom no function for diceroll
 var getRandomInteger = function () {
@@ -21,113 +23,113 @@ var diceRoll = function () {
   return diceNumber;
 };
 
-var playerRollDice = function () {
+var inputValidation = function (userInput) {
+  if (isNaN(userInput) || userInput === "") {
+    console.log("re-Enter again");
+    errorMessage = "Please enter 1 or 2 instead of empty submission";
+    return errorMessage;
+  }
+
+  if (userInput !== 1 && userInput !== 2) {
+    errorMessage = "System only accept 1 or 2 only!";
+    return errorMessage;
+  }
+  return true;
+};
+
+var playerOneRollDice = function () {
   var counter = 0;
   console.log("playRollDice working");
   while (counter < 2) {
-    playerRollDiceResult.push(diceRoll());
+    playerOneRollDiceResult.push(diceRoll());
     counter += 1;
   }
-  console.log("playerRollDiceResult", playerRollDiceResult);
-  if (setCurrentPlayer == 1) {
-    return (
-      "Welcome, You roll " +
-      playerRollDiceResult[0] +
-      " for Dice 1 and " +
-      playerRollDiceResult[1] +
-      " for Dice 2. <br /> Choose the order of the dice. Input Dice 1 = 1 or Dice 2 = 2 as your 1st number"
-    );
-  }
+  console.log("playerRollDiceResult", playerOneRollDiceResult);
+  gameMode = "setPlayerOneScore";
+  console.log("gameMode: ", gameMode);
 
-  if (setCurrentPlayer == 2) {
-    return (
-      "Welcome, You roll " +
-      playerRollDiceResult[2] +
-      " for Dice 1 and " +
-      playerRollDiceResult[3] +
-      " for Dice 2. <br /> Choose the order of the dice. Input Dice 1 = 1 or Dice 2 = 2 as your 1st number"
-    );
-  }
+  return (
+    "Welcome, You roll " +
+    playerOneRollDiceResult[0] +
+    " for Dice 1 and " +
+    playerOneRollDiceResult[1] +
+    " for Dice 2. <br /> Choose the order of the dice. Input Dice 1 = 1 or Dice 2 = 2 as your 1st number"
+  );
 };
 
-var setPlayerScore = function (input) {
-  if (!userInput) {
-    if (!input) {
-      return "Please enter 1 or 2 instead of empty submission";
-    }
-
-    if (userInput != 1 || userInput != 2) {
-      console.log("Choose input : ", userInput);
-      return " System only accept 1 or 2 only!";
-    }
-
-    var userInput = input;
+var playerTwoRollDice = function () {
+  var counter = 0;
+  while (counter < 2) {
+    playerTwoRollDiceResult.push(diceRoll());
+    counter += 1;
   }
+  console.log("playerRollDiceResult", playerTwoRollDiceResult);
+  gameMode = "setPlayerTwoScore";
+  return (
+    "Welcome, You roll " +
+    playerTwoRollDiceResult[0] +
+    " for Dice 1 and " +
+    playerTwoRollDiceResult[1] +
+    " for Dice 2. <br /> Choose the order of the dice. Input Dice 1 = 1 or Dice 2 = 2 as your 1st number"
+  );
+};
 
-  if (userInput == 1) {
-    console.log("Choose input 1 : ", userInput);
+var setPlayerOneScore = function (input) {
+  console.log("The input is ", input);
+  console.log("gameMode setPlayerOneScore working");
+  if (input == "1") {
+    playerOneScore[0] = String(playerOneRollDiceResult[0]);
+    playerOneScore[1] = String(playerOneRollDiceResult[1]);
+    gameMode = "playerTwoRollDice";
+    console.log("PlayerOne Score", playerOneScore);
+    return playerOneChoice();
+  } else if (input == "2") {
+    playerOneScore[0] = String(playerOneRollDiceResult[1]);
+    playerOneScore[1] = String(playerOneRollDiceResult[0]);
+    console.log("PlayerOne Score", playerOneScore);
+    gameMode = "playerTwoRollDice";
+    console.log("gameMode PlayerOneChoice Set");
+    return playerOneChoice();
+  } else return inputValidation(input);
+};
 
-    if (setCurrentPlayer == 1) {
-      var playerOneScore = "";
-      playScore[0] = String(playerRollDiceResult[0]);
-      playScore[1] = String(playerRollDiceResult[1]);
-      playerOneScore = playScore[0] + playScore[1];
-      finalPlayScore.push(playerOneScore);
-      gameMode = gameModeRollDice;
-      console.log("setting playerRollDice = 0 ");
-      return `Player ${setCurrentPlayer}, you choose Dice 1 first. <br/> Your number is ${finalPlayScore[0]} <br/> It is now Player 2's turn.`;
-    }
-    if (setCurrentPlayer == 2) {
-      var playerTwoScore = "";
-      playScore[2] = String(playerRollDiceResult[2]);
-      playScore[3] = String(playerRollDiceResult[3]);
-      playerTwoScore = playScore[2] + playScore[3];
-      finalPlayScore.push(playerTwoScore);
-      return `Player 1 Your Score : ${finalPlayScore[0]}, <br/> Player 2 Your Score: ${finalPlayScore[1]}. `;
-    }
-  }
+var playerOneChoice = function () {
+  ("gameMode PlayerOneChoice Working");
+  playerOneFinalScore = playerOneScore[0] + playerOneScore[1];
+  gameMode = "playerTwoRollDice";
+  return `Player One , you choose Dice 1 first. <br/> Your number is ${playerOneFinalScore} <br/> It is now Player 2's turn.`;
+};
 
-  if (userInput == 2) {
-    console.log("Choose input 2 : ", userInput);
+var setPlayerTwoScore = function (input) {
+  if (input === "1") {
+    playerTwoScore[0] = String(playerTwoRollDiceResult[0]);
+    playerTwoScore[1] = String(playerTwoRollDiceResult[1]);
 
-    if (setCurrentPlayer == 1) {
-      var playerOneScore = "";
-      playScore[0] = String(playerRollDiceResult[1]);
-      playScore[1] = String(playerRollDiceResult[0]);
-      playerOneScore = playScore[0] + playScore[1];
-      finalPlayScore.push(playerOneScore);
-      gameMode = gameModeRollDice;
-      return `Player ${setCurrentPlayer}, you choose Dice 2 first. <br/> Your number is ${finalPlayScore[0]} <br/> It is now Player 2's turn.`;
-    }
-    if (setCurrentPlayer == 2) {
-      var playerTwoScore = "";
-      playScore[2] = String(playerRollDiceResult[3]);
-      playScore[3] = String(playerRollDiceResult[2]);
-      playerTwoScore = playScore[2] + playScore[3];
-      finalPlayScore.push(playerTwoScore);
-      return `Player 1 Your Score : ${finalPlayScore[0]} <br/> Player 2 Your Score: ${finalPlayScore[1]} `;
-    }
-  }
+    return playerTwoChoice();
+  } else if (input === "2") {
+    playerTwoScore[0] = String(playerTwoRollDiceResult[1]);
+    playerTwoScore[1] = String(playerTwoRollDiceResult[0]);
+
+    return playerTwoChoice();
+  } else return inputValidation(input);
+};
+
+var playerTwoChoice = function () {
+  playerTwoFinalScore = playerTwoScore[0] + playerOneScore[1];
+  return `Player 1 Your Score : ${playerOneFinalScore} <br/> Player 2 Your Score: ${playerTwoFinalScore} `;
 };
 
 var main = function (input) {
-  var outPutMessage;
-  while (setCurrentPlayer <= 2) {
-    if (gameMode == gameModeRollDice) {
-      outPutMessage = playerRollDice();
-      console.log("playRollDice return");
-      gameMode = gameModeOrderOfDice;
-      console.log("check gameState if = OrderOfDice set", gameMode);
-      return outPutMessage;
-    }
-
-    if (gameMode == gameModeOrderOfDice) {
-      console.log("Next Step, check game state on submit click : ", gameMode);
-      outPutMessage = setPlayerScore(input);
-      setCurrentPlayer += 1;
-      console.log("GameMode RollDice Again ", gameMode);
-      console.log("Player no ", setCurrentPlayer);
-      return outPutMessage;
-    }
+  input = input || "";
+  if (gameMode === "gameModeRollDice") {
+    outPutMessage = playerOneRollDice();
+  } else if (gameMode === "setPlayerOneScore") {
+    outPutMessage = setPlayerOneScore(input);
+  } else if (gameMode === "playerTwoRollDice") {
+    outPutMessage = playerTwoRollDice();
+  } else if (gameMode === "setPlayerTwoScore") {
+    outPutMessage = setPlayerTwoScore(input);
   }
+
+  return outPutMessage;
 };
