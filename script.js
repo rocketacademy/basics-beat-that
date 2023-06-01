@@ -94,7 +94,7 @@ var main = function (input) {
   }
   if (stateManager == "playerTwoOrder") {
     if (input == 1) {
-      stateManager = "instructions";
+      stateManager = "reset";
       playerTwoScore = playerTwoResults[0] * 10 + playerTwoResults[1];
       //if else block for input == 1 to check if player 1 is winner and output dice choice 1 of player 2 and the winner
       if (playerOneScore > playerTwoScore) {
@@ -111,7 +111,7 @@ var main = function (input) {
       The winner is Player Two!`;
       }
     } else if (input == 2) {
-      stateManager = "instructions";
+      stateManager = "reset";
       playerTwoScore = playerTwoResults[1] * 10 + playerTwoResults[0];
       //if else block for input == 2 to check if player 1 is winner and output dice choice 2 of player 2 and the winner
       if (playerOneScore > playerTwoScore) {
@@ -132,8 +132,13 @@ var main = function (input) {
     You rolled ${playerTwoResults[0]} for dice one and ${playerTwoResults[1]} for dice two.<br><br>
     Please enter either 1 or 2 to choose the order of your dice rolls.`;
     }
-    return myOutputValue;
+    if (stateManager == "reset") {
+      stateManager = "instructions";
+      playerOneResults = [];
+      playerTwoResults = [];
+    }
   }
+  return myOutputValue;
 };
 
 //Function to simulate dice rolling
