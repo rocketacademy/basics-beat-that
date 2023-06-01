@@ -1,15 +1,15 @@
 //Global Variables
 
 //Toggle gamemodes
-stateManager = "instructions";
+var stateManager = "instructions";
 //Store first player's dice rolls
-playerOneResults = [];
+var playerOneResults = [];
 //Store first player's score
-playerOneScore = 0;
+var playerOneScore = 0;
 //Store second player's dice rolls
-playerTwoResults = [];
+var playerTwoResults = [];
 //Store second player's score
-playerTwoScore = 0;
+var playerTwoScore = 0;
 
 var main = function (input) {
   //Local Variable to output instructions of the game upon first click of submit
@@ -33,8 +33,8 @@ var main = function (input) {
   //will output results of rolls and further instructions to the game
   else if (stateManager == "playerOne") {
     stateManager = "playerOneOrder";
-    for (counter = 0; counter < 2; counter += 1) {
-      rollDice = diceRoll();
+    for (var counter = 0; counter < 2; counter += 1) {
+      var rollDice = diceRoll();
       playerOneResults.push(rollDice);
     }
     myOutputValue = `🎲<strong>WELCOME PLAYER 1</strong>🎲<br><br>
@@ -74,8 +74,8 @@ var main = function (input) {
     //will output results of rolls and further instructions to the game
   } else if (stateManager == "playerTwo") {
     stateManager = "playerTwoOrder";
-    for (counter = 0; counter < 2; counter += 1) {
-      rollDice = diceRoll();
+    for (var counter = 0; counter < 2; counter += 1) {
+      var rollDice = diceRoll();
       playerTwoResults.push(rollDice);
     }
     myOutputValue = `🎲<strong>WELCOME PLAYER 2</strong>🎲<br><br>
