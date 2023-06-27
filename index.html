@@ -1,80 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="beatthat.css" />
     <title>Coding Basics</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
-      }
-
-      #header {
-        text-align: center;
-      }
-
-      #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
-      }
-
-      input {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 9px;
-        width: 100%;
-      }
-
-      button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
-      }
-
-      #output-div {
-        background-color: lightgrey;
-        margin: 20px auto;
-        padding: 20px;
-        width: 100%;
-      }
-    </style>
   </head>
-
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
+    <button onclick="toggle()" id="toggle-button">Bigger Number Wins</button>
+    <div class="dropdown">
+      <button onclick="myFunction()" class="rules-dropdown">Rules</button>
+      <div id="myDropdown" class="dropdown-content">
+        <small
+          >There are 2 players and players take turns. <br />
+          Each player rolls 2 dice and will be shown the dice rolls.
+
+          <br />
+
+          If playing "Biggest Number Wins", the player with the higher combined
+          number wins. If playing "Smallest Number Wins", the player with the
+          lower combined number wins.
+          <br />Click on the button above "Rules" to toggle between play modes.
+          Good luck!
+        </small>
+      </div>
+    </div>
+    <div id="players">
+      <div id="player-1">
+        Player 1
+        <div id="player-1-final">0</div>
+        <button id="roll-button-player-1">Roll for Player 1</button>
+      </div>
+      <div id="player-2">
+        Player 2
+        <div id="player-2-final">0</div>
+        <button id="roll-button-player-2">Roll for Player 2</button>
+      </div>
+    </div>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <div id="button">
+        <button id="results">Let's Play!</button>
+      </div>
+      <div id="player-rolls">
+        <div id="player-1-roll">What did Player 1 roll?</div>
+        <div id="player-2-roll">What did Player 2 roll?</div>
+      </div>
       <div id="output-div"></div>
     </div>
-    <!-- Import program logic -->
     <script src="script.js"></script>
-    <!-- Define button click functionality -->
-    <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
-
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
-      });
-    </script>
   </body>
 </html>
