@@ -8,6 +8,7 @@
       }
 
       body {
+        background-color: #252525;
         font-family: sans-serif;
         margin-left: 30px;
         margin-right: 30px;
@@ -15,6 +16,7 @@
 
       #header {
         text-align: center;
+        color: aliceblue;
       }
 
       #container {
@@ -52,7 +54,7 @@
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
       <p>Input:</p>
-      <input id="input-field" />
+      <input id="input-field" autofocus/>
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
@@ -75,6 +77,15 @@
         // Reset input value
         input.value = "";
       });
+      document.addEventListener("keydown", function(event){
+        if (event.key === "Enter"){
+        var input = document.querySelector("#input-field");
+        var result = main(input.value);
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+        input.value = "";
+        }
+      })
     </script>
   </body>
 </html>
