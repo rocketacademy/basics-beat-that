@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: #ff69b4;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -33,30 +33,52 @@
       }
 
       button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
+        display: block;
+        width: 80%;
+        margin: 1em auto;
+        height: 3em;
+        font-size: 1.1rem;
+        min-width: 300px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: whitesmoke;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+      }
+
+      h3 {
+        display: block;
+        color: navy;
+        margin: 20px auto;
+        font-size: 1.1rem;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲⛹️ Beat That! 🎲⛹️</h1>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+      <div id="output-div">
+        <p>Welcome to...BEAT THAT!</p>
+        <p>Please press submit to start the game!</p>
+      </div>
+      <h3>
+        <center>
+          Welcome to Beat That!<br />This is a 2 player game(player1 &
+          player2).<br />You both will compete with each other to see who can<br />
+          make up the most points using 2 dice rolls.<br />You can select which
+          number to go first.<br />e.g You've roll 1 & 6<br />By typing "1" or
+          "2" and submiting will<br />determine which number goes first.<br />typing
+          "1" gives you 16<br />typing "2" gives you 61<br />🤼‍♂️LET'S PLAY!!!🤼‍♂️
+        </center>
+      </h3>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
