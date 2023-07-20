@@ -29,10 +29,13 @@ var main = function (input) {
   }
   if (GAMEMODE === `PLAYER2 CHOICE`) {
     myOutputValue = whenPlayer2ChoosesTheOrder(input);
+    return myOutputValue;
   }
 
   //Score board
   if (GAMEMODE === `SCOREBOARD`) {
+    myOutputValue = scoreBoard();
+    return myOutputValue;
   }
   return myOutputValue;
 };
@@ -79,7 +82,7 @@ var whenPlayer1ChoosesTheOrder = function (order) {
     GAMEMODE = `PLAYER2`;
 
     // add value into PLAYER1 ARRAY for future scores...
-    PLAYER1ARRAY.push(rolledDice01 + rolledDice02);
+    PLAYER1ARRAY.push(rolledDice01 * 10 + rolledDice02);
     console.log(PLAYER1ARRAY);
     return `Player1! You've choosen ${rolledDice01}${rolledDice02}!<br>Now it's Player2s' turn to roll the dice.<br>
   press submit to continue.`;
@@ -89,7 +92,7 @@ var whenPlayer1ChoosesTheOrder = function (order) {
     GAMEMODE = `PLAYER2`;
 
     // add value into PLAYER1 ARRAY for future scores...
-    PLAYER1ARRAY.push(rolledDice02 + rolledDice01);
+    PLAYER1ARRAY.push(rolledDice02 * 10 + rolledDice01);
     console.log(PLAYER1ARRAY);
 
     return `Player1! You've choosen ${rolledDice02}${rolledDice01}!<br>Now it's Player2s' turn to roll the dice.<br>
@@ -124,8 +127,7 @@ var whenPlayer2ChoosesTheOrder = function (order) {
     GAMEMODE = `SCOREBOARD`;
 
     // add value into PLAYER1 ARRAY for future scores...
-    PLAYER2ARRAY.push(rolledDice01 + rolledDice02);
-    console.log(PLAYER1ARRAY);
+    PLAYER2ARRAY.push(rolledDice01 * 10 + rolledDice02);
     return `Player2! You've choosen ${rolledDice01}${rolledDice02}!<br>Now lets see who has won!<br>
   press submit to continue.`;
   }
@@ -134,18 +136,36 @@ var whenPlayer2ChoosesTheOrder = function (order) {
     GAMEMODE = `SCOREBOARD`;
 
     // add value into PLAYER1 ARRAY for future scores...
-    PLAYER2ARRAY.push(rolledDice02 + rolledDice01);
-    console.log(PLAYER1ARRAY);
+    PLAYER2ARRAY.push(rolledDice02 * 10 + rolledDice01);
 
     return `Player2! You've choosen ${rolledDice02}${rolledDice01}!<br>Now lets see who has won!<br>
   press submit to continue.`;
   }
 };
 
-// //Input to only select 1 or 2...
-// var invalidInputs = function (nonsense) {
-//   if (nonsense !== "1" && nonsense !== "2") {
-//     myOutputValue = `Please choose which one goes first by typing "1" or "2" and press submit!!!`;
-//     return myOutputValue;
-//   }
-// };
+//SCOREBOARD
+var scoreBoard = function (input) {
+  //score for Player 1
+  var PLAYER1sScore = 0;
+
+  PLAYER1ARRAY.forEach((item) => {
+    PLAYER1sScore += item;
+  });
+
+  //score for Player 2
+  var PLAYER2sScore = 0;
+
+  PLAYER2ARRAY.forEach((item) => {
+    PLAYER2sScore += item;
+  });
+
+  if (PLAYER1sScore > PLAYER2sScore) {
+    GAMEMODE = `PLAYER1`;
+    myOutputValue = `PLAYER 1 WINS!<br>Here are the scores!<br>PLAYER 1 - ${PLAYER1sScore}<BR>PLAYER 2 - ${PLAYER2sScore}<br>Press submit to continue!`;
+  }
+  if (PLAYER1sScore < PLAYER2sScore) {
+    GAMEMODE = `PLAYER1`;
+    myOutputValue = `PLAYER 2 WINS!<br>Here are the scores!<br>PLAYER 1 - ${PLAYER1sScore}<BR>PLAYER 2 - ${PLAYER2sScore}<br>Press submit to continue!`;
+  }
+  return myOutputValue;
+};
