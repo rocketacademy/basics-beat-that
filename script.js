@@ -28,6 +28,13 @@ var totalPlayers = 2;
 //Store scores of both players.
 var playerScoreTotal = [];
 
+//restart game
+var restartGame = function () {
+  currentPlayer = 1;
+  currentGameMode = GAME_MODE_ROLL_DICE;
+  playerScoreTotal = [];
+};
+
 // Helper Function - Roll Dice
 var rollDice = function () {
   var randomInteger = Math.floor(Math.random() * 6);
@@ -63,13 +70,22 @@ var rollTwoDices = function () {
   );
 };
 
+//Helper function - when input is not one or two.
+var inputNumber = function (input) {
+  //verifies if input is 1 or 2
+  if ((input !== 1) & (input !== 2)) {
+    return `It looks like you didn't enter 1 or 2. Please select either dice 1 or 2.`;
+  }
+};
+
 // Helper function - allow user to arrange dice number, to show final number.
 var showPlayerDiceNumber = function (playerInput) {
   var showPlayerChosenNumber;
-  //If input is not 1 and 2.
   var convertInputToNumber = Number(playerInput);
-  if (convertInputToNumber !== 1 && convertInputToNumber !== 2) {
-    return "There is a minor <i>glitch</i> here. Please enter either 1 or 2.";
+  if (convertInputToNumber === 2) {
+    showPlayerChosenNumber = Number(
+      currentPlayerRolls[1] + currentPlayerRolls[0]
+    );
   }
   // Arrange dice number based on user input.
   if (convertInputToNumber === 1) {
@@ -77,10 +93,9 @@ var showPlayerDiceNumber = function (playerInput) {
     showPlayerChosenNumber = Number(
       currentPlayerRolls[0] + currentPlayerRolls[1]
     );
-  } else if (convertInputToNumber === 2) {
-    showPlayerChosenNumber = Number(
-      currentPlayerRolls[1] + currentPlayerRolls[0]
-    );
+    //if input is not 1 or 2.
+  } else {
+    return inputNumber(playerInput);
   }
   //score player's preferred sequence into score
   playerScoreTotal.push(showPlayerChosenNumber);
@@ -95,6 +110,34 @@ var showPlayerDiceNumber = function (playerInput) {
   );
 };
 
+var comparePlayersScores = function () {
+  compareScoresGameMessage =
+    "Player 1 score: " +
+    playerScoreTotal[0] +
+    ". Player 2 score: " +
+    playerScoreTotal[1] +
+    ".";
+
+  //player 1 wins
+  if (playerScoreTotal[0] > playerScoreTotal[1]) {
+    compareScoresGameMessage =
+      compareScoresGameMessage + "<br><BR> Player 1 wins!";
+  }
+
+  //player 2 wins
+  if (playerScoreTotal[1] > playerScoreTotal[0]) {
+    compareScoresGameMessage =
+      compareScoresGameMessage + "<br><BR> Player 2 wins!";
+  }
+
+  //tie
+  if (playerScoreTotal[1] === playerScoreTotal[0]) {
+    compareScoresGameMessage =
+      compareScoresGameMessage + "<br><BR> It's a tie!";
+  }
+  return compareScoresGameMessage;
+};
+
 // Check Game Mode. Start Game with Dice Roll.
 var main = function (input) {
   console.log("Who is playing: ", currentPlayer);
@@ -102,7 +145,12 @@ var main = function (input) {
   // var gamemodeSequence;
   if (currentGameMode === GAME_MODE_ROLL_DICE) {
     console.log(GAME_MODE_ROLL_DICE);
-    currentGameMode = GAME_MODE_CHOOSE_DICE_ORDER;
+    //user keys info in input, do not allow user to submit.
+    if (input !== "") {
+      return "Please roll the dice by clicking the Submit button.";
+    } else {
+      currentGameMode = GAME_MODE_CHOOSE_DICE_ORDER;
+    }
     return (outputGameMessage = rollTwoDices());
   }
   if (currentGameMode === GAME_MODE_CHOOSE_DICE_ORDER) {
@@ -122,12 +170,19 @@ var main = function (input) {
         "'s turn. Click submit to roll the dices."
       );
     }
+    //if Player reaches Player 2.
+    if ((currentPlayer = totalPlayers)) {
+      currentGameMode = GAME_MODE_COMPARE_PLAYERS_SCORES;
+      console.log(GAME_MODE_COMPARE_PLAYERS_SCORES);
+      console.log("players score", playerScoreTotal);
+      return outputGameMessage + "<br><BR> Submit to calculate totoal scores.";
+    }
   }
-  if ((currentPlayer = totalPlayers)) {
-    currentGameMode = GAME_MODE_COMPARE_PLAYERS_SCORES;
+  if ((currentGameMode = GAME_MODE_COMPARE_PLAYERS_SCORES)) {
     console.log(GAME_MODE_COMPARE_PLAYERS_SCORES);
-    return outputGameMessage + "<br><BR> Submit to calculate totoal scores.";
+    outputGameMessage = comparePlayersScores();
+    //reset game,
+    restartGame();
+    return outputGameMessage;
   }
-
-  return outputGameMessage;
 };
