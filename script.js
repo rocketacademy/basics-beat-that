@@ -68,4 +68,5 @@ var main = function (input) {
       return myOutputValue;
     }
   }
+  return myOutputValue;
 };
