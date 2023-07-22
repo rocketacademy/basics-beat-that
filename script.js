@@ -68,6 +68,4 @@ var main = function (input) {
       return myOutputValue;
     }
   }
-  console.log(mode);
-  console.log(player1Value);
 };
