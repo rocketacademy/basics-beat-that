@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Beat That!</title>
     <style>
       * {
         box-sizing: border-box;
@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: #fffede;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,16 +40,22 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: #edeef0;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+      }
+
+      #gameinstructions {
+        color: #5da8fc;
+        text-align: center;
+        margin-top: 38px;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲 Beat That! 🎲</h1>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
@@ -57,6 +63,21 @@
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+    </div>
+    <div id="gameinstructions">
+      <p style="font-size: large">
+        <b>How to play Beat That? 🎲</b>
+      </p>
+      <p>This is a three-player game.</p>
+      <p>1. Player 1 will start by rolling the dice.</p>
+      <p>A. Click "Submit" to roll two dices.</p>
+      <p>B. Key in either "1" or "2 to to make the highest number possible.</p>
+      <p>
+        2. Next, Player 2 and 3 will roll the dice and form the highest number
+        possible.
+      </p>
+      <p>For example, if you roll a 1 and 6, your best answer would be 61.</p>
+      <p>The Player with the highest number wins!</p>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
