@@ -83,6 +83,47 @@ var getPlayerFinalValue = function (input) {
     "."
   );
 };
+var comparePlayersScore = function () {
+  //player 1 wins:
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    console.log(
+      "player's 1 value is bigger than player's 2 value ",
+      allPlayersScore[0] > allPlayersScore[1]
+    );
+    return (
+      "Player's 1 final value is " +
+      allPlayersScore[0] +
+      ". <br> <br> Player's 2 final value is " +
+      allPlayersScore[1] +
+      ". <br> <br> " +
+      "Player 1 wins."
+    );
+    //player 2 wins
+  } else if (allPlayersScore[1] > allPlayersScore[0]) {
+    console.log(
+      "player's 2 value is bigger than player's 1 value ",
+      allPlayersScore[1] > allPlayersScore[0]
+    );
+    return (
+      "Player's 1 final value is " +
+      allPlayersScore[0] +
+      ". <br> <br> Player's 2 final value is " +
+      allPlayersScore[1] +
+      ". <br> <br> " +
+      "Player 2 wins."
+    );
+  } else {
+    return (
+      "Player's 1 final value is " +
+      allPlayersScore[0] +
+      ". <br> <br> Player's 2 final value is " +
+      allPlayersScore[1] +
+      ". <br> <br> " +
+      "It's a tie."
+    );
+  }
+};
+
 var main = function (input) {
   console.log("Game state: ", gameState);
   var myOutputMessage = "";
@@ -103,19 +144,28 @@ var main = function (input) {
       gameState == GAME_STATE_CHOOSE_DICE_ORDER
     );
     myOutputMessage = getPlayerFinalValue(input);
-  }
-  if (currentPlayer == 1) {
-    console.log("current player is 1: ", currentPlayer == 1);
-    currentPlayer = 2;
-    gameState = GAME_STATE_ROLL_DICE;
-    console.log("game state: ", gameState);
-    return myOutputMessage + " It is now player's 2 turn.";
-  }
+    if (currentPlayer == 1) {
+      console.log("current player is 1: ", currentPlayer == 1);
+      currentPlayer = 2;
+      gameState = GAME_STATE_ROLL_DICE;
+      console.log("game state: ", gameState);
+      return myOutputMessage + " It is now player's 2 turn.";
+    }
 
-  if (currentPlayer == 2) {
-    console.log("current player is 2: ", currentPlayer == 2);
-    gameState = GAME_STATE_COMPARE_SCORES;
-    console.log("game state: ", gameState);
-    return myOutputMessage + " Please click 'submit' to see the final score.";
+    if (currentPlayer == 2) {
+      console.log("current player is 2: ", currentPlayer == 2);
+      gameState = GAME_STATE_COMPARE_SCORES;
+      console.log("game state: ", gameState);
+      return myOutputMessage + " Please click 'submit' to see the final score.";
+    }
+  }
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    console.log(
+      "gameState == GAME_STATE_COMPARE_SCORES",
+      gameState == GAME_STATE_COMPARE_SCORES
+    );
+    myOutputMessage = comparePlayersScore();
+
+    return myOutputMessage;
   }
 };
