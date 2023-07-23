@@ -12,6 +12,7 @@
 var GAME_STATE_ROLL_DICE = "GAME_STATE_ROLL_DICE ";
 var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
 var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES";
+var GAME_STATE_PLAY_AGAIN = "GAME_STATE_PLAY_AGAIN";
 var gameState = GAME_STATE_ROLL_DICE;
 var currentPlayer = 1;
 var currentPlayerRolls = []; //this array will store the currrent player rolls
@@ -36,14 +37,14 @@ var rollDiceForPlayer = function () {
   return (
     "Welcome Player " +
     currentPlayer +
-    ". You rolled " +
+    ". <br> <br> You rolled " +
     currentPlayerRolls[0] +
     " and " +
     currentPlayerRolls[1] +
-    ". Now please key in 1 or 2 to choose the corresponding dice as the first digit of your final value."
+    ".<br> <br> Now please key in 1 or 2 to choose the corresponding dice as the first digit of your final value."
   );
 };
-
+//helper function to get the player final value
 var getPlayerFinalValue = function (input) {
   //input validation:
   if (input != 1 && input != 2) {
@@ -72,8 +73,8 @@ var getPlayerFinalValue = function (input) {
       `${currentPlayerRolls[1]}` + `${currentPlayerRolls[0]}`
     );
   }
-  allPlayersScore.push(playerFinalValue);
-  currentPlayerRolls = [];
+  allPlayersScore.push(playerFinalValue); // add the final values to the corresponding array on line 19
+  currentPlayerRolls = []; //clear the current player rolls array
   console.log("current player rolls:", currentPlayerRolls);
   return (
     "Player " +
@@ -112,6 +113,7 @@ var comparePlayersScore = function () {
       ". <br> <br> " +
       "Player 2 wins."
     );
+    // a tie:
   } else {
     return (
       "Player's 1 final value is " +
@@ -123,7 +125,7 @@ var comparePlayersScore = function () {
     );
   }
 };
-
+//main function
 var main = function (input) {
   console.log("Game state: ", gameState);
   var myOutputMessage = "";
@@ -143,20 +145,23 @@ var main = function (input) {
       "game state: choose the dice order ",
       gameState == GAME_STATE_CHOOSE_DICE_ORDER
     );
-    myOutputMessage = getPlayerFinalValue(input);
+    myOutputMessage = getPlayerFinalValue(input); //output the player value
     if (currentPlayer == 1) {
       console.log("current player is 1: ", currentPlayer == 1);
       currentPlayer = 2;
       gameState = GAME_STATE_ROLL_DICE;
       console.log("game state: ", gameState);
-      return myOutputMessage + " It is now player's 2 turn.";
+      return myOutputMessage + "<br> <br> It is now player's 2 turn.";
     }
 
     if (currentPlayer == 2) {
       console.log("current player is 2: ", currentPlayer == 2);
       gameState = GAME_STATE_COMPARE_SCORES;
       console.log("game state: ", gameState);
-      return myOutputMessage + " Please click 'submit' to see the final score.";
+      return (
+        myOutputMessage +
+        "<br> <br> Please click 'submit' to see the final score."
+      );
     }
   }
   if (gameState == GAME_STATE_COMPARE_SCORES) {
@@ -165,7 +170,19 @@ var main = function (input) {
       gameState == GAME_STATE_COMPARE_SCORES
     );
     myOutputMessage = comparePlayersScore();
-
+    allPlayersScore = [];
+    console.log("all players score", allPlayersScore);
+    gameState = GAME_STATE_PLAY_AGAIN;
     return myOutputMessage;
   }
+  if (gameState == GAME_STATE_PLAY_AGAIN) {
+    console.log(
+      "gameState == GAME_STATE_PLAY_AGAIN:",
+      gameState == GAME_STATE_PLAY_AGAIN
+    );
+    gameState = GAME_STATE_ROLL_DICE;
+    currentPlayer = 1;
+    myOutputMessage = main();
+  }
+  return myOutputMessage;
 };
