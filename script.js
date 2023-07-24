@@ -18,6 +18,7 @@ var currentPlayer = 1;
 var currentPlayerRolls = []; //this array will store the currrent player rolls
 var allPlayersScore = [];
 var playerFinalValue = 0;
+var errorMessage = "";
 //Helper function "Roll the dice"
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -50,39 +51,40 @@ var getPlayerFinalValue = function (input) {
   if (input != 1 && input != 2) {
     console.log(input);
     console.log("Input is not 1 and not 2", input != 1 && input != 2);
-    return (
+    errorMessage =
       "Error! Please only key in 1 or 2 to choose which dice to use as the first digit. Your current dice rolls are " +
       currentPlayerRolls[0] +
       " as dice 1 and " +
       currentPlayerRolls[1] +
-      " as dice 2."
-    );
-  }
-  //condition 1 "if input == 1"
-  if (input == 1) {
-    console.log("input == 1 ", input == 1);
-    playerFinalValue = Number(
-      `${currentPlayerRolls[0]}` + `${currentPlayerRolls[1]}`
-    );
-  }
+      " as dice 2.";
+    return errorMessage;
+  } else {
+    //condition 1 "if input == 1"
+    if (input == 1) {
+      console.log("input == 1 ", input == 1);
+      playerFinalValue = Number(
+        `${currentPlayerRolls[0]}` + `${currentPlayerRolls[1]}`
+      );
+    }
 
-  //condition 2 "if input == 2"
-  if (input == 2) {
-    console.log("input == 2 ", input == 2);
-    playerFinalValue = Number(
-      `${currentPlayerRolls[1]}` + `${currentPlayerRolls[0]}`
+    //condition 2 "if input == 2"
+    if (input == 2) {
+      console.log("input == 2 ", input == 2);
+      playerFinalValue = Number(
+        `${currentPlayerRolls[1]}` + `${currentPlayerRolls[0]}`
+      );
+    }
+    allPlayersScore.push(playerFinalValue); // add the final values to the corresponding array on line 19
+    currentPlayerRolls = []; //clear the current player rolls array
+    console.log("current player rolls:", currentPlayerRolls);
+    return (
+      "Player " +
+      currentPlayer +
+      ", your final value is " +
+      playerFinalValue +
+      "."
     );
   }
-  allPlayersScore.push(playerFinalValue); // add the final values to the corresponding array on line 19
-  currentPlayerRolls = []; //clear the current player rolls array
-  console.log("current player rolls:", currentPlayerRolls);
-  return (
-    "Player " +
-    currentPlayer +
-    ", your final value is " +
-    playerFinalValue +
-    "."
-  );
 };
 var comparePlayersScore = function () {
   //player 1 wins:
@@ -146,6 +148,13 @@ var main = function (input) {
       gameState == GAME_STATE_CHOOSE_DICE_ORDER
     );
     myOutputMessage = getPlayerFinalValue(input); //output the player value
+    //if the input is incorrect, call the function again:
+    if (myOutputMessage == errorMessage) {
+      console.log("invalid input", myOutputMessage == errorMessage);
+      myOutputMessage = getPlayerFinalValue(input);
+      return myOutputMessage;
+    }
+
     if (currentPlayer == 1) {
       console.log("current player is 1: ", currentPlayer == 1);
       currentPlayer = 2;
