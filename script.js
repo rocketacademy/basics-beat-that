@@ -38,6 +38,14 @@ var rollTwoDiceForPlayer = function () {
     return `Hi Player 2, Dice 1 has rolled ${player2Rolls[0]} and Dice 2 has rolled ${player2Rolls[1]} <br><br> Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value.`;
   }
 };
+///Function to Restart Game
+var restartGame = function () {
+  gameState = GAME_STATE_DICE_ROLL;
+  player1Rolls = [];
+  player2Rolls = [];
+  playerScores = [];
+  playerTurn = 1;
+};
 
 //Main Function
 main = function (input) {
@@ -108,18 +116,20 @@ main = function (input) {
   }
 
   //Compare Scores and output winner
-  if ((gameState = GAME_STATE_COMPARE_SCORES)) {
-    console.log(
-      `Player 1 Score is ${playerScores[0]} and Player 2 Score is ${playerScores[1]}`
-    );
+  if (gameState === GAME_STATE_COMPARE_SCORES) {
+    var outputMessage;
     if (playerScores[0] === playerScores[1]) {
-      return `WOW WHAT LUCK! Both Player 1 and 2 have the same score of ${playerScores[0]}!!!!!`;
+      outputMessage = `WOW WHAT LUCK! Both Player 1 and 2 have the same score of ${playerScores[0]}!!!!!<br><br>Click Submit to play again!`;
     }
     if (playerScores[0] > playerScores[1]) {
-      return `Player 1 Wins with a score of ${playerScores[0]}! Player 2 got ${playerScores[1]}:(`;
+      gamestate = GAME_STATE_DICE_ROLL;
+      outputMessage = `Player 1 Wins with a score of ${playerScores[0]}! Player 2 got ${playerScores[1]}:(<br><br>Click Submit to play again!`;
     }
     if (playerScores[0] < playerScores[1]) {
-      return `Player 2 Wins with a score of ${playerScores[1]}! Player 1 got ${playerScores[0]}:(`;
+      gamestate = GAME_STATE_DICE_ROLL;
+      outputMessage = `Player 2 Wins with a score of ${playerScores[1]}! Player 1 got ${playerScores[0]}:(<br><br>Click Submit to play again!`;
     }
+    restartGame();
+    return outputMessage;
   }
 };
