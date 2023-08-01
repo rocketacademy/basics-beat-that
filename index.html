@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap"
+      rel="stylesheet"
+    />
     <title>Coding Basics</title>
     <style>
       * {
@@ -15,13 +21,22 @@
 
       #header {
         text-align: center;
+        font-family: "Bungee Spice", cursive;
+        font-size: 80px;
       }
 
       #container {
-        background-color: pink;
+        background-color: lightyellow;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+      }
+
+      #instructions {
+        background-color: white;
+        margin: 40px auto;
+        max-width: 800px;
+        text-align: center;
       }
 
       input {
@@ -49,7 +64,14 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Beat That!</h1>
+    <div id="instructions">
+      <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
+      <p>
+        Create a two-digit number by selecting the order of your dice rolls.
+      </p>
+      <p>The player with the highest number wins! Good luck!</p>
+    </div>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
