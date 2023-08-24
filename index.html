@@ -9,8 +9,8 @@
 
       body {
         font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
+        margin-left: 33px;
+        margin-right: 33px;
       }
 
       #header {
@@ -25,16 +25,16 @@
       }
 
       input {
-        font-size: 21px;
-        line-height: 33px;
+        font-size: 20px;
+        line-height: 25px;
         margin: 0 0 23px 0;
-        padding: 0 9px;
-        width: 100%;
+        padding: 0 6px;
+        width: 15%;
       }
 
       button {
-        font-size: 21px;
-        line-height: 33px;
+        font-size: 20px;
+        line-height: 25px;
         margin: 0 0 23px 0;
         padding: 0 6px;
       }
@@ -45,16 +45,32 @@
         padding: 20px;
         width: 100%;
       }
+
+      select {
+        font-size: 20px;
+        line-height: 25px;
+        margin: 0 0 23px 0;
+        padding: 0 6px;
+        width: 15%;
+      }
     </style>
   </head>
 
   <body>
     <h1 id="header">Beat That!🎲🎲</h1>
     <div id="container">
-      <p>User: TEST</p>
-      <input id="input-field" />
+      <font size="5">User:</font>
+      <input id="userInput" />
+      <button id="User-button">wants to play!</button>
       <br />
-      <button id="submit-button">is here!</button>
+      <font size="5">Game Mode:</font>
+      <select id="gameMode">
+        <option mode="1">1</option>
+        <option mode="2">2</option>
+      </select>
+      <button id="gameMode-button">select!</button>
+      <br />
+      <button id="play-button">Play!</button>
       <p>The Game:</p>
       <div id="output-div"></div>
     </div>
@@ -62,11 +78,11 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
+      var button = document.querySelector("#User-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        var input = document.querySelector("#userInput");
+        var result = userAdded(input.value);
 
         // Display result in output element
         var output = document.querySelector("#output-div");
@@ -74,6 +90,24 @@
 
         // Reset input value
         input.value = "";
+      });
+      var button = document.querySelector("#gameMode-button");
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var input = document.querySelector("#gameMode");
+        var result = gameModeSelect(input.value);
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+      });
+      var button = document.querySelector("#play-button");
+      button.addEventListener("click", function () {
+        var result = main();
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
       });
     </script>
   </body>
