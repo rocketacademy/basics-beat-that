@@ -51,7 +51,7 @@
         line-height: 25px;
         margin: 0 0 23px 0;
         padding: 0 6px;
-        width: 15%;
+        width: 30%;
       }
     </style>
   </head>
@@ -65,8 +65,8 @@
       <br />
       <font size="5">Game Mode:</font>
       <select id="gameMode">
-        <option mode="1">1</option>
-        <option mode="2">2</option>
+        <option mode="Game Mode 1">Game Mode 1</option>
+        <option mode="Game Mode 2">Game Mode 2</option>
       </select>
       <button id="gameMode-button">select!</button>
       <br />
@@ -78,6 +78,7 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
+      // Add user to the game
       var button = document.querySelector("#User-button");
       button.addEventListener("click", function () {
         // Set result to input value
@@ -91,6 +92,8 @@
         // Reset input value
         input.value = "";
       });
+
+      // Game Mode Choosing
       var button = document.querySelector("#gameMode-button");
       button.addEventListener("click", function () {
         // Set result to input value
