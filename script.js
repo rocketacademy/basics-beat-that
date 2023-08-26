@@ -1,6 +1,6 @@
 //Global Variable
-var user = [];
-var userWinRecord = [];
+var user = ["Ian", "Claire", "Billy", "Tom"];
+var userWinRecord = [1, 2, 3, 4];
 var userAccumulatedScore = [];
 var currentGameMode = "";
 
@@ -28,7 +28,21 @@ var userAdded = function (newUser) {
   user.push(newUser);
   userWinRecord.push(0);
   userList += `Player ${user.length}: ${newUser} have 0 score`;
-  return `${newUser}, welcome to the game.🥳🥳🥳<br>Here is ${user.length} player now!<br>Player list and winning score are:<br><br>${userList}`;
+  return `${newUser}, welcome to the game.🥳🥳🥳<br>Here is ${user.length} player now!<br><br>Player list and winning score are:<br>${userList}`;
+};
+
+var userDelete = function (deleteUser) {
+  //Check if there are user name repeated and delete user.
+  for (let i = 0; i < user.length; i++) {
+    if (deleteUser == user[i]) {
+      user.splice(i, 1);
+      userWinRecord.splice(i, 1);
+      let userList = genUserList();
+      return `Good Bye.${deleteUser}👋👋<br> Have a nice day.<br><br>Player list and winning score are:<br>${userList}`;
+    }
+  }
+
+  return `User name ${deleteUser} cannot be found. Who wants to quit the game?`;
 };
 
 var gameModeSelect = function (gameMode) {
@@ -46,4 +60,14 @@ var main = function () {
   }
 
   return "Test";
+};
+
+var genUserList = function () {
+  let userList = "";
+  for (let i = 0; i < user.length; i++) {
+    userList += `Player ${i + 1}: ${user[i]} have ${
+      userWinRecord[i]
+    } score<br>`;
+  }
+  return userList;
 };

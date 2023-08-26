@@ -77,6 +77,9 @@
       <button id="play-button">Play!</button>
       <p>The Game:</p>
       <div id="output-div"></div>
+      <font size="5">User:</font>
+      <input id="userDeleteInput" />
+      <button id="UserDelete-button">wants to quit the game!</button>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -115,6 +118,21 @@
         // Display result in output element
         var output = document.querySelector("#output-div");
         output.innerHTML = result;
+      });
+
+      // Delete user from the game
+      var button = document.querySelector("#UserDelete-button");
+      button.addEventListener("click", function () {
+        // Set result to input value
+        var input = document.querySelector("#userDeleteInput");
+        var result = userDelete(input.value);
+
+        // Display result in output element
+        var output = document.querySelector("#output-div");
+        output.innerHTML = result;
+
+        // Reset input value
+        input.value = "";
       });
     </script>
   </body>
