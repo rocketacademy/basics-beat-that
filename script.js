@@ -3,10 +3,9 @@ var user = [];
 var userWinRecord = [];
 var userAccumulatedScore = [];
 var currentGameMode = "";
-var gameOnCheck = false;
 
 var userAdded = function (newUser) {
-  var userList = "";
+  let userList = "";
   //Prevent user name to be nothings
 
   if (newUser == "") {
@@ -17,7 +16,7 @@ var userAdded = function (newUser) {
     return `It's already 8 player in the game.😣😣<br>No more player is allowed, Sorry.😭😭`;
   }
   //Check if there are user name repeated and generate userlist.
-  for (var i = 0; i < user.length; i++) {
+  for (let i = 0; i < user.length; i++) {
     if (newUser == user[i]) {
       return `${user[i]} is already in the game.😉<br>New player may want to choose another name.`;
     }
@@ -30,18 +29,11 @@ var userAdded = function (newUser) {
   userWinRecord.push(0);
   userList += `Player ${user.length}: ${newUser} have 0 score`;
   return `${newUser}, welcome to the game.🥳🥳🥳<br>Here is ${user.length} player now!<br>Player list and winning score are:<br><br>${userList}`;
-  //Add Player List*******
-  //Limit the player number******
 };
 
-//Game Mode Idea:
-//Normal Mode
-//Accumulated Fair Score Mode
-//Reroll Mode
-//Knockout Mode
 var gameModeSelect = function (gameMode) {
   currentGameMode = gameMode;
-  return `You choose ${currentGameMode}!Nice choice!<br>Let's start the game by pressing the play button!🤩🤩🤩`;
+  return `You choose ${currentGameMode}! Nice choice!<br>Let's start the game by pressing the play button!🤩🤩🤩`;
 };
 
 var main = function () {
@@ -52,8 +44,6 @@ var main = function () {
   if (currentGameMode == "") {
     return "You have not choose the game mode yet.🤨<br>Please choose what game mode you want to play before starting the game.<br>The game mode rule is explained in the bottom of this website.😆😆";
   }
-
-  gameOnCheck = true;
 
   return "Test";
 };
