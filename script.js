@@ -1,15 +1,11 @@
 //Global Variable
-var userName = [];
+var user = [];
 var userScore = [];
-var userNumber = 0;
 var currentGameMode = 0;
 
-var userAdded = function (user) {
-  userNumber += 1;
-  userName.push(user);
-  return `${
-    userName[userNumber - 1]
-  }, welcome to the game. Here is ${userNumber} player now!`;
+var userAdded = function (newUser) {
+  user.push(newUser);
+  return `${newUser}, welcome to the game. Here is ${user.length} player now!`;
   //Add Player List*******
   //Limit the player number******
 };
@@ -20,7 +16,7 @@ var gameModeSelect = function (gameMode) {
 };
 
 var main = function () {
-  if (userNumber < 2) {
+  if (user.length < 2) {
     return "Here is not enough player to start the game.🥲<br> Please find more friend to play the game with you.";
   }
 
