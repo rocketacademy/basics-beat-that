@@ -1,6 +1,6 @@
 //Global Variable
-var user = ["Ian", "Claire", "Billy", "Tom"];
-var userWinRecord = [1, 2, 3, 4];
+var user = [];
+var userWinRecord = [];
 var userAccumulatedScore = [];
 var currentGameMode = "";
 
