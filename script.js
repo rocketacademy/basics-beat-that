@@ -4,8 +4,14 @@ var userScore = [];
 var currentGameMode = 0;
 
 var userAdded = function (newUser) {
+  //Check if there are user name repeated
+  for (var i = 0; i < user.length; i++) {
+    if (newUser == user[i]) {
+      return `${user[i]} is already in the game.😉<br>New player may want to choose another name.`;
+    }
+  }
   user.push(newUser);
-  return `${newUser}, welcome to the game. Here is ${user.length} player now!`;
+  return `${newUser}, welcome to the game.🥳🥳🥳<br>Here is ${user.length} player now!`;
   //Add Player List*******
   //Limit the player number******
 };
