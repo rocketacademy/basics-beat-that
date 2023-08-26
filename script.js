@@ -6,8 +6,11 @@ var currentGameMode = "";
 
 var userAdded = function (newUser) {
   let userList = "";
-  //Prevent user name to be nothings
 
+  if (currentGameMode != "") {
+    return `Please finish the current game before adding a new player.😉`;
+  }
+  //Prevent user name to be nothings
   if (newUser == "") {
     return `I would like to know your name.👉👈`;
   }
