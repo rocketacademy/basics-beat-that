@@ -1,22 +1,32 @@
 //global variables
+var roundNum = "";
 var playerOneName = "";
 var playerTwoName = "";
+var playerOneDiceOne = "";
+var playerOneDiceTwo = "";
+var playerOneCombinedDice = "";
+var playerTwoDiceOne = "";
+var playerTwoDiceTwo = "";
+var playerTwoCombinedDice = "";
 
 //game mechanics
-var playGame = function (diceChoice) {
+var playerOneRoll = function () {
   //player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
-  var diceRollOne = rollDice().toString();
-  console.log(`dice one = ${diceRollOne}`);
-  var diceRollTwo = rollDice().toString();
-  console.log(`dice two = ${diceRollTwo}`);
-  var combinedDice = "";
+  playerOneDiceOne = rollDice().toString();
+  console.log(`dice one = ${playerOneDiceOne}`);
+  playerOneDiceTwo = rollDice().toString();
+  console.log(`dice two = ${playerOneDiceTwo}`);
+  return `You rolled ${playerOneDiceOne} for Dice One and ${playerOneDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
+};
+
+var combinePlayerOneDice = function (diceChoice) {
   //player pick the order to concatenate
   if (diceChoice == 1) {
-    combinedDice = diceRollOne + diceRollTwo;
-    return combinedDice;
+    playerOneCombinedDice = playerOneDiceOne + playerOneDiceTwo;
+    return playerOneCombinedDice;
   }
-  combinedDice = diceRollTwo + diceRollOne;
-  return combinedDice;
+  playerOneCombinedDice = playerOneDiceTwo + playerOneDiceOne;
+  return playerOneCombinedDice;
 };
 
 //roll dice function
@@ -28,6 +38,12 @@ var rollDice = function () {
 };
 
 var main = function (input) {
-  var playerOnePlay = playGame(input);
-  return playerOnePlay;
+  if (roundNum == ""){
+    input = playerOneName
+    return `Welcome ${playerOneName}! Please roll the dice by clicking "Submit"!`
+  }
+  var playerOnePlay = playerOneRoll();
+  var playerOneDiceChoice = combinePlayerOneDice(input);
+  return playerOneDiceChoice;
+  }
 };
