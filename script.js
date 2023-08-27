@@ -67,11 +67,14 @@ var main = function (input) {
     playerCombinedDice = combinePlayerDice(input);
     playerResult = playerCombinedDice[playerNum - 1];
     playerNum += 1;
-    console.log(`PlayerNum = ${playerNum}`);
-    console.log(`Round ${playerRound} ends`);
-    return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
+    if (playerNum !== 3) {
+      console.log(`PlayerNum = ${playerNum}`);
+      console.log(`Round ${playerRound} ends`);
+      return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
+    }
+    return `Let's see who wins~`;
   }
   //winning conditions
   var findWinner = calcWinner(2);
-  return `Player ${findWinner} wins! Rolled ${largestNum}`;
+  return `Player ${findWinner} wins! The combined dice roll is ${largestNum}!`;
 };
