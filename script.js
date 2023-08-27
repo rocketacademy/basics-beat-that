@@ -1,32 +1,33 @@
 //global variables
-var overallRoundNum = "";
-var diceRollRound = "";
-var playerOneName = "";
-var playerTwoName = "";
-var playerOneDiceOne = "";
-var playerOneDiceTwo = "";
-var playerOneCombinedDice = "";
-var playerTwoDiceOne = "";
-var playerTwoDiceTwo = "";
-var playerTwoCombinedDice = "";
+var playerNum = 1;
+var playerRound = 0;
+var playerDiceOne = "";
+var playerDiceTwo = "";
+var playerCombinedDice = [];
 
 //game mechanics
 var playerRoll = function () {
   //player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
-  playerOneDiceOne = rollDice().toString();
-  console.log(`dice one = ${playerOneDiceOne}`);
-  playerOneDiceTwo = rollDice().toString();
-  console.log(`dice two = ${playerOneDiceTwo}`);
+  playerDiceOne = rollDice().toString();
+  console.log(`dice one = ${playerDiceOne}`);
+  playerDiceTwo = rollDice().toString();
+  console.log(`dice two = ${playerDiceTwo}`);
 };
 
-var combinePlayerOneDice = function (diceChoice) {
+var combinePlayerDice = function (diceChoice) {
   //player pick the order to concatenate
   if (diceChoice == 1) {
-    playerOneCombinedDice = playerOneDiceOne + playerOneDiceTwo;
-    return playerOneCombinedDice;
+    console.log(`array position: ${playerNum - 1}`);
+    console.log(`Dice One+Two = ${playerDiceOne + playerDiceTwo}`);
+    playerCombinedDice[playerNum - 1] = Number(playerDiceOne + playerDiceTwo);
+    console.log(`player combined dice is ${playerCombinedDice[playerNum - 1]}`);
+    return playerCombinedDice;
   }
-  playerOneCombinedDice = playerOneDiceTwo + playerOneDiceOne;
-  return playerOneCombinedDice;
+  console.log(`array position: ${playerNum - 1}`);
+  console.log(`Dice Two+One = ${playerDiceTwo + playerDiceOne}`);
+  playerCombinedDice[playerNum - 1] = Number(playerDiceOne + playerDiceTwo);
+  console.log(`player combined dice is ${playerCombinedDice[playerNum - 1]}`);
+  return playerCombinedDice;
 };
 
 //roll dice function
@@ -37,21 +38,27 @@ var rollDice = function () {
   return diceNumber;
 };
 
-var main = function (input) {
-  //new game input name
-  if (overallRoundNum == "") {
-    playerOneName = input;
-    overallRoundNum += 1;
-    return `Welcome ${playerOneName}! Please roll the dice by clicking "Submit"!`;
-  }
-  if (diceRollRound == "") {
-    //roll dice one and two
-    playerOneRoll = playerRoll();
-    diceRollRound += 1;
-    //return rolled msg to choose
-    return `You rolled ${playerOneDiceOne} for Dice One and ${playerOneDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
-  }
-  var playerOneCombinedDice = combinePlayerOneDice(input);
+//define array
+var defineCombinedDiceArray = function (playerNum) {
+  playerCombinedDice.length(playerNum);
+};
 
-  return playerOneCombinedDice;
+var main = function (input) {
+  //define number of players to play
+  while (playerNum < 3) {
+    if (playerRound < playerNum) {
+      //roll the dice
+      playerRollDice = playerRoll();
+      playerRound += 1;
+      return `Welcome Player ${playerNum}! <br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
+    }
+    console.log(`input is ${input}`);
+    playerCombinedDice = combinePlayerDice(input);
+    playerResult = playerCombinedDice[playerNum - 1];
+    playerNum += 1;
+    console.log(`PlayerNum = ${playerNum}`);
+    console.log(`Round ${playerRound} ends`);
+    return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
+  }
+  return "Game ends!";
 };
