@@ -1,5 +1,6 @@
 //global variables
 var playerNum = 1;
+var totalPlayers = 0;
 var playerRound = 0;
 var playerDiceOne = "";
 var playerDiceTwo = "";
@@ -55,9 +56,16 @@ var calcWinner = function () {
 };
 
 var main = function (input) {
+  //validate input is number
+  if (isNaN(Number(input)) == true) return `You did not enter a number!`;
   //define number of players to play
-  //to change to player number input afterwards
-  while (playerNum < 5) {
+  if (totalPlayers == 0) {
+    totalPlayers = Number(input);
+    console.log(`total players = ${totalPlayers}`);
+    return `There are a total of ${totalPlayers} players! Click "Submit" to begin!`;
+  }
+  //while current player is < total number of players + 1 loop
+  while (playerNum < totalPlayers + 1) {
     if (playerRound < playerNum) {
       //roll the dice
       playerRollDice = playerRoll();
@@ -65,12 +73,15 @@ var main = function (input) {
       return `Welcome Player ${playerNum}! <br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
     }
     console.log(`input is ${input}`);
-    playerCombinedDice = combinePlayerDice(input);
+    //validate input is 1 or 2
+    if (isNaN(Number(input)) == true || (input !== "1" && input !== "2")) {
+      return `You did not enter a valid input. Please enter either "1" or "2"`;
+    } else playerCombinedDice = combinePlayerDice(input);
     playerResult = playerCombinedDice[playerNum - 1];
     playerNum += 1;
 
     //to change to player number input afterwards
-    if (playerNum !== 5) {
+    if (playerNum !== totalPlayers + 1) {
       console.log(`PlayerNum = ${playerNum}`);
       console.log(`Round ${playerRound} ends`);
       return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
