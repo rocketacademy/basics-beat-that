@@ -1,3 +1,7 @@
+//global variables
+var playerOneName = "";
+var playerTwoName = "";
+
 //roll dice function
 var rollDice = function () {
   var randomValue = Math.random() * 6;
