@@ -4,6 +4,7 @@ var playerRound = 0;
 var playerDiceOne = "";
 var playerDiceTwo = "";
 var playerCombinedDice = [];
+var largestNum = 0;
 
 //game mechanics
 var playerRoll = function () {
@@ -25,7 +26,7 @@ var combinePlayerDice = function (diceChoice) {
   }
   console.log(`array position: ${playerNum - 1}`);
   console.log(`Dice Two+One = ${playerDiceTwo + playerDiceOne}`);
-  playerCombinedDice[playerNum - 1] = Number(playerDiceOne + playerDiceTwo);
+  playerCombinedDice[playerNum - 1] = Number(playerDiceTwo + playerDiceOne);
   console.log(`player combined dice is ${playerCombinedDice[playerNum - 1]}`);
   return playerCombinedDice;
 };
@@ -38,9 +39,19 @@ var rollDice = function () {
   return diceNumber;
 };
 
-//define array
-var defineCombinedDiceArray = function (playerNum) {
-  playerCombinedDice.length(playerNum);
+//winning functions
+var calcWinner = function () {
+  largestNum = playerCombinedDice[0];
+  for (var i = 0; i < playerCombinedDice.length; i += 1) {
+    if (playerCombinedDice[i] > largestNum) {
+      largestNum = playerCombinedDice[i];
+    }
+  }
+  var winningPlayer = playerCombinedDice.indexOf(largestNum) + 1;
+  console.log(`largest num is ${largestNum}`);
+  console.log(playerCombinedDice.indexOf(largestNum));
+  console.log(`winning player is ${winningPlayer}`);
+  return winningPlayer;
 };
 
 var main = function (input) {
@@ -60,5 +71,7 @@ var main = function (input) {
     console.log(`Round ${playerRound} ends`);
     return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
   }
-  return "Game ends!";
+  //winning conditions
+  var findWinner = calcWinner(2);
+  return `Player ${findWinner} wins! Rolled ${largestNum}`;
 };
