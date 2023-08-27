@@ -6,17 +6,16 @@ var playerDiceTwo = "";
 var playerCombinedDice = [];
 var largestNum = 0;
 
-//game mechanics
+//player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
 var playerRoll = function () {
-  //player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
   playerDiceOne = rollDice().toString();
   console.log(`dice one = ${playerDiceOne}`);
   playerDiceTwo = rollDice().toString();
   console.log(`dice two = ${playerDiceTwo}`);
 };
 
+//player pick the order to concatenate
 var combinePlayerDice = function (diceChoice) {
-  //player pick the order to concatenate
   if (diceChoice == 1) {
     console.log(`array position: ${playerNum - 1}`);
     console.log(`Dice One+Two = ${playerDiceOne + playerDiceTwo}`);
@@ -56,7 +55,8 @@ var calcWinner = function () {
 
 var main = function (input) {
   //define number of players to play
-  while (playerNum < 3) {
+  //to change to player number input afterwards
+  while (playerNum < 5) {
     if (playerRound < playerNum) {
       //roll the dice
       playerRollDice = playerRoll();
@@ -67,7 +67,9 @@ var main = function (input) {
     playerCombinedDice = combinePlayerDice(input);
     playerResult = playerCombinedDice[playerNum - 1];
     playerNum += 1;
-    if (playerNum !== 3) {
+
+    //to change to player number input afterwards
+    if (playerNum !== 5) {
       console.log(`PlayerNum = ${playerNum}`);
       console.log(`Round ${playerRound} ends`);
       return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
@@ -75,7 +77,7 @@ var main = function (input) {
     return `Let's see who wins~`;
   }
   //winning conditions
-  var findWinner = calcWinner(2);
+  var findWinner = calcWinner();
   playerNum = 1;
   playerRound = 0;
   return `Player ${findWinner} wins! The combined dice roll is ${largestNum}! Let's play again!`;
