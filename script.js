@@ -64,7 +64,31 @@ var main = function (input) {
         playerTwoArray[1].toString() + playerTwoArray[0].toString();
       myOutputValue = `Player 2 has chosen dice 2 to be placed as the first digit.<br>Player 2's number is ${playerTwoFinalNumber}.`;
     }
-    myOutputValue = myOutputValue + `<br><br> Final.`;
+    if (playerOneFinalNumber == playerTwoFinalNumber) {
+      myOutputValue =
+        myOutputValue +
+        `<br> Player 1's number is also ${playerOneFinalNumber}.<br><br> It's a draw!<br><br>To play again, press Submit to roll dice for Player 1.`;
+      playerOneArray = [];
+      playerTwoArray = [];
+      playerOneFinalNumber = 0;
+      playerTwoFinalNumber = 0;
+    } else if (playerOneFinalNumber > playerTwoFinalNumber) {
+      myOutputValue =
+        myOutputValue +
+        `<br> Player 1's number is ${playerOneFinalNumber}.<br><br> Player 1 wins!<br><br>To play again, press Submit to roll dice for Player 1.`;
+      playerOneArray = [];
+      playerTwoArray = [];
+      playerOneFinalNumber = 0;
+      playerTwoFinalNumber = 0;
+    } else if (playerOneFinalNumber < playerTwoFinalNumber) {
+      myOutputValue =
+        myOutputValue +
+        `<br> Player 1's number is ${playerOneFinalNumber}.<br><br> Player 2 wins!<br><br>To play again, press Submit to roll dice for Player 1.`;
+      playerOneArray = [];
+      playerTwoArray = [];
+      playerOneFinalNumber = 0;
+      playerTwoFinalNumber = 0;
+    }
   }
   return myOutputValue;
 };
