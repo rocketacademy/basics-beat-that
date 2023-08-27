@@ -1,5 +1,6 @@
 //global variables
-var roundNum = "";
+var overallRoundNum = "";
+var diceRollRound = "";
 var playerOneName = "";
 var playerTwoName = "";
 var playerOneDiceOne = "";
@@ -10,13 +11,12 @@ var playerTwoDiceTwo = "";
 var playerTwoCombinedDice = "";
 
 //game mechanics
-var playerOneRoll = function () {
+var playerRoll = function () {
   //player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
   playerOneDiceOne = rollDice().toString();
   console.log(`dice one = ${playerOneDiceOne}`);
   playerOneDiceTwo = rollDice().toString();
   console.log(`dice two = ${playerOneDiceTwo}`);
-  return `You rolled ${playerOneDiceOne} for Dice One and ${playerOneDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
 };
 
 var combinePlayerOneDice = function (diceChoice) {
@@ -38,12 +38,20 @@ var rollDice = function () {
 };
 
 var main = function (input) {
-  if (roundNum == ""){
-    input = playerOneName
-    return `Welcome ${playerOneName}! Please roll the dice by clicking "Submit"!`
+  //new game input name
+  if (overallRoundNum == "") {
+    playerOneName = input;
+    overallRoundNum += 1;
+    return `Welcome ${playerOneName}! Please roll the dice by clicking "Submit"!`;
   }
-  var playerOnePlay = playerOneRoll();
-  var playerOneDiceChoice = combinePlayerOneDice(input);
-  return playerOneDiceChoice;
+  if (diceRollRound == "") {
+    //roll dice one and two
+    playerOneRoll = playerRoll();
+    diceRollRound += 1;
+    //return rolled msg to choose
+    return `You rolled ${playerOneDiceOne} for Dice One and ${playerOneDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
   }
+  var playerOneCombinedDice = combinePlayerOneDice(input);
+
+  return playerOneCombinedDice;
 };
