@@ -76,5 +76,7 @@ var main = function (input) {
   }
   //winning conditions
   var findWinner = calcWinner(2);
-  return `Player ${findWinner} wins! The combined dice roll is ${largestNum}!`;
+  playerNum = 1;
+  playerRound = 0;
+  return `Player ${findWinner} wins! The combined dice roll is ${largestNum}! Let's play again!`;
 };
