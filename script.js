@@ -4,6 +4,7 @@ var playerRound = 0;
 var playerDiceOne = "";
 var playerDiceTwo = "";
 var playerCombinedDice = [];
+var playerResult = 0;
 var largestNum = 0;
 
 //player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
