@@ -56,8 +56,9 @@ var calcWinner = function () {
 };
 
 var main = function (input) {
-  //validate input is number
-  if (isNaN(Number(input)) == true) return `You did not enter a number!`;
+  //validate input is number and not blank
+  if (isNaN(Number(input)) == true)
+    return `You did not enter a number! Please enter the number of players!`;
   //define number of players to play
   if (totalPlayers == 0) {
     totalPlayers = Number(input);
@@ -70,12 +71,12 @@ var main = function (input) {
       //roll the dice
       playerRollDice = playerRoll();
       playerRound += 1;
-      return `Welcome Player ${playerNum}! <br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br> Choose the order of the dice. Input "1" or "2"`;
+      return `🎲 <b> Welcome Player ${playerNum}! </b> 🎲 <br><br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br><br> Choose the order of the dice. Input "1" or "2"`;
     }
     console.log(`input is ${input}`);
     //validate input is 1 or 2
     if (isNaN(Number(input)) == true || (input !== "1" && input !== "2")) {
-      return `You did not enter a valid input. Please enter either "1" or "2"`;
+      return `You did not enter a valid input. <br><br> Please enter either "1" or "2"`;
     } else playerCombinedDice = combinePlayerDice(input);
     playerResult = playerCombinedDice[playerNum - 1];
     playerNum += 1;
@@ -84,13 +85,15 @@ var main = function (input) {
     if (playerNum !== totalPlayers + 1) {
       console.log(`PlayerNum = ${playerNum}`);
       console.log(`Round ${playerRound} ends`);
-      return `Your combined dice roll is ${playerResult} <br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
+      return `🎲 <b> Player ${
+        playerNum - 1
+      }! </b> 🎲 <br><br> Your combined dice roll is ${playerResult} <br><br> It is now Player ${playerNum}'s turn! Please click "Submit"!`;
     }
-    return `Let's see who wins~`;
+    return `<b>Let's see who wins~</br>`;
   }
   //winning conditions
   var findWinner = calcWinner();
   playerNum = 1;
   playerRound = 0;
-  return `Player ${findWinner} wins! The combined dice roll is ${largestNum}! Let's play again!`;
+  return `🎲 <b> Player ${findWinner} wins! 🎲 </b> <br><br> The combined dice roll is ${largestNum}! <br><br>Let's play again!`;
 };
