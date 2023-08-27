@@ -16,6 +16,7 @@ reset everything
 var playerOneArray = [];
 var playerTwoArray = [];
 var playerOneFinalNumber = 0;
+var playerTwoFinalNumber = 0;
 
 var rollDice = function () {
   var randomDecimal = Math.random() * 6;
@@ -27,22 +28,43 @@ var main = function (input) {
   var myOutputValue = "";
 
   if (playerOneArray.length == 0) {
-    var diceRollCounter = 0;
-    while (diceRollCounter < 2) {
+    var playerOneDiceRollCounter = 0;
+    while (playerOneDiceRollCounter < 2) {
       playerOneArray.push(rollDice());
-      diceRollCounter = diceRollCounter + 1;
+      playerOneDiceRollCounter = playerOneDiceRollCounter + 1;
     }
     myOutputValue = `Player 1 has rolled ${playerOneArray[0]} and ${playerOneArray[1]}.<br>Which dice (1 or 2) would you choose to be placed as the first digit?`;
-  } else if (playerOneArray.length != 0) {
+  } else if (playerOneArray.length != 0 && playerOneFinalNumber == 0) {
     if (input == 1) {
-      var playerOneFinalNumber =
+      playerOneFinalNumber =
         playerOneArray[0].toString() + playerOneArray[1].toString();
       myOutputValue = `Player 1 has chosen dice 1 to be placed as the first digit.<br>Player 1's number is ${playerOneFinalNumber}.`;
     } else if (input == 2) {
-      var playerOneFinalNumber =
+      playerOneFinalNumber =
         playerOneArray[1].toString() + playerOneArray[0].toString();
       myOutputValue = `Player 1 has chosen dice 2 to be placed as the first digit.<br>Player 1's number is ${playerOneFinalNumber}.`;
     }
+    myOutputValue =
+      myOutputValue +
+      `<br><br> Player 2, please press Submit for your dice roll.`;
+  } else if (playerOneFinalNumber != 0 && playerTwoArray.length == 0) {
+    var playerTwoDiceRollCounter = 0;
+    while (playerTwoDiceRollCounter < 2) {
+      playerTwoArray.push(rollDice());
+      playerTwoDiceRollCounter = playerTwoDiceRollCounter + 1;
+    }
+    myOutputValue = `Player 2 has rolled ${playerTwoArray[0]} and ${playerTwoArray[1]}.<br>Which dice (1 or 2) would you choose to be placed as the first digit?`;
+  } else if (playerTwoArray.length != 0 && playerTwoFinalNumber == 0) {
+    if (input == 1) {
+      playerTwoFinalNumber =
+        playerTwoArray[0].toString() + playerTwoArray[1].toString();
+      myOutputValue = `Player 2 has chosen dice 1 to be placed as the first digit.<br>Player 2's number is ${playerTwoFinalNumber}.`;
+    } else if (input == 2) {
+      playerTwoFinalNumber =
+        playerTwoArray[1].toString() + playerTwoArray[0].toString();
+      myOutputValue = `Player 2 has chosen dice 2 to be placed as the first digit.<br>Player 2's number is ${playerTwoFinalNumber}.`;
+    }
+    myOutputValue = myOutputValue + `<br><br> Final.`;
   }
   return myOutputValue;
 };
