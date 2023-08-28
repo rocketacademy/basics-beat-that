@@ -91,8 +91,8 @@ var rollDice = function () {
     ${user[userRound]}, please choose which dice you want to place first.
     <br>Dice 1🎲: ${playerCurrentDice[0]} or Dice 2🎲: ${playerCurrentDice[1]}`;
   }
-  let dice1 = 5;
-  let dice2 = 5;
+  let dice1 = genDice();
+  let dice2 = genDice();
   playerCurrentDice = [dice1, dice2];
   diceRolled = true;
   return `${user[userRound]} have rolled <br>Dice 1🎲:  ${dice1} <br>Dice 2🎲:  ${dice2}<br>Which dice you want to place first? "Dice 1" or "Dice 2"?`;
