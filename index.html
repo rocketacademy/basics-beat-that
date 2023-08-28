@@ -53,6 +53,11 @@
         padding: 0 6px;
         width: 48%;
       }
+
+      #gameInput,
+      #choose-button {
+        visibility: hidden;
+      }
     </style>
   </head>
 
@@ -82,6 +87,9 @@
       <button id="gameMode-button">select!</button>
       <br />
       <button id="play-button">Play!</button>
+      <br />
+      <button id="choose-button">Choose!</button>
+      <input id="gameInput" />
       <p>The Game:</p>
       <div id="output-div"></div>
       <br /><br />
@@ -149,51 +157,52 @@
     <!-- Define button click functionality -->
     <script>
       // Add user to the game
-      var button = document.querySelector("#User-button");
-      button.addEventListener("click", function () {
+      var userButton = document.querySelector("#User-button");
+      var gameModeButton = document.querySelector("#gameMode-button");
+      var playButton = document.querySelector("#play-button");
+      var userDeleteButton = document.querySelector("#UserDelete-button");
+      var userGameInput = document.querySelector("#gameInput");
+      var chooseButton = document.querySelector("#choose-button");
+
+      userButton.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#userInput");
-        var result = userAdded(input.value);
-
+        let input = document.querySelector("#userInput");
+        let result = userAdded(input.value);
         // Display result in output element
-        var output = document.querySelector("#output-div");
+        let output = document.querySelector("#output-div");
         output.innerHTML = result;
-
         // Reset input value
         input.value = "";
       });
 
       // Game Mode Choosing
-      var button = document.querySelector("#gameMode-button");
-      button.addEventListener("click", function () {
+      gameModeButton.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#gameMode");
-        var result = gameModeSelect(input.value);
-
+        let input = document.querySelector("#gameMode");
+        let result = gameModeSelect(input.value);
         // Display result in output element
-        var output = document.querySelector("#output-div");
+        let output = document.querySelector("#output-div");
         output.innerHTML = result;
       });
-      var button = document.querySelector("#play-button");
-      button.addEventListener("click", function () {
-        var result = main();
 
+      // Play Button
+      playButton.addEventListener("click", function () {
+        userGameInput.style.visibility = "visible";
+        chooseButton.style.visibility = "visible";
+        let result = main();
         // Display result in output element
-        var output = document.querySelector("#output-div");
+        let output = document.querySelector("#output-div");
         output.innerHTML = result;
       });
 
       // Delete user from the game
-      var button = document.querySelector("#UserDelete-button");
-      button.addEventListener("click", function () {
+      userDeleteButton.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#userDeleteInput");
-        var result = userDelete(input.value);
-
+        let input = document.querySelector("#userDeleteInput");
+        let result = userDelete(input.value);
         // Display result in output element
-        var output = document.querySelector("#output-div");
+        let output = document.querySelector("#output-div");
         output.innerHTML = result;
-
         // Reset input value
         input.value = "";
       });

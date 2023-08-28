@@ -53,7 +53,7 @@ var gameModeSelect = function (gameMode) {
   return `You choose ${currentGameMode}! Nice choice!<br>Let's start the game by pressing the play button!🤩🤩🤩`;
 };
 
-var main = function () {
+var gameOn = function () {
   if (user.length < 2) {
     return "Here is not enough player to start the game.🥲<br> Please find more friend to play the game with you.";
   }
@@ -62,7 +62,7 @@ var main = function () {
     return "You have not choose the game mode yet.🤨<br>Please choose what game mode you want to play before starting the game.<br>The game mode rule is explained in the bottom of this website.😆😆";
   }
 
-  return "Test";
+  return `test`;
 };
 
 var genUserList = function () {
