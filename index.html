@@ -55,7 +55,8 @@
       }
 
       #gameInput,
-      #choose-button {
+      #choose-button,
+      #roll-button {
         visibility: hidden;
       }
     </style>
@@ -88,8 +89,9 @@
       <br />
       <button id="play-button">Play!</button>
       <br />
-      <button id="choose-button">Choose!</button>
+      <button id="roll-button">Roll!</button>
       <input id="gameInput" />
+      <button id="choose-button">Choose!</button>
       <p>The Game:</p>
       <div id="output-div"></div>
       <br /><br />
@@ -163,13 +165,14 @@
       var userDeleteButton = document.querySelector("#UserDelete-button");
       var userGameInput = document.querySelector("#gameInput");
       var chooseButton = document.querySelector("#choose-button");
+      var rollButton = document.querySelector("#roll-button");
+      var output = document.querySelector("#output-div");
 
       userButton.addEventListener("click", function () {
         // Set result to input value
         let input = document.querySelector("#userInput");
         let result = userAdded(input.value);
         // Display result in output element
-        let output = document.querySelector("#output-div");
         output.innerHTML = result;
         // Reset input value
         input.value = "";
@@ -181,17 +184,19 @@
         let input = document.querySelector("#gameMode");
         let result = gameModeSelect(input.value);
         // Display result in output element
-        let output = document.querySelector("#output-div");
         output.innerHTML = result;
       });
 
       // Play Button
       playButton.addEventListener("click", function () {
-        userGameInput.style.visibility = "visible";
-        chooseButton.style.visibility = "visible";
         let result = main();
         // Display result in output element
-        let output = document.querySelector("#output-div");
+        output.innerHTML = result;
+      });
+
+      //Roll Button
+      rollButton.addEventListener("Click", function () {
+        let result = rollDice();
         output.innerHTML = result;
       });
 
@@ -200,8 +205,6 @@
         // Set result to input value
         let input = document.querySelector("#userDeleteInput");
         let result = userDelete(input.value);
-        // Display result in output element
-        let output = document.querySelector("#output-div");
         output.innerHTML = result;
         // Reset input value
         input.value = "";

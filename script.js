@@ -4,9 +4,10 @@ var userWinRecord = [];
 var userAccumulatedScore = [];
 var currentGameMode = "";
 var gameStop = false;
+var gameOn = false;
 
 var userAdded = function (newUser) {
-  if (currentGameMode != "") {
+  if (gameOn) {
     gameStop = true;
     return "You cannot add player while playing games!<br> Press play to resume the game!";
   }
@@ -40,7 +41,7 @@ var userAdded = function (newUser) {
 };
 
 var userDelete = function (deleteUser) {
-  if (currentGameMode != "") {
+  if (gameOn) {
     gameStop = true;
     return `You cannot delete player while playing games!<br> Press play to resume the game!`;
   }
@@ -59,7 +60,7 @@ var userDelete = function (deleteUser) {
 };
 
 var gameModeSelect = function (gameMode) {
-  if (currentGameMode != "") {
+  if (gameOn) {
     gameStop = true;
     return `You cannot choose game mode while playing games!<br> Press play to resume the game!`;
   }
@@ -67,7 +68,7 @@ var gameModeSelect = function (gameMode) {
   return `You choose ${currentGameMode}! Nice choice!<br>Let's start the game by pressing the play button!🤩🤩🤩`;
 };
 
-var gameOn = function () {
+var main = function () {
   if (user.length < 2) {
     return "Here is not enough player to start the game.🥲<br> Please find more friend to play the game with you.";
   }
@@ -76,8 +77,12 @@ var gameOn = function () {
     return "You have not choose the game mode yet.🤨<br>Please choose what game mode you want to play before starting the game.<br>The game mode rule is explained in the bottom of this website.😆😆";
   }
 
+  gameOn = true;
+  rollButton.style.visibility = "visible";
+  userGameInput.style.visibility = "visible";
+  chooseButton.style.visibility = "visible";
   if (currentGameMode)
-    return `${user.length} players is in the game.<br>${currentGameMode} have been choose!.`;
+    return `${user.length} players is ready to play the game.<br>${currentGameMode} have been choose!<br>Player 1 ${user[0]} please roll your dices!🎲🎲`;
 };
 
 var genUserList = function () {
@@ -88,4 +93,12 @@ var genUserList = function () {
     } score<br>`;
   }
   return userList;
+};
+
+var rollDice = function () {};
+
+var genDice = function () {
+  let randomNumber = Math.random() * 6;
+  randomDice = Math.floor(randomNumber) + 1;
+  return randomDice;
 };
