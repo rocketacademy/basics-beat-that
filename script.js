@@ -3,8 +3,13 @@ var user = [];
 var userWinRecord = [];
 var userAccumulatedScore = [];
 var currentGameMode = "";
+var gameStop = false;
 
 var userAdded = function (newUser) {
+  if (currentGameMode != "") {
+    gameStop = true;
+    return "You cannot add player while playing games!<br> Press play to resume the game!";
+  }
   let userList = "";
 
   if (currentGameMode != "") {
@@ -35,6 +40,11 @@ var userAdded = function (newUser) {
 };
 
 var userDelete = function (deleteUser) {
+  if (currentGameMode != "") {
+    gameStop = true;
+    return `You cannot delete player while playing games!<br> Press play to resume the game!`;
+  }
+
   //Check if there are user name repeated and delete user.
   for (let i = 0; i < user.length; i++) {
     if (deleteUser == user[i]) {
@@ -49,6 +59,10 @@ var userDelete = function (deleteUser) {
 };
 
 var gameModeSelect = function (gameMode) {
+  if (currentGameMode != "") {
+    gameStop = true;
+    return `You cannot choose game mode while playing games!<br> Press play to resume the game!`;
+  }
   currentGameMode = gameMode;
   return `You choose ${currentGameMode}! Nice choice!<br>Let's start the game by pressing the play button!🤩🤩🤩`;
 };
@@ -62,7 +76,8 @@ var gameOn = function () {
     return "You have not choose the game mode yet.🤨<br>Please choose what game mode you want to play before starting the game.<br>The game mode rule is explained in the bottom of this website.😆😆";
   }
 
-  return `test`;
+  if (currentGameMode)
+    return `${user.length} players is in the game.<br>${currentGameMode} have been choose!.`;
 };
 
 var genUserList = function () {
