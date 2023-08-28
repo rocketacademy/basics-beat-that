@@ -1,21 +1,18 @@
 //Global Variable
+var userRound = 0;
 var user = [];
 var userWinRecord = [];
-var userAccumulatedScore = [];
 var currentGameMode = "";
-var gameStop = false;
+var playerCurrentDice = [];
+var playerDiceNumber = [];
+var diceRolled = false;
 var gameOn = false;
 
 var userAdded = function (newUser) {
   if (gameOn) {
-    gameStop = true;
     return "You cannot add player while playing games!<br> Press play to resume the game!";
   }
   let userList = "";
-
-  if (currentGameMode != "") {
-    return `Please finish the current game before adding a new player.😉`;
-  }
   //Prevent user name to be nothings
   if (newUser == "") {
     return `I would like to know your name.👉👈`;
@@ -42,7 +39,6 @@ var userAdded = function (newUser) {
 
 var userDelete = function (deleteUser) {
   if (gameOn) {
-    gameStop = true;
     return `You cannot delete player while playing games!<br> Press play to resume the game!`;
   }
 
@@ -61,7 +57,6 @@ var userDelete = function (deleteUser) {
 
 var gameModeSelect = function (gameMode) {
   if (gameOn) {
-    gameStop = true;
     return `You cannot choose game mode while playing games!<br> Press play to resume the game!`;
   }
   currentGameMode = gameMode;
@@ -69,6 +64,12 @@ var gameModeSelect = function (gameMode) {
 };
 
 var main = function () {
+  if (gameOn == true && diceRolled == false) {
+    return `Please roll your dices😆😆 ${user[userRound]}`;
+  }
+  if (gameOn == true && diceRolled == true) {
+    return chooseDice("");
+  }
   if (user.length < 2) {
     return "Here is not enough player to start the game.🥲<br> Please find more friend to play the game with you.";
   }
@@ -81,8 +82,79 @@ var main = function () {
   rollButton.style.visibility = "visible";
   userGameInput.style.visibility = "visible";
   chooseButton.style.visibility = "visible";
-  if (currentGameMode)
-    return `${user.length} players is ready to play the game.<br>${currentGameMode} have been choose!<br>Player 1 ${user[0]} please roll your dices!🎲🎲`;
+  return `${user.length} players is ready to play the game.<br>${currentGameMode} have been choose!<br>Player 1 ${user[0]} please roll your dices!🎲🎲`;
+};
+
+var rollDice = function () {
+  if (diceRolled) {
+    return `You have rolled your dice ${user[userRound]}.<br>
+    ${user[userRound]}, please choose which dice you want to place first.
+    <br>Dice 1🎲: ${playerCurrentDice[0]} or Dice 2🎲: ${playerCurrentDice[1]}`;
+  }
+  let dice1 = 5;
+  let dice2 = 5;
+  playerCurrentDice = [dice1, dice2];
+  diceRolled = true;
+  return `${user[userRound]} have rolled <br>Dice 1🎲:  ${dice1} <br>Dice 2🎲:  ${dice2}<br>Which dice you want to place first? "Dice 1" or "Dice 2"?`;
+};
+
+var chooseDice = function (choice) {
+  if (!diceRolled) {
+    return `You haven't roll your dice ${user[userRound]}.😔😔`;
+  }
+  choice = choice.toLowerCase();
+  if (choice != "dice 1" && choice != "dice 2") {
+    return `Dice 1🎲: ${playerCurrentDice[0]}<br>Dice 2🎲: ${playerCurrentDice[1]}<br>Please choose which dice you want to place first.<br>"Dice 1" or "Dice 2"`;
+  }
+  if (choice == "dice 1") {
+    playerDiceNumber.push(
+      String(playerCurrentDice[0]) + String(playerCurrentDice[1])
+    );
+  } else if (choice == "dice 2") {
+    playerDiceNumber.push(
+      String(playerCurrentDice[1]) + String(playerCurrentDice[0])
+    );
+  }
+  userRound += 1;
+  diceRolled = false;
+  if (userRound == user.length) {
+    return normalModeResult(choice);
+  }
+  return `You choose ${choice} to place first , your number is ${
+    playerDiceNumber[userRound - 1]
+  }.🥳🥳<br> Next player ${user[userRound]} please roll your dices!`;
+};
+
+var normalModeResult = function (dice) {
+  let largestNumberUser = 0;
+
+  for (let i = 0; i < user.length; i++) {
+    if (playerDiceNumber[largestNumberUser] < playerDiceNumber[i]) {
+      largestNumberUser = i;
+    }
+  }
+
+  let winningList = [];
+  let winningUser = "";
+  for (let i = 0; i < user.length; i++) {
+    if (playerDiceNumber[largestNumberUser] == playerDiceNumber[i]) {
+      winningList.push(i);
+      userWinRecord[i] += 1;
+      winningUser += `, ${user[i]} `;
+    }
+  }
+
+  let result = `You choose ${dice} to place first , your number is ${
+    playerDiceNumber[userRound - 1]
+  }.<br> Everyone have already roll their dices and choose their number.🎲🎲🎲<br>Here is the list of the player and the number <br>${genUserDiceList()}<br> Congrats${winningUser}🎉🎉. You Wins! Now the score is in below:<br>${genUserList()}`;
+  endGame();
+  return result;
+};
+
+var genDice = function () {
+  let randomNumber = Math.random() * 6;
+  randomDice = Math.floor(randomNumber) + 1;
+  return randomDice;
 };
 
 var genUserList = function () {
@@ -95,10 +167,19 @@ var genUserList = function () {
   return userList;
 };
 
-var rollDice = function () {};
+var genUserDiceList = function () {
+  let userDiceList = "";
+  for (let i = 0; i < user.length; i++) {
+    userDiceList += `Player ${i + 1}: ${user[i]} have number ${
+      playerDiceNumber[i]
+    }<br>`;
+  }
+  return userDiceList;
+};
 
-var genDice = function () {
-  let randomNumber = Math.random() * 6;
-  randomDice = Math.floor(randomNumber) + 1;
-  return randomDice;
+var endGame = function () {
+  userRound = 0;
+  playerCurrentDice = [];
+  playerDiceNumber = [];
+  gameOn = false;
 };

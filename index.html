@@ -68,7 +68,10 @@
     <center>How to play the game:</center>
     <center>1. Please add player until there are two players.</center>
     <center>2. Please choose the game mode you want to play.</center>
-    <center>3. Press "Play!" button and enjoy your game.😉</center>
+    <center>3. Press "Play!" button and enjoy your game.🤩🤩</center>
+    <center>
+      PS. If you want to play the same mode again. Just press play!😉
+    </center>
     <br />
     <center>🎲Game Mode rule is in the bottom of the page.🎲</center>
     <div id="container">
@@ -120,10 +123,8 @@
     </center>
     <center>The leading one will get the smallest combination number.</center>
     <center>
-      The player gets the most accumulated score after 5 rounds wins score equal
-      to player minus 1.
+      The player gets the most accumulated score after 5 rounds wins 1 score.
     </center>
-    <center>Second can get player minus 2, and so on.</center>
     <br />
     <center><font size="6">3. Reroll Mode🎲🎲(?)</font></center>
     <br />
@@ -134,10 +135,7 @@
     <center>
       The player who reroll dice must get the smallest combination number.
     </center>
-    <center>The Largest number player win first.</center>
-    <center>
-      The scoring system is similar to the Accumulated Fair Score Mode
-    </center>
+    <center>The Largest number player win 1 score.</center>
     <br />
     <center><font size="6">4. Knockout Mode👊👊</font></center>
     <br />
@@ -149,10 +147,7 @@
     <center>
       The remaining player will play again with one more dice each round.
     </center>
-    <center>
-      When there are only one player left, that player will get score equal to
-      the total player number.
-    </center>
+    <center>The only player left win 1 score.</center>
 
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -183,7 +178,6 @@
         // Set result to input value
         let input = document.querySelector("#gameMode");
         let result = gameModeSelect(input.value);
-        // Display result in output element
         output.innerHTML = result;
       });
 
@@ -195,9 +189,19 @@
       });
 
       //Roll Button
-      rollButton.addEventListener("Click", function () {
-        let result = rollDice();
+      rollButton.addEventListener("click", function () {
+        var result = rollDice();
         output.innerHTML = result;
+      });
+
+      //Choose Dice
+      chooseButton.addEventListener("click", function () {
+        // Set result to input value
+        let input = document.querySelector("#gameInput");
+        let result = chooseDice(input.value);
+        output.innerHTML = result;
+        // Reset input value
+        input.value = "";
       });
 
       // Delete user from the game
