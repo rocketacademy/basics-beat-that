@@ -155,7 +155,7 @@ var normalModeResult = function (dice) {
 var rollDiceAFSMode = function () {
   let dice1 = genDice();
   let dice2 = genDice();
-  if (dice1 > dice2 && accumulatedRound == 0) {
+  if (dice1 >= dice2 && accumulatedRound == 0) {
     playerNumber.push(String(dice1) + String(dice2));
   } else if (dice1 < dice2 && accumulatedRound == 0) {
     playerNumber.push(String(dice2) + String(dice1));
@@ -171,12 +171,12 @@ var rollDiceAFSMode = function () {
   if (userRound == user.length) {
     userRound = 0;
     accumulatedRound += 1;
-    currentWinner = findWinner();
+    currentWinner = findWinnerIndexList();
     return `${
-      user[userRound]
+      user[user.length - 1]
     } have rolled ${dice1} and ${dice2}.🎲🎲<br> The Largest number combination is ${
-      playerNumber[userRound]
-    }.<br><br>This is the end the Round ${accumulatedRound}.😎<br>Let's see the result of this round.<br><br>${genUserNumberList()}`;
+      playerNumber[user.length - 1]
+    }.<br><br>This is the end the Round ${accumulatedRound}.😎<br>Let's see the result until now.<br><br>${genUserNumberList()}<br>It will be hard for the current winner.<br>The next round will use the smallest combination for the current winner.<br>Good Luck.😏😏`;
   }
 
   return output;
@@ -221,7 +221,7 @@ var endGame = function () {
 };
 
 var findWinnerIndexList = function () {
-  let sortedPlayerNumber = playerNumber.sort();
+  let sortedPlayerNumber = playerNumber.toSorted();
   let winnerNumber = sortedPlayerNumber[sortedPlayerNumber.length - 1];
   let winnerIndexList = [];
   for (let i = 0; i < user.length; i++) {
