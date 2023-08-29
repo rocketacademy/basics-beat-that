@@ -10,6 +10,7 @@ var playerNumber = [];
 var diceRolled = false;
 // For AFS Mode
 var accumulatedRound = 0;
+var currentWinner = 0;
 
 var userAdded = function (newUser) {
   if (gameOn) {
@@ -136,21 +137,17 @@ var chooseDice = function (choice) {
 };
 
 var normalModeResult = function (dice) {
-  let winner = findWinner();
+  let winnerIndexList = findWinnerIndexList();
+  let winnerList = "";
 
-  let winningList = [];
-  let winningUsers = "";
-  for (let i = 0; i < user.length; i++) {
-    if (playerNumber[winner] == playerNumber[i]) {
-      winningList.push(i);
-      userWinRecord[i] += 1;
-      winningUsers += `, ${user[i]} `;
-    }
+  for (let i = 0; i < winnerIndexList.length; i++) {
+    userWinRecord[winnerIndexList[i]] += 1;
+    winnerList += `, ${user[winnerIndexList[i]]}`;
   }
 
   let result = `You choose ${dice} to place first , your number is ${
     playerNumber[userRound - 1]
-  }.<br> Everyone have already roll their dices and choose their number.🎲🎲🎲<br>Here is the list of the player and the number <br>${genUserNumberList()}<br> Congrats${winningUsers}🎉🎉. You Wins! Now the score is in below:<br>${genUserList()}`;
+  }.<br> Everyone have already roll their dices and choose their number.🎲🎲🎲<br>Here is the list of the player and the number <br>${genUserNumberList()}<br> Congrats${winnerList}🎉🎉. You Wins! Now the score is in below:<br>${genUserList()}`;
   endGame();
   return result;
 };
@@ -174,6 +171,7 @@ var rollDiceAFSMode = function () {
   if (userRound == user.length) {
     userRound = 0;
     accumulatedRound += 1;
+    currentWinner = findWinner();
     return `${
       user[userRound]
     } have rolled ${dice1} and ${dice2}.🎲🎲<br> The Largest number combination is ${
@@ -222,11 +220,15 @@ var endGame = function () {
   chooseButton.style.visibility = "hidden";
 };
 
-var findWinner = function () {
-  let winner = 0;
+var findWinnerIndexList = function () {
+  let sortedPlayerNumber = playerNumber.sort();
+  let winnerNumber = sortedPlayerNumber[sortedPlayerNumber.length - 1];
+  let winnerIndexList = [];
   for (let i = 0; i < user.length; i++) {
-    if (playerNumber[winner] < playerNumber[i]) {
-      winner = i;
+    if (winnerNumber == playerNumber[i]) {
+      winnerIndexList.push(i);
     }
   }
+  console.log(winnerIndexList);
+  return winnerIndexList;
 };
