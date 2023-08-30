@@ -6,7 +6,7 @@ var currentGameMode = "";
 var gameOn = false;
 var playerDices = [];
 var playerNumber = [];
-// For normal Mode
+// For normal Mode & Reroll Mode
 var diceRolled = false;
 // For AFS Mode
 var accumulatedRound = 0;
@@ -88,6 +88,10 @@ var main = function () {
     userGameInput.style.visibility = "visible";
     chooseButton.style.visibility = "visible";
   }
+  if (currentGameMode == "Reroll Mode") {
+    rerollButton.style.visibility = "visible";
+    nextPlayerButton.style.visibility = "visible";
+  }
   return `${user.length} players is ready to play the game.<br>${currentGameMode} have been choose!<br>Player 1 ${user[0]} please roll your dices!🎲🎲`;
 };
 
@@ -97,6 +101,9 @@ var rollDice = function () {
   }
   if (currentGameMode == "Accumulated Fair Score Mode") {
     return rollDiceAFSMode();
+  }
+  if (currentGameMode == "Reroll Mode") {
+    return rerollModeRoll();
   }
 };
 
@@ -220,6 +227,35 @@ var AFSModeResult = function (dice1, dice2, currentNumber) {
   return result;
 };
 
+var rerollModeRoll = function () {
+  let dice1 = genDice();
+  let dice2 = genDice();
+  playerDices = [dice1, dice2];
+  console.log(playerDices);
+  playerDices.sort(function (a, b) {
+    return b - a;
+  });
+  console.log(playerDices);
+  playerNumber.push(Number(String(playerDices[1]) + String(playerDices[0])));
+  return `You have roll ${dice1}🎲 and ${dice2}🎲.<br>Your current largest combination number is ${playerNumber[userRound]}.<br>Do you want to reroll the smaller number dice?<br>🚨🚨🚨🚨If you reroll your dice,<br> the next number must use the smallest combination number.🚨🚨🚨🚨<br>If don't, press the next player button.🫰🫰`;
+};
+
+var reroll = function () {
+  if (diceRolled) {
+    return `You have reroll your dice${
+      user[userRound - 1]
+    }.😕<br>I know you want to get a better number.<br>Please let the next player roll their dices.😫😫`;
+  }
+
+  diceRolled = true;
+  userRound += 1;
+  return;
+};
+
+var nextPlayer = function () {
+  userRound += 1;
+};
+
 var genDice = function () {
   let randomNumber = Math.random() * 6;
   randomDice = Math.floor(randomNumber) + 1;
@@ -256,11 +292,15 @@ var endGame = function () {
   rollButton.style.visibility = "hidden";
   userGameInput.style.visibility = "hidden";
   chooseButton.style.visibility = "hidden";
+  rerollButton.style.visibility = "hidden";
+  nextPlayerButton.style.visibility = "hidden";
 };
 
 var findWinnerIndexList = function () {
-  let sortedPlayerNumber = playerNumber.toSorted();
-  let winnerNumber = sortedPlayerNumber[sortedPlayerNumber.length - 1];
+  let sortedPlayerNumber = playerNumber.toSorted(function (a, b) {
+    return b - a;
+  });
+  let winnerNumber = sortedPlayerNumber[0];
   let winnerIndexList = [];
   for (let i = 0; i < user.length; i++) {
     if (winnerNumber == playerNumber[i]) {

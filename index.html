@@ -56,7 +56,9 @@
 
       #gameInput,
       #choose-button,
-      #roll-button {
+      #roll-button,
+      #reroll-button,
+      #next-player-button {
         visibility: hidden;
       }
     </style>
@@ -90,11 +92,13 @@
       </select>
       <button id="gameMode-button">select!</button>
       <br />
-      <button id="play-button">Play!</button>
+      <center><button id="play-button">Play!</button></center>
       <br />
       <button id="roll-button">Roll!</button>
       <input id="gameInput" />
       <button id="choose-button">Choose!</button>
+      <button id="reroll-button">Reroll!</button>
+      <button id="next-player-button">Next Player!</button>
       <p>The Game:</p>
       <div id="output-div"></div>
       <br /><br />
@@ -161,6 +165,8 @@
       var userGameInput = document.querySelector("#gameInput");
       var chooseButton = document.querySelector("#choose-button");
       var rollButton = document.querySelector("#roll-button");
+      var rerollButton = document.querySelector("#reroll-button");
+      var nextPlayerButton = document.querySelector("#next-player-button");
       var output = document.querySelector("#output-div");
 
       userButton.addEventListener("click", function () {
@@ -190,7 +196,7 @@
 
       //Roll Button
       rollButton.addEventListener("click", function () {
-        var result = rollDice();
+        let result = rollDice();
         output.innerHTML = result;
       });
 
@@ -202,6 +208,16 @@
         output.innerHTML = result;
         // Reset input value
         input.value = "";
+      });
+
+      rerollButton.addEventListener("click", function () {
+        let result = reroll();
+        output.innerHTML = result;
+      });
+
+      nextPlayerButton.addEventListener("click", function () {
+        let result = nextPlayer();
+        output.innerHTML = result;
       });
 
       // Delete user from the game
