@@ -137,17 +137,11 @@ var chooseDice = function (choice) {
 };
 
 var normalModeResult = function (dice) {
-  let winnerIndexList = findWinnerIndexList();
-  let winnerList = "";
-
-  for (let i = 0; i < winnerIndexList.length; i++) {
-    userWinRecord[winnerIndexList[i]] += 1;
-    winnerList += `, ${user[winnerIndexList[i]]}`;
-  }
-
   let result = `You choose ${dice} to place first , your number is ${
     playerNumber[userRound - 1]
-  }.<br> Everyone have already roll their dices and choose their number.🎲🎲🎲<br>Here is the list of the player and the number <br>${genUserNumberList()}<br> Congrats${winnerList}🎉🎉. You Wins! Now the score is in below:<br>${genUserList()}`;
+  }.<br> Everyone have already roll their dices and choose their number.🎲🎲🎲<br>Here is the list of the player and the number <br>${genUserNumberList()}<br> Congrats${scorePointAndGenList(
+    true
+  )}🎉🎉. You Wins! Now the score is in below:<br>${genUserList()}`;
   endGame();
   return result;
 };
@@ -155,31 +149,75 @@ var normalModeResult = function (dice) {
 var rollDiceAFSMode = function () {
   let dice1 = genDice();
   let dice2 = genDice();
-  if (dice1 >= dice2 && accumulatedRound == 0) {
-    playerNumber.push(String(dice1) + String(dice2));
-  } else if (dice1 < dice2 && accumulatedRound == 0) {
-    playerNumber.push(String(dice2) + String(dice1));
+  let currentNumber = currentNumberAFS(dice1, dice2);
+
+  if (userRound == user.length - 1 && accumulatedRound == 4) {
+    return AFSModeResult(dice1, dice2, currentNumber);
   }
-
-  let output = `${
-    user[userRound]
-  } have rolled ${dice1} and ${dice2}.🎲🎲<br> The Largest number combination is ${
-    playerNumber[userRound]
-  }.<br>Next player ${user[userRound + 1]} please roll your dices!🤩🤩`;
-  userRound += 1;
-
-  if (userRound == user.length) {
+  if (userRound == user.length - 1 && accumulatedRound < 4) {
     userRound = 0;
     accumulatedRound += 1;
-    currentWinner = findWinnerIndexList();
+    winnerList = scorePointAndGenList(false);
     return `${
       user[user.length - 1]
-    } have rolled ${dice1} and ${dice2}.🎲🎲<br> The Largest number combination is ${
-      playerNumber[user.length - 1]
-    }.<br><br>This is the end the Round ${accumulatedRound}.😎<br>Let's see the result until now.<br><br>${genUserNumberList()}<br>It will be hard for the current winner.<br>The next round will use the smallest combination for the current winner.<br>Good Luck.😏😏`;
+    } have rolled ${dice1} and ${dice2}.🎲🎲<br> The ${
+      currentNumber[1]
+    } combination number is ${
+      currentNumber[0]
+    }.<br><br>This is the end the Round ${accumulatedRound}.😎<br>Let's see the result until now.<br><br>${genUserNumberList()}<br>It will be hard for you${winnerList}.<br>The next round will use the smallest combination for the current winner.<br>Good Luck.😏😏`;
   }
 
+  let result = `${
+    user[userRound]
+  } have rolled ${dice1} and ${dice2}.🎲🎲<br> The ${
+    currentNumber[1]
+  } combination number is ${currentNumber[0]}.<br>Next player ${
+    user[userRound + 1]
+  } please roll your dices!🤩🤩`;
+  userRound += 1;
+  return result;
+};
+
+var currentNumberAFS = function (dice1, dice2) {
+  let currentNumber = 0;
+  let largeOrSmall = "largest";
+  let output = [];
+  if (dice1 >= dice2 && accumulatedRound == 0) {
+    currentNumber = Number(String(dice1) + String(dice2));
+    playerNumber.push(currentNumber);
+  } else if (dice1 < dice2 && accumulatedRound == 0) {
+    currentNumber = Number(String(dice2) + String(dice1));
+    playerNumber.push(currentNumber);
+  } else if (
+    (dice1 >= dice2 && userRound != currentWinner) ||
+    (dice1 <= dice2 && userRound == currentWinner)
+  ) {
+    currentNumber = Number(String(dice1) + String(dice2));
+    playerNumber[userRound] += currentNumber;
+  } else if (
+    (dice1 < dice2 && userRound != currentWinner) ||
+    (dice1 > dice2 && userRound == currentWinner)
+  ) {
+    currentNumber = Number(String(dice2) + String(dice1));
+    playerNumber[userRound] += currentNumber;
+  }
+  if (userRound == currentNumber) {
+    largeOrSmall = "smallest";
+  }
+  output.push(currentNumber, largeOrSmall);
   return output;
+};
+
+var AFSModeResult = function (dice1, dice2, currentNumber) {
+  let result = `${dice1} and ${dice2} have rolled by ${
+    user[user.length - 1]
+  }.<br>The ${
+    currentNumber[1]
+  } combination number have been used.🎲<br><br>5 Round of dices have been rolled!🎲🎲<br>Let's see the final result!😎<br><br>${genUserNumberList()}<br> Congrats${scorePointAndGenList(
+    true
+  )}🎉🎉🎉.You Win!<br>Now the score is in below:<br>${genUserList()}`;
+  endGame();
+  return result;
 };
 
 var genDice = function () {
@@ -229,6 +267,19 @@ var findWinnerIndexList = function () {
       winnerIndexList.push(i);
     }
   }
-  console.log(winnerIndexList);
   return winnerIndexList;
+};
+
+var scorePointAndGenList = function (score) {
+  let winnerIndexList = findWinnerIndexList();
+  let winnerList = "";
+
+  for (let i = 0; i < winnerIndexList.length; i++) {
+    if (score) {
+      userWinRecord[winnerIndexList[i]] += 1;
+    }
+    winnerList += `, ${user[winnerIndexList[i]]}`;
+  }
+
+  return winnerList;
 };
