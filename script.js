@@ -65,7 +65,7 @@ var userDelete = function (deleteUser) {
     }
   }
 
-  return `User name ${deleteUser} cannot be found. Who wants to quit the game?`;
+  return `User name ${deleteUser} cannot be found. Who wants to quit the game?<br>${genUserList()}`;
 };
 
 var gameModeSelect = function (gameMode) {
