@@ -54,6 +54,7 @@ var userDelete = function (deleteUser) {
   for (let i = 0; i < user.length; i++) {
     if (deleteUser == user[i]) {
       user.splice(i, 1);
+      survivedPlayer.splice(i, 1);
       userWinRecord.splice(i, 1);
       let userList = genUserList();
       return `Good Bye.${deleteUser}👋👋<br> Have a nice day.<br><br>Player list and winning score are:<br>${userList}`;
@@ -332,29 +333,37 @@ var knockoutMode = function () {
   if (userRound == survivedPlayer.length) {
     let loser = losingUser();
     output = `${
-      survivedPlayer[userRound]
+      survivedPlayer[userRound - 1]
     } have rolled ${diceList} nice!<br>Your largest combination number is ${
-      playerNumber[userRound]
-    }.🤓<br><br>Here is the list of this round.<br>${genUserNumberList()}<br>Sorry, ${
-      user[loser]
-    }. You are eliminated! `;
-    playerNumber = [];
+      playerNumber[userRound - 1]
+    }.🤓<br><br>Here is the list of this round.🤠🤠<br>${genUserNumberList()}<br>Sorry, ${
+      survivedPlayer[loser]
+    }. You are eliminated!😢😢<br>`;
+
+    survivedPlayer.splice(loser, 1);
     diceNeeded += 1;
+    if (survivedPlayer.length != 1) {
+      output += `${survivedPlayer[0]}, now it's your turn to roll ${diceNeeded} dices!🎲`;
+    } else {
+      let winnerIndex = user.indexOf(survivedPlayer[0]);
+      userWinRecord[winnerIndex] += 1;
+      output += `Congrats! ${
+        survivedPlayer[0]
+      }🥳🥳🥳🥳. You survived and Win!<br>Here is the score:<br>${genUserList()}`;
+      endGame();
+    }
+
+    playerNumber = [];
+    userRound = 0;
   }
   playerDices = [];
   return output;
 };
 
 var losingUser = function () {
-  let losingList = playerNumber.toSorted(function (a, b) {
-    return a - b;
-  });
-  let loser = losingList[0];
-  console.log(loser);
-  for (let i = 0; i < loser.length; i++) {
-    survivedPlayer.splice(loser, 1);
-  }
-  return loser;
+  let lowestNumber = Math.min(...playerNumber);
+  let loserIndex = playerNumber.indexOf(String(lowestNumber));
+  return loserIndex;
 };
 
 //general function
@@ -377,9 +386,7 @@ var genUserList = function () {
 var genUserNumberList = function () {
   let userNumberList = "";
   for (let i = 0; i < survivedPlayer.length; i++) {
-    userNumberList += `Player ${i + 1}: ${survivedPlayer[i]} have number ${
-      playerNumber[i]
-    }<br>`;
+    userNumberList += `${survivedPlayer[i]} have number ${playerNumber[i]}<br>`;
   }
   return userNumberList;
 };
@@ -393,6 +400,7 @@ var endGame = function () {
   accumulatedNumber = [];
   currentWinner = [];
   survivedPlayer = user;
+  diceNeeded = 2;
   rollButton.style.visibility = "hidden";
   userGameInput.style.visibility = "hidden";
   chooseButton.style.visibility = "hidden";
