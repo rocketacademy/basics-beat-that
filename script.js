@@ -6,11 +6,14 @@ var currentGameMode = "";
 var gameOn = false;
 var playerDices = [];
 var playerNumber = [];
-// For normal Mode & Reroll Mode
+// For normal Mode
 var diceRolled = false;
 // For AFS Mode
 var accumulatedRound = 0;
 var currentWinner = [];
+// For Knockout Mode
+var survivedPlayer = [];
+var diceNeeded = 2;
 
 var userAdded = function (newUser) {
   if (gameOn) {
@@ -36,6 +39,7 @@ var userAdded = function (newUser) {
   }
 
   user.push(newUser);
+  survivedPlayer.push(newUser);
   userWinRecord.push(0);
   userList += `Player ${user.length}: ${newUser} have 0 score`;
   return `${newUser}, welcome to the game.🥳🥳🥳<br>Here is ${user.length} player now!<br><br>Player list and winning score are:<br>${userList}`;
@@ -105,8 +109,12 @@ var rollDice = function () {
   if (currentGameMode == "Reroll Mode") {
     return rerollModeRoll();
   }
+  if (currentGameMode == "Knockout Mode") {
+    return knockoutMode();
+  }
 };
 
+//normal mode function
 var rollDiceNormal = function () {
   if (diceRolled) {
     return `You have rolled your dice ${user[userRound]}.<br>
@@ -153,6 +161,7 @@ var normalModeResult = function (dice) {
   return result;
 };
 
+//AFS Mode function
 var rollDiceAFSMode = function () {
   let dice1 = genDice();
   let dice2 = genDice();
@@ -231,6 +240,7 @@ var AFSModeResult = function (dice1, dice2, currentNumber) {
   return result;
 };
 
+//reroll mode function
 var rerollModeRoll = function () {
   let dice1 = genDice();
   let dice2 = genDice();
@@ -255,7 +265,7 @@ var reroll = function () {
     String(playerDices[0]) + String(playerDices[1])
   );
 
-  let output = `Your rerolled dice number is ${newDice}.<br>The smallest combination number is ${
+  let output = `Your rerolled dice number is ${newDice}.🎲<br>The smallest combination number is ${
     playerNumber[userRound]
   }.<br>${user[userRound + 1]}, it's your turn to roll your dices.🙂`;
 
@@ -295,6 +305,59 @@ var rerollResult = function (phase) {
   return output;
 };
 
+//Knockout mode function
+var knockoutMode = function () {
+  let diceList = "";
+
+  for (let i = 0; i < diceNeeded; i++) {
+    playerDices.push(genDice());
+    diceList += `${playerDices[i]},`;
+  }
+
+  let sorted = playerDices.toSorted(function (a, b) {
+    return b - a;
+  });
+
+  playerNumber.push(sorted.join(""));
+
+  let output = `${
+    survivedPlayer[userRound]
+  } have rolled ${diceList} nice!<br>Your largest combination number is ${
+    playerNumber[userRound]
+  }.🤓<br>Next player ${
+    survivedPlayer[userRound + 1]
+  }, you may roll your dices now.🎲💪
+  `;
+  userRound += 1;
+  if (userRound == survivedPlayer.length) {
+    let loser = losingUser();
+    output = `${
+      survivedPlayer[userRound]
+    } have rolled ${diceList} nice!<br>Your largest combination number is ${
+      playerNumber[userRound]
+    }.🤓<br><br>Here is the list of this round.<br>${genUserNumberList()}<br>Sorry, ${
+      user[loser]
+    }. You are eliminated! `;
+    playerNumber = [];
+    diceNeeded += 1;
+  }
+  playerDices = [];
+  return output;
+};
+
+var losingUser = function () {
+  let losingList = playerNumber.toSorted(function (a, b) {
+    return a - b;
+  });
+  let loser = losingList[0];
+  console.log(loser);
+  for (let i = 0; i < loser.length; i++) {
+    survivedPlayer.splice(loser, 1);
+  }
+  return loser;
+};
+
+//general function
 var genDice = function () {
   let randomNumber = Math.random() * 6;
   randomDice = Math.floor(randomNumber) + 1;
@@ -313,8 +376,8 @@ var genUserList = function () {
 
 var genUserNumberList = function () {
   let userNumberList = "";
-  for (let i = 0; i < user.length; i++) {
-    userNumberList += `Player ${i + 1}: ${user[i]} have number ${
+  for (let i = 0; i < survivedPlayer.length; i++) {
+    userNumberList += `Player ${i + 1}: ${survivedPlayer[i]} have number ${
       playerNumber[i]
     }<br>`;
   }
@@ -329,6 +392,7 @@ var endGame = function () {
   accumulatedRound = 0;
   accumulatedNumber = [];
   currentWinner = [];
+  survivedPlayer = user;
   rollButton.style.visibility = "hidden";
   userGameInput.style.visibility = "hidden";
   chooseButton.style.visibility = "hidden";
