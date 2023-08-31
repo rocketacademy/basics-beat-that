@@ -92,7 +92,7 @@ var main = function () {
     rerollButton.style.visibility = "visible";
     nextPlayerButton.style.visibility = "visible";
   }
-  return `${user.length} players is ready to play the game.<br>${currentGameMode} have been choose!<br>Player 1 ${user[0]} please roll your dices!🎲🎲`;
+  return `${user.length} players is ready to play the game.<br>${currentGameMode} have been choose!<br>Player 1 ${user[0]}, please roll your dices!🎲🎲`;
 };
 
 var rollDice = function () {
@@ -157,7 +157,6 @@ var rollDiceAFSMode = function () {
   let dice1 = genDice();
   let dice2 = genDice();
   let currentNumber = currentNumberAFS(dice1, dice2);
-  console.log(playerNumber);
 
   if (userRound == user.length - 1 && accumulatedRound == 4) {
     return AFSModeResult(dice1, dice2, currentNumber);
@@ -188,7 +187,6 @@ var currentNumberAFS = function (dice1, dice2) {
   let currentNumber = 0;
   let largeOrSmall = "largest";
   let output = [];
-  console.log(dice1, dice2);
 
   if (dice1 >= dice2 && accumulatedRound == 0) {
     currentNumber = Number(String(dice1) + String(dice2));
@@ -237,29 +235,64 @@ var rerollModeRoll = function () {
   let dice1 = genDice();
   let dice2 = genDice();
   playerDices = [dice1, dice2];
-  console.log(playerDices);
   playerDices.sort(function (a, b) {
     return b - a;
   });
-  console.log(playerDices);
-  playerNumber.push(Number(String(playerDices[1]) + String(playerDices[0])));
-  return `You have roll ${dice1}🎲 and ${dice2}🎲.<br>Your current largest combination number is ${playerNumber[userRound]}.<br>Do you want to reroll the smaller number dice?<br>🚨🚨🚨🚨If you reroll your dice,<br> the next number must use the smallest combination number.🚨🚨🚨🚨<br>If don't, press the next player button.🫰🫰`;
+  playerNumber.push(Number(String(playerDices[0]) + String(playerDices[1])));
+  document.querySelector("#roll-button").disabled = true;
+  document.querySelector("#reroll-button").disabled = false;
+  document.querySelector("#next-player-button").disabled = false;
+  return `You have roll ${dice1}🎲 and ${dice2}🎲.<br>Your current largest combination number is ${playerNumber[userRound]}.<br>Do you want to reroll the smaller number dice?<br>🚨🚨🚨🚨If you reroll your dice🚨🚨🚨🚨<br>🚨🚨🚨🚨the next number must use the smallest combination number.🚨🚨🚨🚨`;
 };
 
 var reroll = function () {
-  if (diceRolled) {
-    return `You have reroll your dice${
-      user[userRound - 1]
-    }.😕<br>I know you want to get a better number.<br>Please let the next player roll their dices.😫😫`;
-  }
+  let newDice = genDice();
+  playerDices[1] = newDice;
+  playerDices.sort(function (a, b) {
+    return a - b;
+  });
+  playerNumber[userRound] = Number(
+    String(playerDices[0]) + String(playerDices[1])
+  );
 
-  diceRolled = true;
+  let output = `Your rerolled dice number is ${newDice}.<br>The smallest combination number is ${
+    playerNumber[userRound]
+  }.<br>${user[userRound + 1]}, it's your turn to roll your dices.🙂`;
+
+  document.querySelector("#roll-button").disabled = false;
+  document.querySelector("#reroll-button").disabled = true;
+  document.querySelector("#next-player-button").disabled = true;
   userRound += 1;
-  return;
+  if (userRound == user.length) {
+    let phase = `Your rerolled dice number is ${newDice}.<br>The smallest combination number is ${
+      playerNumber[userRound - 1]
+    }.<br>`;
+    return rerollResult(phase);
+  }
+  return output;
 };
 
 var nextPlayer = function () {
   userRound += 1;
+  document.querySelector("#roll-button").disabled = false;
+  document.querySelector("#reroll-button").disabled = true;
+  document.querySelector("#next-player-button").disabled = true;
+
+  if (userRound == user.length) {
+    return rerollResult("");
+  }
+
+  return `Nice job, ${user[userRound - 1]}.<br>${
+    user[userRound]
+  }, it's your turn to roll the dices now.😉😉`;
+};
+
+var rerollResult = function (phase) {
+  let winnerList = scorePointAndGenList(true);
+  let output = `${phase}Here is the final result!🥳🥳🥳<br>${genUserNumberList()}<br>Congrats${winnerList}🎉🎉🎉🎉🎉🎉<br><br>Here is the score.<br>${genUserList()}`;
+  endGame();
+
+  return output;
 };
 
 var genDice = function () {
@@ -304,13 +337,10 @@ var endGame = function () {
 };
 
 var findWinnerIndexList = function () {
-  let sortedPlayerNumber = playerNumber.toSorted(function (a, b) {
-    return b - a;
-  });
+  let highestNumber = Math.max(...playerNumber);
   currentWinner = [];
-  let winnerNumber = sortedPlayerNumber[0];
-  for (let i = 0; i < user.length; i++) {
-    if (winnerNumber == playerNumber[i]) {
+  for (let i = 0; i < playerNumber.length; i++) {
+    if (playerNumber[i] == highestNumber) {
       currentWinner.push(i);
     }
   }
