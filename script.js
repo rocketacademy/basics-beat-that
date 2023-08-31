@@ -1,3 +1,7 @@
+//Bug(feature) need to fix
+//Draw loser in Knockout Mode
+//Draw Winner in last round of knockout Mode
+
 //Global Variable
 var userRound = 0;
 var user = [];
@@ -399,7 +403,7 @@ var endGame = function () {
   accumulatedRound = 0;
   accumulatedNumber = [];
   currentWinner = [];
-  survivedPlayer = user;
+  survivedPlayer = [...user];
   diceNeeded = 2;
   rollButton.style.visibility = "hidden";
   userGameInput.style.visibility = "hidden";
