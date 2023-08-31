@@ -111,6 +111,33 @@ var calcScore = function () {
   return output;
 };
 
+var gameMechanics = function (input) {
+  if (gameMode == "roll dice") {
+    //roll the dice
+    playerRollDice = playerRoll();
+    gameMode = "combine dice";
+    return `🎲 <b> Player ${
+      playerNum + 1
+    } </b> 🎲 <br><br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br><br> Choose the order of the dice. Input "1" or "2"`;
+  } else if (gameMode == "combine dice") {
+    console.log(`input is ${input}`);
+    //validate input is 1 or 2
+    if (isNaN(Number(input)) == true || (input !== "1" && input !== "2")) {
+      return `You did not enter a valid input. <br><br> Please enter either "1" or "2"`;
+    } else playerCombinedDice = combinePlayerDice(input);
+    playerResult = playerCombinedDice[playerNum];
+    playerNum += 1;
+    if (playerNum != totalPlayers) {
+      gameMode = "roll dice";
+      console.log(`PlayerNum = ${playerNum}`);
+      return `🎲 <b> Player ${playerNum} </b> 🎲 <br><br> Your combined dice roll is ${playerResult} <br><br> It is now Player ${
+        playerNum + 1
+      }'s turn! Please click "Submit"!`;
+    }
+    return `🎲 <b> Player ${playerNum} </b> 🎲 <br><br> Your combined dice roll is ${playerResult} <br><br> Let's see who wins~</br>`;
+  }
+};
+
 var main = function (input) {
   if (isNaN(Number(input)) == true)
     return `You did not enter a number! Please enter the number of players!`;
@@ -122,30 +149,8 @@ var main = function (input) {
     return `There are a total of ${totalPlayers} players! Click "Submit" to begin!`;
   }
   while (playerNum < totalPlayers) {
-    if (gameMode == "roll dice") {
-      //roll the dice
-      playerRollDice = playerRoll();
-      gameMode = "combine dice";
-      return `🎲 <b> Player ${
-        playerNum + 1
-      } </b> 🎲 <br><br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br><br> Choose the order of the dice. Input "1" or "2"`;
-    } else if (gameMode == "combine dice") {
-      console.log(`input is ${input}`);
-      //validate input is 1 or 2
-      if (isNaN(Number(input)) == true || (input !== "1" && input !== "2")) {
-        return `You did not enter a valid input. <br><br> Please enter either "1" or "2"`;
-      } else playerCombinedDice = combinePlayerDice(input);
-      playerResult = playerCombinedDice[playerNum];
-      playerNum += 1;
-      if (playerNum != totalPlayers) {
-        gameMode = "roll dice";
-        console.log(`PlayerNum = ${playerNum}`);
-        return `🎲 <b> Player ${playerNum} </b> 🎲 <br><br> Your combined dice roll is ${playerResult} <br><br> It is now Player ${
-          playerNum + 1
-        }'s turn! Please click "Submit"!`;
-      }
-      return `🎲 <b> Player ${playerNum} </b> 🎲 <br><br> Your combined dice roll is ${playerResult} <br><br> Let's see who wins~</br>`;
-    }
+    var playGameMechanics = gameMechanics(input);
+    return playGameMechanics;
   }
   //winning conditions
   var findWinner = calcWinner();
