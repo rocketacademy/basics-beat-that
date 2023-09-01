@@ -220,7 +220,6 @@ var currentNumberAFS = function (dice1, dice2) {
     playerNumber[userRound] += currentNumber;
   }
 
-  playerNumber[userRound] += currentNumber;
   output.push(currentNumber, largeOrSmall);
   return output;
 };
