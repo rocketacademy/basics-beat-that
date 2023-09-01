@@ -93,6 +93,7 @@ var main = function () {
 
   gameOn = true;
   rollButton.style.visibility = "visible";
+  quitButton.style.visibility = "visible";
   if (currentGameMode == "Normal Mode") {
     userGameInput.style.visibility = "visible";
     chooseButton.style.visibility = "visible";
@@ -370,6 +371,12 @@ var losingUser = function () {
   return loserIndex;
 };
 
+var quit = function () {
+  endGame();
+  currentGameMode = "";
+  return `Game quited. Please select your game mode again.😁😁`;
+};
+
 //general function
 var genDice = function () {
   let randomNumber = Math.random() * 6;
@@ -404,12 +411,14 @@ var endGame = function () {
   accumulatedNumber = [];
   currentWinner = [];
   survivedPlayer = [...user];
+  diceRolled = false;
   diceNeeded = 2;
   rollButton.style.visibility = "hidden";
   userGameInput.style.visibility = "hidden";
   chooseButton.style.visibility = "hidden";
   rerollButton.style.visibility = "hidden";
   nextPlayerButton.style.visibility = "hidden";
+  quitButton.styel.visibility = "hidden";
 };
 
 var findWinnerIndexList = function () {

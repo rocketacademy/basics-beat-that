@@ -58,7 +58,8 @@
       #choose-button,
       #roll-button,
       #reroll-button,
-      #next-player-button {
+      #next-player-button,
+      #quit-button {
         visibility: hidden;
       }
     </style>
@@ -99,6 +100,7 @@
       <button id="choose-button">Choose!</button>
       <button id="reroll-button" disabled>Reroll!</button>
       <button id="next-player-button" disabled>Don't Reroll!</button>
+      <button id="quit-button">Quit</button>
       <p>The Game:</p>
       <div id="output-div"></div>
       <br /><br />
@@ -168,6 +170,7 @@
       var rerollButton = document.querySelector("#reroll-button");
       var nextPlayerButton = document.querySelector("#next-player-button");
       var output = document.querySelector("#output-div");
+      var quitButton = document.querySelector("#quit-button");
 
       userButton.addEventListener("click", function () {
         // Set result to input value
@@ -218,6 +221,11 @@
       nextPlayerButton.addEventListener("click", function () {
         let result = nextPlayer();
         output.innerHTML = result;
+      });
+
+      quitButton.addEventListener("click", function () {
+        let result = quit();
+        output.innerHTML = result();
       });
 
       // Delete user from the game
