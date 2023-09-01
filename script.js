@@ -99,6 +99,13 @@ let gameMode = 'Dice game';
   };
 
 
+   // set a function to reset game to 1st player and empty array for cumulatedScores
+   let gameReset = function() {
+    currentPlayer = 1;
+    cumulatedScores = [];
+    gameMode = 'Dice game';
+  };
+  
   
   // actual game (base)
   let base = function (input){
@@ -142,7 +149,7 @@ let gameMode = 'Dice game';
         let winnerResult = evaluateWinner();
         let scoreResult = displayScores();
         let outputMessage = `${individualScore}<br><br> ${winnerResult}<br><br>${scoreResult}`;
-        
+        gameReset();
         return outputMessage;
         }
 }
