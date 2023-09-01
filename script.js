@@ -1,7 +1,3 @@
-//Bug(feature) need to fix
-//Draw loser in Knockout Mode
-//Draw Winner in last round of knockout Mode
-
 //Global Variable
 var userRound = 0;
 var user = [];
@@ -202,35 +198,29 @@ var currentNumberAFS = function (dice1, dice2) {
   let currentNumber = 0;
   let largeOrSmall = "largest";
   let output = [];
-
   if (dice1 >= dice2 && accumulatedRound == 0) {
     currentNumber = Number(String(dice1) + String(dice2));
     playerNumber.push(currentNumber);
   } else if (dice1 < dice2 && accumulatedRound == 0) {
     currentNumber = Number(String(dice2) + String(dice1));
     playerNumber.push(currentNumber);
+  } else if (dice1 >= dice2 && currentWinner.includes(userRound)) {
+    currentNumber = Number(String(dice2) + String(dice1));
+    playerNumber[userRound] += currentNumber;
+    largeOrSmall = "smallest";
+  } else if (dice1 < dice2 && currentWinner.includes(userRound)) {
+    currentNumber = Number(String(dice1) + String(dice2));
+    playerNumber[userRound] += currentNumber;
+    largeOrSmall = "smallest";
+  } else if (dice1 >= dice2) {
+    currentNumber = Number(String(dice1) + String(dice2));
+    playerNumber[userRound] += currentNumber;
+  } else if (dice1 < dice2) {
+    currentNumber = Number(String(dice2) + String(dice1));
+    playerNumber[userRound] += currentNumber;
   }
 
-  for (let i = 0; i < currentWinner.length; i++) {
-    if (
-      (dice1 >= dice2 && userRound != currentWinner[i]) ||
-      (dice1 <= dice2 && userRound == currentWinner[i])
-    ) {
-      currentNumber = Number(String(dice1) + String(dice2));
-      playerNumber[userRound] += currentNumber;
-    } else if (
-      (dice1 < dice2 && userRound != currentWinner[i]) ||
-      (dice1 > dice2 && userRound == currentWinner[i])
-    ) {
-      currentNumber = Number(String(dice2) + String(dice1));
-      playerNumber[userRound] += currentNumber;
-    }
-    if (userRound == currentWinner[i] && accumulatedRound != 0) {
-      largeOrSmall = "smallest";
-    } else {
-      largeOrSmall = "largest";
-    }
-  }
+  playerNumber[userRound] += currentNumber;
   output.push(currentNumber, largeOrSmall);
   return output;
 };
@@ -239,9 +229,9 @@ var AFSModeResult = function (dice1, dice2, currentNumber) {
   let scorelist = scorePointAndGenList(true);
   let result = `${dice1} and ${dice2} have rolled by ${
     user[user.length - 1]
-  }.<br>The ${
-    currentNumber[1]
-  } combination number have been used.🎲<br><br>5 Round of dices have been rolled!🎲🎲<br>Let's see the final result!😎<br><br>${genUserNumberList()}<br> Congrats${scorelist}🎉🎉🎉.You Win!<br>Now the score is in below:<br>${genUserList()}`;
+  }.<br>The ${currentNumber[1]} combination number ${
+    currentNumber[0]
+  }have been used.🎲<br><br>5 Round of dices have been rolled!🎲🎲<br>Let's see the final result!😎<br><br>${genUserNumberList()}<br> Congrats${scorelist}🎉🎉🎉.You Win!<br>Now the score is in below:<br>${genUserList()}`;
   endGame();
   return result;
 };
@@ -337,6 +327,17 @@ var knockoutMode = function () {
   userRound += 1;
   if (userRound == survivedPlayer.length) {
     let loser = losingUser();
+    if (isNaN(loser)) {
+      userRound = 0;
+      return `${
+        survivedPlayer[survivedPlayer.length - 1]
+      } have rolled ${diceList} nice!<br>Your largest combination number is ${
+        playerNumber[survivedPlayer.length - 1]
+      }.🤓<br><br>Here is the list of this round.🤠🤠<br>${genUserNumberList()}<br>Becuase there are two more player have the lowest number.😮😮<br> This round will be play again!<br> ${
+        survivedPlayer[0]
+      }, now it's your turn to roll ${diceNeeded} dices!🎲`;
+    }
+
     output = `${
       survivedPlayer[userRound - 1]
     } have rolled ${diceList} nice!<br>Your largest combination number is ${
@@ -367,7 +368,14 @@ var knockoutMode = function () {
 
 var losingUser = function () {
   let lowestNumber = Math.min(...playerNumber);
-  let loserIndex = playerNumber.indexOf(String(lowestNumber));
+  let loserIndexArray = [];
+  for (let i = 0; i < playerNumber.length; i++) {
+    if (playerNumber[i] == lowestNumber) {
+      loserIndexArray.push(i);
+    }
+  }
+  let loserIndex = Number(loserIndexArray);
+
   return loserIndex;
 };
 
@@ -418,7 +426,7 @@ var endGame = function () {
   chooseButton.style.visibility = "hidden";
   rerollButton.style.visibility = "hidden";
   nextPlayerButton.style.visibility = "hidden";
-  quitButton.styel.visibility = "hidden";
+  quitButton.style.visibility = "hidden";
 };
 
 var findWinnerIndexList = function () {
