@@ -2,19 +2,52 @@
 <html>
   <head>
     <title>Coding Basics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        --neutral-80: #33363d;
+      }
+
       * {
         box-sizing: border-box;
       }
 
       body {
-        font-family: sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
+        background-color: #fff4df;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 22px;
+        letter-spacing: -0.2px;
+        font-weight: 300;
+        color: var(--neutral-80);
+        margin: 0 auto;
+        padding-left: 80px;
+        padding-right: 80px;
+        width: 1120px;
+      }
+
+      .lowerblock {
+        display: flex;
+        column-gap: 40px;
+      }
+
+      h1 {
+        font-size: 70px;
+        font-weight: 600;
+
+        letter-spacing: -2.8px;
       }
 
       #header {
-        text-align: center;
+        text-align: left;
+        padding-bottom: 32px;
+        border-bottom: 1.5px solid var(--neutral-80);
+        margin-top: 32px;
+        margin-bottom: 48px;
       }
 
       #container {
@@ -25,63 +58,92 @@
       }
 
       input {
+        font-family: "IBM Plex Mono", monospace;
+        background-color: #fff4df;
+        font-weight: 300;
         font-size: 21px;
+        letter-spacing: -0.2px;
         line-height: 33px;
+        border: 1.5px solid var(--neutral-80);
         margin: 0 0 23px 0;
-        padding: 0 9px;
+        padding: 4px 10px;
         width: 100%;
       }
 
       button {
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--neutral-80);
+        font-weight: 600;
         font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
+        letter-spacing: -0.2px;
+        padding: 4px 32px;
+        border-left: 5px solid #dbdbdb;
+        border-top: 5px solid #dbdbdb;
+        border-bottom: 5px solid #959595;
+        border-right: 5px solid #959595;
+        background-color: #c9c9c9;
+        outline: 2px solid var(--neutral-80);
+        outline-offset: -2px;
+        margin-top: 8px;
       }
 
       #output-div {
-        background-color: rgb(203, 255, 208);
-        margin: 20px auto;
-        padding: 20px;
-        width: 100%;
+        margin-bottom: 24px;
+      }
+      .chunk {
+        padding-bottom: 16px;
+        margin: 0px;
+      }
+
+      .column {
+        width: 50%;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
-    <div id="container">
-      <p>Hello there! Welcome to the game.</p>
-      <p>
-        Beat that is a 2-player game, where each player take turn to roll 2 or
-        more dice to form the largest possible number.
-      </p>
-      <p>The player with the highest number wins!</p>
-      <br />
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div">Enter the number of dice rolls to play.</div>
+    <h1 id="header">Beat that! 🎲</h1>
+    <div class="lowerblock">
+      <div class="column">
+        <p class="chunk">
+          <span style="font-weight: 600">Number of players:</span> 2
+        </p>
+
+        <p style="font-weight: 600">Game mechanics:</p>
+        <p>
+          Each player takes turn to roll 2 or more dice to form the largest
+          possible number.
+        </p>
+        <p>The player with the highest number wins!</p>
+        <br />
+      </div>
+      <div class="column">
+        <!-- <p>Output:</p> -->
+        <div id="output-div">
+          To start, enter the number of dice rolls to play.
+        </div>
+        <!-- <p>Input:</p> -->
+        <input id="input-field" />
+        <button id="submit-button">Go!</button>
+      </div>
+      <!-- Import program logic -->
+      <script src="script.js"></script>
+      <!-- Define button click functionality -->
+      <script>
+        var button = document.querySelector("#submit-button");
+        button.addEventListener("click", function () {
+          // Set result to input value
+          var input = document.querySelector("#input-field");
+          var result = main(input.value);
+
+          // Display result in output element
+          var output = document.querySelector("#output-div");
+          output.innerHTML = result;
+
+          // Reset input value
+          input.value = "";
+        });
+      </script>
     </div>
-    <!-- Import program logic -->
-    <script src="script.js"></script>
-    <!-- Define button click functionality -->
-    <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
-
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
-      });
-    </script>
   </body>
 </html>

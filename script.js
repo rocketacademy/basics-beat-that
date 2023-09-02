@@ -16,12 +16,16 @@ var rollDice = function () {
 
 var main = function (input) {
   var myOutputValue = "";
+  var button = document.querySelector("#submit-button");
+  var field = document.querySelector("#input-field");
   // save input as number of dice rolls
   if (n == 0) {
     numberInput = Number(input);
     if (Number.isInteger(numberInput) && input > 1) {
       n = input;
-      myOutputValue = `You have chosen to play ${n} dice rolls.<br><br>Player 1, please press Submit to roll the dice.`;
+      myOutputValue = `You have chosen to play ${n} dice rolls.<br><br><span style="font-weight: 600">Player 1</span>, please roll the dice.`;
+      field.style.display = "none";
+      button.innerText = "Roll dice";
     } else {
       myOutputValue = `Please enter an integer that is greater than 1.`;
     }
@@ -38,8 +42,8 @@ var main = function (input) {
       return b - a;
     });
     playerOneFinalNumber = Number(playerOneArray.join(""));
-    myOutputValue += `<br>Player 1's number is ${playerOneFinalNumber}.
-    <br><br> Player 2, please press Submit for your dice roll.`;
+    myOutputValue += `<br><br>Player 1's number is ${playerOneFinalNumber}.
+    <br><br><span style="font-weight: 600">Player 2</span>, please roll the dice.`;
 
     // else if Player 1's number is not 0, and no player2 dice rolls detected
   } else if (playerOneFinalNumber != 0 && playerTwoArray.length == 0) {
@@ -58,31 +62,32 @@ var main = function (input) {
     if (playerOneFinalNumber == playerTwoFinalNumber) {
       myOutputValue =
         myOutputValue +
-        `<br> Player 1's number is also ${playerOneFinalNumber}.<br><br> It's a draw!<br><br>To play again, re-enter the number of dice rolls of your choice.`;
-      playerOneArray = [];
-      playerTwoArray = [];
-      playerOneFinalNumber = 0;
-      playerTwoFinalNumber = 0;
-      n = 0;
+        `<br><br>Player 1's number is also ${playerOneFinalNumber}.<br><br><span style="font-weight: 600">It's a draw!</span>`;
+
+      button.innerText = "Play again";
     } else if (playerOneFinalNumber > playerTwoFinalNumber) {
       myOutputValue =
         myOutputValue +
-        `<br> Player 1's number is ${playerOneFinalNumber}.<br><br> Player 1 wins!<br><br>To play again, re-enter the number of dice rolls of your choice.`;
-      playerOneArray = [];
-      playerTwoArray = [];
-      playerOneFinalNumber = 0;
-      playerTwoFinalNumber = 0;
-      n = 0;
+        `<br><br>Player 1's number is ${playerOneFinalNumber}.<br><br><span style="font-weight: 600">Player 1 wins!</span>`;
+
+      button.innerText = "Play again";
     } else if (playerOneFinalNumber < playerTwoFinalNumber) {
       myOutputValue =
         myOutputValue +
-        `<br> Player 1's number is ${playerOneFinalNumber}.<br><br> Player 2 wins!<br><br>To play again, re-enter the number of dice rolls of your choice.`;
-      playerOneArray = [];
-      playerTwoArray = [];
-      playerOneFinalNumber = 0;
-      playerTwoFinalNumber = 0;
-      n = 0;
+        `<br><br>Player 1's number is ${playerOneFinalNumber}.<br><br><span style="font-weight: 600">Player 2 wins!</span>`;
+
+      button.innerText = "Play again";
     }
+  } else if (playerOneFinalNumber != 0 && playerTwoFinalNumber != 0) {
+    playerOneArray = [];
+    playerTwoArray = [];
+    playerOneFinalNumber = 0;
+    playerTwoFinalNumber = 0;
+    n = 0;
+    field.style.display = "block";
+    button.innerText = "Go!";
+    myOutputValue = `To start, enter the number of dice rolls to play.`;
   }
+
   return myOutputValue;
 };
