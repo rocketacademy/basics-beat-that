@@ -10,12 +10,6 @@ var playerResult = 0;
 var largestNum = 0;
 var winningBoard = [];
 var scoreBoard = [];
-// var playingPlayerMsg = `🎲 <b> Player ${playerNum + 1} </b> 🎲`;
-// var rollingDiceMsg = `You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br><br> Choose the order of the dice. Input "1" or "2"`;
-// var combineDiceMsg = `Your combined dice roll is ${playerResult}`;
-// var nextPlayer = `It is now Player ${
-//   playerNum + 2
-// }'s turn! Please click "Submit"!`;
 
 var calcScoreBoard = function () {
   //loop through winning board length
@@ -35,24 +29,16 @@ var calcScoreBoard = function () {
 //player rolls 2 dice and shows the dice roll and convert it to string to concatenate later
 var playerRoll = function () {
   playerDiceOne = rollDice().toString();
-  console.log(`dice one = ${playerDiceOne}`);
   playerDiceTwo = rollDice().toString();
-  console.log(`dice two = ${playerDiceTwo}`);
 };
 
 //player pick the order to concatenate
 var combinePlayerDice = function (diceChoice) {
   if (diceChoice == 1) {
-    console.log(`array position: ${playerNum}`);
-    console.log(`Dice One+Two = ${playerDiceOne + playerDiceTwo}`);
     playerCombinedDice[playerNum] = Number(playerDiceOne + playerDiceTwo);
-    console.log(`player combined dice is ${playerCombinedDice[playerNum]}`);
     return playerCombinedDice;
   }
-  console.log(`array position: ${playerNum}`);
-  console.log(`Dice Two+One = ${playerDiceTwo + playerDiceOne}`);
   playerCombinedDice[playerNum] = Number(playerDiceTwo + playerDiceOne);
-  console.log(`player combined dice is ${playerCombinedDice[playerNum]}`);
   return playerCombinedDice;
 };
 
@@ -74,9 +60,6 @@ var calcWinner = function () {
   }
   var winningPlayer = playerCombinedDice.indexOf(largestNum) + 1;
   winningBoard.push(winningPlayer);
-  console.log(`largest num is ${largestNum}`);
-  console.log(playerCombinedDice.indexOf(largestNum));
-  console.log(`winning player is ${winningPlayer}`);
   return winningPlayer;
 };
 
@@ -89,14 +72,11 @@ var calcScore = function () {
   }
   //loop each player through the winning board and count number of times each player wins
   for (var i = 0; i < totalPlayers; i += 1) {
-    console.log(`total players loop ${i}`);
     //loop each win in the winning board and match with player number
     for (var j = 0; j < winningBoard.length; j += 1) {
-      console.log(`winning board loop ${j}`);
       if (winningBoard[j] == i + 1) {
         //if match then + 1
         totalScore += 1;
-        console.log(`score ${totalScore}`);
       }
     }
     //push the scores of each player into the scoreboard array
@@ -120,7 +100,6 @@ var gameMechanics = function (input) {
       playerNum + 1
     } </b> 🎲 <br><br> You rolled ${playerDiceOne} for Dice One and ${playerDiceTwo} for Dice Two. <br><br> Choose the order of the dice. Input "1" or "2"`;
   } else if (gameMode == "combine dice") {
-    console.log(`input is ${input}`);
     //validate input is 1 or 2
     if (isNaN(Number(input)) == true || (input !== "1" && input !== "2")) {
       return `You did not enter a valid input. <br><br> Please enter either "1" or "2"`;
@@ -129,7 +108,6 @@ var gameMechanics = function (input) {
     playerNum += 1;
     if (playerNum != totalPlayers) {
       gameMode = "roll dice";
-      console.log(`PlayerNum = ${playerNum}`);
       return `🎲 <b> Player ${playerNum} </b> 🎲 <br><br> Your combined dice roll is ${playerResult} <br><br> It is now Player ${
         playerNum + 1
       }'s turn! Please click "Submit"!`;
@@ -145,7 +123,6 @@ var main = function (input) {
   if (gameMode == "Number of players") {
     totalPlayers = Number(input);
     gameMode = "roll dice";
-    console.log(`total players = ${totalPlayers}`);
     return `There are a total of ${totalPlayers} players! Click "Submit" to begin!`;
   }
   while (playerNum < totalPlayers) {
