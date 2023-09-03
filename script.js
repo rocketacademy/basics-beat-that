@@ -29,9 +29,6 @@ let playerOneCumulativeScore = 0;
 // store player two's score based on dice order selection in moreComfortable game
 let playerTwoCumulativeScore = 0;
 
-// store accumulated ongoing scores temporarily in moreComfortable game
-let tempArray = [];
-
 
 // set a function to generate random dices from 1 to 6
 let rollDice = function (){
@@ -213,8 +210,6 @@ let moreComfortable = function (input){
   }
     let winnerResult = evaluateWinnerInMC();
     currentPlayer = 1;
-
     gameMode = 'Dice game';
     return winnerResult;
-  
 };
