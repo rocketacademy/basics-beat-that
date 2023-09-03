@@ -5,248 +5,176 @@ let main = function (input){
 
 let gameMode = 'Dice game';
   
-  // player 1 will start first
-  let currentPlayer = 1;
-  
-  // store individual dice rolls 
-  let playerDiceArray = [];
-  
-  // store individual score based on dice order selection
-  let currentScore = 0;
-  
-  // store all players' scores in an array 
-  let cumulatedScores = [];
-  
-  // maximum number of players for base game
-  let maxNumPlayersBase = 4;
+// player 1 will start first
+let currentPlayer = 1;
 
-  // maximum number of players for moreComfortable game
-  let maxNumPlayersMoreComfortable = 2;
-  
-  // store player one's score based on dice order selection
-  let ongoingScoresPlayerOne = 0;
+// maximum number of players for base game
+let maxNumPlayersInBase = 4;
 
-  // store player one's score based on dice order selection
-  let ongoingScoresPlayerTwo = 0;
-  
-  // temp array to hold most recent accumulated scores
-  let tempArray = [];
+// store generated dice rolls
+let playerDiceArray = [];
 
+// record individual score based on dice order selection
+let currentScore = 0;
 
-  // set a function to generate random dices from 1 to 6
-  let rollDice = function (){
-    return Math.ceil(Math.random () * 6);
-  };
-  
-  
-  // set a function to generate and store random dices
-  let generateDiceRoll = function (){
-  
-    // reset array to store dices at every player's turn
-    playerDiceArray = [];
-    let maxNumDice = 2;
-    
-    for (let diceCounter = 0; diceCounter < maxNumDice; diceCounter += 1){
-        let randomDiceRoll = rollDice();
-        playerDiceArray.push(randomDiceRoll);
-    }
-    
-    return `You rolled ${playerDiceArray[0]} for Dice 1 and ${playerDiceArray[1]} for Dice 2. <br><br>
-    Please enter either '1' or '2' to choose the order of the dice.`;
-  };
+// store all players' scores in an array 
+let cumulatedScores = [];
+
+// maximum number of players in moreComfortable game
+let maxNumPlayersInMC = 2;
+
+// store player one's score based on dice order selection in moreComfortable game
+let playerOneCumulativeScore = 0;
+
+// store player two's score based on dice order selection in moreComfortable game
+let playerTwoCumulativeScore = 0;
+
+// store accumulated ongoing scores temporarily in moreComfortable game
+let tempArray = [];
 
 
-  // set a function to determine individual score based on player's order of dice
-  let evaluateIndividualScore = function (userDecision){
-    let genericHeaderMessage = `Player ${currentPlayer} 🎲`;
-
-    // reset current score to store next player's score upon dice order selection
-    currentScore = 0;
-    if (userDecision == '1'){
-      currentScore = Number(String(playerDiceArray[0]) + String(playerDiceArray[1]));
-    } else {
-      currentScore = Number(String(playerDiceArray[1]) + String(playerDiceArray[0]));
-    }
-    cumulatedScores.push(currentScore);
-    return `${genericHeaderMessage}<br><br>You chose ${userDecision}. You scored ${currentScore} points.`;
-  };
-  
-  // set a function to determine winner
-  // if players have equal scores and are the highest, there will be no winners
-  let evaluateWinner = function (){
-  
-    // if player 1's score is the highest
-    if (cumulatedScores[0] > cumulatedScores[1] && cumulatedScores[0] > cumulatedScores[2] && cumulatedScores[0] > cumulatedScores[3]){
-       return `Player 1 is the winner! 🥇`;
-      } 
-    
-      // if player 2's score is the highest
-    if (cumulatedScores[1] > cumulatedScores[0] && cumulatedScores[1] > cumulatedScores[2] && cumulatedScores[1] > cumulatedScores[3]){
-        return `Player 2 is the winner! 🥇`;
-      } 
-    
-      // if player 3's score is the highest
-    if (cumulatedScores[2] > cumulatedScores[0] && cumulatedScores[2] > cumulatedScores[1] && cumulatedScores[2] > cumulatedScores[3]){
-        return `Player 3 is the winner! 🥇`;
-      }
-  
-      // if player 4's score is the highest
-    if (cumulatedScores[3] > cumulatedScores[0] && cumulatedScores[3] > cumulatedScores[1] && cumulatedScores[3] > cumulatedScores[2]){
-        return `Player 4 is the winner! 🥇`;
-      }
-      
-      // no winners if there are 2 players with equal highest scores
-      return `There are no winners.`;
-    };
-
-  // set a function to display scores
-  let displayScores = function (){
-    let cumulatedScoresLength = [...cumulatedScores].length;
-    let scoresMessage = " ";
-    
-    for (let playerNum = 0; playerNum < cumulatedScoresLength; playerNum += 1 ){
-      let playerIndex = playerNum + 1;
-      scoresMessage += `Player ${playerIndex}: ${cumulatedScores[playerNum]}<br>`;
-    }
-    return `🏁 Final Scores:<br><br>${scoresMessage}<br><br>Click on 'Submit' to play another round!`;
-  };
+// set a function to generate random dices from 1 to 6
+let rollDice = function (){
+  return Math.ceil(Math.random () * 6);
+};
 
 
-   // set a function to reset game to 1st player and empty array for cumulatedScores
-   let gameReset = function() {
-    currentPlayer = 1;
-    cumulatedScores = [];
-    gameMode = 'Dice game';
-  };
+// set a function to generate and store random dices
+let generateDiceRoll = function (){
+  playerDiceArray = []; // reset array to store dices at every player's turn
+  let maxNumDice = 2;
+  for (let diceCounter = 0; diceCounter < maxNumDice; diceCounter += 1){
+      let randomDiceRoll = rollDice();
+      playerDiceArray.push(randomDiceRoll);
+  }
+  return `You rolled ${playerDiceArray[0]} for Dice One and ${playerDiceArray[1]} for Dice Two. <br><br>
+  Please enter either '1' or '2' to choose the order of the dice.`;
+};
 
 
-  // set a function to determine individual score based on player's dice order
-  let evaluateIndividualScoreforMoreComfortable = function (userDecision){
-    let genericHeaderMessage = `Player ${currentPlayer} 🎲`;
-    tempArray = []; // reset temporary array in order to store current ongoing score
-    
-    if (userDecision == '1'){
-      currentScore = Number(String(playerDiceArray[0]) + String(playerDiceArray[1]));
-
-      // if player is 1st player
-      if (currentPlayer == '1'){
-        ongoingScoresPlayerOne +=  currentScore; // add current score to ongoing scores for each player
-        tempArray.push(ongoingScoresPlayerOne); // array to temporary hold accumulated ongoing scores
-        cumulatedScores[currentPlayer-1] = [...tempArray]; // mirror cumulated scores with ongoing scores 
-      } else { // if player is 2nd player
-        ongoingScoresPlayerTwo +=  currentScore;
-        tempArray.push(ongoingScoresPlayerTwo);
-        cumulatedScores[currentPlayer-1] = [...tempArray];
-      }
-    }
-    
-    if (userDecision == '2'){
-      currentScore = Number(String(playerDiceArray[1]) + String(playerDiceArray[0]));
-
-        // if player is 1st player
-        if (currentPlayer == '1'){
-          ongoingScoresPlayerOne +=  currentScore; 
-          tempArray.push(ongoingScoresPlayerOne);
-          cumulatedScores[currentPlayer-1] = [...tempArray];
-        } else { // if player is 2nd player
-          ongoingScoresPlayerTwo +=  currentScore;
-          tempArray.push(ongoingScoresPlayerTwo);
-          cumulatedScores[currentPlayer-1] = [...tempArray];
-        }
-      }
-      return `${genericHeaderMessage}<br><br> You chose ${userDecision}. You scored ${currentScore} points.`;
-    };
-  
-  // set a function to determine winner
-// if players have equal scores and are the highest, there will be no winners
-let evaluateWinnerforMoreComfortable = function (){
-  let winnerOutput = " ";
-  if (cumulatedScores[0] > cumulatedScores[1]){
-    winnerOutput = `Player 1 is leading! 🥇`;
+// set a function to determine individual score based on player's order of dice
+let evaluateIndividualScore = function (userDecision, gamePlay){
+  if (userDecision == '1'){
+    currentScore = Number(String(playerDiceArray[0]) + String(playerDiceArray[1]));
   } else {
-    winnerOutput = `Player 2 is leading! 🥇`;
+    currentScore = Number(String(playerDiceArray[1]) + String(playerDiceArray[0]));
   }
-  return winnerOutput;
-};
-
-
-// set a function to display scores
-let displayScoresforMoreComfortable = function (){
-  let cumulatedScoresLength = [...cumulatedScores].length;
   
-  for (let playerNum = 0; playerNum < cumulatedScoresLength; playerNum += 1 ){
-    let leaderboardHeaderMessage = `🏁 Leaderboard:<br><br>`;
-    
-    if (cumulatedScores[0] > cumulatedScores[1]){
-      winnerOutput = `Player 1: ${cumulatedScores[0]}<br>Player 2: ${cumulatedScores[1]}`;
-    } else 
-    if (cumulatedScores[1] > cumulatedScores[0]){
-      winnerOutput = `Player 2: ${cumulatedScores[1]}<br>Player 1: ${cumulatedScores[0]}`;
+  if (gamePlay == 'base'){
+    cumulatedScores.push(currentScore); 
+  } else {
+    if (currentPlayer == '1'){
+      playerOneCumulativeScore +=  currentScore; // accumulate scores for player one 
+      cumulatedScores[currentPlayer-1] = playerOneCumulativeScore;
     } else {
-      winnerOutput = 'Wow, both tie!';
+      playerTwoCumulativeScore +=  currentScore; // accumulate scores for player two 
+      cumulatedScores[currentPlayer-1] = playerTwoCumulativeScore;
     }
-    return `${leaderboardHeaderMessage}${winnerOutput}<br><br>Click on 'Submit' to play another round!`;
   }
+  return `<b>Player ${currentPlayer} 🎲</b><br><br> You chose ${userDecision}. You scored ${currentScore} points.`;
 };
   
-  
+
+// set a function to determine winner
+// if players have equal scores and are higher than the rest, there will be no winners 
+let evaluateWinnerInBase = function (){
+  let winner = 0; // reset winner for next game
+  let numWinner = 0; // reset number of winner(s) for next game
+  let scoreDisplayMessage = " ";
+  let winnerMessage = " ";
+  for (let playerIndex = 0; playerIndex < cumulatedScores.length; playerIndex += 1){
+    scoreDisplayMessage += `Player ${playerIndex + 1}: ${cumulatedScores[playerIndex]}<br>`;
+
+    if (cumulatedScores[playerIndex] == Math.max.apply(Math, cumulatedScores)){
+      numWinner += 1; // increment number of winners with scores that are equal and higher than the rest
+      winner = playerIndex + 1; // indicate the corresponding player who wins
+    }
+  }
+  if (numWinner >= 2){
+    winnerMessage = `There are no winners.`;
+  } else {
+  winnerMessage = `<em><b>Player ${winner} is the winner!</b></em>`;
+  }
+  return `${winnerMessage}<hr>🏆 Final Scores:<br><br>${scoreDisplayMessage}<br>Click on 'Submit' to play another round!`
+};
+
+
+// set a function to reset the game 
+let resetGame = function() {
+  currentPlayer = 1;
+  cumulatedScores = [];
+  gameMode = 'Dice game';
+};
+
+
+// set a function to determine winner
+let evaluateWinnerInMC = function (){
+  let runningScoreMessage = " ";
+  let winnerMessage = " ";
+
+  if (cumulatedScores[0] > cumulatedScores[1]){
+    runningScoreMessage = `Player 1: ${cumulatedScores[0]}<br>Player 2: ${cumulatedScores[1]}`;
+    winnerMessage = `Player 1 is leading!`;
+  } else {
+    runningScoreMessage = `Player 2: ${cumulatedScores[1]}<br>Player 1: ${cumulatedScores[0]}`;
+    if (cumulatedScores[0] == cumulatedScores[1]){
+      winnerMessage = `Wow, both tie!`;
+    } else {
+      winnerMessage = `Player 2 is leading!`;
+    }
+  }
+  return `<b>${winnerMessage}</b><hr>🏆 Leaderboard:<br><br>${runningScoreMessage}<br><br>Click on 'Submit' to play another round!`;
+};
+
+
 // actual game (base)
 let base = function (input){
-  let headerMessage = `Welcome, Player ${currentPlayer} 🎲 `;
-
-  // start of dice roll game
+  let headerMessage = `<b>Welcome, Player ${currentPlayer}</b> 🎲 `;
   if (gameMode == 'Dice game'){
-
       let diceRollGenerator =  generateDiceRoll();
       gameMode = 'Choose order of dice';
       return `${headerMessage}<br><br>${diceRollGenerator}`;
   }
-
+  
   let userDecision = Number(input);
+  let gamePlay = 'base';
+  
+  // check for input validation
+  if (!(userDecision == '1' || userDecision == '2') && (currentPlayer <= maxNumPlayersInBase)){ 
+    return `Please enter either '1' or '2' to determine your score.<br><br>Your dice rolls were ${playerDiceArray[0]} and ${playerDiceArray[1]}.`;
+  }
 
-  // player decision in order of dice
-  if (gameMode == 'Choose order of dice'){
+  // if player selected either 1 or 2 and the game reaches 3rd player
+  if ((userDecision == '1' || userDecision == '2') && currentPlayer < maxNumPlayersInBase){
     
-    // check for input validation
-    if (!(userDecision == '1' || userDecision == '2') && (currentPlayer <= maxNumPlayersBase)){
-      return `Please enter either '1' or '2' to determine your score.<br><br>Your dice rolls were ${playerDiceArray[0]} and ${playerDiceArray[1]}.`;
-    }
+    // reset game mode to allow next player to roll dice
+    gameMode = 'Dice game';
+    let individualScore = evaluateIndividualScore(userDecision, gamePlay);
+    
+    // update next player 
+    let nextPlayer = (currentPlayer % maxNumPlayersInBase) + 1;
+    currentPlayer = nextPlayer;
+    return `${individualScore}<br><br>Player ${nextPlayer}, you are up next! 💨`;
+  }
 
-
-    // if player selected either 1 or 2 and the game reaches 3rd player
-    if ((userDecision == '1' || userDecision == '2') && currentPlayer < maxNumPlayersBase){
-      
-      // reset game mode to allow next player to roll dice
-      gameMode = 'Dice game';
-      let individualScore = evaluateIndividualScore(userDecision);
-      
-      // update next player 
-      let nextPlayer = (currentPlayer % maxNumPlayersBase) + 1;
-      currentPlayer = nextPlayer;
-      return `${individualScore}<br><br> Player ${nextPlayer}, you are up next! 💨`;
-    }
-
-    // if player selected either 1 and 2 and the game reaches the final player/4th player 
-    if ((userDecision == '1' || userDecision == '2') && currentPlayer == maxNumPlayersBase){
-      let individualScore = evaluateIndividualScore(userDecision);
-      let winnerResult = evaluateWinner();
-      let scoreResult = displayScores();
-      let outputMessage = `${individualScore}<br><br> ${winnerResult}<br><br>${scoreResult}`;
-      gameReset();
-      return outputMessage;
-      }
-}
-}
+  // if player selected either 1 and 2 and the game reaches the final player/4th player 
+  if ((userDecision == '1' || userDecision == '2') && currentPlayer == maxNumPlayersInBase){
+    let individualScore = evaluateIndividualScore(userDecision, gamePlay);
+    let winnerResult = evaluateWinnerInBase();
+    let outputMessage = `${individualScore}<br><br> ${winnerResult}`;
+    resetGame();
+    return outputMessage;
+  }
+};
 
 
 // actual game (more comfortable)
 let moreComfortable = function (input){
-  let headerMessage = `Welcome, Player ${currentPlayer} 🎲 `;
+  let headerMessage = `<b>Welcome, Player ${currentPlayer}</b> 🎲 `;
   
   // start of dice roll game
   if (gameMode == 'Dice game'){
     let diceRollGenerator =  generateDiceRoll ();
-    console.log(diceRollGenerator)
     gameMode = 'Choose order of dice';
     return `${headerMessage}<br><br>${diceRollGenerator}`;
   }
@@ -262,33 +190,31 @@ let moreComfortable = function (input){
     }
     
     // if player selected either 1 or 2 and game reaches only 1st player
-    if ((userDecision == '1' || userDecision == '2') && (currentPlayer < maxNumPlayersMoreComfortable)){
+    if ((userDecision == '1' || userDecision == '2') && (currentPlayer < maxNumPlayersInMC)){
       
       // reset game mode to allow next player to roll dice
       gameMode = 'Dice game';
-      let individualScore = evaluateIndividualScoreforMoreComfortable (userDecision);
+      let gamePlay = 'MC';
+      let individualScore = evaluateIndividualScore(userDecision, gamePlay);
 
       // update next player 
-      let nextPlayer = (currentPlayer % maxNumPlayersMoreComfortable) + 1;
+      let nextPlayer = (currentPlayer % maxNumPlayersInMC) + 1;
       currentPlayer = nextPlayer;
       return `${individualScore}<br><br> Player ${nextPlayer}, you are up next! 💨`;
     }
     
     // if player selected either 1 and 2 and the game reaches the final player/2nd player 
-    if ((userDecision == '1' || userDecision == '2') && currentPlayer == maxNumPlayersMoreComfortable){
-      let individualScore = evaluateIndividualScoreforMoreComfortable(userDecision);
+    if ((userDecision == '1' || userDecision == '2') && currentPlayer == maxNumPlayersInMC){
+      let gamePlay = 'MC';
+      let individualScore = evaluateIndividualScore(userDecision, gamePlay);
       gameMode = 'Leaderboard';
       return `${individualScore}<br><br>Click on 'Submit' to see who is leading.`;
     }
   }
-  
-  if (gameMode == 'Leaderboard'){
-    let winnerResult = evaluateWinnerforMoreComfortable();
-    let scoreResult = displayScoresforMoreComfortable();
-    let outputMessage = ` ${winnerResult}<br><br>${scoreResult}`;
+    let winnerResult = evaluateWinnerInMC();
     currentPlayer = 1;
 
     gameMode = 'Dice game';
-    return outputMessage;
-  }
+    return winnerResult;
+  
 };
