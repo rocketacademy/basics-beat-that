@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: steelblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,16 +40,20 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: white;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+      }
+
+      #game-win-conditions {
+        text-align: center;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Project 2: Beat That! 🎲</h1>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
@@ -57,6 +61,19 @@
       <button id="submit-button">Submit</button>
       <p>Output:</p>
       <div id="output-div"></div>
+    </div>
+    <div id="game-win-conditions">
+      <h2>How to play</h2>
+        <p>
+        Roll the dice and put them in order to make the highest number possible.
+        </p>
+        <p>If you roll a 4 and an 6, for example, your best answer would be 64.
+        </p>
+        <p>Write
+        down your answer, pass the dice, and challenge the next player to Beat
+        That!
+      </p>
+      </p>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
