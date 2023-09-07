@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: red;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,21 +40,35 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: white;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+      }
+
+      #input-container {
+        display: none;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Basics: Beat That! 😎😎😎😎😎🙌🙌, let's have fun !</h1>
+    <p>
+      TODO:</p> 1. Click roll dice to start </p> 2. In output, your two dice will be
+      displayed </p> 3. In input field, type 0 if you want the first die to be the
+      first number in the score or type 1 if you want the second number to come
+      first. </p> 4. Click select starting dice.</p> 5. Your score will be displayed. </p>6.
+      player two repeats these steps. <type/p>
+    </p>
+
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
+      <div id="input-container">
+        <p>Input:</p>
+        <input id="input-field" />
+      </div>
       <br />
-      <button id="submit-button">Submit</button>
+      <button id="submit-button">Roll Dice</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
@@ -62,14 +76,14 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
+      var button = document.getElementById("submit-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#input-field");
+        var input = document.getElementById("input-field");
         var result = main(input.value);
 
         // Display result in output element
-        var output = document.querySelector("#output-div");
+        var output = document.getElementById("output-div");
         output.innerHTML = result;
 
         // Reset input value
