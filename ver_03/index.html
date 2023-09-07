@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="eng">
+  <head>
+    <title>SWE-Project 2-ver.1</title>
+    <script src="script.js" defer></script>
+    <!-- CSS style settings -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: sans-serif;
+        background-color: rgb(85, 85, 85);
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+
+      #header {
+        text-align: center;
+        color: azure;
+      }
+
+      #header2 {
+        text-align: center;
+        color: azure;
+      }
+
+      #turnCounter {
+        text-align: center;
+        font-family: monospace, bold;
+        /* font-size: large; */
+        background-color: rgb(159, 248, 223);
+        width: auto;
+        border: 1rem;
+        border-radius: 2%;
+        padding: 1rem;
+        margin: 1rem;
+      }
+      #turnOutput-div {
+        background-color: grey;
+        margin: 10rem auto;
+        padding: 10rem;
+        width: 10%;
+      }
+
+      /* #container {
+        background-color: pink;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 38px 31px;
+      } */
+
+      .parent {
+        border: 1px solid black;
+        border-radius: 2%;
+        background-color: pink;
+        margin: 1rem;
+        padding: 2rem 2rem;
+        text-align: center;
+      }
+      .child1 {
+        display: inline-block;
+        border: 5px solid red;
+        padding: 2rem 3rem;
+        vertical-align: middle;
+      }
+      .child2 {
+        display: inline-block;
+        border: 5px solid blue;
+        padding: 2rem 3rem;
+        vertical-align: middle;
+      }
+
+      #input1 {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 100%;
+      }
+
+      #input2 {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 9px;
+        width: 100%;
+      }
+
+      #button1 {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 6px;
+      }
+
+      #button2 {
+        font-size: 21px;
+        line-height: 33px;
+        margin: 0 0 23px 0;
+        padding: 0 6px;
+      }
+
+      #outputName1-div {
+        margin: 10px auto;
+        padding: 10px;
+        width: 100%;
+      }
+
+      #outputName2-div {
+        margin: 10px auto;
+        padding: 10px;
+        width: 100%;
+      }
+
+      #output1-div {
+        background-color: lightgrey;
+        margin: 20px auto;
+        padding: 20px;
+        width: 100%;
+      }
+      #output2-div {
+        background-color: lightgrey;
+        margin: 20px auto;
+        padding: 20px;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 id="header">SWE Fundamentals! 🚀</h1>
+    <h2 id="header2">Project 02 - 🎲🎲</h2>
+    <div id="turnCounter">
+      <p>Turn Counter:</p>
+      <div id="#turnOutput-div"></div>
+    </div>
+    <br />
+    <div class="parent">
+      <div class="child1">
+        <div id="outputName1-div"><br /></div>
+        <p>Player One</p>
+        <p>Input:</p>
+        <input id="input1-field" /><br />
+        <br />
+        <button id="submit1-button">Submit</button>
+        <p>Output:</p>
+        <div id="output1-div"><br /></div>
+      </div>
+
+      <div class="child2">
+        <div id="outputName2-div"><br /></div>
+        <p>Player Two</p>
+        <p>Input:</p>
+        <input id="input2-field" /><br />
+        <br /><button id="submit-button2">Submit</button>
+        <p>Output:</p>
+        <div id="output2-div"><br /></div>
+      </div>
+    </div>
+
+    <!-- 
+    <script src="script.js"></script>
+    <script>
+      // game counter
+      /*
+      var resultOC = gameCounter(counterValue.value);
+
+      var outputOC = document.querySelector("#turnCounter-div");
+      outputOC.innerHTML = resultOC;
+      */
+
+      // player one
+      var playerOneButton = document.querySelector("#submit1-button");
+      playerOneButton.addEventListener("click", function () {
+        console.log("Player1 button clicked - HTML side");
+        var playerOneInput = document.querySelector("#input1-field");
+
+        var result1 = playerOne(playerOneInput.value);
+
+        var output1 = document.querySelector("#output1-div");
+        output1.innerHTML = result1;
+
+        playerOneInput.value = "";
+      });
+
+      var playerTwoButton = document.querySelector("#submit-button2");
+      playerTwoButton.addEventListener("click", function () {
+        console.log("Player2 button clicked - HTML side");
+        var playerTwoInput = document.querySelector("#input2-field");
+
+        var result2 = playerTwo(playerTwoInput.value);
+
+        var output2 = document.querySelector("#output2-div");
+        output2.innerHTML = result2;
+
+        playerTwoInput.value = "";
+      });
+
+      // var button = document.querySelector("#submit-button");
+      // button.addEventListener("click", function () {
+      //   var input = document.querySelector("#input-field");
+
+      //   var result = main(input.value);
+
+      //   var output = document.querySelector("#output-div");
+      //   output.innerHTML = result;
+
+      //   input.value = "";
+      // });
+    </script>
+     -->
+  </body>
+</html>
