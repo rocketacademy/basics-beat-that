@@ -21,26 +21,26 @@ const rollDiceResult = () => {
 };
 
 const evalLogic = (dice) => {
-  if (currPlayer == 2) {
-    evalDice(dice);
-    return evalWinner();
-  } else {
-    let rolledNumber = evalDice(dice);
-    initGame();
-    return `Your submitted number is ${rolledNumber}. It is now Player ${currPlayer}'s turn. Roll your dice.`;
+  if (dice == 1 || dice == 2) {
+    if (currPlayer == 2) {
+      evalDice(dice);
+      return evalWinner();
+    } else {
+      let rolledNumber = evalDice(dice);
+      initGame();
+      return `Your submitted number is ${rolledNumber}. It is now Player ${currPlayer}'s turn. Roll your dice.`;
+    }
   }
+  return `Please input either "1" or "2" to select which dice you would like to place first.`;
 };
 
 const evalDice = (dice) => {
-  if (dice == 1 || dice == 2) {
-    let result =
-      dice == 1
-        ? currDiceRoll[0] + currDiceRoll[1]
-        : currDiceRoll[1] + currDiceRoll[0];
-    currPlayer == 1 ? (player1Num = result) : (player2Num = result);
-    return result;
-  }
-  return `Please input either "1" or "2" to select which dice you would like to place first.`;
+  let result =
+    dice == 1
+      ? currDiceRoll[0] + currDiceRoll[1]
+      : currDiceRoll[1] + currDiceRoll[0];
+  currPlayer == 1 ? (player1Num = result) : (player2Num = result);
+  return result;
 };
 
 const evalWinner = () => {
