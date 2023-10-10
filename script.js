@@ -12,6 +12,9 @@
 // then we will assign the numbers into variables playerOneTens and playerOneOnes
 // Then, we need to make the numbers into a String so we can concatenate them. This concatenation will be stored in playerOneConcatenatedString
 // and then turn them back into a Number so we can compare the numbers later on. This reverse type will be stored in playerOneFinalNumber
+// need to clean up the main function. First step is to helper function the playerOneChoice?
+// then need to think about maybe we do a for loop to loop this whole chunk twice
+// then compare the final numbers
 
 // Make the dice roll variables global because we will need to switch game states
 var playerOneDiceRolls = [];
