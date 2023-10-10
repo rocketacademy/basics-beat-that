@@ -17,6 +17,7 @@
 var playerOneDiceRolls = [];
 var gameState = "storePlayerOneName";
 var playerOneName = "";
+var playerOneFinalNumber;
 
 var main = function (input) {
   var myOutputValue = "";
@@ -29,6 +30,17 @@ var main = function (input) {
     myOutputValue = `You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br> Choose the order of your dice`;
     gameState = "askPlayerOneChoice";
     console.log(gameState);
+  } else if (gameState == "askPlayerOneChoice") {
+    var diceNumberInTensPosition = input;
+    var indexNumberInTensPosition = diceNumberInTensPosition - 1;
+    var playerOneTens = playerOneDiceRolls[indexNumberInTensPosition];
+    if (indexNumberInTensPosition == 1) var indexNumberInOnesPosition = 0;
+    else indexNumberInOnesPosition = 1;
+    var playerOneOnes = playerOneDiceRolls[indexNumberInOnesPosition];
+    var playerOneConcatenatedString = "" + playerOneTens + playerOneOnes;
+    playerOneFinalNumber = Number(playerOneConcatenatedString);
+    myOutputValue = `Your final number is ${playerOneFinalNumber}`;
+    gameState = "storePlayerOneName";
   }
   return myOutputValue;
 };
