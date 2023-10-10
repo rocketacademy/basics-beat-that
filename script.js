@@ -5,7 +5,7 @@
 // After both players have rolled and chosen dice order, the player with the higher combined number wins.
 
 // Pseudocode
-// 1st player clicks submit, a helper function will roll dice which returns a number between 1 to 6 and store this number in playerOneFirstDiceRoll. roll dice again and store this number in playerOneSecondDiceRoll
+// 1st player clicks submit, a helper function will roll dice which returns a number between 1 to 6 and store this number in first index of playerOneDiceRolls array. roll dice again and store this number in second index of playerOneDiceRolls array
 // then, we need to ask the player to specify which order they want the dice to be in
 
 // Make the dice roll variables global because we will need to switch game states
