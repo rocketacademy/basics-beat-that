@@ -7,7 +7,11 @@
 // Pseudocode
 // first input is player will enter their name, and then
 // a helper function will roll dice which returns a number between 1 to 6 and store this number in first index of playerOneDiceRolls array. roll dice again and store this number in second index of playerOneDiceRolls array
-// the game state needs to then change to ask user to input how they want to sequence the dice rolls
+// the game state needs to then change to ask user to input how they want to sequence the dice rolls. Instruct player to input the dice number they want in the tens position
+// E.g. if the roll is 3 for Dice One and 6 for Dice Two, i input 2 because i want Dice Two as the tens place. Then the code will minus 1 from it to find out the index position of the tens number in the array
+// then we will assign the numbers into variables playerOneTens and playerOneOnes
+// Then, we need to make the numbers into a String so we can concatenate them. This concatenation will be stored in playerOneConcatenatedString
+// and then turn them back into a Number so we can compare the numbers later on. This reverse type will be stored in playerOneFinalNumber
 
 // Make the dice roll variables global because we will need to switch game states
 var playerOneDiceRolls = [];
