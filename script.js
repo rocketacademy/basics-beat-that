@@ -8,7 +8,14 @@
 // 1st player clicks submit, a helper function will roll dice which returns a number between 1 to 6 and store this number in playerOneFirstDiceRoll. roll dice again and store this number in playerOneSecondDiceRoll
 // then, we need to ask the player to specify which order they want the dice to be in
 
-var main = function (input) {
-  var myOutputValue = "hello world";
+var main = function () {
+  var myOutputValue = rollDice();
   return myOutputValue;
+};
+
+// Dice Roll Helper Function - returns a random number between 1 to 6
+var rollDice = function () {
+  var randomDecimalLessThanSix = Math.random() * 6;
+  var diceRollNumber = Math.floor(randomDecimalLessThanSix) + 1; // +1 because when we floor, we will get min 0 and max 5
+  return diceRollNumber;
 };
