@@ -12,7 +12,10 @@
 // then we will assign the numbers into variables playerOneTens and playerOneOnes
 // Then, we need to make the numbers into a String so we can concatenate them. This concatenation will be stored in playerOneConcatenatedString
 // and then turn them back into a Number so we can compare the numbers later on. This reverse type will be stored in playerOneFinalNumber
-// need to clean up the main function. First step is to helper function the playerOneChoice?
+// 3 Helper function to return the final number:
+// 1. function to return the number in the tens position
+// 2. function to return the number in the ones position
+// 3. function to return the final number concatenated and Number type
 // then need to think about maybe we do a for loop to loop this whole chunk twice
 // then compare the final numbers
 
@@ -32,16 +35,27 @@ var main = function (input) {
     for (var i = 0; i < 2; i += 1) playerOneDiceRolls[i] = rollDice(); // rolls dice twice and stores it in the corresponding index of the array
     myOutputValue = `You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br> Choose the order of your dice`;
     gameState = "askPlayerOneChoice";
-    console.log(gameState);
   } else if (gameState == "askPlayerOneChoice") {
-    var diceNumberInTensPosition = input;
-    var indexNumberInTensPosition = diceNumberInTensPosition - 1;
-    var playerOneTens = playerOneDiceRolls[indexNumberInTensPosition];
-    if (indexNumberInTensPosition == 1) var indexNumberInOnesPosition = 0;
-    else indexNumberInOnesPosition = 1;
-    var playerOneOnes = playerOneDiceRolls[indexNumberInOnesPosition];
-    var playerOneConcatenatedString = "" + playerOneTens + playerOneOnes;
-    playerOneFinalNumber = Number(playerOneConcatenatedString);
+    // var diceNumberInTensPosition = input;
+    // var indexNumberInTensPosition = diceNumberInTensPosition - 1;
+    // var playerOneTens = playerOneDiceRolls[indexNumberInTensPosition];
+    // if (indexNumberInTensPosition == 1) var indexNumberInOnesPosition = 0;
+    // else indexNumberInOnesPosition = 1;
+    // var playerOneOnes = playerOneDiceRolls[indexNumberInOnesPosition];
+    // var playerOneConcatenatedString = "" + playerOneTens + playerOneOnes;
+    // playerOneFinalNumber = Number(playerOneConcatenatedString);
+    playerOneNumberInTens = returnNumberInTensPosition(
+      input,
+      playerOneDiceRolls
+    );
+    playerOneNumberInOnes = returnNumberInOnesPosition(
+      playerOneNumberInTens,
+      playerOneDiceRolls
+    );
+    playerOneFinalNumber = returnFinalNumber(
+      playerOneNumberInTens,
+      playerOneNumberInOnes
+    );
     myOutputValue = `Your final number is ${playerOneFinalNumber}`;
     gameState = "storePlayerOneName";
   }
@@ -53,4 +67,35 @@ var rollDice = function () {
   var randomDecimalLessThanSix = Math.random() * 6;
   var diceRollNumber = Math.floor(randomDecimalLessThanSix) + 1; // +1 because when we floor, we will get min 0 and max 5
   return diceRollNumber;
+};
+
+// Return number in the tens position
+var returnNumberInTensPosition = function (
+  selectedDiceNumber,
+  playerDiceRollArray
+) {
+  var diceNumberInTensPosition = selectedDiceNumber;
+  var indexNumberInTensPosition = diceNumberInTensPosition - 1;
+  var numberInTensPosition = playerDiceRollArray[indexNumberInTensPosition];
+  return numberInTensPosition;
+};
+
+// Return number in ones position
+var returnNumberInOnesPosition = function (
+  numberInTensPosition,
+  playerDiceRollArray
+) {
+  var numberInOnesPosition = playerDiceRollArray.find(function (
+    elementInArray
+  ) {
+    return elementInArray != numberInTensPosition;
+  });
+  return numberInOnesPosition;
+};
+
+// Return the two numbers concatenated
+var returnFinalNumber = function (tensPositionNumber, onesPositionNumber) {
+  concatenatedString = "" + tensPositionNumber + onesPositionNumber;
+  convertedNumber = Number(concatenatedString);
+  return convertedNumber;
 };
