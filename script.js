@@ -1,10 +1,21 @@
 //Declare Global Variables
-let numberRolled, gameMessage, player1Number, player2Number, diceOrder;
+let numberRolled,
+  gameMessage,
+  player1Number,
+  player2Number,
+  diceOrder,
+  player1Score = 0,
+  player2Score = 0;
 
 //Main Function
 let main = function (input, myOutputValue) {
-  if (player1Number && player2Number) evalutateWinner();
-  else if (!player1Number && !numberRolled) {
+  if (player1Number && player2Number) {
+    evalutateWinner();
+    player1Number = null;
+    player2Number = null;
+    diceOrder = null;
+    numberRolled = null;
+  } else if (!player1Number && !numberRolled) {
     numberRolled = rollTwoDice();
     gameMessage = `Welcome Player 1.<br>You rolled ${numberRolled[0]} for Dice 1 and ${numberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first`;
   } else if (!player1Number && numberRolled) {
@@ -35,30 +46,29 @@ let rollTwoDice = () => [
 function combineDiceNumber() {
   switch (diceOrder) {
     case 1:
-      return `${numberRolled[0]}` + `${numberRolled[1]}`;
+      return Number(`${numberRolled[0]}` + `${numberRolled[1]}`);
     case 2:
-      return `${numberRolled[1]}` + `${numberRolled[0]}`;
+      return Number(`${numberRolled[1]}` + `${numberRolled[0]}`);
     default:
       return `Invalid input.<br>You rolled ${numberRolled[0]} for Dice 1 and ${numberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first.`;
   }
 }
 
 //Compare both numbers to determine winner
-function evalutateWinner(winnerIndex) {
-  Number(player1Number) > Number(player2Number)
-    ? (winnerIndex = 1)
-    : Number(player2Number) > Number(player1Number)
-    ? (winnerIndex = 2)
-    : (winnerIndex = 0);
-  switch (winnerIndex) {
-    case 1:
+function evalutateWinner() {
+  switch (true) {
+    case player1Number > player2Number:
       gameMessage = `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`;
       break;
-    case 2:
+    case player1Number < player2Number:
       gameMessage = `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`;
       break;
-    case 0:
+    case player1Number == player2Number:
       gameMessage = `It is a draw with both players getting ${player1Number}.`;
       break;
+    default:
+      return `Error with evaluating winner.`;
   }
 }
+
+function scoreRecord() {}
