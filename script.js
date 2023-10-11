@@ -21,19 +21,20 @@
 
 // Make the dice roll variables global because we will need to switch game states
 var playerOneDiceRolls = [];
-var gameState = "storePlayerOneName";
-var playerOneName = "";
+var gameState = "rollPlayerOneDiceS";
+// var playerOneName = "";
 var playerOneFinalNumber;
 
 var main = function (input) {
   var myOutputValue = "";
-  if (gameState == "storePlayerOneName") {
-    playerOneName = input; // only take input and put it into playerOneName if gameState is "Player One enter name"
-    myOutputValue = `Welcome to Beat That! ${playerOneName}. Press "Submit" again to roll your dice!`;
-    gameState = "rollPlayerOneDice";
-  } else if (gameState == "rollPlayerOneDice") {
+  // if (gameState == "storePlayerOneName") {
+  //   playerOneName = input; // only take input and put it into playerOneName if gameState is "Player One enter name"
+  //   myOutputValue = `Welcome to Beat That! ${playerOneName}. Press "Submit" again to roll your dice!`;
+  //   gameState = "rollPlayerOneDice";
+  //}
+  if (gameState == "rollPlayerOneDice") {
     for (var i = 0; i < 2; i += 1) playerOneDiceRolls[i] = rollDice(); // rolls dice twice and stores it in the corresponding index of the array
-    myOutputValue = `You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br> Choose the order of your dice`;
+    myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
     playerOneNumberInTens = returnNumberInTensPosition(
