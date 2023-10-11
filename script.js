@@ -28,12 +28,19 @@ var playerOneNumberTensPosition;
 var playerOneNumberOnesPosition;
 var playerOneFinalNumber;
 
+var playerTwoDiceRollsArray = [];
+var playerTwoNumberTensPosition;
+var playerTwoNumberOnesPosition;
+var playerTwoFinalNumber;
+
 var main = function (input) {
   var myOutputValue = "";
+  // start off with Player One roll dice
   if (gameState == "rollPlayerOneDice") {
     for (var i = 0; i < 2; i += 1) playerOneDiceRollsArray[i] = rollDice(); // rolls dice twice and stores it in the corresponding index of the array
     myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRollsArray[0]} for Dice One and ${playerOneDiceRollsArray[1]} for Dice Two.<br>Choose the order of your dice`;
     gameState = "askPlayerOneChoice";
+    // change gamestate to get playerOne's Dice Number choice as input. Then activate the helper functions to return the final number
   } else if (gameState == "askPlayerOneChoice") {
     var diceNumberChosen = input;
     playerOneFinalNumber = activateReturnNumberFunctions(
@@ -43,8 +50,13 @@ var main = function (input) {
       playerOneNumberOnesPosition,
       playerOneFinalNumber
     );
-    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}`;
-    gameState = "storePlayerOneName";
+    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}.<br>It is now Player 2's turn.`;
+    gameState = "rollPlayerTwoDice";
+    // swap gameState to initiate the same above code we did for playerTwo
+  } else if (gameState == "rollPlayerTwoDice") {
+    for (var i = 0; i < 2; i += 1) playerTwoDiceRollsArray[i] = rollDice();
+    myOutputValue = `Player 2, you rolled ${playerTwoDiceRollsArray[0]} for Dice One and ${playerTwoDiceRollsArray[1]} for Dice Two.<br>Choose the order of your dice`;
+    gameState = "askPlayerTwoChoice";
   }
   return myOutputValue;
 };
