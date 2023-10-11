@@ -21,7 +21,7 @@
 
 // Make the dice roll variables global because we will need to switch game states
 var playerOneDiceRolls = [];
-var gameState = "rollPlayerOneDiceS";
+var gameState = "rollPlayerOneDice";
 // var playerOneName = "";
 var playerOneFinalNumber;
 
@@ -37,8 +37,9 @@ var main = function (input) {
     myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
+    var diceNumberChosen = input;
     playerOneNumberInTens = returnNumberInTensPosition(
-      input,
+      diceNumberChosen,
       playerOneDiceRolls
     );
     playerOneNumberInOnes = returnNumberInOnesPosition(
@@ -49,7 +50,7 @@ var main = function (input) {
       playerOneNumberInTens,
       playerOneNumberInOnes
     );
-    myOutputValue = `Your final number is ${playerOneFinalNumber}`;
+    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}`;
     gameState = "storePlayerOneName";
   }
   return myOutputValue;
