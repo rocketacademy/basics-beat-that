@@ -16,39 +16,32 @@
 // 1. function to return the number in the tens position
 // 2. function to return the number in the ones position
 // 3. function to return the final number concatenated and Number type
-// then need to think about maybe we do a for loop to loop this whole chunk twice
+// put all of the playerOneChoice code into a helper function so that it makes main more concise
+// need to make the playerOne numbers global. so the helper function can access them and store them
+// then we will need to switch gamestates to player two
 // then compare the final numbers
 
 // Make the dice roll variables global because we will need to switch game states
-var playerOneDiceRolls = [];
 var gameState = "rollPlayerOneDice";
-// var playerOneName = "";
+var playerOneDiceRollsArray = [];
+var playerOneNumberTensPosition;
+var playerOneNumberOnesPosition;
 var playerOneFinalNumber;
 
 var main = function (input) {
   var myOutputValue = "";
-  // if (gameState == "storePlayerOneName") {
-  //   playerOneName = input; // only take input and put it into playerOneName if gameState is "Player One enter name"
-  //   myOutputValue = `Welcome to Beat That! ${playerOneName}. Press "Submit" again to roll your dice!`;
-  //   gameState = "rollPlayerOneDice";
-  //}
   if (gameState == "rollPlayerOneDice") {
-    for (var i = 0; i < 2; i += 1) playerOneDiceRolls[i] = rollDice(); // rolls dice twice and stores it in the corresponding index of the array
-    myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
+    for (var i = 0; i < 2; i += 1) playerOneDiceRollsArray[i] = rollDice(); // rolls dice twice and stores it in the corresponding index of the array
+    myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRollsArray[0]} for Dice One and ${playerOneDiceRollsArray[1]} for Dice Two.<br>Choose the order of your dice`;
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
     var diceNumberChosen = input;
-    playerOneNumberInTens = returnNumberInTensPosition(
+    playerOneFinalNumber = activateReturnNumberFunctions(
       diceNumberChosen,
-      playerOneDiceRolls
-    );
-    playerOneNumberInOnes = returnNumberInOnesPosition(
-      playerOneNumberInTens,
-      playerOneDiceRolls
-    );
-    playerOneFinalNumber = returnFinalNumber(
-      playerOneNumberInTens,
-      playerOneNumberInOnes
+      playerOneDiceRollsArray,
+      playerOneNumberTensPosition,
+      playerOneNumberOnesPosition,
+      playerOneFinalNumber
     );
     myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}`;
     gameState = "storePlayerOneName";
@@ -61,6 +54,30 @@ var rollDice = function () {
   var randomDecimalLessThanSix = Math.random() * 6;
   var diceRollNumber = Math.floor(randomDecimalLessThanSix) + 1; // +1 because when we floor, we will get min 0 and max 5
   return diceRollNumber;
+};
+
+// Function to activate the helper functions returning the final number
+var activateReturnNumberFunctions = function (
+  chosenDiceNumber,
+  playerXDiceRollsArray,
+  playerXNumberTensPosition,
+  playerXNumberOnesPosition,
+  playerXFinalNumber
+) {
+  var diceNumberChosen = chosenDiceNumber;
+  playerXNumberTensPosition = returnNumberInTensPosition(
+    diceNumberChosen,
+    playerXDiceRollsArray
+  );
+  playerXNumberOnesPosition = returnNumberInOnesPosition(
+    playerXNumberTensPosition,
+    playerXDiceRollsArray
+  );
+  playerXFinalNumber = returnFinalNumber(
+    playerXNumberTensPosition,
+    playerXNumberOnesPosition
+  );
+  return playerXFinalNumber;
 };
 
 // Return number in the tens position
