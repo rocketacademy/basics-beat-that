@@ -130,19 +130,6 @@ var returnNumberInTensPosition = function (
   return numberInTensPosition;
 };
 
-// // Return number in ones position
-// var returnNumberInOnesPosition = function (
-//   numberInTensPosition,
-//   playerDiceRollArray
-// ) {
-//   var numberInOnesPosition = playerDiceRollArray.find(function (
-//     elementInArray
-//   ) {
-//     return elementInArray != numberInTensPosition;
-//   });
-//   return numberInOnesPosition;
-// };
-
 var returnNumberInOnesPosition = function (
   selectedDiceNumber,
   playerDiceRollArray
