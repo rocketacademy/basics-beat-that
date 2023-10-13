@@ -30,46 +30,58 @@
 // checkResult compares running scores now instead of final number.
 // It will also output who is the current leader instead of a single winner
 
+// initialise the initial gameState
 var gameState = "rollPlayerOneDice";
 
+// global playerOne variables so we can access them throughout the different gameStates
 var playerOneDiceRolls = [];
 var playerOneFinalNumber;
 var playerOneRunningScore = 0;
 
+// global playerTwo variables to access throughout the different gameStates
 var playerTwoDiceRolls = [];
 var playerTwoFinalNumber;
 var playerTwoRunningScore = 0;
 
 var main = function (input) {
+  // "refresh" myOutputValue everytime we restart the app i.e. pressing submit
   var myOutputValue = "";
   if (gameState == "rollPlayerOneDice") {
+    // for loop to roll two dices and store the dice rolls in playerOneDiceRolls array
     for (var i = 0; i < 2; i += 1) playerOneDiceRolls[i] = rollDice();
-    myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
+    // reassign myOutputValue to show Player 1 their rolls and ask them to choose which dice to be first
+    myOutputValue = `Welcome Player 1.<br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice by inputting 1 for Dice One first or 2 for Dice Two first`;
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
+    // assign input to the diceNumberChosen
     var diceNumberChosen = input;
-    // input validation
+    // input validation - if user inputs a valid diceNumberChosen
     if (diceNumberChosen == 1 || diceNumberChosen == 2) {
+      // function to return the number in the tens position
       var playerOneNumberInTens = returnNumberInTensPosition(
         diceNumberChosen,
         playerOneDiceRolls
       );
+      // function to return the number in the ones position
       var playerOneNumberInOnes = returnNumberInOnesPosition(
         diceNumberChosen,
         playerOneDiceRolls
       );
+      // function to concatenate the numbers and then return it as a Number type
       playerOneFinalNumber = returnFinalNumber(
         playerOneNumberInTens,
         playerOneNumberInOnes
       );
+      // function to update playerOneRunningScore
       playerOneRunningScore = updateRunningScore(
         playerOneRunningScore,
         playerOneFinalNumber
       );
-      // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}. Press submit to roll Player 2's dice`;
+      // reassign myOutputValue to tell playerOne the final number and their running score. And tell Player 2 to resubmit to roll the dice
       myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerOneFinalNumber}.<br>Your running score is ${playerOneRunningScore}.<br> Press submit to roll Player 2's dice`;
       gameState = "rollPlayerTwoDice";
     } else {
+      // user validation if the user inputs wrong diceNumberChosen
       myOutputValue = `Please enter a valid input of either 1 or 2 only. <br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     }
   } else if (gameState == "rollPlayerTwoDice") {
@@ -96,13 +108,13 @@ var main = function (input) {
         playerTwoRunningScore,
         playerTwoFinalNumber
       );
-      // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
       myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerTwoFinalNumber}.<br>Your running score is ${playerTwoRunningScore}.<br> Press submit once more to see the winner`;
       gameState = "checkResult";
     } else {
       myOutputValue = `Please enter a valid input of either 1 or 2 only.<br> You rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     }
   } else if (gameState == "checkResult") {
+    // function to check who is the leader in terms of running score
     leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
     myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}, and running score is ${playerOneRunningScore}.<br>
     Player 2's final number this round is ${playerTwoFinalNumber} and running score is ${playerTwoRunningScore}.<br>
