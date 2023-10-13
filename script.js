@@ -5,20 +5,22 @@
 // After both players have rolled and chosen dice order, the player with the higher combined number wins.
 
 // Pseudocode
-// a helper function will roll dice which returns a number between 1 to 6 and store this number in first index of playerOneDiceRolls array. roll dice again and store this number in second index of playerOneDiceRolls array
-// the game state needs to then change to ask user to input how they want to sequence the dice rolls. Instruct player to input the dice number they want in the tens position
-// E.g. if the roll is 3 for Dice One and 6 for Dice Two, i input 2 because i want Dice Two as the tens place. Then the code will minus 1 from it to find out the index position of the tens number in the array
-// then we will assign the numbers into variables playerOneTens and playerOneOnes
-// Then, we need to make the numbers into a String so we can concatenate them. This concatenation will be stored in playerOneConcatenatedString
-// and then turn them back into a Number so we can compare the numbers later on. This reverse type will be stored in playerOneFinalNumber
-// 3 Helper function to return the final number:
-// 1. function to return the number in the tens position
-// 2. function to return the number in the ones position
-// 3. function to return the final number concatenated and Number type
-// then need to think about maybe we do a for loop to loop this whole chunk twice
-// then compare the final numbers
+// Two game states
+// First game state is for Player 1 to roll dice.
+// The dice will roll twice and be stored in an array
+// Change to next game state to ask Player 1 for which dice number should be in the tens position
+// input is player's choice
+// program will then store Player 1's final number
 
-// Make the dice roll variables global because we will need to switch game states
+// Game state will change to roll Player 2's dice
+//// The dice will roll twice and be stored in an array
+// Change to next game state to ask Player 2 for which dice number should be in the tens position
+// input is player's choice
+// program will then store Player 2's final number
+
+// Game state will change to compare the two Player's numbers
+// final output is to compare Player 1 and Player 2's final number to see whose one is bigger
+
 var gameState = "rollPlayerOneDice";
 
 var playerOneDiceRolls = [];
