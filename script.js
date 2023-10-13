@@ -35,11 +35,11 @@ var main = function (input) {
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
     var diceNumberChosen = input;
-    playerOneNumberInTens = returnNumberInTensPosition(
+    var playerOneNumberInTens = returnNumberInTensPosition(
       diceNumberChosen,
       playerOneDiceRolls
     );
-    playerOneNumberInOnes = returnNumberInOnesPosition(
+    var playerOneNumberInOnes = returnNumberInOnesPosition(
       playerOneNumberInTens,
       playerOneDiceRolls
     );
@@ -53,6 +53,22 @@ var main = function (input) {
     for (var i = 0; i < 2; i += 1) playerTwoDiceRolls[i] = rollDice();
     myOutputValue = `Player 2,<br>You rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     gameState = "askPlayerTwoChoice";
+  } else if (gameState == "askPlayerTwoChoice") {
+    var diceNumberChosen = input;
+    var playerTwoNumberInTens = returnNumberInTensPosition(
+      diceNumberChosen,
+      playerTwoDiceRolls
+    );
+    var playerTwoNumberInOnes = returnNumberInOnesPosition(
+      playerTwoNumberInTens,
+      playerTwoDiceRolls
+    );
+    playerTwoFinalNumber = returnFinalNumber(
+      playerTwoNumberInTens,
+      playerTwoNumberInOnes
+    );
+    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
+    gameState = "checkWinner";
   }
   return myOutputValue;
 };
