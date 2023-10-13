@@ -103,8 +103,10 @@ var main = function (input) {
       myOutputValue = `Please enter a valid input of either 1 or 2 only.<br> You rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     }
   } else if (gameState == "checkResult") {
-    finalResult = checkResult(playerOneFinalNumber, playerTwoFinalNumber);
-    myOutputValue = `Player 1's number is ${playerOneFinalNumber}<br>Player 2's final number is ${playerTwoFinalNumber}.<br>Result is ${finalResult}. Press Submit again to restart`;
+    leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
+    myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}, and running score is ${playerOneRunningScore}.<br>
+    Player 2's final number this round is ${playerTwoFinalNumber} and running score is ${playerTwoRunningScore}.<br>
+    Current Leader is is ${leader}. Press Submit again to reroll from Player 1`;
     gameState = "rollPlayerOneDice";
   }
   return myOutputValue;
@@ -161,4 +163,12 @@ var checkResult = function (playerOneNumber, playerTwoNumber) {
 var updateRunningScore = function (runningScore, finalNumber) {
   runningScore = runningScore + finalNumber;
   return runningScore;
+};
+
+// checkLeader
+var checkLeader = function (runningScoreOne, runningScoreTwo) {
+  if (runningScoreOne > runningScoreTwo) result = "Player 1 is leading!";
+  else if (runningScoreTwo > runningScoreOne) result = "Player 2 is leading";
+  else result = "scores are tied!";
+  return result;
 };
