@@ -60,7 +60,12 @@ var main = function (input) {
       playerOneNumberInTens,
       playerOneNumberInOnes
     );
-    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}. Press submit to roll Player 2's dice`;
+    playerOneRunningScore = updateRunningScore(
+      playerOneRunningScore,
+      playerOneFinalNumber
+    );
+    // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}. Press submit to roll Player 2's dice`;
+    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerOneFinalNumber}.<br>Your running score is ${playerOneRunningScore}.<br> Press submit to roll Player 2's dice`;
     gameState = "rollPlayerTwoDice";
   } else if (gameState == "rollPlayerTwoDice") {
     for (var i = 0; i < 2; i += 1) playerTwoDiceRolls[i] = rollDice();
@@ -80,11 +85,17 @@ var main = function (input) {
       playerTwoNumberInTens,
       playerTwoNumberInOnes
     );
-    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
-    gameState = "checkWinner";
-  } else if (gameState == "checkWinner") {
+    playerTwoRunningScore = updateRunningScore(
+      playerTwoRunningScore,
+      playerTwoFinalNumber
+    );
+    // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
+    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerTwoFinalNumber}.<br>Your running score is ${playerTwoRunningScore}.<br> Press submit once more to see the winner`;
+    gameState = "checkResult";
+  } else if (gameState == "checkResult") {
     finalResult = checkResult(playerOneFinalNumber, playerTwoFinalNumber);
-    myOutputValue = `Player 1's number is ${playerOneFinalNumber}<br>Player 2's final number is ${playerTwoFinalNumber}.<br>Result is ${finalResult}.`;
+    myOutputValue = `Player 1's number is ${playerOneFinalNumber}<br>Player 2's final number is ${playerTwoFinalNumber}.<br>Result is ${finalResult}. Press Submit again to restart`;
+    gameState = "rollPlayerOneDice";
   }
   return myOutputValue;
 };
@@ -134,4 +145,10 @@ var checkResult = function (playerOneNumber, playerTwoNumber) {
   else if (playerTwoNumber > playerOneNumber) result = "Player 2 wins";
   else result = "draw";
   return result;
+};
+
+// updateRunningScore
+var updateRunningScore = function (runningScore, finalNumber) {
+  runningScore = runningScore + finalNumber;
+  return runningScore;
 };
