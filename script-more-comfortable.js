@@ -21,13 +21,24 @@
 // Game state will change to compare the two Player's numbers
 // final output is to compare Player 1 and Player 2's final number to see whose one is bigger
 
+// Score
+// Keep score for each player. The score is the running sum of all numbers that player has generated so far. This means there is no permanent winner, only a temporary leader.
+// example, first run Player 1 41, Player 2 62, then the game needs to restart and take in the new numbers again and add them up. Then show who is the winner
+
+// need to define two global variables to store the running scores
+// after the returnFinalNumber function returns the final number, need to add it to the running score
+// checkResult compares running scores now instead of final number.
+// It will also output who is the current leader instead of a single winner
+
 var gameState = "rollPlayerOneDice";
 
 var playerOneDiceRolls = [];
 var playerOneFinalNumber;
+var playerOneRunningScore = 0;
 
 var playerTwoDiceRolls = [];
 var playerTwoFinalNumber;
+var playerTwoRunningScore = 0;
 
 var main = function (input) {
   var myOutputValue = "";
