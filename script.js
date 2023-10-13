@@ -69,6 +69,9 @@ var main = function (input) {
     );
     myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
     gameState = "checkWinner";
+  } else if (gameState == "checkWinner") {
+    finalResult = checkResult(playerOneFinalNumber, playerTwoFinalNumber);
+    myOutputValue = `Player 1's number is ${playerOneFinalNumber}<br>Player 2's final number is ${playerTwoFinalNumber}.<br>Result is ${finalResult}.`;
   }
   return myOutputValue;
 };
@@ -109,4 +112,13 @@ var returnFinalNumber = function (tensPositionNumber, onesPositionNumber) {
   concatenatedString = "" + tensPositionNumber + onesPositionNumber;
   convertedNumber = Number(concatenatedString);
   return convertedNumber;
+};
+
+// checkWinner
+var checkResult = function (playerOneNumber, playerTwoNumber) {
+  result = "";
+  if (playerOneNumber > playerTwoNumber) result = "Player 1 wins";
+  else if (playerTwoNumber > playerOneNumber) result = "Player 2 wins";
+  else result = "draw";
+  return result;
 };
