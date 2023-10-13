@@ -48,50 +48,60 @@ var main = function (input) {
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
     var diceNumberChosen = input;
-    var playerOneNumberInTens = returnNumberInTensPosition(
-      diceNumberChosen,
-      playerOneDiceRolls
-    );
-    var playerOneNumberInOnes = returnNumberInOnesPosition(
-      playerOneNumberInTens,
-      playerOneDiceRolls
-    );
-    playerOneFinalNumber = returnFinalNumber(
-      playerOneNumberInTens,
-      playerOneNumberInOnes
-    );
-    playerOneRunningScore = updateRunningScore(
-      playerOneRunningScore,
-      playerOneFinalNumber
-    );
-    // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}. Press submit to roll Player 2's dice`;
-    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerOneFinalNumber}.<br>Your running score is ${playerOneRunningScore}.<br> Press submit to roll Player 2's dice`;
-    gameState = "rollPlayerTwoDice";
+    // input validation
+    if (diceNumberChosen == 1 || diceNumberChosen == 2) {
+      var playerOneNumberInTens = returnNumberInTensPosition(
+        diceNumberChosen,
+        playerOneDiceRolls
+      );
+      var playerOneNumberInOnes = returnNumberInOnesPosition(
+        playerOneNumberInTens,
+        playerOneDiceRolls
+      );
+      playerOneFinalNumber = returnFinalNumber(
+        playerOneNumberInTens,
+        playerOneNumberInOnes
+      );
+      playerOneRunningScore = updateRunningScore(
+        playerOneRunningScore,
+        playerOneFinalNumber
+      );
+      // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerOneFinalNumber}. Press submit to roll Player 2's dice`;
+      myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerOneFinalNumber}.<br>Your running score is ${playerOneRunningScore}.<br> Press submit to roll Player 2's dice`;
+      gameState = "rollPlayerTwoDice";
+    } else {
+      myOutputValue = `Please enter a valid input of either 1 or 2 only. <br>You rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
+    }
   } else if (gameState == "rollPlayerTwoDice") {
     for (var i = 0; i < 2; i += 1) playerTwoDiceRolls[i] = rollDice();
     myOutputValue = `Player 2,<br>You rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     gameState = "askPlayerTwoChoice";
   } else if (gameState == "askPlayerTwoChoice") {
     var diceNumberChosen = input;
-    var playerTwoNumberInTens = returnNumberInTensPosition(
-      diceNumberChosen,
-      playerTwoDiceRolls
-    );
-    var playerTwoNumberInOnes = returnNumberInOnesPosition(
-      playerTwoNumberInTens,
-      playerTwoDiceRolls
-    );
-    playerTwoFinalNumber = returnFinalNumber(
-      playerTwoNumberInTens,
-      playerTwoNumberInOnes
-    );
-    playerTwoRunningScore = updateRunningScore(
-      playerTwoRunningScore,
-      playerTwoFinalNumber
-    );
-    // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
-    myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerTwoFinalNumber}.<br>Your running score is ${playerTwoRunningScore}.<br> Press submit once more to see the winner`;
-    gameState = "checkResult";
+    // input validation
+    if (diceNumberChosen == 1 || diceNumberChosen == 2) {
+      var playerTwoNumberInTens = returnNumberInTensPosition(
+        diceNumberChosen,
+        playerTwoDiceRolls
+      );
+      var playerTwoNumberInOnes = returnNumberInOnesPosition(
+        playerTwoNumberInTens,
+        playerTwoDiceRolls
+      );
+      playerTwoFinalNumber = returnFinalNumber(
+        playerTwoNumberInTens,
+        playerTwoNumberInOnes
+      );
+      playerTwoRunningScore = updateRunningScore(
+        playerTwoRunningScore,
+        playerTwoFinalNumber
+      );
+      // myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number is ${playerTwoFinalNumber}. Press submit once more to see the winner`;
+      myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerTwoFinalNumber}.<br>Your running score is ${playerTwoRunningScore}.<br> Press submit once more to see the winner`;
+      gameState = "checkResult";
+    } else {
+      myOutputValue = `Please enter a valid input of either 1 or 2 only.<br> You rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
+    }
   } else if (gameState == "checkResult") {
     finalResult = checkResult(playerOneFinalNumber, playerTwoFinalNumber);
     myOutputValue = `Player 1's number is ${playerOneFinalNumber}<br>Player 2's final number is ${playerTwoFinalNumber}.<br>Result is ${finalResult}. Press Submit again to restart`;
