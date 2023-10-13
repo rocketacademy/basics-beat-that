@@ -30,6 +30,13 @@
 // checkResult compares running scores now instead of final number.
 // It will also output who is the current leader instead of a single winner
 
+// Leaderboard
+// input is the running scores
+// program needs to compare the running scores
+// after comparing, need to manipulate the output value to have the higher one on top
+// return this
+// output will be the higher running score on top of the lower one
+
 // initialise the initial gameState
 var gameState = "rollPlayerOneDice";
 
@@ -118,7 +125,7 @@ var main = function (input) {
     leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
     myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}, and running score is ${playerOneRunningScore}.<br>
     Player 2's final number this round is ${playerTwoFinalNumber} and running score is ${playerTwoRunningScore}.<br>
-    Current Leader is is ${leader}. Press Submit again to reroll from Player 1`;
+    Current Leader is ${leader}. Press Submit again to reroll from Player 1`;
     gameState = "rollPlayerOneDice";
   }
   return myOutputValue;
@@ -181,8 +188,8 @@ var updateRunningScore = function (runningScore, finalNumber) {
 
 // checkLeader
 var checkLeader = function (runningScoreOne, runningScoreTwo) {
-  if (runningScoreOne > runningScoreTwo) result = "Player 1 is leading!";
-  else if (runningScoreTwo > runningScoreOne) result = "Player 2 is leading";
-  else result = "scores are tied!";
+  if (runningScoreOne > runningScoreTwo) result = "Player 1";
+  else if (runningScoreTwo > runningScoreOne) result = "Player 2";
+  else result = "none, scores are tied!";
   return result;
 };
