@@ -4,14 +4,17 @@ let currentNumberRolled,
   player1Number = 0,
   player2Number = 0,
   currentDiceOrder,
-  player1Score = 0,
-  player2Score = 0;
+  scoreTable = [0, 0],
+  scoreTableSorted = [0, 0],
+  playerIndexSortX = 1,
+  playerIndexSortY = 2;
 
 //Main Function
 let main = function (input, myOutputValue) {
   if (player1Number && player2Number) {
     evalutateWinner();
     scoreRecord();
+    leaderboard();
     resetGame();
   } else if (!player1Number && !currentNumberRolled) {
     currentNumberRolled = rollTwoDice();
@@ -37,7 +40,7 @@ let main = function (input, myOutputValue) {
   }
   myOutputValue =
     gameMessage +
-    `<br><br>Player 1 total:${player1Score}<br>Player 2 total:${player2Score}`;
+    `<br><br>Player ${playerIndexSortX} score: ${scoreTableSorted[0]}<br>Player ${playerIndexSortY} score: ${scoreTableSorted[1]}`;
   return myOutputValue;
 };
 
@@ -83,7 +86,26 @@ function semiResetGame() {
   currentNumberRolled = null;
 }
 
+//Records total score
 function scoreRecord() {
-  player1Score += player1Number;
-  player2Score += player2Number;
+  scoreTable[0] += player1Number;
+  scoreTable[1] += player2Number;
+}
+
+//Bubble Sort for 2 players only
+function leaderboard() {
+  if (scoreTable[0] < scoreTable[1]) {
+    scoreTableSorted[0] = scoreTable[1];
+    scoreTableSorted[1] = scoreTable[0];
+  } else {
+    scoreTableSorted[0] = scoreTable[0];
+    scoreTableSorted[1] = scoreTable[1];
+  }
+  if (scoreTable[1] == scoreTableSorted[0]) {
+    playerIndexSortX = 2;
+    playerIndexSortY = 1;
+  } else {
+    playerIndexSortX = 1;
+    playerIndexSortY = 2;
+  }
 }
