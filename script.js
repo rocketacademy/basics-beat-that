@@ -1,8 +1,8 @@
 //Declare Global Variables
 let currentNumberRolled,
   gameMessage,
-  player1Number,
-  player2Number,
+  player1Number = 0,
+  player2Number = 0,
   currentDiceOrder,
   player1Score = 0,
   player2Score = 0;
@@ -11,6 +11,7 @@ let currentNumberRolled,
 let main = function (input, myOutputValue) {
   if (player1Number && player2Number) {
     evalutateWinner();
+    scoreRecord();
     resetGame();
   } else if (!player1Number && !currentNumberRolled) {
     currentNumberRolled = rollTwoDice();
@@ -34,7 +35,9 @@ let main = function (input, myOutputValue) {
     } else
       gameMessage = `Invalid input.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first.`;
   }
-  myOutputValue = gameMessage;
+  myOutputValue =
+    gameMessage +
+    `<br><br>Player 1 total:${player1Score}<br>Player 2 total:${player2Score}`;
   return myOutputValue;
 };
 
@@ -80,4 +83,7 @@ function semiResetGame() {
   currentNumberRolled = null;
 }
 
-function scoreRecord() {}
+function scoreRecord() {
+  player1Score += player1Number;
+  player2Score += player2Number;
+}
