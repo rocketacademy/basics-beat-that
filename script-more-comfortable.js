@@ -55,7 +55,7 @@ var main = function (input) {
         playerOneDiceRolls
       );
       var playerOneNumberInOnes = returnNumberInOnesPosition(
-        playerOneNumberInTens,
+        diceNumberChosen,
         playerOneDiceRolls
       );
       playerOneFinalNumber = returnFinalNumber(
@@ -85,7 +85,7 @@ var main = function (input) {
         playerTwoDiceRolls
       );
       var playerTwoNumberInOnes = returnNumberInOnesPosition(
-        playerTwoNumberInTens,
+        diceNumberChosen,
         playerTwoDiceRolls
       );
       playerTwoFinalNumber = returnFinalNumber(
@@ -130,16 +130,31 @@ var returnNumberInTensPosition = function (
   return numberInTensPosition;
 };
 
-// Return number in ones position
+// // Return number in ones position
+// var returnNumberInOnesPosition = function (
+//   numberInTensPosition,
+//   playerDiceRollArray
+// ) {
+//   var numberInOnesPosition = playerDiceRollArray.find(function (
+//     elementInArray
+//   ) {
+//     return elementInArray != numberInTensPosition;
+//   });
+//   return numberInOnesPosition;
+// };
+
 var returnNumberInOnesPosition = function (
-  numberInTensPosition,
+  selectedDiceNumber,
   playerDiceRollArray
 ) {
-  var numberInOnesPosition = playerDiceRollArray.find(function (
-    elementInArray
-  ) {
-    return elementInArray != numberInTensPosition;
-  });
+  var indexNumberInTensPosition = selectedDiceNumber - 1;
+  var indexNumberInOnesPosition;
+  if (indexNumberInTensPosition == 0) {
+    indexNumberInOnesPosition = 1;
+  } else {
+    indexNumberInOnesPosition = 0;
+  }
+  numberInOnesPosition = playerDiceRollArray[indexNumberInOnesPosition];
   return numberInOnesPosition;
 };
 
