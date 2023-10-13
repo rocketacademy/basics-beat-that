@@ -123,9 +123,14 @@ var main = function (input) {
   } else if (gameState == "checkResult") {
     // function to check who is the leader in terms of running score
     leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
-    myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}, and running score is ${playerOneRunningScore}.<br>
-    Player 2's final number this round is ${playerTwoFinalNumber} and running score is ${playerTwoRunningScore}.<br>
-    Current Leader is ${leader}. Press Submit again to reroll from Player 1`;
+    // function to display leaderboard
+    leaderboard = displayLeaderboard(
+      playerOneRunningScore,
+      playerTwoRunningScore
+    );
+    myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}.<br>
+    Player 2's final number this round is ${playerTwoFinalNumber}<br>
+    Current Leader is ${leader}.<br><br>${leaderboard}<br><br>Press Submit again to reroll from Player 1`;
     gameState = "rollPlayerOneDice";
   }
   return myOutputValue;
@@ -188,8 +193,25 @@ var updateRunningScore = function (runningScore, finalNumber) {
 
 // checkLeader
 var checkLeader = function (runningScoreOne, runningScoreTwo) {
+  var result = "";
   if (runningScoreOne > runningScoreTwo) result = "Player 1";
   else if (runningScoreTwo > runningScoreOne) result = "Player 2";
   else result = "none, scores are tied!";
   return result;
+};
+
+// displayLeaderboard
+var displayLeaderboard = function (runningScoreOne, runningScoreTwo) {
+  var leaderboard = "";
+  if (runningScoreOne > runningScoreTwo) {
+    leaderboard = `1st Place. Player 1 --- ${runningScoreOne}<br>
+    2nd Place. Player 2 --- ${runningScoreTwo}`;
+  } else if (runningScoreTwo > runningScoreOne) {
+    leaderboard = `1st Place. Player 2 --- ${runningScoreTwo}<br>
+    2nd Place. Player 1 --- ${runningScoreOne}`;
+  } else {
+    leaderboard = `Tied. Player 1 --- ${runningScoreOne}<br>
+    Tied. --- ${runningScoreTwo}`;
+  }
+  return leaderboard;
 };
