@@ -66,6 +66,7 @@ function evalutateWinner() {
           : player1Number == player2Number
           ? `It is a draw with both players getting ${player1Number}.`
           : `Error with evaluating winner.`;
+      break;
     case "L":
       gameMessage =
         player1Number < player2Number
@@ -75,6 +76,7 @@ function evalutateWinner() {
           : player1Number == player2Number
           ? `It is a draw with both players getting ${player1Number}.`
           : `Error with evaluating winner.`;
+      break;
   }
 }
 
