@@ -3,7 +3,6 @@ let currentNumberRolled,
   gameMessage,
   player1Number = 0,
   player2Number = 0,
-  currentDiceOrder,
   scoreTable = [0, 0],
   scoreTableSorted = [0, 0],
   playerIndexSortX = 1,
@@ -28,9 +27,10 @@ let main = function (input, myOutputValue) {
         gameMessage = "Invalid input, choose H or L for game mode.";
     }
   } else if (gameMode && !player1Number) {
-    player1Logic(input);
+    player1Logic();
+    semiResetGame();
   } else if (gameMode && !player2Number) {
-    player2Logic(input);
+    player2Logic();
   }
   myOutputValue =
     gameMessage +
@@ -38,19 +38,37 @@ let main = function (input, myOutputValue) {
   return myOutputValue;
 };
 
-//Generate 2 numbers from dice roll
-let rollTwoDice = () => [
-  Math.floor(Math.random() * 6) + 1,
-  Math.floor(Math.random() * 6) + 1,
-];
+//Reset game state for next player
+const semiResetGame = () => (currentNumberRolled = null);
 
-//Concatenate the rolls to form new number
-function combineDiceNumber() {
-  switch (currentDiceOrder) {
-    case 1:
-      return Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`);
-    case 2:
-      return Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
+//Reset entire game state
+const resetGame = () => {
+  player1Number = null;
+  player2Number = null;
+  currentNumberRolled = null;
+};
+
+//Records total score
+function scoreRecord() {
+  scoreTable[0] += player1Number;
+  scoreTable[1] += player2Number;
+}
+
+//Bubble Sort for 2 players only
+function leaderboard() {
+  if (scoreTable[0] < scoreTable[1]) {
+    scoreTableSorted[0] = scoreTable[1];
+    scoreTableSorted[1] = scoreTable[0];
+  } else {
+    scoreTableSorted[0] = scoreTable[0];
+    scoreTableSorted[1] = scoreTable[1];
+  }
+  if (scoreTable[1] == scoreTableSorted[0]) {
+    playerIndexSortX = 2;
+    playerIndexSortY = 1;
+  } else {
+    playerIndexSortX = 1;
+    playerIndexSortY = 2;
   }
 }
 
@@ -77,81 +95,43 @@ function evalutateWinner() {
           ? `It is a draw with both players getting ${player1Number}.`
           : `Error with evaluating winner.`;
       break;
-  }
-}
-
-//Reset entire game state
-function resetGame() {
-  player1Number = null;
-  player2Number = null;
-  currentDiceOrder = null;
-  currentNumberRolled = null;
-}
-
-//Reset game state for next player
-function semiResetGame() {
-  currentDiceOrder = null;
-  currentNumberRolled = null;
-}
-
-//Records total score
-function scoreRecord() {
-  scoreTable[0] += player1Number;
-  scoreTable[1] += player2Number;
-}
-
-//Bubble Sort for 2 players only
-function leaderboard() {
-  if (scoreTable[0] < scoreTable[1]) {
-    scoreTableSorted[0] = scoreTable[1];
-    scoreTableSorted[1] = scoreTable[0];
-  } else {
-    scoreTableSorted[0] = scoreTable[0];
-    scoreTableSorted[1] = scoreTable[1];
-  }
-  if (scoreTable[1] == scoreTableSorted[0]) {
-    playerIndexSortX = 2;
-    playerIndexSortY = 1;
-  } else {
-    playerIndexSortX = 1;
-    playerIndexSortY = 2;
+    default:
+      console.log("error in evaluatedWinner()");
   }
 }
 
 //Plays game for player 1
-function player1Logic(input) {
-  if (!currentNumberRolled) {
-    currentNumberRolled = rollTwoDice();
-    gameMessage = `Welcome Player 1.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first`;
-  } else if (currentNumberRolled) {
-    switch (input) {
-      case "1":
-      case "2":
-        currentDiceOrder = Number(input);
-        player1Number = combineDiceNumber();
-        gameMessage = `Player 1, you chose Dice ${currentDiceOrder} first.<br>Your number is ${player1Number}.<br>It is now Player 2's turn.`;
-        semiResetGame();
-        break;
-      default:
-        gameMessage = `Invalid input.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first.`;
-    }
-  }
+function player1Logic() {
+  currentNumberRolled = rollTwoDice();
+  player1Number = combineDiceNumber();
+  gameMessage = `Welcome Player 1.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Your number is ${player1Number}.<br>It is now Player 2's turn.`;
 }
+
 //Plays game for player 2
-function player2Logic(input) {
-  if (!currentNumberRolled) {
-    currentNumberRolled = rollTwoDice();
-    gameMessage = `Welcome Player 2.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first.`;
-  } else if (currentNumberRolled) {
-    switch (input) {
-      case "1":
-      case "2":
-        currentDiceOrder = Number(input);
-        player2Number = combineDiceNumber();
-        gameMessage = `Player 2, you chose Dice ${currentDiceOrder} first.<br>Your number is ${player2Number}. Press sumbmit to reveal winner.`;
-        break;
-      default:
-        gameMessage = `Invalid input.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Choose the order of the dice, type "1" for Dice 1 first and type "2" for Dice 2 first.`;
-    }
+function player2Logic() {
+  currentNumberRolled = rollTwoDice();
+  player2Number = combineDiceNumber();
+  gameMessage = `Welcome Player 2.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Your number is ${player2Number}.<br>Press sumbmit to reveal winner.`;
+}
+
+//Generate 2 numbers from dice roll
+let rollTwoDice = () => [
+  Math.floor(Math.random() * 6) + 1,
+  Math.floor(Math.random() * 6) + 1,
+];
+
+//Concatenate the rolls to form new number
+function combineDiceNumber() {
+  switch (gameMode) {
+    case "H":
+      return currentNumberRolled[0] > currentNumberRolled[1]
+        ? Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`)
+        : Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
+    case "L":
+      return currentNumberRolled[0] < currentNumberRolled[1]
+        ? Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`)
+        : Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
+    default:
+      console.log("error in combineDiceNumber()");
   }
 }
