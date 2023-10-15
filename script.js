@@ -1,5 +1,5 @@
 //Declare Global Variables
-let currentNumberRolled,
+let currentNumberRolled = [],
   gameMessage,
   player1Number = 0,
   player2Number = 0,
@@ -7,7 +7,8 @@ let currentNumberRolled,
   scoreTableSorted = [0, 0],
   playerIndexSortX = 1,
   playerIndexSortY = 2,
-  gameMode;
+  gameMode,
+  numberOfDice;
 
 //Main Function
 let main = function (input, myOutputValue) {
@@ -21,11 +22,18 @@ let main = function (input, myOutputValue) {
       case "H":
       case "L":
         gameMode = input;
-        gameMessage = `${gameMode} mode chosen`;
+        gameMessage = `${gameMode} mode chosen. Type in the number of dice (interger) to roll`;
         break;
       default:
         gameMessage = "Invalid input, choose H or L for game mode.";
     }
+  } else if (!numberOfDice) {
+    if (Number.isInteger(Number(input)) && Number(input) > 0) {
+      numberOfDice = input;
+      gameMessage = `${numberOfDice} dice selected, press submit to play.`;
+    } else
+      gameMessage =
+        "Invalid input, type in the number of dice (interger) to roll";
   } else if (gameMode && !player1Number) {
     player1Logic();
     semiResetGame();
@@ -46,6 +54,7 @@ const resetGame = () => {
   player1Number = null;
   player2Number = null;
   currentNumberRolled = null;
+  numberOfDice = null;
 };
 
 //Records total score
@@ -102,36 +111,61 @@ function evalutateWinner() {
 
 //Plays game for player 1
 function player1Logic() {
-  currentNumberRolled = rollTwoDice();
+  currentNumberRolled = rollDice();
+  const displayRoll = "" + currentNumberRolled;
+  sortDiceNumber();
   player1Number = combineDiceNumber();
-  gameMessage = `Welcome Player 1.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Your number is ${player1Number}.<br>It is now Player 2's turn.`;
+  gameMessage = `Welcome Player 1.<br>You rolled: ${displayRoll}<br>Your number is ${player1Number}.<br><br>It is now Player 2's turn.`;
 }
 
 //Plays game for player 2
 function player2Logic() {
-  currentNumberRolled = rollTwoDice();
+  currentNumberRolled = rollDice();
+  const displayRoll = "" + currentNumberRolled;
+  sortDiceNumber();
   player2Number = combineDiceNumber();
-  gameMessage = `Welcome Player 2.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Your number is ${player2Number}.<br>Press sumbmit to reveal winner.`;
+  gameMessage = `Welcome Player 2.<br>You rolled: ${displayRoll}<br>Your number is ${player2Number}.<br><br>Press sumbmit to reveal winner.`;
 }
 
-//Generate 2 numbers from dice roll
-let rollTwoDice = () => [
-  Math.floor(Math.random() * 6) + 1,
-  Math.floor(Math.random() * 6) + 1,
-];
+//Generate X numbers from dice roll
+function rollDice() {
+  let outputArray = [];
+  for (let i = 0; i < numberOfDice; i++) {
+    outputArray.push(Math.floor(Math.random() * 6) + 1);
+  }
+  return outputArray;
+}
 
-//Concatenate the rolls to form new number
+//Concatenate the rolls to form new number with insertion sort algorithm
 function combineDiceNumber() {
+  let outputNumber = "";
+  for (let i = 0; i < currentNumberRolled.length; i++) {
+    outputNumber += currentNumberRolled[i];
+  }
+  return Number(outputNumber);
+}
+
+//Insertion sort algorithm
+function sortDiceNumber() {
+  let i, j;
   switch (gameMode) {
     case "H":
-      return currentNumberRolled[0] > currentNumberRolled[1]
-        ? Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`)
-        : Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
+      for (i = 1; i < currentNumberRolled.length; i++) {
+        let holdIndex = currentNumberRolled[i];
+        for (j = i - 1; j >= 0 && currentNumberRolled[j] < holdIndex; j--) {
+          currentNumberRolled[j + 1] = currentNumberRolled[j];
+        }
+        currentNumberRolled[j + 1] = holdIndex;
+      }
+      break;
     case "L":
-      return currentNumberRolled[0] < currentNumberRolled[1]
-        ? Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`)
-        : Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
-    default:
-      console.log("error in combineDiceNumber()");
+      for (i = 1; i < currentNumberRolled.length; i++) {
+        let holdIndex = currentNumberRolled[i];
+        for (j = i - 1; j >= 0 && currentNumberRolled[j] > holdIndex; j--) {
+          currentNumberRolled[j + 1] = currentNumberRolled[j];
+        }
+        currentNumberRolled[j + 1] = holdIndex;
+      }
+      break;
   }
 }
