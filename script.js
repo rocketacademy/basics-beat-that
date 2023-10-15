@@ -96,7 +96,7 @@ function evalutateWinner() {
           : `Error with evaluating winner.`;
       break;
     default:
-      console.log("error in evaluatedWinner()");
+      console.log("error in evaluateWinner()");
   }
 }
 
