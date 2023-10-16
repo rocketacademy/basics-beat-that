@@ -1,157 +1,69 @@
 //Declare Global Variables
 let currentNumberRolled = [],
   gameMessage,
-  player1Number = 0,
-  player2Number = 0,
-  scoreTable = [0, 0],
-  scoreTableSorted = [0, 0],
-  playerIndexSortX = 1,
-  playerIndexSortY = 2,
+  scoreTable = [],
+  scoreRecord = [],
   gameMode,
-  numberOfDice;
+  numberOfDice,
+  numberOfPlayers,
+  playerCounter = 0,
+  currentNumber;
 
 //Main Function
 let main = function (input, myOutputValue) {
-  if (player1Number && player2Number) {
-    evalutateWinner();
-    scoreRecord();
-    leaderboard();
-    resetGame();
+  if (numberOfDice && numberOfPlayers && gameMode) {
+    if (playerCounter < numberOfPlayers) {
+      playerLogic();
+      recordScore();
+      semiResetGame();
+      playerCounter++;
+    } else {
+      gameMessage = `Game Ended.`;
+      resetGame();
+    }
   } else if (!gameMode) {
     switch (input) {
       case "H":
       case "L":
         gameMode = input;
-        gameMessage = `${gameMode} mode chosen. Type in the number of dice (interger) to roll`;
+        gameMessage = `${gameMode} mode chosen. Type in the number of dice (integer).`;
         break;
       default:
         gameMessage = "Invalid input, choose H or L for game mode.";
     }
   } else if (!numberOfDice) {
     if (Number.isInteger(Number(input)) && Number(input) > 0) {
-      numberOfDice = input;
-      gameMessage = `${numberOfDice} dice selected, press submit to play.`;
+      numberOfDice = Number(input);
+      gameMessage = `${numberOfDice} dice selected, Type in the number of players (integer).`;
+    } else gameMessage = "Invalid input, type in the number of dice (integer).";
+  } else if (!numberOfPlayers) {
+    if (Number.isInteger(Number(input)) && Number(input) > 0) {
+      numberOfPlayers = Number(input);
+      scoreTable = Array(numberOfPlayers).fill(0);
+      scoreRecord = Array(numberOfPlayers).fill(0);
+      gameMessage = `${numberOfPlayers} players selected, press submit to play.`;
     } else
-      gameMessage =
-        "Invalid input, type in the number of dice (interger) to roll";
-  } else if (gameMode && !player1Number) {
-    player1Logic();
-    semiResetGame();
-  } else if (gameMode && !player2Number) {
-    player2Logic();
-  }
-  myOutputValue =
-    gameMessage +
-    `<br><br>Player ${playerIndexSortX} score: ${scoreTableSorted[0]}<br>Player ${playerIndexSortY} score: ${scoreTableSorted[1]}`;
+      gameMessage = "Invalid input, type in the number of players (integer).";
+  } else gameMessage = "Error in main function.";
+  myOutputValue = gameMessage + `<br><br>${scoreRecord}`;
   return myOutputValue;
 };
 
-//Reset game state for next player
-const semiResetGame = () => (currentNumberRolled = null);
-
-//Reset entire game state
-const resetGame = () => {
-  player1Number = null;
-  player2Number = null;
-  currentNumberRolled = null;
-  numberOfDice = null;
-};
-
-//Records total score
-function scoreRecord() {
-  scoreTable[0] += player1Number;
-  scoreTable[1] += player2Number;
-}
-
-//Bubble Sort for 2 players only
-function leaderboard() {
-  if (scoreTable[0] < scoreTable[1]) {
-    scoreTableSorted[0] = scoreTable[1];
-    scoreTableSorted[1] = scoreTable[0];
-  } else {
-    scoreTableSorted[0] = scoreTable[0];
-    scoreTableSorted[1] = scoreTable[1];
-  }
-  if (scoreTable[1] == scoreTableSorted[0]) {
-    playerIndexSortX = 2;
-    playerIndexSortY = 1;
-  } else {
-    playerIndexSortX = 1;
-    playerIndexSortY = 2;
-  }
-}
-
-//Compare both numbers to determine winner
-function evalutateWinner() {
-  switch (gameMode) {
-    case "H":
-      gameMessage =
-        player1Number > player2Number
-          ? `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`
-          : player1Number < player2Number
-          ? `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`
-          : player1Number == player2Number
-          ? `It is a draw with both players getting ${player1Number}.`
-          : `Error with evaluating winner.`;
-      break;
-    case "L":
-      gameMessage =
-        player1Number < player2Number
-          ? `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`
-          : player1Number > player2Number
-          ? `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`
-          : player1Number == player2Number
-          ? `It is a draw with both players getting ${player1Number}.`
-          : `Error with evaluating winner.`;
-      break;
-    default:
-      console.log("error in evaluateWinner()");
-  }
-}
-
-//Plays game for player 1
-function player1Logic() {
+function playerLogic() {
   currentNumberRolled = rollDice();
-  const displayRoll = "" + currentNumberRolled;
+  let displayRoll = `${currentNumberRolled}`;
   sortDiceNumber();
-  player1Number = combineDiceNumber();
-  gameMessage = `Welcome Player 1.<br>You rolled: ${displayRoll}<br>Your number is ${player1Number}.<br><br>It is now Player 2's turn.`;
-}
-
-//Plays game for player 2
-function player2Logic() {
-  currentNumberRolled = rollDice();
-  const displayRoll = "" + currentNumberRolled;
-  sortDiceNumber();
-  player2Number = combineDiceNumber();
-  gameMessage = `Welcome Player 2.<br>You rolled: ${displayRoll}<br>Your number is ${player2Number}.<br><br>Press sumbmit to reveal winner.`;
-}
-
-//Generate X numbers from dice roll
-function rollDice() {
-  let outputArray = [];
-  for (let i = 0; i < numberOfDice; i++) {
-    outputArray.push(Math.floor(Math.random() * 6) + 1);
-  }
-  return outputArray;
-}
-
-//Concatenate the rolls to form new number with insertion sort algorithm
-function combineDiceNumber() {
-  let outputNumber = "";
-  for (let i = 0; i < currentNumberRolled.length; i++) {
-    outputNumber += currentNumberRolled[i];
-  }
-  return Number(outputNumber);
+  currentNumber = combineDiceNumber();
+  gameMessage = `You rolled: ${displayRoll}<br>Your number is ${currentNumber}.`;
 }
 
 //Insertion sort algorithm
 function sortDiceNumber() {
-  let i, j;
+  let i, j, holdIndex;
   switch (gameMode) {
     case "H":
       for (i = 1; i < currentNumberRolled.length; i++) {
-        let holdIndex = currentNumberRolled[i];
+        holdIndex = currentNumberRolled[i];
         for (j = i - 1; j >= 0 && currentNumberRolled[j] < holdIndex; j--) {
           currentNumberRolled[j + 1] = currentNumberRolled[j];
         }
@@ -160,7 +72,7 @@ function sortDiceNumber() {
       break;
     case "L":
       for (i = 1; i < currentNumberRolled.length; i++) {
-        let holdIndex = currentNumberRolled[i];
+        holdIndex = currentNumberRolled[i];
         for (j = i - 1; j >= 0 && currentNumberRolled[j] > holdIndex; j--) {
           currentNumberRolled[j + 1] = currentNumberRolled[j];
         }
@@ -169,3 +81,95 @@ function sortDiceNumber() {
       break;
   }
 }
+
+//Concatenate the rolls to form new number
+const combineDiceNumber = (concatenatedNumber = "") => {
+  for (let i = 0; i < currentNumberRolled.length; i++) {
+    concatenatedNumber += currentNumberRolled[i];
+  }
+  return Number(concatenatedNumber);
+};
+
+//Generate X numbers from dice roll
+const rollDice = (outputArray = []) => {
+  for (let i = 0; i < numberOfDice; i++) {
+    outputArray.push(Math.floor(Math.random() * 6) + 1);
+  }
+  return outputArray;
+};
+
+//Generates score table
+const recordScore = () => {
+  scoreTable[playerCounter] += currentNumber;
+  scoreRecord[playerCounter] += scoreTable[playerCounter];
+};
+
+//Reset game state for next player
+const semiResetGame = () => {
+  currentNumberRolled = null;
+  currentNumber = null;
+};
+
+//Reset entire game state
+const resetGame = () => {
+  currentNumberRolled = null;
+  currentNumber = null;
+  numberOfDice = null;
+  playerCounter = 0;
+  for (let i = 0; i < scoreTable.length; i++) {
+    scoreTable[i] = 0;
+  }
+};
+
+// //Compare both numbers to determine winner
+// function evalutateWinner() {
+//   switch (gameMode) {
+//     case "H":
+//       gameMessage =
+//         player1Number > player2Number
+//           ? `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`
+//           : player1Number < player2Number
+//           ? `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`
+//           : player1Number == player2Number
+//           ? `It is a draw with both players getting ${player1Number}.`
+//           : `Error with evaluating winner.`;
+//       break;
+//     case "L":
+//       gameMessage =
+//         player1Number < player2Number
+//           ? `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`
+//           : player1Number > player2Number
+//           ? `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`
+//           : player1Number == player2Number
+//           ? `It is a draw with both players getting ${player1Number}.`
+//           : `Error with evaluating winner.`;
+//       break;
+//     default:
+//       console.log("error in evaluateWinner()");
+//   }
+// }
+
+// //Records total score
+// function scoreRecord() {
+//   scoreTable[0] += player1Number;
+//   scoreTable[1] += player2Number;
+// }
+
+// //Bubble Sort for 2 players only
+// function leaderboard() {
+//   if (scoreTable[0] < scoreTable[1]) {
+//     scoreTableSorted[0] = scoreTable[1];
+//     scoreTableSorted[1] = scoreTable[0];
+//   } else {
+//     scoreTableSorted[0] = scoreTable[0];
+//     scoreTableSorted[1] = scoreTable[1];
+//   }
+//   if (scoreTable[1] == scoreTableSorted[0]) {
+//     playerIndexSortX = 2;
+//     playerIndexSortY = 1;
+//   } else {
+//     playerIndexSortX = 1;
+//     playerIndexSortY = 2;
+//   }
+//   return `<br><br>Player ${playerIndexSortX} score: ${scoreTableSorted[0]}<br>Player ${playerIndexSortY} score: ${scoreTableSorted[1]}`;
+// }
