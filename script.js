@@ -10,14 +10,14 @@ let gameMode,
   playerCounter = 0;
 
 //Main Function
-let main = function (input, myOutputValue) {
+function main(input, myOutputValue) {
   if (numberOfDice && numberOfPlayers && gameMode) {
     if (playerCounter < numberOfPlayers) {
       playerRound();
       semiResetGame();
       playerCounter++;
     } else {
-      gameMessage = `Game Ended.<br>${winEvaluation()}`;
+      gameMessage = `Game Ended.<br>${winEvaluate()}`;
       resetGame();
     }
   } else if (!gameMode) {
@@ -31,23 +31,23 @@ let main = function (input, myOutputValue) {
         gameMessage = "Invalid input, choose H or L for game mode.";
     }
   } else if (!numberOfDice) {
-    if (Number.isInteger(Number(input)) && Number(input) > 0) {
-      numberOfDice = Number(input);
-      gameMessage = `${numberOfDice} dice selected, type in the number of players (integer).`;
-    } else gameMessage = "Invalid input, type in the number of dice (integer).";
+    Number.isInteger(Number(input)) && Number(input) > 0
+      ? ((numberOfDice = Number(input)),
+        (gameMessage = `${numberOfDice} dice selected, type in the number of players (integer).`))
+      : (gameMessage = "Invalid input, type in the number of dice (integer).");
   } else if (!numberOfPlayers) {
-    if (Number.isInteger(Number(input)) && Number(input) > 0) {
-      numberOfPlayers = Number(input);
-      scoreTable = Array(numberOfPlayers).fill(0);
-      scoreRecord = Array(numberOfPlayers).fill(0);
-      gameMessage = `${numberOfPlayers} players selected, press submit to play.`;
-    } else
-      gameMessage = "Invalid input, type in the number of players (integer).";
+    Number.isInteger(Number(input)) && Number(input) > 0
+      ? ((numberOfPlayers = Number(input)),
+        (scoreTable = Array(numberOfPlayers).fill(0)),
+        (scoreRecord = Array(numberOfPlayers).fill(0)),
+        (gameMessage = `${numberOfPlayers} players selected, press submit to play.`))
+      : (gameMessage =
+          "Invalid input, type in the number of players (integer).");
   } else gameMessage = "Error in main function.";
   sortLeaderboard();
   myOutputValue = gameMessage + `<br><br>${displaySortedLeaderboard()}`;
   return myOutputValue;
-};
+}
 
 //Generate a number for player and record score
 function playerRound() {
@@ -135,8 +135,8 @@ function sortLeaderboard() {
           scoreRecordSorted[j + 1] = scoreRecordSorted[j];
         }
         scoreRecordSorted[j + 1] = holdIndex;
-        break;
       }
+      break;
   }
 }
 
@@ -154,29 +154,29 @@ function winEvaluation() {
   }
 }
 
-// //Find max/min value and index of it
-// function winEvaluate() {
-//   switch (gameMode) {
-//     case "H":
-//       let maxIndex = 0;
-//       for (let i = 1; i < scoreTable.length; i++) {
-//         if (scoreTable[i] > scoreRecord[maxIndex]) {
-//           maxIndex = i;
-//         }
-//       }
-//       let maxValue = scoreRecord[maxIndex];
-//       return `Player ${maxIndex + 1} won with ${maxValue}.`;
-//     case "L":
-//       let minIndex = 0;
-//       for (let i = 1; i < scoreTable.length; i++) {
-//         if (scoreTable[i] < scoreRecord[minIndex]) {
-//           minIndex = i;
-//         }
-//       }
-//       let minValue = scoreRecord[minIndex];
-//       return `Player ${minIndex + 1} won with ${minValue}.`;
-//   }
-// }
+//Find max/min value and index of it
+function winEvaluate() {
+  switch (gameMode) {
+    case "H":
+      let maxIndex = 0;
+      for (let i = 1; i < scoreTable.length; i++) {
+        if (scoreTable[i] > scoreRecord[maxIndex]) {
+          maxIndex = i;
+        }
+      }
+      let maxValue = scoreRecord[maxIndex];
+      return `Player ${maxIndex + 1} won with ${maxValue}.`;
+    case "L":
+      let minIndex = 0;
+      for (let i = 1; i < scoreTable.length; i++) {
+        if (scoreTable[i] < scoreRecord[minIndex]) {
+          minIndex = i;
+        }
+      }
+      let minValue = scoreRecord[minIndex];
+      return `Player ${minIndex + 1} won with ${minValue}.`;
+  }
+}
 
 //Reset game state for next player
 const semiResetGame = () => (currentNumberRolled = null);
@@ -192,9 +192,9 @@ function resetGame() {
 }
 
 //Fill array function
-// function fillScoreArrays() {
-//   for (let i = 0; i < numberOfPlayers; i++) {
-//     scoreTable.push(0);
-//     scoreRecord.push(0);
-//   }
-// }
+function fillScoreArrays() {
+  for (let i = 0; i < numberOfPlayers; i++) {
+    scoreTable.push(0);
+    scoreRecord.push(0);
+  }
+}
