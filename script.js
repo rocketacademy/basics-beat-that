@@ -17,7 +17,7 @@ function main(input, myOutputValue) {
       semiResetGame();
       playerCounter++;
     } else {
-      gameMessage = `Game Ended.<br>${winEvaluate()}`;
+      gameMessage = `Game Ended.<br>${winEvaluation()}`;
       resetGame();
     }
   } else if (!gameMode) {
@@ -25,7 +25,7 @@ function main(input, myOutputValue) {
       case "H":
       case "L":
         gameMode = input;
-        gameMessage = `${gameMode} mode chosen. Type in the number of dice (integer).`;
+        gameMessage = `${gameMode} mode chosen. Enter the number of dice (integer).`;
         break;
       default:
         gameMessage = "Invalid input, choose H or L for game mode.";
@@ -33,16 +33,15 @@ function main(input, myOutputValue) {
   } else if (!numberOfDice) {
     Number.isInteger(Number(input)) && Number(input) > 0
       ? ((numberOfDice = Number(input)),
-        (gameMessage = `${numberOfDice} dice selected, type in the number of players (integer).`))
-      : (gameMessage = "Invalid input, type in the number of dice (integer).");
+        (gameMessage = `${numberOfDice} dice selected, enter the number of players (integer).`))
+      : (gameMessage = "Invalid input, enter the number of dice (integer).");
   } else if (!numberOfPlayers) {
     Number.isInteger(Number(input)) && Number(input) > 0
       ? ((numberOfPlayers = Number(input)),
-        (scoreTable = Array(numberOfPlayers).fill(0)),
-        (scoreRecord = Array(numberOfPlayers).fill(0)),
-        (gameMessage = `${numberOfPlayers} players selected, press submit to play.`))
-      : (gameMessage =
-          "Invalid input, type in the number of players (integer).");
+        (scoreTable = fillArrays(numberOfPlayers)),
+        ((scoreRecord = fillArrays(numberOfPlayers)),
+        (gameMessage = `${numberOfPlayers} players selected, press submit to play.`)))
+      : (gameMessage = "Invalid input, enter the number of players (integer).");
   } else gameMessage = "Error in main function.";
   sortLeaderboard();
   myOutputValue = gameMessage + `<br><br>${displaySortedLeaderboard()}`;
@@ -51,7 +50,7 @@ function main(input, myOutputValue) {
 
 //Generate a number for player and record score
 function playerRound() {
-  currentNumberRolled = rollDice();
+  currentNumberRolled = rollDice(numberOfDice);
   let displayRoll = [...currentNumberRolled];
   sortDiceNumber();
   let currentNumber = combineDiceNumber();
@@ -63,9 +62,9 @@ function playerRound() {
 }
 
 //Generate rolls from number of dice
-function rollDice() {
+function rollDice(x) {
   let outputArray = [];
-  for (let i = 0; i < numberOfDice; i++) {
+  for (let i = 0; i < x; i++) {
     outputArray.push(Math.floor(Math.random() * 6) + 1);
   }
   return outputArray;
@@ -107,7 +106,7 @@ function combineDiceNumber() {
 
 //Generate leaderboard from highest to lowest
 function displaySortedLeaderboard() {
-  record = "";
+  let record = "";
   for (let [player, score] of scoreRecordSorted) {
     record += `Player ${Number(player) + 1}: ${score}<br>`;
   }
@@ -140,43 +139,43 @@ function sortLeaderboard() {
   }
 }
 
-//Determine winner
+//Find max/min value and index of it
 function winEvaluation() {
   switch (gameMode) {
     case "H":
       let maxValue = Math.max(...scoreTable);
       let maxIndex = scoreTable.indexOf(maxValue);
-      return `Player ${maxIndex + 1} won with ${maxValue}.`;
+      return `Player ${maxIndex + 1} won this round with ${maxValue}.`;
     case "L":
       let minValue = Math.min(...scoreTable);
-      let minIndex = scoreTable.indexOf(maxValue);
-      return `Player ${minIndex + 1} won with ${minValue}.`;
+      let minIndex = scoreTable.indexOf(minValue);
+      return `Player ${minIndex + 1} won this round with ${minValue}.`;
   }
 }
 
-//Find max/min value and index of it
-function winEvaluate() {
-  switch (gameMode) {
-    case "H":
-      let maxIndex = 0;
-      for (let i = 1; i < scoreTable.length; i++) {
-        if (scoreTable[i] > scoreRecord[maxIndex]) {
-          maxIndex = i;
-        }
-      }
-      let maxValue = scoreRecord[maxIndex];
-      return `Player ${maxIndex + 1} won with ${maxValue}.`;
-    case "L":
-      let minIndex = 0;
-      for (let i = 1; i < scoreTable.length; i++) {
-        if (scoreTable[i] < scoreRecord[minIndex]) {
-          minIndex = i;
-        }
-      }
-      let minValue = scoreRecord[minIndex];
-      return `Player ${minIndex + 1} won with ${minValue}.`;
-  }
-}
+// //Find max/min value and index of it
+// function winEvaluate() {
+//   switch (gameMode) {
+//     case "H":
+//       let maxIndex = 0;
+//       for (let i = 1; i < scoreTable.length; i++) {
+//         if (scoreTable[i] > scoreTable[maxIndex]) {
+//           maxIndex = i;
+//         }
+//       }
+//       let maxValue = scoreTable[maxIndex];
+//       return `Player ${maxIndex + 1} won this round with ${maxValue}.`;
+//     case "L":
+//       let minIndex = 0;
+//       for (let i = 1; i < scoreTable.length; i++) {
+//         if (scoreTable[i] < scoreTable[minIndex]) {
+//           minIndex = i;
+//         }
+//       }
+//       let minValue = scoreTable[minIndex];
+//       return `Player ${minIndex + 1} won this round with ${minValue}.`;
+//   }
+// }
 
 //Reset game state for next player
 const semiResetGame = () => (currentNumberRolled = null);
@@ -192,9 +191,12 @@ function resetGame() {
 }
 
 //Fill array function
-function fillScoreArrays() {
-  for (let i = 0; i < numberOfPlayers; i++) {
-    scoreTable.push(0);
-    scoreRecord.push(0);
-  }
-}
+const fillArrays = (x) => Array(x).fill(0);
+
+// //Fill array function
+// function fillScoreArrays() {
+//   for (let i = 0; i < numberOfPlayers; i++) {
+//     scoreTable.push(0);
+//     scoreRecord.push(0);
+//   }
+// }
