@@ -163,6 +163,26 @@ var main = function (input) {
     );
     myOutputValue = `Player 1 rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two. <br> Player 1 auto-gen number is ${playerOneFinalNumber}.<br> Player 1 running score is ${playerOneRunningScore}. <br> <br> Player 2 rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two <br> Player 2 auto-gen number is ${playerTwoFinalNumber}. <br> Player 2 running score is ${playerTwoRunningScore} <br> <br> Press Submit to find winner based on lowest game state`;
     gameState = "lowestCheckResult";
+  } else if (gameState == "normalCheckResult") {
+    // function to check who is the leader in terms of running score
+    leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
+    // function to display leaderboard
+    leaderboard = displayLeaderboard(
+      playerOneRunningScore,
+      playerTwoRunningScore
+    );
+    myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lower" again to enter your game choice`;
+    gameState = "start";
+  } else if (gameState == "lowestCheckResult") {
+    // function to check who is the "winner" in terms of lowest running score
+    lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
+    // function to display leaderboard
+    lowestLeaderboard = displayLowestLeaderboard(
+      playerOneRunningScore,
+      playerTwoRunningScore
+    );
+    myOutputValue = `Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lower" again to enter your game choice`;
+    gameState = "start";
   }
   return myOutputValue;
 };
@@ -364,7 +384,7 @@ var displayLeaderboard = function (runningScoreOne, runningScoreTwo) {
     2nd Place. Player 1 --- ${runningScoreOne}`;
   } else {
     leaderboard = `Tied. Player 1 --- ${runningScoreOne}<br>
-    Tied. --- ${runningScoreTwo}`;
+    Tied. Player 2 --- ${runningScoreTwo}`;
   }
   return leaderboard;
 };
@@ -380,7 +400,7 @@ var displayLowestLeaderboard = function (runningScoreOne, runningScoreTwo) {
     2nd Place. Player 1 --- ${runningScoreOne}`;
   } else {
     leaderboard = `Tied. Player 1 --- ${runningScoreOne}<br>
-    Tied. --- ${runningScoreTwo}`;
+    Tied. Player 2 --- ${runningScoreTwo}`;
   }
   return leaderboard;
 };
