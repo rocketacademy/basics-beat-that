@@ -47,7 +47,8 @@
 - checkResult */
 // need to have use an input to change the gameState from checkResult to a checkResultLowest
 // output will be the reverse of checkResult i.e. lowest combined number wins instead of highest
-// instead of at the end of askPlayerTwoChoice I hardcode the change in gameState, maybe we ask user to input which gameState they want
+// insert an intermediate gameState to ask user to input which gameState they want: checkResultNormal or checkResultLowest
+// insert another gameState for checkResultLowest which outputs winner based on lowest combined score instead
 // then we switch the gameState accordingly
 
 // initialise the initial gameState
