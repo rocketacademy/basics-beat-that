@@ -129,12 +129,24 @@ var main = function (input) {
         playerTwoRunningScore,
         playerTwoFinalNumber
       );
-      myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerTwoFinalNumber}.<br>Your running score is ${playerTwoRunningScore}.<br> Press submit once more to see the winner`;
-      gameState = "checkResult";
+      myOutputValue = `You chose Dice ${diceNumberChosen} first. <br> Your final number this round is ${playerTwoFinalNumber}.<br>Your running score is ${playerTwoRunningScore}.<br> Now, choose the game state. Enter "normal" for the normal game state or "lowest" for lowest combined number game state.`;
+      // change this to the intermediate step to ask user for which checkResult they want
+      gameState = "askUserChoiceForGameState";
     } else {
       myOutputValue = `Please enter a valid input of either 1 or 2 only.<br> You rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two.<br>Choose the order of your dice`;
     }
-  } else if (gameState == "checkResult") {
+    // intermediate gameState to ask user to switch
+  } else if (gameState == "askUserChoiceForGameState") {
+    var userChoice = input;
+    // user validation
+    if (userChoice == "normal" || userChoice == "lowest") {
+      gameState = chooseNextGameState(userChoice);
+      myOutputValue = `You have chosen ${userChoice} as the next game state.<br> Press "Submit" once more to see the results based on your choice`;
+    } else
+      myOutputValue = `Please enter a valid choice of "normal" or "lowest" only`;
+  }
+  // normal gameState
+  else if (gameState == "checkResultNormal") {
     // function to check who is the leader in terms of running score
     leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
     // function to display leaderboard
@@ -144,7 +156,21 @@ var main = function (input) {
     );
     myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}.<br>
     Player 2's final number this round is ${playerTwoFinalNumber}<br>
-    Current Leader is ${leader}.<br><br>${leaderboard}<br><br>Press Submit again to reroll from Player 1`;
+    Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Press Submit again to reroll from Player 1`;
+    gameState = "rollPlayerOneDice";
+  }
+  // lowest gameState
+  else if (gameState == "checkResultLowest") {
+    // function to check who is the "winner" in terms of lowest running score
+    lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
+    // function to display leaderboard
+    lowestLeaderboard = displayLowestLeaderboard(
+      playerOneRunningScore,
+      playerTwoRunningScore
+    );
+    myOutputValue = `Player 1's number this round is ${playerOneFinalNumber}.<br>
+    Player 2's final number this round is ${playerTwoFinalNumber}<br>
+    Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Press Submit again to reroll from Player 1`;
     gameState = "rollPlayerOneDice";
   }
   return myOutputValue;
@@ -214,6 +240,15 @@ var checkLeader = function (runningScoreOne, runningScoreTwo) {
   return result;
 };
 
+// checkLowest
+var checkLowest = function (runningScoreOne, runningScoreTwo) {
+  var lowest = "";
+  if (runningScoreOne < runningScoreTwo) lowest = "Player 1";
+  else if (runningScoreTwo < runningScoreOne) lowest = "Player 2";
+  else lowest = "none, scores are tied!";
+  return lowest;
+};
+
 // displayLeaderboard
 var displayLeaderboard = function (runningScoreOne, runningScoreTwo) {
   var leaderboard = "";
@@ -228,4 +263,27 @@ var displayLeaderboard = function (runningScoreOne, runningScoreTwo) {
     Tied. --- ${runningScoreTwo}`;
   }
   return leaderboard;
+};
+
+// displayLowestLeaderboard
+var displayLowestLeaderboard = function (runningScoreOne, runningScoreTwo) {
+  var leaderboard = "";
+  if (runningScoreOne < runningScoreTwo) {
+    leaderboard = `1st Place. Player 1 --- ${runningScoreOne}<br>
+    2nd Place. Player 2 --- ${runningScoreTwo}`;
+  } else if (runningScoreTwo < runningScoreOne) {
+    leaderboard = `1st Place. Player 2 --- ${runningScoreTwo}<br>
+    2nd Place. Player 1 --- ${runningScoreOne}`;
+  } else {
+    leaderboard = `Tied. Player 1 --- ${runningScoreOne}<br>
+    Tied. --- ${runningScoreTwo}`;
+  }
+  return leaderboard;
+};
+
+// function to return the chosen gameState
+var chooseNextGameState = function (choice) {
+  if (choice == "normal") var nextGameState = "checkResultNormal";
+  else nextGameState = "checkResultLowest";
+  return nextGameState;
 };
