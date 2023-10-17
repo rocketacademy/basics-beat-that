@@ -100,7 +100,17 @@ var main = function (input) {
     else {
       gameState = chooseNormalOrLowestAutoGame(userChoice);
       myOutputValue = `You chose ${userChoice} game mode. Press Submit to roll the dice for both players`;
+      for (var i = 0; i < 2; i += 1) {
+        playerOneDiceRolls[i] = rollDice();
+        playerTwoDiceRolls[i] = rollDice();
+      }
     }
+  }
+  // gameState "normal" for normal mode
+  else if (gameState == "normal") {
+  }
+  // gameState "lowest" for normal mode
+  else if (gameState == "lowest") {
   }
   return myOutputValue;
 };
@@ -332,7 +342,7 @@ var chooseNextGameState = function (choice) {
 
 // function to return normal or lowest auto-generated game mode
 var chooseNormalOrLowestAutoGame = function (choice) {
-  if (choice == "normal") var nextGameState = "normalRollDice";
-  else nextGameState = "lowestRollDice";
+  if (choice == "normal") var nextGameState = "normal";
+  else nextGameState = "lowest";
   return nextGameState;
 };
