@@ -1,137 +1,197 @@
 //Declare Global Variables
-let currentNumberRolled,
+let gameMode,
+  numberOfDice,
+  numberOfPlayers,
   gameMessage,
-  player1Number = 0,
-  player2Number = 0,
-  scoreTable = [0, 0],
-  scoreTableSorted = [0, 0],
-  playerIndexSortX = 1,
-  playerIndexSortY = 2,
-  gameMode;
+  currentNumberRolled = [],
+  scoreTable = [],
+  scoreRecord = [],
+  scoreRecordSorted = [],
+  playerCounter = 0;
 
 //Main Function
-let main = function (input, myOutputValue) {
-  if (player1Number && player2Number) {
-    evalutateWinner();
-    scoreRecord();
-    leaderboard();
-    resetGame();
+function main(input, myOutputValue) {
+  if (numberOfDice && numberOfPlayers && gameMode) {
+    playerCounter < numberOfPlayers
+      ? (playerRound(), semiResetGame(), playerCounter++)
+      : ((gameMessage = `Game Ended.<br>${winEvaluation()}`), resetGame());
   } else if (!gameMode) {
     switch (input) {
       case "H":
       case "L":
         gameMode = input;
-        gameMessage = `${gameMode} mode chosen`;
+        gameMessage = `${gameMode} mode chosen. Enter the number of dice (integer).`;
         break;
       default:
         gameMessage = "Invalid input, choose H or L for game mode.";
     }
-  } else if (gameMode && !player1Number) {
-    player1Logic();
-    semiResetGame();
-  } else if (gameMode && !player2Number) {
-    player2Logic();
-  }
-  myOutputValue =
-    gameMessage +
-    `<br><br>Player ${playerIndexSortX} score: ${scoreTableSorted[0]}<br>Player ${playerIndexSortY} score: ${scoreTableSorted[1]}`;
+  } else if (!numberOfDice) {
+    Number.isInteger(Number(input)) && Number(input) > 0
+      ? ((numberOfDice = Number(input)),
+        (gameMessage = `${numberOfDice} dice selected, enter the number of players (integer).`))
+      : (gameMessage = "Invalid input, enter the number of dice (integer).");
+  } else if (!numberOfPlayers) {
+    Number.isInteger(Number(input)) && Number(input) > 0
+      ? ((numberOfPlayers = Number(input)),
+        (scoreTable = fillArrays(numberOfPlayers)),
+        ((scoreRecord = fillArrays(numberOfPlayers)),
+        (gameMessage = `${numberOfPlayers} players selected, press submit to play.`)))
+      : (gameMessage = "Invalid input, enter the number of players (integer).");
+  } else gameMessage = "Error in main function.";
+  sortLeaderboard();
+  myOutputValue = gameMessage + `<br><br>${displaySortedLeaderboard()}`;
   return myOutputValue;
-};
+}
+
+//Generate a number for player and record score
+function playerRound() {
+  currentNumberRolled = rollDice(numberOfDice);
+  let displayRoll = [...currentNumberRolled];
+  sortDiceNumber();
+  let currentNumber = combineDiceNumber();
+  scoreTable[playerCounter] += currentNumber;
+  scoreRecord[playerCounter] += scoreTable[playerCounter];
+  gameMessage = `Welcome Player ${
+    playerCounter + 1
+  }.<br>You rolled: ${displayRoll}<br>Your number is ${currentNumber}.`;
+}
+
+//Generate rolls from number of dice
+function rollDice(x) {
+  let outputArray = [];
+  for (let i = 0; i < x; i++) {
+    outputArray.push(Math.floor(Math.random() * 6) + 1);
+  }
+  return outputArray;
+}
+
+//Insertion sort algorithm for dice number
+function sortDiceNumber() {
+  let i, j, holdIndex;
+  switch (gameMode) {
+    case "H":
+      for (i = 1; i < currentNumberRolled.length; i++) {
+        holdIndex = currentNumberRolled[i];
+        for (j = i - 1; j >= 0 && currentNumberRolled[j] < holdIndex; j--) {
+          currentNumberRolled[j + 1] = currentNumberRolled[j];
+        }
+        currentNumberRolled[j + 1] = holdIndex;
+      }
+      break;
+    case "L":
+      for (i = 1; i < currentNumberRolled.length; i++) {
+        holdIndex = currentNumberRolled[i];
+        for (j = i - 1; j >= 0 && currentNumberRolled[j] > holdIndex; j--) {
+          currentNumberRolled[j + 1] = currentNumberRolled[j];
+        }
+        currentNumberRolled[j + 1] = holdIndex;
+      }
+      break;
+  }
+}
+
+//Concatenate the rolls to form new number
+function combineDiceNumber() {
+  let concatenatedNumber = "";
+  for (let i = 0; i < currentNumberRolled.length; i++) {
+    concatenatedNumber += currentNumberRolled[i];
+  }
+  return Number(concatenatedNumber);
+}
+
+//Generate leaderboard from highest to lowest
+function displaySortedLeaderboard() {
+  let record = "";
+  for (let [player, score] of scoreRecordSorted) {
+    record += `Player ${Number(player) + 1}: ${score}<br>`;
+  }
+  return record;
+}
+
+//Insertion Sort for leaderboard
+function sortLeaderboard() {
+  let i, j, holdIndex;
+  scoreRecordSorted = Object.entries({ ...scoreRecord });
+  switch (gameMode) {
+    case "H":
+      for (i = 1; i < scoreRecordSorted.length; i++) {
+        holdIndex = scoreRecordSorted[i];
+        for (j = i - 1; j >= 0 && scoreRecordSorted[j][1] < holdIndex[1]; j--) {
+          scoreRecordSorted[j + 1] = scoreRecordSorted[j];
+        }
+        scoreRecordSorted[j + 1] = holdIndex;
+      }
+      break;
+    case "L":
+      for (i = 1; i < scoreRecordSorted.length; i++) {
+        holdIndex = scoreRecordSorted[i];
+        for (j = i - 1; j >= 0 && scoreRecordSorted[j][1] > holdIndex[1]; j--) {
+          scoreRecordSorted[j + 1] = scoreRecordSorted[j];
+        }
+        scoreRecordSorted[j + 1] = holdIndex;
+      }
+      break;
+  }
+}
+
+//Find max/min value and index of it
+function winEvaluation() {
+  switch (gameMode) {
+    case "H":
+      let maxValue = Math.max(...scoreTable);
+      let maxIndex = scoreTable.indexOf(maxValue);
+      return `Player ${maxIndex + 1} won this round with ${maxValue}.`;
+    case "L":
+      let minValue = Math.min(...scoreTable);
+      let minIndex = scoreTable.indexOf(minValue);
+      return `Player ${minIndex + 1} won this round with ${minValue}.`;
+  }
+}
+
+// //Find max/min value and index of it
+// function winEvaluate() {
+//   switch (gameMode) {
+//     case "H":
+//       let maxIndex = 0;
+//       for (let i = 1; i < scoreTable.length; i++) {
+//         if (scoreTable[i] > scoreTable[maxIndex]) {
+//           maxIndex = i;
+//         }
+//       }
+//       let maxValue = scoreTable[maxIndex];
+//       return `Player ${maxIndex + 1} won this round with ${maxValue}.`;
+//     case "L":
+//       let minIndex = 0;
+//       for (let i = 1; i < scoreTable.length; i++) {
+//         if (scoreTable[i] < scoreTable[minIndex]) {
+//           minIndex = i;
+//         }
+//       }
+//       let minValue = scoreTable[minIndex];
+//       return `Player ${minIndex + 1} won this round with ${minValue}.`;
+//   }
+// }
 
 //Reset game state for next player
 const semiResetGame = () => (currentNumberRolled = null);
 
 //Reset entire game state
-const resetGame = () => {
-  player1Number = null;
-  player2Number = null;
+function resetGame() {
   currentNumberRolled = null;
-};
-
-//Records total score
-function scoreRecord() {
-  scoreTable[0] += player1Number;
-  scoreTable[1] += player2Number;
-}
-
-//Bubble Sort for 2 players only
-function leaderboard() {
-  if (scoreTable[0] < scoreTable[1]) {
-    scoreTableSorted[0] = scoreTable[1];
-    scoreTableSorted[1] = scoreTable[0];
-  } else {
-    scoreTableSorted[0] = scoreTable[0];
-    scoreTableSorted[1] = scoreTable[1];
-  }
-  if (scoreTable[1] == scoreTableSorted[0]) {
-    playerIndexSortX = 2;
-    playerIndexSortY = 1;
-  } else {
-    playerIndexSortX = 1;
-    playerIndexSortY = 2;
+  numberOfDice = null;
+  playerCounter = 0;
+  for (let i = 0; i < scoreTable.length; i++) {
+    scoreTable[i] = 0;
   }
 }
 
-//Compare both numbers to determine winner
-function evalutateWinner() {
-  switch (gameMode) {
-    case "H":
-      gameMessage =
-        player1Number > player2Number
-          ? `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`
-          : player1Number < player2Number
-          ? `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`
-          : player1Number == player2Number
-          ? `It is a draw with both players getting ${player1Number}.`
-          : `Error with evaluating winner.`;
-      break;
-    case "L":
-      gameMessage =
-        player1Number < player2Number
-          ? `Winner is Player 1 with ${player1Number} over Player 2 with ${player2Number}.`
-          : player1Number > player2Number
-          ? `Winner is Player 2 with ${player2Number} over Player 1 with ${player1Number}.`
-          : player1Number == player2Number
-          ? `It is a draw with both players getting ${player1Number}.`
-          : `Error with evaluating winner.`;
-      break;
-    default:
-      console.log("error in evaluateWinner()");
-  }
-}
+//Fill array function
+const fillArrays = (x) => Array(x).fill(0);
 
-//Plays game for player 1
-function player1Logic() {
-  currentNumberRolled = rollTwoDice();
-  player1Number = combineDiceNumber();
-  gameMessage = `Welcome Player 1.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Your number is ${player1Number}.<br>It is now Player 2's turn.`;
-}
-
-//Plays game for player 2
-function player2Logic() {
-  currentNumberRolled = rollTwoDice();
-  player2Number = combineDiceNumber();
-  gameMessage = `Welcome Player 2.<br>You rolled ${currentNumberRolled[0]} for Dice 1 and ${currentNumberRolled[1]} for Dice 2.<br>Your number is ${player2Number}.<br>Press sumbmit to reveal winner.`;
-}
-
-//Generate 2 numbers from dice roll
-let rollTwoDice = () => [
-  Math.floor(Math.random() * 6) + 1,
-  Math.floor(Math.random() * 6) + 1,
-];
-
-//Concatenate the rolls to form new number
-function combineDiceNumber() {
-  switch (gameMode) {
-    case "H":
-      return currentNumberRolled[0] > currentNumberRolled[1]
-        ? Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`)
-        : Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
-    case "L":
-      return currentNumberRolled[0] < currentNumberRolled[1]
-        ? Number(`${currentNumberRolled[0]}` + `${currentNumberRolled[1]}`)
-        : Number(`${currentNumberRolled[1]}` + `${currentNumberRolled[0]}`);
-    default:
-      console.log("error in combineDiceNumber()");
-  }
-}
+// //Fill array function
+// function fillScoreArrays() {
+//   for (let i = 0; i < numberOfPlayers; i++) {
+//     scoreTable.push(0);
+//     scoreRecord.push(0);
+//   }
+// }
