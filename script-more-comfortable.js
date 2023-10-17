@@ -137,6 +137,32 @@ var main = function (input) {
   }
   // gameState "lowest" for normal mode
   else if (gameState == "lowest") {
+    // find the min number and store in playerXFirstNum
+    playerOneFirstNum = Math.min(...playerOneDiceRolls);
+    playerTwoFirstNum = Math.min(...playerTwoDiceRolls);
+    // find the max number and store in playerXSecondNum
+    playerOneSecondNum = Math.max(...playerOneDiceRolls);
+    playerTwoSecondNum = Math.max(...playerTwoDiceRolls);
+    // use returnFinalNumber(firstNum, secondNum) to concatenate and return as a number
+    playerOneFinalNumber = returnFinalNumber(
+      playerOneFirstNum,
+      playerOneSecondNum
+    );
+    playerTwoFinalNumber = returnFinalNumber(
+      playerTwoFirstNum,
+      playerTwoSecondNum
+    );
+    // update running scores using updateRunningScore
+    playerOneRunningScore = updateRunningScore(
+      playerOneRunningScore,
+      playerOneFinalNumber
+    );
+    playerTwoRunningScore = updateRunningScore(
+      playerTwoRunningScore,
+      playerTwoFinalNumber
+    );
+    myOutputValue = `Player 1 rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two. <br> Player 1 auto-gen number is ${playerOneFinalNumber}.<br> Player 1 running score is ${playerOneRunningScore}. <br> <br> Player 2 rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two <br> Player 2 auto-gen number is ${playerTwoFinalNumber}. <br> Player 2 running score is ${playerTwoRunningScore} <br> <br> Press Submit to find winner based on lowest game state`;
+    gameState = "lowestCheckResult";
   }
   return myOutputValue;
 };
