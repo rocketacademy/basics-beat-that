@@ -12,14 +12,9 @@ let gameMode,
 //Main Function
 function main(input, myOutputValue) {
   if (numberOfDice && numberOfPlayers && gameMode) {
-    if (playerCounter < numberOfPlayers) {
-      playerRound();
-      semiResetGame();
-      playerCounter++;
-    } else {
-      gameMessage = `Game Ended.<br>${winEvaluation()}`;
-      resetGame();
-    }
+    playerCounter < numberOfPlayers
+      ? (playerRound(), semiResetGame(), playerCounter++)
+      : ((gameMessage = `Game Ended.<br>${winEvaluation()}`), resetGame());
   } else if (!gameMode) {
     switch (input) {
       case "H":
