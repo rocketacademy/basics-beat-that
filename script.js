@@ -12,9 +12,14 @@ let gameMode,
 //Main Function
 function main(input, myOutputValue) {
   if (numberOfDice && numberOfPlayers && gameMode) {
-    playerCounter < numberOfPlayers
-      ? (playerRound(), semiResetGame(), playerCounter++)
-      : ((gameMessage = `Game Ended.<br>${winEvaluation()}`), resetGame());
+    if (playerCounter < numberOfPlayers) {
+      playerRound();
+      semiResetGame();
+      playerCounter++;
+    } else {
+      gameMessage = `Game Ended.<br>${winEvaluation()}`;
+      resetGame();
+    }
   } else if (!gameMode) {
     switch (input) {
       case "H":
@@ -26,17 +31,18 @@ function main(input, myOutputValue) {
         gameMessage = "Invalid input, choose H or L for game mode.";
     }
   } else if (!numberOfDice) {
-    Number.isInteger(Number(input)) && Number(input) > 0
-      ? ((numberOfDice = Number(input)),
-        (gameMessage = `${numberOfDice} dice selected, enter the number of players (integer).`))
-      : (gameMessage = "Invalid input, enter the number of dice (integer).");
+    if (Number.isInteger(Number(input)) && Number(input) > 0) {
+      numberOfDice = Number(input);
+      gameMessage = `${numberOfDice} dice selected, enter the number of players (integer).`;
+    } else gameMessage = "Invalid input, enter the number of dice (integer).";
   } else if (!numberOfPlayers) {
-    Number.isInteger(Number(input)) && Number(input) > 0
-      ? ((numberOfPlayers = Number(input)),
-        (scoreTable = fillArrays(numberOfPlayers)),
-        ((scoreRecord = fillArrays(numberOfPlayers)),
-        (gameMessage = `${numberOfPlayers} players selected, press submit to play.`)))
-      : (gameMessage = "Invalid input, enter the number of players (integer).");
+    if (Number.isInteger(Number(input)) && Number(input) > 0) {
+      numberOfPlayers = Number(input);
+      scoreTable = fillArrays(numberOfPlayers);
+      scoreRecord = fillArrays(numberOfPlayers);
+      gameMessage = `${numberOfPlayers} players selected, press submit to play.`;
+    } else
+      gameMessage = "Invalid input, enter the number of players (integer).";
   } else gameMessage = "Error in main function.";
   sortLeaderboard();
   myOutputValue = gameMessage + `<br><br>${displaySortedLeaderboard()}`;
