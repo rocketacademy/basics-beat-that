@@ -171,7 +171,7 @@ var main = function (input) {
       playerOneRunningScore,
       playerTwoRunningScore
     );
-    myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lower" again to enter your game choice`;
+    myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
     gameState = "start";
   } else if (gameState == "lowestCheckResult") {
     // function to check who is the "winner" in terms of lowest running score
@@ -181,7 +181,7 @@ var main = function (input) {
       playerOneRunningScore,
       playerTwoRunningScore
     );
-    myOutputValue = `Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lower" again to enter your game choice`;
+    myOutputValue = `Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
     gameState = "start";
   }
   return myOutputValue;
