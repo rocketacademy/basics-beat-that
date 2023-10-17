@@ -37,6 +37,9 @@
 // return this
 // output will be the higher running score on top of the lower one
 
+// Lowest Combined Number Mode
+// Add a game mode such that the player with the lowest combined number is the winner.
+
 // initialise the initial gameState
 var gameState = "rollPlayerOneDice";
 
