@@ -85,20 +85,12 @@ gameState = "chooseGameMode"
 var gameState = "chooseGameMode";
 var chosenGameMode = "";
 
-// global playerOne variables so we can access them throughout the different gameStates
-var playerOneDiceRolls = [];
-var playerOneFinalNumber;
-var playerOneRunningScore = 0;
-
-// global playerTwo variables to access throughout the different gameStates
-var playerTwoDiceRolls = [];
-var playerTwoFinalNumber;
-var playerTwoRunningScore = 0;
+// global arrays
+var numOfPlayers;
 
 var main = function (input) {
   // "refresh" output everytime we restart the app i.e. pressing submit
   var output = "";
-  console.log(gameState);
   // 0. asks user for what gameMode they want: "normal" or "lowest"
   if (gameState == "chooseGameMode") {
     chosenGameMode = input;
@@ -106,8 +98,18 @@ var main = function (input) {
     if (chosenGameMode != "normal" && chosenGameMode != "lowest")
       output = `Please enter only "normal" or "lowest".`;
     else {
-      output = `You have chosen ${chosenGameMode} game mode. Next, enter the number of dice you want to roll and press Submit.`;
-      gameState = "rollDice";
+      output = `You have chosen ${chosenGameMode} game mode. Next, enter the number of players and press Submit.`;
+      gameState = "selectNumOfPlayers";
+    }
+  }
+  // 1. selectNumOfPlayers
+  else if (gameState == "selectNumOfPlayers") {
+    numOfPlayers = Number(input);
+    // user validation; isNaN takes care of strings because Number will conver them to NaN. The rest is for 0 and 1 because we those values do not help us generate useful numbers
+    if (isNaN(numOfPlayers) || numOfPlayers == 0 || numOfPlayers == 1)
+      output = `Please enter only a number that of minimum value 2.`;
+    else {
+      output = `You have selected ${numOfPlayers} number of players. Enter the number of dice to roll`;
     }
   }
   // 1. gameState "rollDice" which gets user to choose the amount of dice they want to roll
