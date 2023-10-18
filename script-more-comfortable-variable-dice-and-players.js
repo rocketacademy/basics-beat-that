@@ -19,7 +19,7 @@ var playerTwoFinalNumber;
 var playerTwoRunningScore = 0;
 
 var main = function (input) {
-  // "refresh" myOutputValue everytime we restart the app i.e. pressing submit
+  // "refresh" output everytime we restart the app i.e. pressing submit
   var output = "";
   console.log(gameState);
   // asks user for what gameMode they want: "normal" or "lowest"
@@ -32,7 +32,6 @@ var main = function (input) {
       output = `You have chosen ${chosenGameMode} game mode. Next, enter the number of dice you want to roll and press Submit.`;
       gameState = "rollDice";
     }
-    console.log(chosenGameMode);
   }
   // gameState "rollDice" which gets user to choose the amount of dice they want to roll
   else if (gameState == "rollDice") {
@@ -64,6 +63,40 @@ var main = function (input) {
     output = `Player One final number based on ${chosenGameMode} is ${playerOneFinalNumber} <br>
     Player Two final number based on ${chosenGameMode} is ${playerTwoFinalNumber} <br>
     Press Submit to view the winner based on running score`;
+    // update the running scores of both Players
+    playerOneRunningScore = updateRunningScore(
+      playerOneRunningScore,
+      playerOneFinalNumber
+    );
+    playerTwoRunningScore = updateRunningScore(
+      playerTwoRunningScore,
+      playerTwoFinalNumber
+    );
+    gameState = "checkResult";
+  }
+  // gameState to checkResult
+  else if (gameState == "checkResult") {
+    if (chosenGameMode == "normal") {
+      // function to check who is the leader in terms of running score
+      leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
+      // function to display leaderboard
+      leaderboard = displayLeaderboard(
+        playerOneRunningScore,
+        playerTwoRunningScore
+      );
+      output = `Current Leader based on ${chosenGameMode} game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
+      gameState = "chooseGameMode";
+    } else {
+      // function to check who is the "winner" in terms of lowest running score
+      lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
+      // function to display leaderboard
+      lowestLeaderboard = displayLowestLeaderboard(
+        playerOneRunningScore,
+        playerTwoRunningScore
+      );
+      output = `Current Leader based on ${chosenGameMode} combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
+      gameState = "chooseGameMode";
+    }
   }
   return output;
 };
@@ -78,48 +111,6 @@ var rollDice = function () {
 // Compare Function to help sort the array in descending order
 var compare = function (a, b) {
   return b - a;
-};
-
-// Return number in the tens position
-var returnNumberInTensPosition = function (
-  selectedDiceNumber,
-  playerDiceRollArray
-) {
-  var diceNumberInTensPosition = selectedDiceNumber;
-  var indexNumberInTensPosition = diceNumberInTensPosition - 1;
-  var numberInTensPosition = playerDiceRollArray[indexNumberInTensPosition];
-  return numberInTensPosition;
-};
-
-var returnNumberInOnesPosition = function (
-  selectedDiceNumber,
-  playerDiceRollArray
-) {
-  var indexNumberInTensPosition = selectedDiceNumber - 1;
-  var indexNumberInOnesPosition;
-  if (indexNumberInTensPosition == 0) {
-    indexNumberInOnesPosition = 1;
-  } else {
-    indexNumberInOnesPosition = 0;
-  }
-  numberInOnesPosition = playerDiceRollArray[indexNumberInOnesPosition];
-  return numberInOnesPosition;
-};
-
-// Return the two numbers concatenated
-var returnFinalNumber = function (tensPositionNumber, onesPositionNumber) {
-  concatenatedString = "" + tensPositionNumber + onesPositionNumber;
-  convertedNumber = Number(concatenatedString);
-  return convertedNumber;
-};
-
-// checkWinner
-var checkResult = function (playerOneNumber, playerTwoNumber) {
-  result = "";
-  if (playerOneNumber > playerTwoNumber) result = "Player 1 wins";
-  else if (playerTwoNumber > playerOneNumber) result = "Player 2 wins";
-  else result = "draw";
-  return result;
 };
 
 // updateRunningScore
