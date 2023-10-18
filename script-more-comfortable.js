@@ -77,6 +77,7 @@
 // initialise the initial gameState
 // var gameState = "rollPlayerOneDice";
 var gameState = "start";
+var userChoice; // global userChoice so we can access in all the code blocks
 
 // global playerOne variables so we can access them throughout the different gameStates
 var playerOneDiceRolls = [];
@@ -93,12 +94,14 @@ var main = function (input) {
   var myOutputValue = "";
   // gameState "start" which gets user to choose their "normal" or "lowest" game
   if (gameState == "start") {
-    var userChoice = input;
+    // "resets" userChoice to be either "normal" or "input" when we switch gameState to "start"
+    userChoice = input;
     // user validation
     if (userChoice != "normal" && userChoice != "lowest")
       myOutputValue = `Please enter only "normal" or "lowest"`;
     else {
-      gameState = chooseNormalOrLowestAutoGame(userChoice);
+      // use fixed gameState getNumbers so we can avoid repeating codes from playerOneFinalNumber to playerTwoRunningScore
+      gameState = "getNumbers";
       myOutputValue = `You chose ${userChoice} game mode. Press Submit to roll the dice for both players`;
       for (var i = 0; i < 2; i += 1) {
         playerOneDiceRolls[i] = rollDice();
@@ -107,13 +110,24 @@ var main = function (input) {
     }
   }
   // gameState "normal" for normal mode
-  else if (gameState == "normal") {
-    // find the max number and store in playerXFirstNum
-    playerOneFirstNum = Math.max(...playerOneDiceRolls);
-    playerTwoFirstNum = Math.max(...playerTwoDiceRolls);
-    // find the min number and store in playerXSecondNum
-    playerOneSecondNum = Math.min(...playerOneDiceRolls);
-    playerTwoSecondNum = Math.min(...playerTwoDiceRolls);
+  else if (gameState == "getNumbers") {
+    // for userChoice == "normal", the first number will be the larger one in the respective array
+    if (userChoice == "normal") {
+      // find the max number and store in playerXFirstNum
+      playerOneFirstNum = Math.max(...playerOneDiceRolls);
+      playerTwoFirstNum = Math.max(...playerTwoDiceRolls);
+      // find the min number and store in playerXSecondNum
+      playerOneSecondNum = Math.min(...playerOneDiceRolls);
+      playerTwoSecondNum = Math.min(...playerTwoDiceRolls);
+    } // for userChoice == "lowest", do the opposite
+    else {
+      // find the min number and store in playerXFirstNum
+      playerOneFirstNum = Math.min(...playerOneDiceRolls);
+      playerTwoFirstNum = Math.min(...playerTwoDiceRolls);
+      // find the max number and store in playerXSecondNum
+      playerOneSecondNum = Math.max(...playerOneDiceRolls);
+      playerTwoSecondNum = Math.max(...playerTwoDiceRolls);
+    }
     // use returnFinalNumber(firstNum, secondNum) to concatenate and return as a number
     playerOneFinalNumber = returnFinalNumber(
       playerOneFirstNum,
@@ -132,38 +146,10 @@ var main = function (input) {
       playerTwoRunningScore,
       playerTwoFinalNumber
     );
-    myOutputValue = `Player 1 rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two. <br> Player 1 auto-gen number is ${playerOneFinalNumber}.<br> Player 1 running score is ${playerOneRunningScore}. <br> <br> Player 2 rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two <br> Player 2 auto-gen number is ${playerTwoFinalNumber}. <br> Player 2 running score is ${playerTwoRunningScore} <br> <br> Press Submit to find winner based on normal game state`;
-    gameState = "normalCheckResult";
-  }
-  // gameState "lowest" for normal mode
-  else if (gameState == "lowest") {
-    // find the min number and store in playerXFirstNum
-    playerOneFirstNum = Math.min(...playerOneDiceRolls);
-    playerTwoFirstNum = Math.min(...playerTwoDiceRolls);
-    // find the max number and store in playerXSecondNum
-    playerOneSecondNum = Math.max(...playerOneDiceRolls);
-    playerTwoSecondNum = Math.max(...playerTwoDiceRolls);
-    // use returnFinalNumber(firstNum, secondNum) to concatenate and return as a number
-    playerOneFinalNumber = returnFinalNumber(
-      playerOneFirstNum,
-      playerOneSecondNum
-    );
-    playerTwoFinalNumber = returnFinalNumber(
-      playerTwoFirstNum,
-      playerTwoSecondNum
-    );
-    // update running scores using updateRunningScore
-    playerOneRunningScore = updateRunningScore(
-      playerOneRunningScore,
-      playerOneFinalNumber
-    );
-    playerTwoRunningScore = updateRunningScore(
-      playerTwoRunningScore,
-      playerTwoFinalNumber
-    );
-    myOutputValue = `Player 1 rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two. <br> Player 1 auto-gen number is ${playerOneFinalNumber}.<br> Player 1 running score is ${playerOneRunningScore}. <br> <br> Player 2 rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two <br> Player 2 auto-gen number is ${playerTwoFinalNumber}. <br> Player 2 running score is ${playerTwoRunningScore} <br> <br> Press Submit to find winner based on lowest game state`;
-    gameState = "lowestCheckResult";
-  } else if (gameState == "normalCheckResult") {
+    myOutputValue = `Player 1 rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two. <br> Player 1 auto-gen number is ${playerOneFinalNumber}.<br> Player 1 running score is ${playerOneRunningScore}. <br> <br> Player 2 rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two <br> Player 2 auto-gen number is ${playerTwoFinalNumber}. <br> Player 2 running score is ${playerTwoRunningScore} <br> <br> Press Submit to find winner based on ${userChoice} game state`;
+    // helper function to decide the. If "normal", returns checkResultNormal, else checkResultLowest
+    gameState = chooseNextGameState(userChoice);
+  } else if (gameState == "checkResultNormal") {
     // function to check who is the leader in terms of running score
     leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
     // function to display leaderboard
@@ -173,7 +159,7 @@ var main = function (input) {
     );
     myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
     gameState = "start";
-  } else if (gameState == "lowestCheckResult") {
+  } else if (gameState == "checkResultLowest") {
     // function to check who is the "winner" in terms of lowest running score
     lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
     // function to display leaderboard
@@ -409,12 +395,5 @@ var displayLowestLeaderboard = function (runningScoreOne, runningScoreTwo) {
 var chooseNextGameState = function (choice) {
   if (choice == "normal") var nextGameState = "checkResultNormal";
   else nextGameState = "checkResultLowest";
-  return nextGameState;
-};
-
-// function to return normal or lowest auto-generated game mode
-var chooseNormalOrLowestAutoGame = function (choice) {
-  if (choice == "normal") var nextGameState = "normal";
-  else nextGameState = "lowest";
   return nextGameState;
 };
