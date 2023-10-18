@@ -88,6 +88,7 @@ var chosenGameMode = "";
 // global arrays
 var numOfPlayers;
 var everyPlayersRolls = [];
+var everyPlayersFinalNum = [];
 
 var main = function (input) {
   // "refresh" output everytime we restart the app i.e. pressing submit
@@ -127,60 +128,25 @@ var main = function (input) {
       }
       output = output + "Press Submit to generate the numbers";
       gameState = "generateNums";
+      console.log(everyPlayersRolls[0]);
     }
   }
   // 2. gameState to generate the final numbers based on the chosenGameMode
   else if (gameState == "generateNums") {
-    // sort the two arrays in descending order first
-    var sortedPlayerOne = playerOneDiceRolls.sort(compare);
-    var sortedPlayerTwo = playerTwoDiceRolls.sort(compare);
-    // if block to reverse the order to ascending if chosenGameMode == "lowest". reassign the sorted arrays
-    if (chosenGameMode == "lowest") {
-      var sortedPlayerOne = sortedPlayerOne.reverse();
-      var sortedPlayerTwo = sortedPlayerTwo.reverse();
+    // sort based on descending order first
+    for (var i = 0; i < numOfPlayers; i++) {
+      everyPlayersRolls[i] = everyPlayersRolls[i].sort(compare);
+      if (chosenGameMode == "lowest") {
+        everyPlayersRolls[i] = everyPlayersRolls[i].reverse();
+      }
+      everyPlayersFinalNum[i] = Number(everyPlayersRolls[i].join(""));
+      output =
+        output +
+        `Player ${i + 1} final number is ${everyPlayersFinalNum[i]}<br>`;
     }
-    playerOneFinalNumber = Number(sortedPlayerOne.join(""));
-    playerTwoFinalNumber = Number(sortedPlayerTwo.join(""));
-    output = `Player One final number based on ${chosenGameMode} is ${playerOneFinalNumber} <br>
-    Player Two final number based on ${chosenGameMode} is ${playerTwoFinalNumber} <br>
-    Press Submit to view the winner based on running score`;
-    // update the running scores of both Players
-    playerOneRunningScore = updateRunningScore(
-      playerOneRunningScore,
-      playerOneFinalNumber
-    );
-    playerTwoRunningScore = updateRunningScore(
-      playerTwoRunningScore,
-      playerTwoFinalNumber
-    );
-    gameState = "checkResult";
-  }
-  // 3. gameState to checkResult
-  else if (gameState == "checkResult") {
-    if (chosenGameMode == "normal") {
-      // function to check who is the leader in terms of running score
-      var leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
-      // function to display leaderboard
-      var leaderboard = displayLeaderboard(
-        playerOneRunningScore,
-        playerTwoRunningScore
-      );
-      output = `Current Leader based on ${chosenGameMode} game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
-      gameState = "chooseGameMode";
-    } else {
-      // function to check who is the "winner" in terms of lowest running score
-      var lowestLeader = checkLowest(
-        playerOneRunningScore,
-        playerTwoRunningScore
-      );
-      // function to display leaderboard
-      var lowestLeaderboard = displayLowestLeaderboard(
-        playerOneRunningScore,
-        playerTwoRunningScore
-      );
-      output = `Current Leader based on ${chosenGameMode} combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
-      gameState = "chooseGameMode";
-    }
+    output =
+      output + `Restart the game by choosing game mode "normal" or "lowest"`;
+    gameState = "chooseGameMode";
   }
   return output;
 };
