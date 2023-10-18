@@ -49,6 +49,22 @@ var main = function (input) {
       gameState = "generateNums";
     }
   }
+  // gameState to generate the final numbers based on the chosenGameMode
+  else if (gameState == "generateNums") {
+    // sort the two arrays in descending order first
+    var sortedPlayerOne = playerOneDiceRolls.sort(compare);
+    var sortedPlayerTwo = playerTwoDiceRolls.sort(compare);
+    // if block to reverse the order to ascending if chosenGameMode == "lowest". reassign the sorted arrays
+    if (chosenGameMode == "lowest") {
+      var sortedPlayerOne = sortedPlayerOne.reverse();
+      var sortedPlayerTwo = sortedPlayerTwo.reverse();
+    }
+    playerOneFinalNumber = Number(sortedPlayerOne.join(""));
+    playerTwoFinalNumber = Number(sortedPlayerTwo.join(""));
+    output = `Player One final number based on ${chosenGameMode} is ${playerOneFinalNumber} <br>
+    Player Two final number based on ${chosenGameMode} is ${playerTwoFinalNumber} <br>
+    Press Submit to view the winner based on running score`;
+  }
   return output;
 };
 
@@ -57,6 +73,11 @@ var rollDice = function () {
   var randomDecimalLessThanSix = Math.random() * 6;
   var diceRollNumber = Math.floor(randomDecimalLessThanSix) + 1; // +1 because when we floor, we will get min 0 and max 5
   return diceRollNumber;
+};
+
+// Compare Function to help sort the array in descending order
+var compare = function (a, b) {
+  return b - a;
 };
 
 // Return number in the tens position
