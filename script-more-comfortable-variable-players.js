@@ -144,8 +144,15 @@ var main = function (input) {
         output +
         `Player ${i + 1} final number is ${everyPlayersFinalNum[i]}<br>`;
     }
-    output =
-      output + `Restart the game by choosing game mode "normal" or "lowest"`;
+    output = output + `Press Submit to see the winner`;
+    gameState = "checkResult";
+  }
+  // checkResult to at least return a winner
+  else if (gameState == "checkResult") {
+    winnersIndex = returnWinningIndex(); // return the winningIndex based on game mode;
+    output = `The winner is Player ${winnersIndex + 1} with a score of ${
+      everyPlayersFinalNum[winnersIndex]
+    }. Restart the game by choose game mode "normal" or "lowest"`;
     gameState = "chooseGameMode";
   }
   return output;
@@ -237,4 +244,16 @@ var storeEveryPlayersRolls = function (howManyPlayers, howManyDice) {
     allPlayersRolls[i] = onePlayerRoll;
   }
   return allPlayersRolls;
+};
+
+// return the winning index
+var returnWinningIndex = function () {
+  if (chosenGameMode == "normal") {
+    var winningNum = Math.max(...everyPlayersFinalNum);
+    var winningIndex = everyPlayersFinalNum.indexOf(winningNum);
+  } else {
+    var winningNum = Math.min(...everyPlayersFinalNum);
+    var winningIndex = everyPlayersFinalNum.indexOf(winningNum);
+  }
+  return winningIndex;
 };
