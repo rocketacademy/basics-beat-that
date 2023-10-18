@@ -4,55 +4,82 @@
 // Store each player's dice rolls in an array. When each player rolls dice, use a loop to place n dice roll values in that player's array, where n is the number of dice the players specified at the beginning of the round. Output each player's dice roll values.
 // Auto-generate the optimal combined number based on each player's dice rolls to determine the winner of that round.
 
-/* 4 game states
-0. gameState = "gameMode" as the starting global variable
-- user validation
-- user input either "normal" or "lowest"
-- store this in a global variable called gameMode to use later
-- output is "Enter the number of dice you want to roll"
-- change gameState = "rollDice"
-1. gameState = "rollDice"
-- user validation
-- numOfDice = input
-- for (var i = 0; i < numOfDice; i++) {
-playerOneDiceRolls[i] = rollDice()
-repeat for playerTwoDiceRolls array
-- output the dice roll values for Player One and Player Two. Tell user to press Submit to generate numbers
-- gameState = "generateNums"
+/* Variable Number of Players
+Allow more than 2 players at a time to play Beat That. At the beginning of the game, ask how many players would like to play. For a variable number of players, feel free to output the leaderboard in any order, because implementing the leaderboard in decreasing order requires advanced logic.
 
-2. gameState = "generateNums"
-- if (chosenGameMode == "lowest")
-use array.sort(compare function)
-compare function is a function that takes two numbers and returns the value of a - b. This will then be passed to the sort function to determine the placing i.e. a first or b second
-array will be returned in ascending order
-- else (for normal)
-reverse the ascending order sort
+Current beat that is:
+- ask for normal or lowest game mode
+- how many dice to roll
+- then auto-generate the numbers 
+- and compare who wins
 
-- some function to concatenate the numbers in the arrays to the final numbers
-- output these are the auto-gen numbers based on the chosenGameMode. Press Submit to check result
-- gameState = "checkResult"
+- input is the numOfPlayers
+- for each player, roll the number of dice selected
+- need a way to refer back to each player's rolls
 
-3. gameState = "checkResult"
-- if (userChoice == "normal")
- // function to check who is the leader in terms of running score
-    leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
-    // function to display leaderboard
-    leaderboard = displayLeaderboard(
-      playerOneRunningScore,
-      playerTwoRunningScore
-    );
-    myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
-    gameState = "start";
-- else (userChoice == "lowest")
-// function to check who is the "winner" in terms of lowest running score
-    lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
-    // function to display leaderboard
-    lowestLeaderboard = displayLowestLeaderboard(
-      playerOneRunningScore,
-      playerTwoRunningScore
-    );
-    myOutputValue = `Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
-    gameState = "start"; */
+- use double for loop
+- inner for loop is to roll the number of dices specified
+- outer for loop will then do the inner loop for how many players specified
+
+Flow of program will be:
+0. chooseGameMode
+1. selectNumOfPlayers
+2. rollDice
+3. generateNums
+4. checkResult
+
+0. change ending gameState to "selectNumOfPlayers"
+
+1. selectNumOfPlayers
+- create global var numOfPlayers so we can access it in rollDice game state
+- user validation use the same one as rollDice cos we only want numbers min. value 2
+- numOfPlayers = input;
+- output how many players selected. Next, input the number of dice to roll
+
+2. rollDice
+- change the code in the else block
+- create global var everyPlayersRolls array to store every player's rolls
+- double for loop below can make into a helper function
+storeEveryPlayerRolls (howManyPlayers, howManyDice)
+for (var i = 0; i < numOfPlayers; i++) {
+	var onePlayerRoll = [];
+  for (var j = 0; j < numOfDice; j++) {
+    onePlayerRoll[j] = rollDice();
+  }
+  allPlayersRolls[i] = onePlayerRoll;
+}
+return allPlayersRolls;
+- everyPlayersRolls = storeEveryPlayerRolls(numOfPlayers, numOfDice);
+- for output
+for (var i = 0; i < numOfPlayers; i++) {
+	output = output + "Player ${i+1} rolled ${everyPlayersRolls[i]}<br>";
+}
+output = output + "Press Submit to generate the numbers"
+gameState = "generateNums"
+
+3. generateNums
+- global array everyPlayersFinalNum
+- reassign each array inside everyPlayersRolls to the sorted one
+- need to add if (gameMode = "normal") to differentiate the two codes
+for (var i = 0; i < numOfPlayers; i++) {
+	everyPlayersRolls[i] = everyPlayersRolls[i].sort(compare);
+	everyPlayersFinalNum[i] = Number(everyPlayersRolls[i].join(""));
+	output = output + "Player ${i+1} final number is ${everyPlayersFinalNum[i]}<br>";
+}
+- else the lowest game mode, just reverse() and reassign
+for (var i = 0; i < numOfPlayers; i++) {
+	everyPlayersRolls[i] = everyPlayersRolls[i].reverse();
+	everyPlayersFinalNum[i] = Number(everyPlayersRolls[i].join(""));
+	output = output + "Player ${i+1} final number is ${everyPlayersFinalNum[i]}<br>";
+}
+output = output + `Restart the game by choosing game mode "normal" or "lowest"`
+gameState = "chooseGameMode"
+
+4. checkResult
+- need to use objects which we haven't learned
+- can come back to this when i've got the knowledge and time
+
+*/
 
 // initialise the initial gameState
 var gameState = "chooseGameMode";
@@ -85,7 +112,7 @@ var main = function (input) {
   }
   // 1. gameState "rollDice" which gets user to choose the amount of dice they want to roll
   else if (gameState == "rollDice") {
-    numOfDice = Number(input);
+    var numOfDice = Number(input);
     // user validation; isNaN takes care of strings because Number will conver them to NaN. The rest is for 0 and 1 because we those values do not help us generate useful numbers
     if (isNaN(numOfDice) || numOfDice == 0 || numOfDice == 1)
       output = `Please enter only a number that of minimum value 2.`;
@@ -128,9 +155,9 @@ var main = function (input) {
   else if (gameState == "checkResult") {
     if (chosenGameMode == "normal") {
       // function to check who is the leader in terms of running score
-      leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
+      var leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
       // function to display leaderboard
-      leaderboard = displayLeaderboard(
+      var leaderboard = displayLeaderboard(
         playerOneRunningScore,
         playerTwoRunningScore
       );
@@ -138,9 +165,12 @@ var main = function (input) {
       gameState = "chooseGameMode";
     } else {
       // function to check who is the "winner" in terms of lowest running score
-      lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
+      var lowestLeader = checkLowest(
+        playerOneRunningScore,
+        playerTwoRunningScore
+      );
       // function to display leaderboard
-      lowestLeaderboard = displayLowestLeaderboard(
+      var lowestLeaderboard = displayLowestLeaderboard(
         playerOneRunningScore,
         playerTwoRunningScore
       );
