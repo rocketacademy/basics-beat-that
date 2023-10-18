@@ -87,6 +87,7 @@ var chosenGameMode = "";
 
 // global arrays
 var numOfPlayers;
+var everyPlayersRolls = [];
 
 var main = function (input) {
   // "refresh" output everytime we restart the app i.e. pressing submit
@@ -110,20 +111,21 @@ var main = function (input) {
       output = `Please enter only a number that of minimum value 2.`;
     else {
       output = `You have selected ${numOfPlayers} number of players. Enter the number of dice to roll`;
+      gameState = "rollDice"; // only do this if input is valid
     }
   }
-  // 1. gameState "rollDice" which gets user to choose the amount of dice they want to roll
+  // 2. gameState "rollDice" which gets user to choose the amount of dice they want to roll
   else if (gameState == "rollDice") {
     var numOfDice = Number(input);
     // user validation; isNaN takes care of strings because Number will conver them to NaN. The rest is for 0 and 1 because we those values do not help us generate useful numbers
     if (isNaN(numOfDice) || numOfDice == 0 || numOfDice == 1)
       output = `Please enter only a number that of minimum value 2.`;
     else {
-      for (var i = 0; i < numOfDice; i++) {
-        playerOneDiceRolls[i] = rollDice();
-        playerTwoDiceRolls[i] = rollDice();
+      everyPlayersRolls = storeEveryPlayersRolls(numOfPlayers, numOfDice);
+      for (var i = 0; i < numOfPlayers; i++) {
+        output = output + `Player ${i + 1} rolled ${everyPlayersRolls[i]}<br>`;
       }
-      output = `Player One rolled ${playerOneDiceRolls} <br> Player Two rolled ${playerTwoDiceRolls} <br> Press Submit to generate the numbers`;
+      output = output + "Press Submit to generate the numbers";
       gameState = "generateNums";
     }
   }
@@ -256,4 +258,17 @@ var chooseNextGameState = function (choice) {
   if (choice == "normal") var nextGameState = "checkResultNormal";
   else nextGameState = "checkResultLowest";
   return nextGameState;
+};
+
+// helper function to storeEveryPlayersRolls
+var storeEveryPlayersRolls = function (howManyPlayers, howManyDice) {
+  var allPlayersRolls = [];
+  for (var i = 0; i < howManyPlayers; i++) {
+    var onePlayerRoll = [];
+    for (var j = 0; j < howManyDice; j++) {
+      onePlayerRoll[j] = rollDice();
+    }
+    allPlayersRolls[i] = onePlayerRoll;
+  }
+  return allPlayersRolls;
 };
