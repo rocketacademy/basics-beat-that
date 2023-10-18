@@ -4,6 +4,56 @@
 // Store each player's dice rolls in an array. When each player rolls dice, use a loop to place n dice roll values in that player's array, where n is the number of dice the players specified at the beginning of the round. Output each player's dice roll values.
 // Auto-generate the optimal combined number based on each player's dice rolls to determine the winner of that round.
 
+/* 4 game states
+0. gameState = "gameMode" as the starting global variable
+- user validation
+- user input either "normal" or "lowest"
+- store this in a global variable called gameMode to use later
+- output is "Enter the number of dice you want to roll"
+- change gameState = "rollDice"
+1. gameState = "rollDice"
+- user validation
+- numOfDice = input
+- for (var i = 0; i < numOfDice; i++) {
+playerOneDiceRolls[i] = rollDice()
+repeat for playerTwoDiceRolls array
+- output the dice roll values for Player One and Player Two. Tell user to press Submit to generate numbers
+- gameState = "generateNums"
+
+2. gameState = "generateNums"
+- if (chosenGameMode == "lowest")
+use array.sort(compare function)
+compare function is a function that takes two numbers and returns the value of a - b. This will then be passed to the sort function to determine the placing i.e. a first or b second
+array will be returned in ascending order
+- else (for normal)
+reverse the ascending order sort
+
+- some function to concatenate the numbers in the arrays to the final numbers
+- output these are the auto-gen numbers based on the chosenGameMode. Press Submit to check result
+- gameState = "checkResult"
+
+3. gameState = "checkResult"
+- if (userChoice == "normal")
+ // function to check who is the leader in terms of running score
+    leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
+    // function to display leaderboard
+    leaderboard = displayLeaderboard(
+      playerOneRunningScore,
+      playerTwoRunningScore
+    );
+    myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
+    gameState = "start";
+- else (userChoice == "lowest")
+// function to check who is the "winner" in terms of lowest running score
+    lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
+    // function to display leaderboard
+    lowestLeaderboard = displayLowestLeaderboard(
+      playerOneRunningScore,
+      playerTwoRunningScore
+    );
+    myOutputValue = `Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
+    gameState = "start"; */
+
 // initialise the initial gameState
 var gameState = "chooseGameMode";
 var chosenGameMode = "";
@@ -22,7 +72,7 @@ var main = function (input) {
   // "refresh" output everytime we restart the app i.e. pressing submit
   var output = "";
   console.log(gameState);
-  // asks user for what gameMode they want: "normal" or "lowest"
+  // 0. asks user for what gameMode they want: "normal" or "lowest"
   if (gameState == "chooseGameMode") {
     chosenGameMode = input;
     // user validation
@@ -33,7 +83,7 @@ var main = function (input) {
       gameState = "rollDice";
     }
   }
-  // gameState "rollDice" which gets user to choose the amount of dice they want to roll
+  // 1. gameState "rollDice" which gets user to choose the amount of dice they want to roll
   else if (gameState == "rollDice") {
     numOfDice = Number(input);
     // user validation; isNaN takes care of strings because Number will conver them to NaN. The rest is for 0 and 1 because we those values do not help us generate useful numbers
@@ -48,7 +98,7 @@ var main = function (input) {
       gameState = "generateNums";
     }
   }
-  // gameState to generate the final numbers based on the chosenGameMode
+  // 2. gameState to generate the final numbers based on the chosenGameMode
   else if (gameState == "generateNums") {
     // sort the two arrays in descending order first
     var sortedPlayerOne = playerOneDiceRolls.sort(compare);
@@ -74,7 +124,7 @@ var main = function (input) {
     );
     gameState = "checkResult";
   }
-  // gameState to checkResult
+  // 3. gameState to checkResult
   else if (gameState == "checkResult") {
     if (chosenGameMode == "normal") {
       // function to check who is the leader in terms of running score
