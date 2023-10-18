@@ -5,9 +5,7 @@
 // Auto-generate the optimal combined number based on each player's dice rolls to determine the winner of that round.
 
 // initialise the initial gameState
-// var gameState = "rollPlayerOneDice";
-var gameState = "start";
-var userChoice; // global userChoice so we can access in all the code blocks
+var gameState = "rollDice";
 
 // global playerOne variables so we can access them throughout the different gameStates
 var playerOneDiceRolls = [];
@@ -21,86 +19,22 @@ var playerTwoRunningScore = 0;
 
 var main = function (input) {
   // "refresh" myOutputValue everytime we restart the app i.e. pressing submit
-  var myOutputValue = "";
-  // gameState "start" which gets user to choose their "normal" or "lowest" game
-  if (gameState == "start") {
-    // "resets" userChoice to be either "normal" or "input" when we switch gameState to "start"
-    userChoice = input;
-    // user validation
-    if (userChoice != "normal" && userChoice != "lowest")
-      myOutputValue = `Please enter only "normal" or "lowest"`;
+  var output = "";
+  // gameState "rollDice" which gets user to choose the amount of dice they want to roll
+  if (gameState == "rollDice") {
+    numOfDice = Number(input);
+    // user validation; isNaN takes care of strings because Number will conver them to NaN. The rest is for 0 and 1 because we those values do not help us generate useful numbers
+    if (isNaN(numOfDice) || numOfDice == 0 || numOfDice == 1)
+      output = `Please enter only a number that of minimum value 2.`;
     else {
-      // use fixed gameState getNumbers so we can avoid repeating codes from playerOneFinalNumber to playerTwoRunningScore
-      gameState = "getNumbers";
-      myOutputValue = `You chose ${userChoice} game mode. Press Submit to roll the dice for both players`;
-      for (var i = 0; i < 2; i += 1) {
+      for (var i = 0; i < numOfDice; i++) {
         playerOneDiceRolls[i] = rollDice();
         playerTwoDiceRolls[i] = rollDice();
       }
+      output = `Player One rolled ${playerOneDiceRolls} <br> Player Two rolled ${playerTwoDiceRolls} <br> Press Submit to generate the numbers`;
     }
   }
-  // gameState "normal" for normal mode
-  else if (gameState == "getNumbers") {
-    // for userChoice == "normal", the first number will be the larger one in the respective array
-    if (userChoice == "normal") {
-      // find the max number and store in playerXFirstNum
-      playerOneFirstNum = Math.max(...playerOneDiceRolls);
-      playerTwoFirstNum = Math.max(...playerTwoDiceRolls);
-      // find the min number and store in playerXSecondNum
-      playerOneSecondNum = Math.min(...playerOneDiceRolls);
-      playerTwoSecondNum = Math.min(...playerTwoDiceRolls);
-    } // for userChoice == "lowest", do the opposite
-    else {
-      // find the min number and store in playerXFirstNum
-      playerOneFirstNum = Math.min(...playerOneDiceRolls);
-      playerTwoFirstNum = Math.min(...playerTwoDiceRolls);
-      // find the max number and store in playerXSecondNum
-      playerOneSecondNum = Math.max(...playerOneDiceRolls);
-      playerTwoSecondNum = Math.max(...playerTwoDiceRolls);
-    }
-    // use returnFinalNumber(firstNum, secondNum) to concatenate and return as a number
-    playerOneFinalNumber = returnFinalNumber(
-      playerOneFirstNum,
-      playerOneSecondNum
-    );
-    playerTwoFinalNumber = returnFinalNumber(
-      playerTwoFirstNum,
-      playerTwoSecondNum
-    );
-    // update running scores using updateRunningScore
-    playerOneRunningScore = updateRunningScore(
-      playerOneRunningScore,
-      playerOneFinalNumber
-    );
-    playerTwoRunningScore = updateRunningScore(
-      playerTwoRunningScore,
-      playerTwoFinalNumber
-    );
-    myOutputValue = `Player 1 rolled ${playerOneDiceRolls[0]} for Dice One and ${playerOneDiceRolls[1]} for Dice Two. <br> Player 1 auto-gen number is ${playerOneFinalNumber}.<br> Player 1 running score is ${playerOneRunningScore}. <br> <br> Player 2 rolled ${playerTwoDiceRolls[0]} for Dice One and ${playerTwoDiceRolls[1]} for Dice Two <br> Player 2 auto-gen number is ${playerTwoFinalNumber}. <br> Player 2 running score is ${playerTwoRunningScore} <br> <br> Press Submit to find winner based on ${userChoice} game state`;
-    // helper function to decide the. If "normal", returns checkResultNormal, else checkResultLowest
-    gameState = chooseNextGameState(userChoice);
-  } else if (gameState == "checkResultNormal") {
-    // function to check who is the leader in terms of running score
-    leader = checkLeader(playerOneRunningScore, playerTwoRunningScore);
-    // function to display leaderboard
-    leaderboard = displayLeaderboard(
-      playerOneRunningScore,
-      playerTwoRunningScore
-    );
-    myOutputValue = `Current Leader based on normal game state is ${leader}.<br><br>${leaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
-    gameState = "start";
-  } else if (gameState == "checkResultLowest") {
-    // function to check who is the "winner" in terms of lowest running score
-    lowestLeader = checkLowest(playerOneRunningScore, playerTwoRunningScore);
-    // function to display leaderboard
-    lowestLeaderboard = displayLowestLeaderboard(
-      playerOneRunningScore,
-      playerTwoRunningScore
-    );
-    myOutputValue = `Current Leader based on lowest combined number game state is ${lowestLeader}.<br><br>${lowestLeaderboard}<br><br>Enter "normal" or "lowest" again to enter your game choice`;
-    gameState = "start";
-  }
-  return myOutputValue;
+  return output;
 };
 
 // Dice Roll Helper Function - returns a random number between 1 to 6
