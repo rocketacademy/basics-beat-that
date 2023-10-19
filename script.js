@@ -47,7 +47,7 @@ var main = function (input) {
 var rollDice = function (playerNum, playerArr) {
   playerArr[0] = Math.floor(Math.random() * 6) + 1;
   playerArr[1] = Math.floor(Math.random() * 6) + 1;
-  messageRollDice = `🎲 WELCOME, PLAYER ${playerNum} 🎲 <br><br>
+  messageRollDice = `WELCOME, PLAYER ${playerNum} <br><br>
                     You rolled ${playerArr[0]} for dice one and ${playerArr[1]} for dice two. <br><br>
                     Choose the order of the dice by entering "1" or "2".`; 
 };
@@ -65,7 +65,7 @@ var combineNumbers = function (playerNum, combineNum, playerArr){
     combinedString = strDice2 + strDice1;
     combinedValue = parseInt(combinedString);
   }
-  messageCombinedNumbers = `🎲 PLAYER ${playerNum} 🎲 <br><br>
+  messageCombinedNumbers = `PLAYER ${playerNum} <br><br>
                             You chose Dice ${combineNum} first. Your number is ${combinedValue}. <br><br>
                             It is now Player 2's turn. <br><br>
                             Please press "Submit" to continue.`                        
