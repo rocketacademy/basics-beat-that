@@ -79,6 +79,7 @@ var getPlayerScore = function (playerInput) {
   return "Player " + currentPlayer + ", Your chosen value is: " + playerScore;
 };
 
+// create compare players score function
 var comparePlayersScore = function () {
   myOutputMessage =
     "Player 1 score: " +
@@ -100,6 +101,13 @@ var comparePlayersScore = function () {
   }
 
   return myOutputMessage;
+};
+
+// create restart game function
+var restartGame = function () {
+  currentPlayer = 1;
+  gameState = gameMode1;
+  allPlayersScore = [];
 };
 
 var main = function (input) {
@@ -130,6 +138,7 @@ var main = function (input) {
   if (gameState == gameMode3) {
     console.log("check game state = compares score");
     myOutputMessage = comparePlayersScore();
+    restartGame();
     return myOutputMessage;
   }
 };
