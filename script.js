@@ -44,6 +44,7 @@ var rollDiceForPlayer = function () {
   );
 };
 
+// create different player's score function
 var getPlayerScore = function (playerInput) {
   var playerScore;
   // if input is not 1 or 2
@@ -78,6 +79,29 @@ var getPlayerScore = function (playerInput) {
   return "Player " + currentPlayer + ", Your chosen value is: " + playerScore;
 };
 
+var comparePlayersScore = function () {
+  myOutputMessage =
+    "Player 1 score: " +
+    allPlayersScore[0] +
+    "<br>Player 2 score: " +
+    allPlayersScore[1];
+  // player 1 wins
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    myOutputMessage = myOutputMessage + "<br>Player 1 wins!";
+  }
+
+  // player 2 wins
+  if (allPlayersScore[1] > allPlayersScore[0]) {
+    myOutputMessage = myOutputMessage + "<br>Player 2 wins!";
+  }
+  // tie
+  if (allPlayersScore[0] == allPlayersScore[1]) {
+    myOutputMessage = myOutputMessage + "<br>Its a tie!";
+  }
+
+  return myOutputMessage;
+};
+
 var main = function (input) {
   console.log("check game state: ", gameState);
   console.log("check current player: ", currentPlayer);
@@ -88,7 +112,7 @@ var main = function (input) {
     gameState = gameMode2;
     return myOutputMessage;
   }
-  if ((gameState = gameMode2)) {
+  if (gameState == gameMode2) {
     console.log("check game state: ", gameState);
     // call player score function
     myOutputMessage = getPlayerScore(input);
@@ -102,7 +126,10 @@ var main = function (input) {
       gameState = gameMode3;
       return myOutputMessage + " Click submit again to calculate the score";
     }
-
+  }
+  if (gameState == gameMode3) {
+    console.log("check game state = compares score");
+    myOutputMessage = comparePlayersScore();
     return myOutputMessage;
   }
 };
