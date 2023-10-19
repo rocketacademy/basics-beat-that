@@ -37,12 +37,12 @@ var main = function (input) {
     gameState = "askPlayerOneChoice";
   } else if (gameState == "askPlayerOneChoice") {
     var diceNumberChosen = input;
-    var playerOneNumberInTens = returnNumberInTensPosition(
+    var playerOneNumberInTens = getNumberInTensPosition(
       diceNumberChosen,
       playerOneDiceRolls
     );
     var playerOneNumberInOnes = returnNumberInOnesPosition(
-      playerOneNumberInTens,
+      diceNumberChosen,
       playerOneDiceRolls
     );
     playerOneFinalNumber = returnFinalNumber(
@@ -57,12 +57,12 @@ var main = function (input) {
     gameState = "askPlayerTwoChoice";
   } else if (gameState == "askPlayerTwoChoice") {
     var diceNumberChosen = input;
-    var playerTwoNumberInTens = returnNumberInTensPosition(
+    var playerTwoNumberInTens = getNumberInTensPosition(
       diceNumberChosen,
       playerTwoDiceRolls
     );
     var playerTwoNumberInOnes = returnNumberInOnesPosition(
-      playerTwoNumberInTens,
+      diceNumberChosen,
       playerTwoDiceRolls
     );
     playerTwoFinalNumber = returnFinalNumber(
@@ -74,6 +74,7 @@ var main = function (input) {
   } else if (gameState == "checkWinner") {
     finalResult = checkResult(playerOneFinalNumber, playerTwoFinalNumber);
     myOutputValue = `Player 1's number is ${playerOneFinalNumber}<br>Player 2's final number is ${playerTwoFinalNumber}.<br>Result is ${finalResult}.`;
+    gameState = "rollPlayerOneDice";
   }
   return myOutputValue;
 };
@@ -86,7 +87,7 @@ var rollDice = function () {
 };
 
 // Return number in the tens position
-var returnNumberInTensPosition = function (
+var getNumberInTensPosition = function (
   selectedDiceNumber,
   playerDiceRollArray
 ) {
@@ -98,14 +99,17 @@ var returnNumberInTensPosition = function (
 
 // Return number in ones position
 var returnNumberInOnesPosition = function (
-  numberInTensPosition,
+  selectedDiceNumber,
   playerDiceRollArray
 ) {
-  var numberInOnesPosition = playerDiceRollArray.find(function (
-    elementInArray
-  ) {
-    return elementInArray != numberInTensPosition;
-  });
+  var indexNumberInTensPosition = selectedDiceNumber - 1;
+  var indexNumberInOnesPosition;
+  if (indexNumberInTensPosition == 0) {
+    indexNumberInOnesPosition = 1;
+  } else {
+    indexNumberInOnesPosition = 0;
+  }
+  var numberInOnesPosition = playerDiceRollArray[indexNumberInOnesPosition];
   return numberInOnesPosition;
 };
 
