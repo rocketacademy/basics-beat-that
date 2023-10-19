@@ -7,10 +7,13 @@
 
 var gameMode1 = "players roll dice";
 var gameMode2 = "players choose the order of the dice";
-
+var gameMode3 = "compares scores";
 var gameState = gameMode1;
 
-var playerRolls = [];
+var currentPlayerRolls = [];
+
+var currentPlayer = 1;
+var allPlayersScore = [];
 
 // Create a roll dice function
 var rollDice = function () {
@@ -26,47 +29,58 @@ var rollDiceForPlayer = function () {
   console.log("start of roll dice for player");
   var counter = 0;
   while (counter < 2) {
-    playerRolls.push(rollDice());
+    currentPlayerRolls.push(rollDice());
     counter = counter + 1;
   }
-  console.log("roll dice for player: ", playerRolls);
+  console.log("roll dice for player: ", currentPlayerRolls);
   return (
-    "Welcome, You rolled <br> Dice 1: " +
-    playerRolls[0] +
+    "Welcome player " +
+    currentPlayer +
+    ", You rolled <br> Dice 1: " +
+    currentPlayerRolls[0] +
     "<br>Dice 2: " +
-    playerRolls[1] +
+    currentPlayerRolls[1] +
     "<br>Please choose between 1 or 2 to choose the corresponding dice to be used as the first digit of your final value"
   );
 };
 
 var getPlayerScore = function (playerInput) {
+  var playerScore;
   // if input is not 1 or 2
   if (playerInput != 1 && playerInput != 2) {
     console.log("input is not 1 or 2");
     return (
       "Error! Please only input 1 or 2 to choose the corresponding dice to be used as the first digit of your final value<br>Your dice rolls are<br>Dice 1: " +
-      playerRolls[0] +
+      currentPlayerRolls[0] +
       "<br>Dice 2: " +
-      playerRolls[1]
+      currentPlayerRolls[1]
     );
   }
   // input = 1
   if (playerInput == 1) {
     console.log("If input = 1");
-    var playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
-    return "Your chosen score is " + playerScore;
+    var playerScore = Number(
+      String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
+    );
+    //return "Your chosen score is " + playerScore;
   }
 
   // input = 2
-  if (playerInput == 1) {
+  if (playerInput == 2) {
     console.log("If input = 2");
-    var playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
-    return "Your chosen score is " + playerScore;
+    var playerScore = Number(
+      String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
+    );
+    //return "Your chosen score is " + playerScore;
   }
+  allPlayersScore.push(playerScore);
+  currentPlayerRolls = [];
+  return "Player " + currentPlayer + ", Your chosen value is: " + playerScore;
 };
 
 var main = function (input) {
   console.log("check game state: ", gameState);
+  console.log("check current player: ", currentPlayer);
   var myOutputMessage = "";
   if (gameState == gameMode1) {
     console.log("game state = players roll dice");
@@ -78,6 +92,17 @@ var main = function (input) {
     console.log("check game state: ", gameState);
     // call player score function
     myOutputMessage = getPlayerScore(input);
+    if (currentPlayer == 1) {
+      currentPlayer = 2;
+      gameState = gameMode1;
+      return myOutputMessage + " It is now player 2's turn!";
+    }
+    if (currentPlayer == 2) {
+      console.log("End of player 2's turn, next submit will compare score");
+      gameState = gameMode3;
+      return myOutputMessage + " Click submit again to calculate the score";
+    }
+
     return myOutputMessage;
   }
 };
