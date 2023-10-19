@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>SWE Fundamentals</title>
     <style>
       * {
         box-sizing: border-box;
@@ -49,32 +50,16 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Beat That!</h1>
     <div id="container">
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+      <div id="output-div">Press "Submit" for Player 1 to start rolling the dice!</div>
     </div>
-    <!-- Import program logic -->
+
     <script src="script.js"></script>
-    <!-- Define button click functionality -->
-    <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
-
-        // Display result in output element
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
-
-        // Reset input value
-        input.value = "";
-      });
-    </script>
   </body>
 </html>
