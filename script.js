@@ -20,13 +20,17 @@ const rollDiceResult = () => {
       Choose which dice you would like to place first in your number.`;
 };
 
+function evalGame(dice) {
+  console.log("testing");
+}
+
 const evalLogic = (dice) => {
   if (dice == 1 || dice == 2) {
     if (currPlayer == 2) {
-      evalDice(dice);
-      return evalWinner();
+      evalGame.dice(dice);
+      return evalGame.winner();
     } else {
-      let rolledNumber = evalDice(dice);
+      let rolledNumber = evalGame.dice(dice);
       initGame();
       return `Your submitted number is ${rolledNumber}. It is now Player ${currPlayer}'s turn. Roll your dice.`;
     }
@@ -54,6 +58,10 @@ const evalWinner = () => {
     : `Your submitted number is ${player2Num}. Player 1's number is ${player1Num}. Player 2 has won!`;
 };
 
+evalGame.winner = evalWinner;
+evalGame.dice = evalDice;
+evalGame.logic = evalLogic;
+
 const resetGame = () => {
   (player1Num = 0), (player2Num = 0), (gameState = undefined);
 };
@@ -64,7 +72,7 @@ let main = function (input) {
   if (gameState) {
     console.log(`game state is roll dice`);
     myOutputValue =
-      gameState == "roll-dice" ? rollDiceResult() : evalLogic(input);
+      gameState == "roll-dice" ? rollDiceResult() : evalGame.logic(input);
   } else {
     console.log(`game state is empty`);
 
