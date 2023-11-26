@@ -1,3 +1,4 @@
+// =========== GLOBAL VARIABLES ==========
 var player1Name = "";
 var player2Name = "";
 var player1Dice1 = 0;
@@ -8,6 +9,8 @@ var player2Dice2 = 0;
 var player2Number = 0;
 var journeyCounter = 0;
 
+// =========== HELPER FUNCTIONS ==========
+// Function that helps autogenerate the dice roll values
 var diceRoll = function () {
   var diceNumber = 6;
   var randomDecimal = Math.random() * diceNumber;
@@ -16,6 +19,7 @@ var diceRoll = function () {
   return diceResult;
 };
 
+// Functions that checks for validation of name
 var nameString = function (input) {
   const letterRegex = /^[a-zA-Z]+$/;
   if (letterRegex.test(input)) {
@@ -27,12 +31,7 @@ var nameString = function (input) {
   }
 };
 
-var checkDicePosition = function (input) {
-  input = Number(input);
-  if (input == 1) {
-  }
-};
-
+// Initial Dice rolls for each player and determines which player is currently going through this linear journey
 var playerInput = function (input, counter) {
   if (counter == 0) {
     player1Name = input;
@@ -49,6 +48,7 @@ var playerInput = function (input, counter) {
   }
 };
 
+// Function that assists in calculating the player's final Dice results after selecting their Dice positions
 var playerResult = function (input, counter) {
   if (counter == 1) {
     if (input == 1) {
@@ -84,6 +84,7 @@ var playerResult = function (input, counter) {
   }
 };
 
+// =========== MAIN FUNCTION ==========
 var main = function (input) {
   var usrInput = input;
   if (journeyCounter == 0) {

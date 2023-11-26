@@ -1,7 +1,17 @@
 # Rocket Academy Coding Basics: Beat That!
 
-## Project Details:
+A game that allows 2 players to roll dice and pit the highest concatenated dice values against each other. Higher rolled dice wins!
 
-### Author: Samuel Lee
+## Table of Content:
 
-### Last Updated: 26 November, 2023
+- [Project Details](#project-details)
+
+## Project Details
+
+### Author:
+
+Samuel Lee
+
+### Last Updated:
+
+26 November, 2023
