@@ -10,15 +10,22 @@
 // the player with the higher number will be the winner
 
 // GLOBEL VARIABLES
+// Scores and Leaderboard
+var playerOneScore = 0;
+var playerTwoScore = 0;
+
 // player database
 var playerOneRolls = [];
 var playerOneNumber = 0;
 var playerTwoRolls = [];
 var playerTwoNumber = 0;
 
-// gamemode and current player
-var gameMode = 'dice roll'
+// gameProcess and current player
+var gameProcess = 'dice roll'
 var player = 'Player 1'
+
+// leaderborad
+document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1:\n2:`
 
 // player summary
 document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
@@ -57,7 +64,7 @@ var twoDiceRolls = function () {
 
 // HELPER FUNCTION
 // determining the 2 dice roll results for respective player
-var gameModeDiceRoll = function () {
+var gameProcessDiceRoll = function () {
   // generating an array with 2 dice roll results
   var diceRollResults = twoDiceRolls();
 
@@ -79,7 +86,7 @@ var gameModeDiceRoll = function () {
   document.getElementById("submit-button").innerHTML = `Submit`
   
   // changing game mode
-  gameMode = 'first numeral'
+  gameProcess = 'first numeral'
   
   // return system message for the results of the dice rolls
   return `You rolled the following: ${diceRollResults}`
@@ -87,7 +94,7 @@ var gameModeDiceRoll = function () {
 
 // HELPER FUNCTION
 // determine the combined number based on user choice of first numeral 
-var gameModeFirstNum = function (playerIndex) {
+var gameProcessFirstNum = function (playerIndex) {
   // defining which player's dice rolls to use
   if (player == 'Player 1') {
     var arr = playerOneRolls;
@@ -115,8 +122,9 @@ var gameModeFirstNum = function (playerIndex) {
   if (player == 'Player 1') {
     // reset game and change to player 2
     playerOneNumber = playerNum;
+    playerOneScore += playerNum;
     player = 'Player 2';
-    gameMode = 'dice roll';
+    gameProcess = 'dice roll';
 
     // update player summary
     document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1: ${playerOneRolls[0]}\nDice #2: ${playerOneRolls[1]}\nCombined Number:${playerOneNumber}`
@@ -132,8 +140,9 @@ var gameModeFirstNum = function (playerIndex) {
   } else if (player == 'Player 2') {
     // reset game and change game mode to summary
     playerTwoNumber = playerNum;
+    playerTwoScore += playerNum;
     player = 'Player 1';
-    gameMode = 'summary';
+    gameProcess = 'summary';
 
     // update player summary
     document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1: ${playerTwoRolls[0]}\nDice #2: ${playerTwoRolls[1]}\nCombined Number:${playerTwoNumber}`
@@ -163,13 +172,13 @@ var gameResults = function () {
 
 // HELPER FUNCTION
 // reset the game
-var gameModeSummary = function () {
+var gameProcessSummary = function () {
   playerOneRolls = [];
   playerOneNumber = 0;
   playerTwoRolls = [];
   playerTwoNumber = 0;
   
-  gameMode = 'dice roll'
+  gameProcess = 'dice roll'
   player = 'Player 1'
   document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
   document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
@@ -179,18 +188,31 @@ var gameModeSummary = function () {
   return '';
 }
 
+// HELPER FUNCTION
+// tabulate total scores and update leaderboard
+var updateLeaderboard = function () {
+  if (playerOneScore >= playerTwoScore) {
+    document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1:   Player 1 - ${playerOneScore}\n2:   Player 2 - ${playerTwoScore}`
+  } else {
+    document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1:   Player 2 - ${playerTwoScore}\n2:   Player 1 - ${playerOneScore}`
+  }
+}
+
+// MAIN FUNCTION
 var main = function (input) {
 
   var myOutputValue = '';
 
-  if (gameMode == 'dice roll') {
-    myOutputValue = gameModeDiceRoll();
-  } else if  (gameMode == 'first numeral') {
+  if (gameProcess == 'dice roll') {
+    myOutputValue = gameProcessDiceRoll();
+  } else if  (gameProcess == 'first numeral') {
     var playerIndex = input;
-    myOutputValue = gameModeFirstNum(playerIndex);
-  } else if (gameMode == 'summary') {
-    myOutputValue = gameModeSummary();
+    myOutputValue = gameProcessFirstNum(playerIndex);
+  } else if (gameProcess == 'summary') {
+    myOutputValue = gameProcessSummary();
   }
+
+  updateLeaderboard();
 
   return myOutputValue;
 };
