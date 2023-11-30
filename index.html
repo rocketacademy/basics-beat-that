@@ -18,10 +18,16 @@
       }
 
       #container {
-        background-color: pink;
-        margin: 40px auto;
+        background-color: rgb(241, 241, 247);
+        margin: 0px auto;
         max-width: 800px;
-        padding: 38px 31px;
+        padding: 20px;
+        border-radius: 0px 0px 10px 10px;
+      }
+
+      #instruction-container {
+        margin: 0px auto;
+        max-width: 800px;
       }
 
       input {
@@ -39,8 +45,37 @@
         padding: 0 6px;
       }
 
+      #flex-item-one {
+        flex: 1;
+        white-space: pre-wrap;
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(241, 241, 247);
+        border-radius: 10px 0px 0px 0px;
+      }
+
+      #flex-item-two {
+        flex: 1;
+        white-space: pre-wrap;
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(241, 241, 247);
+        border-radius: 0px 10px 0px 0px;
+      }
+
       #para {
         margin: 5px 0px;
+      }
+      
+      #myCustomText {
+        white-space: pre-wrap;
+      }
+
+      #flex-row {
+        display: flex;
+        flex-direction: row;
+        max-width: 800px;
+        margin: 40px auto 0px;
       }
 
       #output-div {
@@ -54,14 +89,18 @@
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
-    <div>
+    <div id="instruction-container">
       <h3>How to play?</h3>
       <p id="para">This is a 2 player game:</p>
       <p id="para">Player 1 will roll 2 dice, choose one of the dice as the first numeral of the combined number.</p>
       <p id="para">Player 2 will do the same and compare their combined number with Player 1</p>
     </div>
+    <div id="flex-row">
+      <p id="flex-item-one"></p>
+      <p id="flex-item-two"></p>
+    </div>
     <div id="container">
-      <p><span id="myCustomText"></p>
+      <p id="myCustomText"></p>
       <p>Input:</p>
       <input id="input-field" />
       <br />
@@ -86,6 +125,15 @@
         // Reset input value
         input.value = "";
       });
+
+      // QOL function, clicking enter will click the submit button
+      var input = document.getElementById("input-field");
+      input.addEventListener("keypress", function(event) {
+        if(event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("submit-button").click();
+        }
+      })
     </script>
   </body>
 </html>
