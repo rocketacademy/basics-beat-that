@@ -1,3 +1,14 @@
+// Beat That Psudo Code
+// 2 players is required to play the game
+// player 1 will start by rolling 2 dice
+// player 1 will select which dice will be his first numeral
+// the other dice will automatically be the second numeral
+// player 2 will continue by throwing his 2 dice
+// player 2 will select which dice will be his first numeral
+// the other dice will automatically be the second numeral
+// compare the results of player 1 and player 2
+// the player with the higher number will be the winner
+
 // GLOBEL VARIABLES
 var playerOneRolls = [];
 var playerOneNumber = 0;
@@ -9,6 +20,7 @@ var player = 'Player 1'
 document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
 document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
 document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`
+document.getElementById("submit-button").innerHTML = `Roll dice!`
 
 // HELPER FUNCTION
 // function to roll a 6-sided dice and return a random number
@@ -16,6 +28,7 @@ var diceRoll = function () {
   var randomDecimal = Math.random() * 6;
   var randomInteger = Math.floor(randomDecimal);
   var diceNumber = randomInteger + 1;
+  console.log(`this dice roll result: ${diceNumber}`)
   return diceNumber;
 }
 
@@ -51,7 +64,8 @@ var gameModeDiceRoll = function () {
   // returning system message for the results of the dice rolls
   console.log(`${player}'s dice rolls are ${diceRollResults}`)
 
-  document.getElementById("myCustomText").innerHTML = `${player}! Please select which dice you want for your first numeral!`
+  document.getElementById("myCustomText").innerHTML = `${player}! Please select which dice you want for your first numeral!`;
+  document.getElementById("submit-button").innerHTML = `Submit`
 
   // changing game mode
   gameMode = 'first numeral'
@@ -94,6 +108,7 @@ var gameModeFirstNum = function (playerIndex) {
 
     document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1: ${playerOneRolls[0]}\nDice #2: ${playerOneRolls[1]}\nCombined Number:${playerOneNumber}`
     document.getElementById("myCustomText").innerHTML = `Player 2, please roll your dice.`
+    document.getElementById("submit-button").innerHTML = `Roll dice!`
 
     return `Player 1 has selected dice #${playerIndex} as their first numberal!`
   } else if (player == 'Player 2') {
@@ -103,9 +118,10 @@ var gameModeFirstNum = function (playerIndex) {
     gameMode = 'summary';
 
     document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1: ${playerTwoRolls[0]}\nDice #2: ${playerTwoRolls[1]}\nCombined Number:${playerTwoNumber}`
-    document.getElementById("myCustomText").innerHTML = `The game has ended. Click "Enter" to reset the game`
+    document.getElementById("myCustomText").innerHTML = `The game has ended. Click "Reset" to reset the game`;
+    document.getElementById("submit-button").innerHTML = `Reset`;
 
-    return `Player 2 has selected dice #${playerIndex} as their first numberal! ${gameModeSummary()}`
+    return `Player 2 has selected dice #${playerIndex} as their first numberal!\n<b>${gameModeSummary()}</b>`
   }
 }
 
@@ -113,9 +129,11 @@ var gameModeFirstNum = function (playerIndex) {
 // determine the winner 
 var gameModeSummary = function () {
   if (playerOneNumber > playerTwoNumber) {
-    return `Player 1 wins!`
+    return `Player 1 Wins!`
+  } else if (playerOneNumber < playerTwoNumber) {
+    return  `Player 2 Wins!`
   } else {
-    return  `Player 2 wins!`
+    return `WOW! It's a Draw!`
   }
 }
 
@@ -140,6 +158,7 @@ var main = function (input) {
     document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
     document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
     document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`
+    document.getElementById("submit-button").innerHTML = `Roll dice!`;
 
     myOutputValue = '';
   }
