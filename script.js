@@ -10,16 +10,24 @@
 // the player with the higher number will be the winner
 
 // GLOBEL VARIABLES
+// player database
 var playerOneRolls = [];
 var playerOneNumber = 0;
 var playerTwoRolls = [];
 var playerTwoNumber = 0;
 
+// gamemode and current player
 var gameMode = 'dice roll'
 var player = 'Player 1'
+
+// player summary
 document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
 document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
+
+// system instructions
 document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`
+
+// button text
 document.getElementById("submit-button").innerHTML = `Roll dice!`
 
 // HELPER FUNCTION
@@ -52,7 +60,8 @@ var twoDiceRolls = function () {
 var gameModeDiceRoll = function () {
   // generating an array with 2 dice roll results
   var diceRollResults = twoDiceRolls();
-  // assigning to assigned player
+
+  // assigning to respective player
   if (player == 'Player 1') {
     playerOneRolls = diceRollResults;
     document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1: ${playerOneRolls[0]}\nDice #2: ${playerOneRolls[1]}\nCombined Number:`
@@ -61,22 +70,25 @@ var gameModeDiceRoll = function () {
     document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1: ${playerTwoRolls[0]}\nDice #2: ${playerTwoRolls[1]}\nCombined Number:`
   }
   
-  // returning system message for the results of the dice rolls
   console.log(`${player}'s dice rolls are ${diceRollResults}`)
-
+  
+  // update system instructions
   document.getElementById("myCustomText").innerHTML = `${player}! Please select which dice you want for your first numeral!`;
+  
+  // update button text
   document.getElementById("submit-button").innerHTML = `Submit`
-
+  
   // changing game mode
   gameMode = 'first numeral'
-
+  
+  // return system message for the results of the dice rolls
   return `You rolled the following: ${diceRollResults}`
 }
 
 // HELPER FUNCTION
 // determine the combined number based on user choice of first numeral 
 var gameModeFirstNum = function (playerIndex) {
-  // defining the which player's dice rolls use
+  // defining which player's dice rolls to use
   if (player == 'Player 1') {
     var arr = playerOneRolls;
   } else if (player == 'Player 2') {
@@ -106,10 +118,16 @@ var gameModeFirstNum = function (playerIndex) {
     player = 'Player 2';
     gameMode = 'dice roll';
 
+    // update player summary
     document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1: ${playerOneRolls[0]}\nDice #2: ${playerOneRolls[1]}\nCombined Number:${playerOneNumber}`
+
+    // update system instructions
     document.getElementById("myCustomText").innerHTML = `Player 2, please roll your dice.`
+
+    // update button text
     document.getElementById("submit-button").innerHTML = `Roll dice!`
 
+    // return system message for the player's chosen value
     return `Player 1 has selected dice #${playerIndex} as their first numberal!`
   } else if (player == 'Player 2') {
     // reset game and change game mode to summary
@@ -117,17 +135,23 @@ var gameModeFirstNum = function (playerIndex) {
     player = 'Player 1';
     gameMode = 'summary';
 
+    // update player summary
     document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1: ${playerTwoRolls[0]}\nDice #2: ${playerTwoRolls[1]}\nCombined Number:${playerTwoNumber}`
+
+    // update system instructions
     document.getElementById("myCustomText").innerHTML = `The game has ended. Click "Reset" to reset the game`;
+
+    // update button
     document.getElementById("submit-button").innerHTML = `Reset`;
 
-    return `Player 2 has selected dice #${playerIndex} as their first numberal!\n<b>${gameModeSummary()}</b>`
+    // return system message for the player's chosen value and the results of the game
+    return `Player 2 has selected dice #${playerIndex} as their first numberal!\n<b>${gameResults()}</b>`
   }
 }
 
 // HELPER FUINCTION
 // determine the winner 
-var gameModeSummary = function () {
+var gameResults = function () {
   if (playerOneNumber > playerTwoNumber) {
     return `Player 1 Wins!`
   } else if (playerOneNumber < playerTwoNumber) {
@@ -137,6 +161,24 @@ var gameModeSummary = function () {
   }
 }
 
+// HELPER FUNCTION
+// reset the game
+var gameModeSummary = function () {
+  playerOneRolls = [];
+  playerOneNumber = 0;
+  playerTwoRolls = [];
+  playerTwoNumber = 0;
+  
+  gameMode = 'dice roll'
+  player = 'Player 1'
+  document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
+  document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
+  document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`
+  document.getElementById("submit-button").innerHTML = `Roll dice!`;
+
+  return '';
+}
+
 var main = function (input) {
 
   var myOutputValue = '';
@@ -144,23 +186,10 @@ var main = function (input) {
   if (gameMode == 'dice roll') {
     myOutputValue = gameModeDiceRoll();
   } else if  (gameMode == 'first numeral') {
-    // input validation & combining players dice
     var playerIndex = input;
     myOutputValue = gameModeFirstNum(playerIndex);
   } else if (gameMode == 'summary') {
-    playerOneRolls = [];
-    playerOneNumber = 0;
-    playerTwoRolls = [];
-    playerTwoNumber = 0;
-
-    gameMode = 'dice roll'
-    player = 'Player 1'
-    document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
-    document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
-    document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`
-    document.getElementById("submit-button").innerHTML = `Roll dice!`;
-
-    myOutputValue = '';
+    myOutputValue = gameModeSummary();
   }
 
   return myOutputValue;
