@@ -20,22 +20,26 @@ var playerOneNumber = 0;
 var playerTwoRolls = [];
 var playerTwoNumber = 0;
 
-// gameProcess and current player
-var gameProcess = 'dice roll'
-var player = 'Player 1'
+// gamemode, gameProcess and current player
+var gameMode = 'default';
+var autoGen = false;
+var gameStart = false;
+var gameProcess = 'dice roll';
+var player = 'Player 1';
 
-// leaderborad
-document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1:\n2:`
+// leaderboard
+document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1:\n2:`;
+document.getElementById("gameMode").innerHTML = `<b>GameMode:</b> ${gameMode} | <b>Auto-Generate:</b> ${autoGen}`;
 
 // player summary
-document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
-document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`
+document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`;
+document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1:\nDice #2:\nCombined Number:`;
 
 // system instructions
-document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`
+document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`;
 
 // button text
-document.getElementById("submit-button").innerHTML = `Roll dice!`
+document.getElementById("submit-button").innerHTML = `Roll dice!`;
 
 // HELPER FUNCTION
 // function to roll a 6-sided dice and return a random number
@@ -67,6 +71,7 @@ var twoDiceRolls = function () {
 var gameProcessDiceRoll = function () {
   // generating an array with 2 dice roll results
   var diceRollResults = twoDiceRolls();
+  gameStart = true;
 
   // assigning to respective player
   if (player == 'Player 1') {
@@ -87,6 +92,10 @@ var gameProcessDiceRoll = function () {
   
   // changing game mode
   gameProcess = 'first numeral'
+
+  if (autoGen) {
+    gameProcessFirstNum();
+  }
   
   // return system message for the results of the dice rolls
   return `You rolled the following: ${diceRollResults}`
@@ -103,20 +112,36 @@ var gameProcessFirstNum = function (playerIndex) {
   }
 
   // combining the numbers
-  if (playerIndex == 1) {
-    var firstNumeral = arr[0];
-    var secondNumeral = arr[1];
-    var playerNum =  (firstNumeral * 10) + secondNumeral;
-  } else if (playerIndex == 2) {
-    var firstNumeral = arr[1];
-    var secondNumeral = arr[0];
-    var playerNum =  (firstNumeral * 10) + secondNumeral;
-  } else {
-    // input validation
-    return `You have entered in invalid input, please choose either the first or second dice as your first numeral (i.e. 1 or 2)`;
+  if (!autoGen) {
+    if (playerIndex == 1) {
+      var firstNumeral = arr[0];
+      var secondNumeral = arr[1];
+      var playerNum =  (firstNumeral * 10) + secondNumeral;
+    } else if (playerIndex == 2) {
+      var firstNumeral = arr[1];
+      var secondNumeral = arr[0];
+      var playerNum =  (firstNumeral * 10) + secondNumeral;
+    } else {
+      // input validation
+      return `You have entered in invalid input, please choose either the first or second dice as your first numeral (i.e. 1 or 2)`;
+    }
+    console.log(`${player}'s combined number is: ${playerNum}`)
+  } else if (autoGen && gameMode == 'default') {
+    if (arr[0] > arr[1]) {
+      var playerNum = (arr[0] * 10) + arr[1];
+    } else {
+      var playerNum = (arr[1] * 10) + arr[0];
+    }
+    console.log(`System has automatically generate the best outcome of ${playerNum}`)
+  } else if (autoGen && gameMode == 'reverse') {
+    if (arr[0] < arr[1]) {
+      var playerNum = (arr[0] * 10) + arr[1];
+    } else {
+      var playerNum = (arr[1] * 10) + arr[0];
+    }
+    console.log(`System has automatically generate the best outcome of ${playerNum}`)
   }
 
-  console.log(`${player}'s combined number is: ${playerNum}`)
   
   // return the combined numbers to the respective players
   if (player == 'Player 1') {
@@ -161,12 +186,22 @@ var gameProcessFirstNum = function (playerIndex) {
 // HELPER FUINCTION
 // determine the winner 
 var gameResults = function () {
-  if (playerOneNumber > playerTwoNumber) {
-    return `Player 1 Wins!`
-  } else if (playerOneNumber < playerTwoNumber) {
-    return  `Player 2 Wins!`
-  } else {
-    return `WOW! It's a Draw!`
+  if (gameMode == 'default') {
+    if (playerOneNumber > playerTwoNumber) {
+      return `Player 1 Wins!`
+    } else if (playerOneNumber < playerTwoNumber) {
+      return  `Player 2 Wins!`
+    } else {
+      return `WOW! It's a Draw!`
+    }
+  } else if (gameMode == 'reverse') {
+    if (playerOneNumber > playerTwoNumber) {
+      return `Player 2 Wins!`
+    } else if (playerOneNumber < playerTwoNumber) {
+      return  `Player 1 Wins!`
+    } else {
+      return `WOW! It's a Draw!`
+    }
   }
 }
 
@@ -178,6 +213,7 @@ var gameProcessSummary = function () {
   playerTwoRolls = [];
   playerTwoNumber = 0;
   
+  gameStart = false;
   gameProcess = 'dice roll'
   player = 'Player 1'
   document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1:\nDice #2:\nCombined Number:`
@@ -198,18 +234,67 @@ var updateLeaderboard = function () {
   }
 }
 
+// HELPER FUNCTION
+// change settings
+var gameProcessSettings = function (lowerCaseInput) {
+  if (lowerCaseInput == 'reverse') {
+    gameMode = 'reverse'
+    document.getElementById("gameMode").innerHTML = `<b>GameMode:</b> ${gameMode} | <b>Auto-Generate:</b> ${autoGen}`;
+    console.log({gameMode})
+    console.log({autoGen})
+    return 'GameMode changed to reverse'
+  } else if (lowerCaseInput == 'default') {
+    gameMode = 'default'
+    document.getElementById("gameMode").innerHTML = `<b>GameMode:</b> ${gameMode} | <b>Auto-Generate:</b> ${autoGen}`;
+    console.log({gameMode})
+    console.log({autoGen})
+    return 'GameMode changed to default'
+  } else if (lowerCaseInput == 'auto-generate' && !gameStart) {
+    autoGen = !autoGen
+    document.getElementById("gameMode").innerHTML = `<b>GameMode:</b> ${gameMode} | <b>Auto-Generate:</b> ${autoGen}`;
+    console.log({gameMode})
+    console.log({autoGen})
+    return `Game Settings auto generation set to ${autoGen}`
+  } else if (lowerCaseInput == 'exit') {
+    gameProcess = 'dice roll';
+    document.getElementById("myCustomText").innerHTML = `${player}, please roll your dice.`;
+    console.log({gameMode})
+    console.log({autoGen})
+    return `Settings saved and returned to game!`
+  }
+
+}
+
 // MAIN FUNCTION
 var main = function (input) {
 
   var myOutputValue = '';
 
+  // change settings
+  var lowerCaseInput = input.toLowerCase();
+  if (lowerCaseInput == 'settings' && !gameStart) {
+    
+    gameProcess = 'settings';
+
+    console.log({gameMode})
+    console.log({autoGen})
+    
+    document.getElementById("myCustomText").innerHTML = `You are currently in the Game Settings! Type "Exit" to return to game!`
+    return '';
+  } else if (lowerCaseInput == 'settings' && gameStart) {
+    return `Game has started, you cannot change game setting in a middle of a game!`;
+  }
+  
+  // main game process
   if (gameProcess == 'dice roll') {
     myOutputValue = gameProcessDiceRoll();
-  } else if  (gameProcess == 'first numeral') {
+  } else if  (gameProcess == 'first numeral' && !autoGen) {
     var playerIndex = input;
     myOutputValue = gameProcessFirstNum(playerIndex);
   } else if (gameProcess == 'summary') {
     myOutputValue = gameProcessSummary();
+  } else if (gameProcess == 'settings') {
+    myOutputValue = gameProcessSettings(lowerCaseInput)
   }
 
   updateLeaderboard();
