@@ -28,55 +28,6 @@ var gameProcess = 'dice roll';
 var player = 'Player 1';
 
 // HELPER FUNCTION
-// function to help update leaderboard information
-var updateLeaderboard = function () {
-  if (playerOneScore > playerTwoScore) {
-    document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1: Player 1 - ${playerOneScore}\n2: Player 2 - ${playerTwoScore}`;
-  } else {
-    document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1: Player 2 - ${playerTwoScore}\n2: Player 1 - ${playerOneScore}`;
-  }
-}
-
-// HELPER FUNCTION
-// function to update settings information
-var updateSettingsInfo = function () {
-  document.getElementById("settingInfo").innerHTML = `<b>GameMode:</b> ${gameMode}
-    <br><b>Auto-Generate:</b> ${autoGen}
-  `
-}
-
-// HELPER FUNCTION
-// function to update player summary
-var updatePlayerSummary = function () {
-  document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1: ${playerOneRolls[0]}\nDice #2: ${playerOneRolls[1]}\nCombined Number: ${playerOneNumber}`;
-  document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1: ${playerTwoRolls[0]}\nDice #2: ${playerTwoRolls[1]}\nCombined Number: ${playerTwoNumber}`;
-}
-
-// HELPER FUNCTION
-// function to update system instructions
-var updateSystemText = function (msg) {
-  document.getElementById("myCustomText").innerHTML = msg;
-}
-
-// HELPER FUNCTION
-// function to update button text
-var updateButtonText = function (msg) {
-  document.getElementById("submit-button").innerHTML = msg;
-}
-
-// HELPER FUNCTION
-// function to return help details
-var helpDetails = function () {
-  return `settings - open up settings page to amend game rules
-    <br>default - change game mode to default
-    <br>reverse - change game mode to reverse
-    <br>auto-generate - update game rule to switch auto-generate on/off
-    <br>exit - exit and save game settings
-    <br>reset - reset game and leaderboard
-  `;
-}
-
-// HELPER FUNCTION
 // function to roll a 6-sided dice and return a random number
 var diceRoll = function () {
   var randomDecimal = Math.random() * 6;
@@ -301,6 +252,55 @@ var gameProcessSettings = function (lowerCaseInput) {
   } else {
     return `Invalid settings, type "help" for more details,`
   }
+}
+
+// HELPER FUNCTION
+// function to update settings information
+var updateSettingsInfo = function () {
+  document.getElementById("settingInfo").innerHTML = `<b>GameMode:</b> ${gameMode}
+    <br><b>Auto-Generate:</b> ${autoGen}
+  `
+}
+
+// HELPER FUNCTION
+// function to help update leaderboard information
+var updateLeaderboard = function () {
+  if (playerOneScore > playerTwoScore) {
+    document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1: Player 1 - ${playerOneScore}\n2: Player 2 - ${playerTwoScore}`;
+  } else {
+    document.getElementById("leader-board").innerHTML = `<b>🏁LEADERBOARD🏁</b>\n1: Player 2 - ${playerTwoScore}\n2: Player 1 - ${playerOneScore}`;
+  }
+}
+
+// HELPER FUNCTION
+// function to update player summary
+var updatePlayerSummary = function () {
+  document.getElementById("flex-item-one").innerHTML = `<b>Player 1!</b>\nDice #1: ${playerOneRolls[0]}\nDice #2: ${playerOneRolls[1]}\nCombined Number: ${playerOneNumber}`;
+  document.getElementById("flex-item-two").innerHTML = `<b>Player 2!</b>\nDice #1: ${playerTwoRolls[0]}\nDice #2: ${playerTwoRolls[1]}\nCombined Number: ${playerTwoNumber}`;
+}
+
+// HELPER FUNCTION
+// function to update system instructions
+var updateSystemText = function (msg) {
+  document.getElementById("myCustomText").innerHTML = msg;
+}
+
+// HELPER FUNCTION
+// function to update button text
+var updateButtonText = function (msg) {
+  document.getElementById("submit-button").innerHTML = msg;
+}
+
+// HELPER FUNCTION
+// function to return help details
+var helpDetails = function () {
+  return `settings - open up settings page to amend game rules
+    <br>default - change game mode to default
+    <br>reverse - change game mode to reverse
+    <br>auto-generate - update game rule to switch auto-generate on/off
+    <br>exit - exit and save game settings
+    <br>reset - reset game and leaderboard
+  `;
 }
 
 updateSettingsInfo();
