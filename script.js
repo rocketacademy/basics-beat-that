@@ -1,72 +1,65 @@
-// There are 2 players and players take turns.
-// When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
-// The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
-// After both players have rolled and chosen dice order, the player with the higher combined number wins.
+var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
+var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER ";
+var gameState = GAME_STATE_DICE_ROLL;
 
-// GLOBAL STATES
-
-var DICE_ROLL_GAME_STATE = "";
-var ORDER_OF_DICE = "";
-var gameState = DICE_ROLL_GAME_STATE;
-var player = 1;
 var playerRolls = [];
 
-// roll dice functinon
+// HELPER FUNCTION
 var rollDice = function () {
+  console.log("Control flow: start of rollDice()");
   var randomDecimal = Math.random() * 6;
   var randomInterger = Math.floor(randomDecimal) + 1;
+  console.log("CrollDice output, randomInterger,", randomInterger);
   return randomInterger;
 };
 
 var rollDiceForPlayer = function () {
+  console.log("Control flow: start of rollDiceForPlayer()");
+
   var counter = 0;
   while (counter < 2) {
     playerRolls.push(rollDice());
     counter += 1;
   }
-  console.log("player rolls", playerRolls);
-  return `Welcome! You rolled Dice one: ${playerRolls[0]} and Dice two: ${playerRolls[1]} <br> Please enter '1' or '2' to choose the corresponding dice to be used as the fiorst digit of your final value.`;
+  console.log(`rollDiceForPlayer changes, playerRolls`, playerRolls);
+  return `Welcome<br><br>You rolled:<br> Dice 1: ${playerRolls[0]} | Dice 2: ${playerRolls[1]}.<br><br>Now, select '1' or '2' to choose the corresponding dice to be used as the first digit of your final value`;
 };
 
 var getPlayerScore = function (playerInput) {
-  // input validation
   if (playerInput != 1 && playerInput != 2) {
-    return `Error! Please input only '1' or '2'. <br> Dice one value is ${playerRolls[0]} <br> Dice two value is ${playerRolls[1]} `;
+    console.log("Control flow: gameState = GAME_STATE_CHOOSE_DICE_ORDER");
+    return `ERROR! Please only input '1' or '2' to choose the corresponding dice to be used as the first digit of your final value.<br><br> You rolled <br> Dice 1: ${playerRolls[0]} | Dice 2: ${playerRolls[1]}`;
   }
-  // input == 1
+
   if (playerInput == 1) {
+    console.log("Control flow: input == 1");
     var playerScore = Number(String(playerRolls[0])) + String(playerRolls[1]);
-    return `You chose ${playerScore}`;
+    return `Your chosen value is: ${playerScore}`;
   }
-  // input ==2
-  if (playerInput == 1) {
-    var playerScore = Number(String(playerRolls[0])) + String(playerRolls[1]);
-    return `The value you chose ${playerScore}`;
-  }
+
   if (playerInput == 2) {
+    console.log("Control flow: input == 2");
     var playerScore = Number(String(playerRolls[1])) + String(playerRolls[0]);
-    return `The value you chose ${playerScore}`;
+    return `Your chosen value is: ${playerScore}`;
   }
 };
 
 var main = function (input) {
+  console.log(`Checking game state on submit click: ${gameState}`);
   var myOutputValue = "";
-  // diceRoll function gets called twice.
-  if (gameState == DICE_ROLL_GAME_STATE) {
+
+  if ((gameState = GAME_STATE_DICE_ROLL)) {
+    console.log("Control flow: gameState = GAME_STATE_DICE_ROLL");
+
     myOutputValue = rollDiceForPlayer();
-    // change the game state
-    gameState = ORDER_OF_DICE;
+
+    gameState = GAME_STATE_CHOOSE_DICE_ORDER;
   }
 
-  if (gameState == ORDER_OF_DICE) {
-    console.log(`Control flow: gameState == ORDER_OF_DICE`);
-
-    // call playerSCore function into the gameState when it is ORDER_OF_DICE and pass in the input from the main function
+  if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
+    console.log("Control flow: input validation for input not 1 and 2");
     myOutputValue = getPlayerScore(input);
-  }
-  return myOutputValue;
-};
 
-// assign the values into a global variable
-// function for an input to be collected 1 or 2
-// concatanate both values and store it back in global variable
+    return myOutputValue;
+  }
+};
