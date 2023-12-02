@@ -286,11 +286,11 @@ var updateButtonText = function (msg) {
 // HELPER FUNCTION
 // function to return help details
 var helpDetails = function () {
-  return `settings - open up settings page to amend game rules
-    <br>default - change game mode to default
-    <br>reverse - change game mode to reverse
-    <br>auto-generate - update game rule to switch auto-generate on/off
-    <br>exit - exit and save game settings
+  return `settings - open up settings page to amend game rules;
+    <br>default - change game mode to default;
+    <br>reverse - change game mode to reverse;
+    <br>auto-generate - update game rule to switch auto-generate on/off;
+    <br>exit - exit and save game settings;
   `;
 }
 
