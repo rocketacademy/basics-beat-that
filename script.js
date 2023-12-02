@@ -228,26 +228,18 @@ var gameProcessSettings = function (lowerCaseInput) {
   if (lowerCaseInput == 'reverse') {
     gameMode = 'reverse'
     updateSettingsInfo();
-    console.log({gameMode})
-    console.log({autoGen})
     return 'GameMode changed to reverse'
   } else if (lowerCaseInput == 'default') {
     gameMode = 'default'
     updateSettingsInfo();
-    console.log({gameMode})
-    console.log({autoGen})
     return 'GameMode changed to default'
   } else if (lowerCaseInput == 'auto-generate' && !gameStart) {
     autoGen = !autoGen
     updateSettingsInfo();
-    console.log({gameMode})
-    console.log({autoGen})
     return `Game Settings auto generation set to ${autoGen}`
   } else if (lowerCaseInput == 'exit') {
     gameProcess = 'dice roll';
     updateSystemText(`${player}, please roll your dice.`);
-    console.log({gameMode})
-    console.log({autoGen})
     return `Settings saved and returned to game!`
   } else {
     return `Invalid settings, type "help" for more details,`
@@ -299,7 +291,6 @@ var helpDetails = function () {
     <br>reverse - change game mode to reverse
     <br>auto-generate - update game rule to switch auto-generate on/off
     <br>exit - exit and save game settings
-    <br>reset - reset game and leaderboard
   `;
 }
 
@@ -344,8 +335,6 @@ var main = function (input) {
   }
 
   updateLeaderboard();
-  console.log(playerOneNumber)
-  console.log(playerTwoNumber)
 
   return myOutputValue;
 };
