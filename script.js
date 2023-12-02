@@ -228,17 +228,14 @@ var gameProcessSettings = function (lowerCaseInput) {
   if (lowerCaseInput == 'reverse') {
     gameMode = 'reverse'
     updateSettingsInfo();
-    updateButtonText(`Roll dice!`);
     return 'GameMode changed to reverse'
   } else if (lowerCaseInput == 'default') {
     gameMode = 'default'
     updateSettingsInfo();
-    updateButtonText(`Roll dice!`);
     return 'GameMode changed to default'
   } else if (lowerCaseInput == 'auto-generate' && !gameStart) {
     autoGen = !autoGen
     updateSettingsInfo();
-    updateButtonText(`Roll dice!`);
     return `Game Settings auto generation set to ${autoGen}`
   } else if (lowerCaseInput == 'exit') {
     gameProcess = 'dice roll';
