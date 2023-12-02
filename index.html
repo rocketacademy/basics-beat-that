@@ -23,10 +23,10 @@
 
       #container {
         background-color: rgb(241, 241, 247);
-        margin: 0px auto;
+        margin: 20px auto;
         max-width: 800px;
-        padding: 0px 20px 20px;
-        border-radius: 0px 0px 10px 10px;
+        padding: 20px 20px 1px;
+        border-radius: 10px;
       }
 
       #instruction-container {
@@ -55,7 +55,7 @@
         padding: 20px;
         margin: 0px;
         background-color: rgb(241, 241, 247);
-        border-radius: 10px 0px 0px 0px;
+        border-radius: 10px;
       }
 
       #flex-item-two {
@@ -64,7 +64,7 @@
         padding: 20px;
         margin: 0px;
         background-color: rgb(241, 241, 247);
-        border-radius: 0px 10px 0px 0px;
+        border-radius: 10px;
       }
 
       #para {
@@ -78,7 +78,16 @@
       #leader-board {
         max-width: 800px;
         padding: 20px;
-        margin: 40px auto 0px;
+        margin: 20px auto 0px;
+        background-color: rgb(241, 241, 247);
+        white-space: pre-wrap;
+        border-radius: 10px;
+      }
+
+      #settingInfo {
+        max-width: 800px;
+        padding: 20px;
+        margin: 20px auto;
         background-color: rgb(241, 241, 247);
         white-space: pre-wrap;
         border-radius: 10px;
@@ -89,6 +98,7 @@
         flex-direction: row;
         max-width: 800px;
         margin: 20px auto 0px;
+        gap: 10px;
       }
 
       #output-div {
@@ -108,6 +118,7 @@
       <p id="para">This is a 2 player game:</p>
       <p id="para">Player 1 will roll 2 dice, choose one of the dice as the first numeral of the combined number.</p>
       <p id="para">Player 2 will do the same and compare their combined number with Player 1</p>
+      <p id="para">Tip: Type "help" for more info</p>
     </div>
     <div id="leader-board"></div>
     <div id="flex-row">
@@ -115,7 +126,6 @@
       <p id="flex-item-two"></p>
     </div>
     <div id="container">
-      <p id="gameMode"></p>
       <p id="myCustomText"></p>
       <p>Input:</p>
       <input id="input-field" />
@@ -124,6 +134,8 @@
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
+    <h3 id="instruction-container">Settings</h3>
+    <div id="settingInfo"></div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
