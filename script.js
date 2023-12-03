@@ -86,11 +86,15 @@ function getWinner() {
   } else {
     winner = 2;
   }
+  gameMode = ROLL_DICE_MODE;
+  currentPlayer = 1;
+  allPlayersNumberArr = [];
   return `==== SCOREBOARD ====<br><br>
           Player 1: ${playerOneScore}<br><br>
           player 2: ${playerTwoScore}<br><br>
           ==================== <br><br>
-          The winner of the game is Player ${winner}!!!`;
+          The winner of the game is Player ${winner}!!!<br><br>
+          Click on submit to play again!`;
 }
 var main = function (input) {
   if (gameMode == ROLL_DICE_MODE) {
@@ -104,7 +108,7 @@ var main = function (input) {
       currentPlayer = 2;
       gameMode = ROLL_DICE_MODE;
       return ` ${gameModeChooseOrder(input)} <br><br>
-                It is now player 2's turn.`;
+                It is now player 2's turn. Please click on submit!`;
     }
     if (allPlayersNumberArr.length == 2) {
       return getWinner();
