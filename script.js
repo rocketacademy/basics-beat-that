@@ -21,10 +21,13 @@ second mode: Player input dice order
 */
 
 //global variables
+const ROLL_DICE_MODE = "roll dice mode";
+const CHOOSE_ORDER_OF_Player_VALUE = "choose player value";
+// const RETRIEVE_WINNER = "retrieve winner";
 var currentDiceRollsArray = [];
 //game mode 1 is dice roll
 //game mode 2 is choose dice order to get the score
-var gameMode = 1;
+var gameMode = ROLL_DICE_MODE;
 var playerNumber = 0;
 var numOfPlayers = 2;
 var currentPlayer = 1;
@@ -33,20 +36,23 @@ var allPlayersNumberArr = [];
 function diceRoll() {
   return Math.floor(Math.random() * 6) + 1;
 }
-function gameMode1() {
+
+function gameModeRollDice() {
   for (var i = 0; i < 2; i++) {
     currentDiceRollsArray.push(diceRoll());
   }
   var dice1 = currentDiceRollsArray[0];
   var dice2 = currentDiceRollsArray[1];
   console.log("dice array", currentDiceRollsArray);
-  gameMode = 2;
+  gameMode = CHOOSE_ORDER_OF_Player_VALUE;
+
   return `Hello there Player ${currentPlayer}!<br><br>
-          You rolled ${dice1} for dice 1 and ${dice2} for dice 2.<br><br>
-          Choose the order of dice by entering "1" or "2"`;
+          1.First dice: ${dice1}<br><br>
+          2.Second dice: ${dice2}<br><br>
+          Choose the order of dice for your score by entering "1" or "2"`;
 }
 
-function gameMode2(diceOrder) {
+function gameModeChooseOrder(diceOrder) {
   var playerNumber;
   console.log("dice arr [0]", currentDiceRollsArray[0]);
   console.log("Dice arr [1]:", currentDiceRollsArray[1]);
@@ -68,17 +74,42 @@ function gameMode2(diceOrder) {
 
   return `You have chosen dice ${diceOrder}. Your number is ${playerNumber}`;
 }
-var main = function (input) {
-  console.log("current player: ", currentPlayer);
-  if (gameMode == 1) {
-    return gameMode1();
+
+function getWinner() {
+  var highestScore = 0;
+  var winner;
+  console.log("get winner method is called.");
+  var playerOneScore = allPlayersNumberArr[0].toString();
+  var playerTwoScore = allPlayersNumberArr[1].toString();
+  if (playerOneScore > playerTwoScore) {
+    winner = 1;
+  } else {
+    winner = 2;
   }
-  if (gameMode == 2) {
+  return `==== SCOREBOARD ====<br><br>
+          Player 1: ${playerOneScore}<br><br>
+          player 2: ${playerTwoScore}<br><br>
+          ==================== <br><br>
+          The winner of the game is Player ${winner}!!!`;
+}
+var main = function (input) {
+  if (gameMode == ROLL_DICE_MODE) {
+    return gameModeRollDice();
+  }
+  if (gameMode == CHOOSE_ORDER_OF_Player_VALUE) {
+    // if (input != 1 && input != 2) {
+    //   return `Invalid input. Please enter 1 or 2 only.`;
+    // }
     if (currentPlayer == 1) {
       currentPlayer = 2;
-      gameMode = 1;
+      gameMode = ROLL_DICE_MODE;
+      return ` ${gameModeChooseOrder(input)} <br><br>
+                It is now player 2's turn.`;
     }
-    return gameMode2(input);
+    if (allPlayersNumberArr.length == 2) {
+      return getWinner();
+    }
+    return gameModeChooseOrder(input);
   }
 };
 
