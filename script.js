@@ -103,6 +103,11 @@ var comparePlayerScores = function () {
   return compareMessage;
 };
 
+var resetGame = function () {
+  currentPlayer = 1;
+  gameState = GAME_STATE_DICE_ROLL;
+  allPlayerScore = [];
+};
 var main = function (input) {
   console.log("Checking game state on submit click: ", gameState);
   console.log("Checking currentPlayer on submit click: ", currentPlayer);
@@ -142,6 +147,10 @@ var main = function (input) {
   if (gameState == GAME_STATE_COMPARE_SCORES) {
     console.log("Control flow: gameState == GAME_STATE_COMPARE_SCORES");
     outputMessage = comparePlayerScores();
+    resetGame();
+    console.log("Current player after reset: ", currentPlayer);
+    console.log("Game state after reset: ", gameState);
+    console.log("allPlayersScore array after reset: ", allPlayerScore);
     return outputMessage;
   }
 };
