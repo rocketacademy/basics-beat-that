@@ -2,6 +2,8 @@ Please fill out the survey before submitting the pull request. Thanks!
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
+Batch 26, Rusydi Ahmad
+
 How many hours did you spend on this assignment? 3-4 hours
 
 Please fill in one error and/or error message you received while working on this assignment.
