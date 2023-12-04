@@ -1,122 +1,122 @@
-var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
-var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER ";
-var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES ";
-var gameState = GAME_STATE_DICE_ROLL;
-
-var currentPlayerRolls = [];
-
-var currentPlayer = 1;
-var allPlayerScore = [];
+// GLOBAL VARIABLES
+var gameStateDiceRoll = "gameStateDiceRoll";
+var gameStateOrder = "gameStateOrder";
+var gameStateCompare = "gameStateCompare";
+var gameStateReset = "gameStateReset";
+var gameState = "gameStateDiceRoll";
+var player = 1;
+var currentRoll = [];
+var diceCalcHolder = [];
 
 // HELPER FUNCTION
-var rollDice = function () {
-  console.log("Control flow: start of rollDice()");
+// Dice roll function
+var diceRoll = function () {
   var randomDecimal = Math.random() * 6;
-  var randomInterger = Math.floor(randomDecimal) + 1;
-  console.log("CrollDice output, randomInterger,", randomInterger);
+  var randomInterger = Math.floor(randomDecimal + 1);
+  console.log(`Random interger ${randomInterger}`);
   return randomInterger;
 };
 
-var rollDiceForPlayer = function () {
-  console.log("Control flow: start of rollDiceForPlayer()");
-
+// Function that rolls the dice twice and store it in the array currentRoll
+var playerRoll = function () {
   var counter = 0;
+  var message = "";
+
   while (counter < 2) {
-    currentPlayerRolls.push(rollDice());
     counter += 1;
+    currentRoll.push(diceRoll());
   }
-  console.log(
-    `rollDiceForPlayer changes, currentPlayerRolls`,
-    currentPlayerRolls
-  );
-  return `Welcome ${currentPlayer}<br><br>You rolled:<br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}.<br><br>Now, select '1' or '2' to choose the corresponding dice to be used as the first digit of your final value`;
+  console.log(`While loop to roll dice twice`, currentRoll);
+  message = `Welcome player ${player}. Please select which order dice one and two to form the highest value by selecting '1' or '2'<br>
+  Dice one: ${currentRoll[0]} <br> Dice two: ${currentRoll[1]}`;
+
+  return message;
 };
 
-var getPlayerScore = function (playerInput) {
-  var playerScore;
+// Function that concatanate two strings together
+var addNum = function (playerInput) {
+  var diceCalc;
+  // input validation
   if (playerInput != 1 && playerInput != 2) {
-    console.log("Control flow: gameState = GAME_STATE_CHOOSE_DICE_ORDER");
-    return `ERROR! Please only input '1' or '2' to choose the corresponding dice to be used as the first digit of your final value.<br><br> You rolled <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}`;
+    myOutputValue = `ERROR! <br> Please select which order dice one and two to form the highest value by selecting '1' or '2'<br>
+  Dice one: ${currentRoll[0]} <br> Dice two: ${currentRoll[1]}`;
+    return myOutputValue;
   }
-
-  if (playerInput == 1) {
-    console.log("Control flow: input == 1");
-    playerScore =
-      Number(String(currentPlayerRolls[0])) + String(currentPlayerRolls[1]);
-
-    return `Your chosen value is: ${playerScore}`;
+  // playerInput
+  else if (playerInput == 1) {
+    diceCalc = Number(String(currentRoll[0])) + String(currentRoll[1]);
+    myOutputValue = `Your value added up to be ${diceCalc}. `;
+  } else if (playerInput == 2) {
+    diceCalc = Number(String(currentRoll[1])) + String(currentRoll[0]);
+    myOutputValue = `Your value added up to be ${diceCalc}. `;
   }
-
-  if (playerInput == 2) {
-    console.log("Control flow: input == 2");
-
-    playerScore =
-      Number(String(currentPlayerRolls[1])) + String(currentPlayerRolls[0]);
-  }
-
-  allPlayerScore.push(playerScore);
-  currentPlayerRolls = [];
-  return `Player ${currentPlayer}, your chosen value is: ${playerScore}`;
+  console.log(`Push diceCalc value into holder ${diceCalc}`);
+  diceCalcHolder.push(diceCalc);
+  currentRoll = [];
+  return myOutputValue;
 };
 
-var comparePlayerScores = function () {
-  var compareMessage = `Player 1 score: ${allPlayerScore[0]} <br> Player 2 score: ${allPlayerScore[1]} `;
-  if (allPlayerScore[0] > allPlayerScore[1]) {
-    compareMessage = `${compareMessage} <br> Player 1 wins!`;
+// Function that compares the two scores
+var scoreComparison = function () {
+  var message = "";
+  if (gameState == gameStateCompare) {
+    // Player 1 win condition
+    if (diceCalcHolder[0] > diceCalcHolder[1]) {
+      message = `🥇Player 1 wins🥇! <br><br> Player 1 dice value is ${diceCalcHolder[0]} <br> Player 1 dice value is ${diceCalcHolder[1]} <br><br><br> Click submit to reset game.`;
+    }
+    // Player 2 win condition
+    else if (diceCalcHolder[1] > diceCalcHolder[0]) {
+      message = `🥇Player 2 wins🥇! <br><br> Player 2 dice value is ${diceCalcHolder[1]} <br> Player 1 dice value is ${diceCalcHolder[0]} <br><br><br> Click submit to reset game.`;
+    }
+    // TIE
+    else if ((diceCalcHolder[1] = diceCalcHolder[0])) {
+      message = `It's a tie! <br><br> Player 2 dice value is ${diceCalcHolder[1]} <br> Player 1 dice value is ${diceCalcHolder[0]} <br><br><br> Click submit to reset game.`;
+    }
   }
-
-  if (allPlayerScore[0] < allPlayerScore[1]) {
-    compareMessage = `${compareMessage} <br> Player 2 wins!`;
-  }
-  if (allPlayerScore[0] == allPlayerScore[1]) {
-    compareMessage = `${compareMessage} <br> It's a tie!`;
-  }
-  return compareMessage;
+  return message;
 };
 
-var resetGame = function () {
-  currentPlayer = 1;
-  gameState = GAME_STATE_DICE_ROLL;
-  allPlayerScore = [];
-};
-
+// MAIN FUNCTION
 var main = function (input) {
-  console.log(`Checking game state on submit click: ${gameState}`);
-  console.log(`Checking currentPlayer on submit click: ${currentPlayer}`);
   var myOutputValue = "";
 
-  if (gameState == GAME_STATE_DICE_ROLL) {
-    console.log("Control flow: gameState = GAME_STATE_DICE_ROLL");
-
-    myOutputValue = rollDiceForPlayer();
-
-    gameState = GAME_STATE_CHOOSE_DICE_ORDER;
+  // Dice roll
+  if (gameState == gameStateDiceRoll) {
+    console.log(`Control flow: Set game to dice roll state`);
+    gameState = gameStateOrder;
+    myOutputValue = playerRoll();
     return myOutputValue;
   }
 
-  if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
-    console.log("Control flow: input validation for input not 1 and 2");
-    myOutputValue = getPlayerScore(input);
-
-    if (currentPlayer == 1) {
-      console.log(`Control flow: end of player 1, now player 2`);
-      currentPlayer = 2;
-      gameState = gameState = GAME_STATE_DICE_ROLL;
-      return myOutputValue + `<br><br> It is now player 2's turn`;
-    }
-    if (currentPlayer == 2) {
-      console.log(
-        `Control flow: end of player 2, Next submit click will calculate score`
+  // Order the dice
+  if (gameState == gameStateOrder) {
+    console.log(`Control flow: Set game to dice order state`);
+    myOutputValue = addNum(input);
+    if (player == 1) {
+      player = 2;
+      gameState = gameStateDiceRoll;
+      return (
+        myOutputValue + `<br> Click submit button for player 2 to roll the dice`
       );
-      gameState = GAME_STATE_COMPARE_SCORES;
-      return myOutputValue + "<br><br>Press submit to calculate scores!";
+    } else if (player == 2) {
+      gameState = gameStateCompare;
+      return myOutputValue + `<br>  Click submit button to reveal the winner!`;
     }
+    return myOutputValue;
   }
 
-  if (gameState == GAME_STATE_COMPARE_SCORES) {
-    console.log(`Control flow: comparing scores`);
-    myOutputValue = comparePlayerScores();
-    resetGame();
+  // Compare the dice values
+  if (gameState == gameStateCompare) {
+    myOutputValue = scoreComparison();
+    gameState = gameStateReset;
     return myOutputValue;
+  }
+
+  // Reset the game
+  if (gameState == gameStateReset) {
+    player = 1;
+    gameState = gameStateDiceRoll;
+    diceCalcHolder = [];
+    return `--GAME RESET-- <br> Player 1 turn. <br> Click Submit to roll dice.`;
   }
 };
