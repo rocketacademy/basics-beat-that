@@ -17,11 +17,21 @@
         text-align: center;
       }
 
+      #gameMode {
+        margin: 0px;
+      }
+
       #container {
-        background-color: pink;
-        margin: 40px auto;
+        background-color: rgb(241, 241, 247);
+        margin: 20px auto;
         max-width: 800px;
-        padding: 38px 31px;
+        padding: 20px 20px 1px;
+        border-radius: 10px;
+      }
+
+      #instruction-container {
+        margin: 0px auto;
+        max-width: 800px;
       }
 
       input {
@@ -39,25 +49,93 @@
         padding: 0 6px;
       }
 
+      #flex-item-one {
+        flex: 1;
+        white-space: pre-wrap;
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(241, 241, 247);
+        border-radius: 10px;
+      }
+
+      #flex-item-two {
+        flex: 1;
+        white-space: pre-wrap;
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(241, 241, 247);
+        border-radius: 10px;
+      }
+
+      #para {
+        margin: 5px 0px;
+      }
+      
+      #myCustomText {
+        white-space: pre-wrap;
+      }
+
+      #leader-board {
+        max-width: 800px;
+        padding: 20px;
+        margin: 20px auto 0px;
+        background-color: rgb(241, 241, 247);
+        white-space: pre-wrap;
+        border-radius: 10px;
+      }
+
+      #settingInfo {
+        max-width: 800px;
+        padding: 20px;
+        margin: 20px auto;
+        background-color: rgb(241, 241, 247);
+        white-space: pre-wrap;
+        border-radius: 10px;
+      }
+
+      #flex-row {
+        display: flex;
+        flex-direction: row;
+        max-width: 800px;
+        margin: 20px auto 0px;
+        gap: 10px;
+      }
+
       #output-div {
         background-color: lightgrey;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+        white-space: pre-wrap;
       }
     </style>
   </head>
 
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
+    <div id="instruction-container">
+      <h3>How to play?</h3>
+      <p id="para">This is a 2 player game:</p>
+      <p id="para">Player 1 will roll 2 dice, choose one of the dice as the first numeral of the combined number.</p>
+      <p id="para">Player 2 will do the same and compare their combined number with Player 1</p>
+      <p id="para">Tip: Type "help" for more info</p>
+    </div>
+    <div id="leader-board"></div>
+    <div id="flex-row">
+      <p id="flex-item-one"></p>
+      <p id="flex-item-two"></p>
+    </div>
     <div id="container">
+      <p id="myCustomText"></p>
       <p>Input:</p>
       <input id="input-field" />
       <br />
-      <button id="submit-button">Submit</button>
+      <button id="submit-button"></button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
+    <h3 id="instruction-container">Settings</h3>
+    <div id="settingInfo"></div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
@@ -75,6 +153,15 @@
         // Reset input value
         input.value = "";
       });
+
+      // QOL function, clicking enter will click the submit button
+      var input = document.getElementById("input-field");
+      input.addEventListener("keypress", function(event) {
+        if(event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("submit-button").click();
+        }
+      })
     </script>
   </body>
 </html>
