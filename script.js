@@ -141,7 +141,7 @@ var main = function (input) {
     console.log(`Entering GAME_MODE gamemode - playerInput`);
     console.log(`Current Player: ${playerNames[currentPlayer]}`);
     playerInput(currentPlayer);
-    return `<b>${playerNames[previousPlayer]} rolls</b>. <br>For Dice 1, you rolled: ${diceRoll_1}.<br>For Dice 2, you rolled: ${diceRoll_2}.<br> Please enter '1' for Dice 1 to be first, or '2' for Dice 2 to be the first.`;
+    return `<b>${playerNames[currentPlayer]} rolls</b>. <br>For Dice 1, you rolled: ${diceRoll_1}.<br>For Dice 2, you rolled: ${diceRoll_2}.<br> Please enter '1' for Dice 1 to be first, or '2' for Dice 2 to be the first.`;
   }
 
   // Gets the results based on User's selection of which Dice goes first
