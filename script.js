@@ -2,7 +2,6 @@
 const ROLL_DICE_MODE = "roll dice mode";
 const CHOOSE_ORDER_OF_Player_VALUE = "choose player value";
 
-var isInputValid = true;
 var currentDiceRollsArray = [];
 //game mode 1 is dice roll
 //game mode 2 is choose dice order to get the score
