@@ -8,7 +8,7 @@ var gameMode1 = "p1 roll dice";
 var gameMode2 = "p2 roll dice";
 var gameMode3 = "p1 choose order";
 var gameMode4 = "p2 choose order";
-var gameMode5 = "Compare biggest number";
+var gameMode5 = "Compare highest number";
 var currentGameMode = gameMode1;
 var p1DiceRolls;
 var p2DiceRolls;
@@ -16,6 +16,8 @@ var diceRollArraysP1 = [];
 var diceRollArraysP2 = [];
 var player1selection = 0;
 var player2selection = 0;
+var player1score = 0;
+var player2score = 0;
 
 var main = function (input) {
   var myOutputValue = "";
@@ -106,24 +108,29 @@ var main = function (input) {
   }
 
   if (currentGameMode == gameMode5) {
+    var scoreboard = getScoreboard();
     console.log("determine current round winner");
     // p1 win
     if (player1selection > player2selection) {
+      player1score += 1;
       myOutputValue =
         "Player 1 wins! <br><br> Player 1 entry: " +
         player1selection +
         "<br> Player 2 entry: " +
         player2selection +
-        "<br><br> Click submit to play again!";
+        "<br><br> Click submit to play again!" +
+        scoreboard;
     }
     // p2 win
     if (player1selection < player2selection) {
+      player2score += 1;
       myOutputValue =
         "Player 2 wins! <br><br> Player 1 entry: " +
         player1selection +
         "<br> Player 2 entry: " +
         player2selection +
-        "<br><br> Click submit to play again!";
+        "<br><br> Click submit to play again!" +
+        scoreboard;
     }
     // tie result
     if (player1selection == player2selection) {
@@ -132,12 +139,20 @@ var main = function (input) {
         player1selection +
         "<br> Player 2 entry: " +
         player2selection +
-        "<br><br> Click submit to play again!";
+        "<br><br> Click submit to play again!" +
+        scoreboard;
     }
     // restart game without refreshing
-    currentGameMode = gameMode1;
+    if (input == "") {
+      currentGameMode = gameMode1;
+    } // reset stored dice rolls and player selection
+    if (currentGameMode == gameMode1) {
+      diceRollArraysP1 = [];
+      diceRollArraysP2 = [];
+      player1selection = 0;
+      player2selection = 0;
+    }
   }
-
   return myOutputValue;
 };
 
@@ -182,4 +197,33 @@ var player2DiceRoll = function () {
     diceRollArraysP2[1] +
     '"'
   );
+};
+
+// scores in decreasing order
+var getScoreboard = function () {
+  var message = "";
+  if (player1score < player2score) {
+    message =
+      "<br><br>Scoreboard: " +
+      "<br> 1: Player 1 - " +
+      player1score +
+      "<br> 2: Player 2 - " +
+      player2score;
+  }
+  if (player2score < player1score) {
+    message =
+      "<br><br>Scoreboard: " +
+      "<br> 1: Player 2 - " +
+      player2score +
+      "<br> 2: Player 1 - " +
+      player1score;
+  }
+  if (player1score == player2score) {
+    message =
+      "<br><br>Scoreboard: " + "<br>Player 1 and 2 both scored " + player1score;
+  }
+  if (player1score == 0 && player2score == 0) {
+    message = "<br>This is the first game. Continue playing to see scoreboard.";
+  }
+  return message;
 };
