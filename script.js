@@ -2,7 +2,7 @@
 const ROLL_DICE_MODE = "roll dice mode";
 const CHOOSE_ORDER_OF_Player_VALUE = "choose player value";
 
-var isInputValid = false;
+var isInputValid = true;
 var currentDiceRollsArray = [];
 //game mode 1 is dice roll
 //game mode 2 is choose dice order to get the score
@@ -77,6 +77,7 @@ var main = function (input) {
   if (gameMode == ROLL_DICE_MODE) {
     return gameModeRollDice();
   }
+
   if (gameMode == CHOOSE_ORDER_OF_Player_VALUE) {
     if (currentPlayer == 1) {
       currentPlayer = 2;
@@ -88,6 +89,7 @@ var main = function (input) {
     if (allPlayersNumberArr.length == 2) {
       return getWinner();
     }
+
     return gameModeChooseOrder(input);
   }
 };
