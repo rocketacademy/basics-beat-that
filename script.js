@@ -1,29 +1,8 @@
-/*
-1. There are 2 players and players take turns.
-2. When a player clicks Submit, the game rolls 2 dice and shows the dice rolls, for example 3 and 6.
-3. The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
-4. After both players have rolled and chosen dice order, the player with the higher combined number wins.
-*/
-
-// === problem breakdown and planning === //
-// version 1 . rolls 2 dice and returns the output for 1 player. Player then chooses the dice order and get the correct output
-// version 2. refactor code to include player 2
-//            - global variables for current player; array to store all the players score
-//            -refactor output messages to interact with each player 1 and 2
-//            - write logic for player 1 to go first, then plater 2, then compare the score
-
-// version 3. implement comparing the dice scores and declare the winner
-// version 4. reset the game so that players can play continually without refreshing trhe browser page
-
-/* 2 game modes -  
-first mode: rolls 2 dice and returns the dice num for both dices. program to ask for order
-second mode: Player input dice order 
-*/
-
 //global variables
 const ROLL_DICE_MODE = "roll dice mode";
 const CHOOSE_ORDER_OF_Player_VALUE = "choose player value";
 
+var isInputValid = false;
 var currentDiceRollsArray = [];
 //game mode 1 is dice roll
 //game mode 2 is choose dice order to get the score
@@ -62,11 +41,9 @@ function gameModeChooseOrder(diceOrder) {
   if (diceOrder == 1) {
     var number = dice1 + dice2;
     playerNumber = Number(number);
-    //return `You have chosen dice ${diceOrder}. Your number is ${playerNumber}`;
   } else {
     var number = dice2 + dice1;
     playerNumber = Number(number);
-    //return `You have chosen dice ${diceOrder}. Your number is ${playerNumber}`;
   }
   console.log("player number is: ", number);
   allPlayersNumberArr.push(playerNumber);
@@ -104,6 +81,7 @@ var main = function (input) {
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameMode = ROLL_DICE_MODE;
+
       return ` ${gameModeChooseOrder(input)} <br><br>
                 It is now player 2's turn. Please click on submit!`;
     }
