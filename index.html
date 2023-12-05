@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap"
+      rel="stylesheet"
+    />
     <title>Coding Basics</title>
     <style>
       * {
@@ -18,18 +24,26 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: lightblue;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+        border: 1px solid black;
+        border-radius: 10px;
       }
-
+      .instructions {
+        font-weight: bold;
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 10px;
+      }
       input {
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 9px;
         width: 100%;
+        border-radius: 5px;
       }
 
       button {
@@ -37,13 +51,15 @@
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
+        border-radius: 5px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: #ffff;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
+        border-radius: 10px;
       }
     </style>
   </head>
@@ -51,12 +67,20 @@
   <body>
     <h1 id="header">Basics: Beat That! 🚀</h1>
     <div id="container">
+      <div class="instructions">
+        <p>Hello! Welcome to Beat That! Click submit to start the game.</p>
+        <p>
+          Create a two-digit number by selecting the order of your dice rolls.
+        </p>
+        <p>The player with the highest number wins! Good luck!</p>
+      </div>
+
       <p>Input:</p>
       <input id="input-field" />
       <br />
       <button id="submit-button">Submit</button>
       <p>Output:</p>
-      <div id="output-div"></div>
+      <div id="output-div">Click Submit to Play the Game!</div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
