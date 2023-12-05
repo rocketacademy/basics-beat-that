@@ -23,7 +23,7 @@ second mode: Player input dice order
 //global variables
 const ROLL_DICE_MODE = "roll dice mode";
 const CHOOSE_ORDER_OF_Player_VALUE = "choose player value";
-// const RETRIEVE_WINNER = "retrieve winner";
+
 var currentDiceRollsArray = [];
 //game mode 1 is dice roll
 //game mode 2 is choose dice order to get the score
@@ -101,9 +101,6 @@ var main = function (input) {
     return gameModeRollDice();
   }
   if (gameMode == CHOOSE_ORDER_OF_Player_VALUE) {
-    // if (input != 1 && input != 2) {
-    //   return `Invalid input. Please enter 1 or 2 only.`;
-    // }
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameMode = ROLL_DICE_MODE;
@@ -116,5 +113,3 @@ var main = function (input) {
     return gameModeChooseOrder(input);
   }
 };
-
-//next is to implement comparing the scores for the 2 players
