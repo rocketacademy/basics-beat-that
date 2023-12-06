@@ -17,13 +17,15 @@
 */
 
 //---GLOBAL VARIABLE---
+//game state 1
 var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
+//game state 2
 var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
 //set to compare scores
 var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES";
 //Set first state of the game
 var gameState = GAME_STATE_DICE_ROLL;
-//Create an array
+//Create an array <currentPlayerRolls>
 var currentPlayerRolls = [];
 //Player 1 start first
 var currentPlayer = 1;
@@ -52,9 +54,8 @@ var rollDiceForPlayer = function () {
   );
 
   return `Welcome, player
-   ${currentPlayer}
- "<br> You rolled:<br>Dice 1:${currentPlayerRolls[0]} <br> Dice 2:
-  ${currentPlayerRolls[1]}<br> Please enter '1' or '2' to choose the corresponding dice to be set as your first digit of your final value"`;
+   ${currentPlayer}<br> You rolled:<br>Dice 1:${currentPlayerRolls[0]} <br> Dice 2:
+  ${currentPlayerRolls[1]}<br> Please enter '1' or '2' to choose the corresponding dice to be set as your first digit of your final value`;
 };
 
 //---HELPER FUNCTION #3 <PLAYER SCORE> ---
@@ -88,6 +89,28 @@ var getPlayerScore = function (playerInput) {
   //clear current player rolls array
   currentPlayerRolls = [];
   return `Player ${currentPlayer}, your chosen value is: ${playerScore}`;
+};
+
+//---HELPER FUNCTION #4 <COMPARE PLAYER SCORE> ---
+var comparePlayerScores = function () {
+  var compareMessage =
+    "Player 1 score: " +
+    allPlayerScore[0] +
+    "<br>Player 2 score: " +
+    allPlayerScore[1];
+  //player 1 wins
+  if (allPlayerScore[0] > allPlayerScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 1 wins!";
+  }
+  //player 2 wins
+  if (allPlayerScore[0] < allPlayerScore[1]) {
+    compareMessage = compareMessage + "<br><br>Player 2 wins!";
+  }
+  //tie
+  if (allPlayerScore[0] == allPlayerScore[1]) {
+    compareMessage = compareMessage + "<br><br>It's a tie";
+  }
+  return compareMessage;
 };
 
 //---MAIN FUNCTION----
@@ -128,5 +151,10 @@ var main = function (input) {
       gameState = GAME_STATE_COMPARE_SCORES;
       return outputMessage + "<br><br> Press submit to calculate scores";
     }
+  }
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    console.log("Control flow: gameState == GAME_STATE_COMPARE_SCORES");
+    outputMessage = comparePlayerScores();
+    return outputMessage;
   }
 };
