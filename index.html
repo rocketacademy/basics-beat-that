@@ -1,7 +1,15 @@
+<!--  All HTML files begin with the following line: -->
 <!DOCTYPE html>
+<!-- This indicates that the rest of the lines that follow are to be interpreted as HTML. It tells the browser about what document type to expect. -->
+
+<!-- All text enclosed in angled brackets are known as HTML element tags. There are usually, but not always, starting and closing element "tags", each representing a HTML element.
+The <html> element is known as the root element of a HTML page. All other elements are encased within it. -->
 <html>
+  <!-- The <head> element contains meta information about the HTML page, information that is not rendered or displayed by the browser -->
   <head>
-    <title>Coding Basics</title>
+    <!-- The <title> element specifies a title for the HTML page (which is shown in the browser's title bar or in the page's tab) and is the default name given to a bookmark of a webpage. -->
+    <title>SWE Fundamentals</title>
+    <!-- The <style> element contains information relating to the layout and style of the webpage. The syntax within a <style> tag is referred to as CSS - Cascading Style Sheets. -->
     <style>
       * {
         box-sizing: border-box;
@@ -18,7 +26,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: rgb(137, 207, 240);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -48,24 +56,40 @@
     </style>
   </head>
 
+  <!-- The <body> element defines the document's body, and is a container for all the visible contents that will be rendered by the browser.  -->
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <!-- The <h1> element defines a large heading. There are 6 pre-set header elements, <h1> to <h6> -->
+    <h1 id="header">Beat That! 🚀</h1>
+    <!-- The <div> tag defines a division or a section in an HTML document, and is commonly use as a "container" for nested HTML elements. -->
     <div id="container">
-      <p>Input:</p>
+      <!-- The <p> tag defines a paragraph element. -->
+      <p>Let's Play Beat That!</p>
+      <p>Create a largest number with two dice rolls.</p>
+      <p>Player with the highest number wins!</p>
+      <p>Goodluck!</p>
+      <!-- The self-closing <input /> tag represents a field for a user to enter input. -->
       <input id="input-field" />
+      <!-- The self-closing <br /> tag represents a line break - a line's worth of spacing before dispalying the next element. -->
       <br />
-      <button id="submit-button">Submit</button>
+      <!-- The <button> tag represents.. you guessed it! a button. -->
+      <button id="submit-button">Play</button>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
-    <!-- Import program logic -->
+    <!-- Everything below this is incorporating JavaScript programming logic into the webpage. -->
+    <!-- The script tag encloses JavaScript syntax for the browser to interpret programtically -->
+    <!-- The following line imports all code written in the script.js file -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
+      // Declare and define a variable that represents the Submit Button
       var button = document.querySelector("#submit-button");
+      // When the submit button is clicked, access the text entered by the user in the input field
+      // And pass it as an input parameter to the main function as defined in script.js
       button.addEventListener("click", function () {
         // Set result to input value
         var input = document.querySelector("#input-field");
+        // Store the output of main() in a new variable
         var result = main(input.value);
 
         // Display result in output element
