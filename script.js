@@ -17,7 +17,7 @@ var Dice = function () {
     return myOutputValue;
     };
 
-var home = function(){
+var home = function(){    
   stage = "starting";
   PlayerOneFinalNumber = "";
   PlayerTwoFinalNumber = "";
@@ -30,7 +30,7 @@ var home = function(){
 
 
 
-var main = function (input) {
+var main = function (input) {                   //starting and PlayerRollDice is common gateway for 2 and 3 Dice.
     if (stage == "starting"){
         var noDice = Number(input.trim())
         numberDice = noDice
@@ -45,7 +45,7 @@ var main = function (input) {
         } else{
             return "If you want to play 2 Dice or 3 Dice Game, Press 2 or 3 then submit.";
         }
-    } else if (stage == "PlayerRollDice") {
+    } else if (stage == "PlayerRollDice") {         //2 Dice Player 1        
         
         var user = "Player 1";
 
@@ -58,7 +58,7 @@ var main = function (input) {
         stage = "TwoDicePlayer1Input";
         return `<b>${user}</b>: Rolled ${numberDice} dice. Results <b>${PlayerOneArr}</b>. <br>Input rearranged number for bigger value.`;
 
-    } else if (stage == "TwoDicePlayer1Input"){
+    } else if (stage == "TwoDicePlayer1Input"){     //2 Dice Player 1 input
         var PlayerOneInput = Number(input.trim());
         console.log("line 50" + stage);
         var FirstDigitONETWO = Math.floor(PlayerOneInput/10)%10;
@@ -83,7 +83,7 @@ var main = function (input) {
             return `Kindly Check the result number <b>${PlayerOneArr}</b> and input which order you want to`;
         };
 
-    } else if (stage == "TwoDicePlayer2") {
+    } else if (stage == "TwoDicePlayer2") {               //2 Dice Player2
         var user = "Player 2";
         console.log("Stage3")
         while (counterTwo < numberDice) {
@@ -98,7 +98,7 @@ var main = function (input) {
             return `<b>${user}</b>: Rolled ${numberDice} dice. Results <b>${PlayerTwoArr}</b>.<br>
             Input rearranged number for bigger value.`;
 
-    } else if (stage == "TwoDicePlayer2Input"){
+    } else if (stage == "TwoDicePlayer2Input"){                 //2 Dice Player2 input
         
         var PlayerTwoInput = Number(input.trim());
     
@@ -124,16 +124,7 @@ var main = function (input) {
             return `Kindly Check the result number <b>${PlayerTwoArr}</b> and input which order you want to`;
         };
 
-    } else if (stage == "Totality") {
-            if (PlayerOneFinalNumber > PlayerTwoFinalNumber) {
-                ScoreOne++;
-                return `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>`;
-            } else if (PlayerOneFinalNumber === PlayerTwoFinalNumber) {
-                return `It's a Tie!! (Player1 : <b>${PlayerOneFinalNumber}</b>, Player2 : <b>${PlayerTwoFinalNumber}</b>`;
-            } else {
-                ScoreTwo++;
-                return `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>`;
-            }
+    
         } else if (stage == "PlayerRollDice") {
         
         var user = "Player 1";
@@ -383,20 +374,21 @@ var main = function (input) {
     } else if (stage == "Totality") {
       var massage ="";
           if (PlayerOneFinalNumber > PlayerTwoFinalNumber) {
-            massage = `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
-            <br> Do you want to play?`;
             ScoreOne++;
+            massage = `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> xxxx Player2 Score: <b>${ScoreTwo}</b>
+            <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit Twice</b>`;
+            
             console.log(ScoreOne);
           } else if (PlayerOneFinalNumber === PlayerTwoFinalNumber) {
               
               massage = `It's a Tie!! (Player1 : <b>${PlayerOneFinalNumber}</b>,  Player2 : <b>${PlayerTwoFinalNumber}</b>
-              <br> Do you want to play?`;
+              <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit Twice</b>`;
               
           } else if (PlayerOneFinalNumber < PlayerTwoFinalNumber){
-              
-              massage = `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
-              <br> Do you want to play?`;
               ScoreTwo++;
+              massage = `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> xxxx Player2 Score: <b>${ScoreTwo}</b>
+              <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit Twice</b>`;
+              
               console.log(ScoreTwo);
 
             } 
@@ -404,7 +396,7 @@ var main = function (input) {
             console.log("player one and two"+ PlayerOneFinalNumber + PlayerTwoFinalNumber);
             console.log("stage" + stage);
             return massage;
-               
+
     } if (stage == "home"){
       var homeInput = input.toLowerCase();
       if (homeInput == "yes"){
