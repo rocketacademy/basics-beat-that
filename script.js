@@ -26,13 +26,7 @@ var rollDice = function () {
   console.log(`Dice rolled ${randomDigits}`);
   return randomDigits;
 };
-// var leaderBoardMain = function () {
-//   console.log(`current game turn: ${gameTurn}`);
-//   if (input.toLowerCase() == "board") {
-//     gameTurn = "player_one";
-//     return `<br><center>LEADER BOARD</center><br>Player One<br>Total Wins: ${player_one_win}<br><br>Player Two<br>Total Wins: ${player_two_win}<br><br>Total Ties: ${player_tie}<br>Click "Play" to continue`;
-//   }
-// };
+
 
 var main = function (input) {
   //change to lowest number
@@ -49,10 +43,7 @@ var main = function (input) {
       return `Welcome PLAYER ONE.<br> You rolled ${player_one_first} for Dice 1 and ${player_one_second} for Dice 2. <br>Choose the order of the dice and key it in the box above.`;
     }
     if (game_mode == "LOWEST") {
-      return `Welcome PLAYER ONE.<br> You rolled ${Math.min(
-        player_one_first + player_one_second,
-        player_one_second + player_one_first
-      )}<br>Lowest combined number is the winner!.`;
+      return `Welcome PLAYER ONE.<br> You rolled ${Math.min(String(player_one_first) + String(player_one_second),String(player_one_second) + String(player_one_first))}<br>Lowest combined number is the winner!.`;
     }
   }
   if (gameTurn == "player_two" || gameTurn == "player_one_retry") {
@@ -71,10 +62,8 @@ var main = function (input) {
       }
     }
     if (game_mode == "LOWEST") {
-      player_one_order = Math.min(
-        player_one_first + player_one_second,
-        player_one_second + player_one_first
-      );
+      gameTurn = "player_two";
+      player_one_order = Math.min(String(player_one_first) + String(player_one_second),String(player_one_second) + String(player_one_first));
     }
   }
   if (gameTurn == "player_two") {
@@ -86,8 +75,8 @@ var main = function (input) {
     }
     if (game_mode == "LOWEST") {
       return `Welcome PLAYER TWO.<br> You rolled ${Math.min(
-        player_two_first + player_two_second,
-        player_two_second + player_two_first
+        String(player_two_first) + String(player_two_second),
+        String(player_two_second) + String(player_two_first)
       )}<br>Lowest combined number is the winner!.`;
     }
   }
@@ -95,28 +84,23 @@ var main = function (input) {
     if (game_mode == "NORMAL") {
       player_two_order = input;
       if (
-        player_two_order ==
-          String(player_two_first) + String(player_two_second) ||
+        player_two_order == String(player_two_first) + String(player_two_second) || 
         player_two_order == String(player_two_second) + String(player_two_first)
       ) {
         console.log("player one order is: " + player_two_order);
         gameTurn = "compare_order";
       } else {
         gameTurn = "player_two_retry";
-        return `PLAYER ONE please try again. <br> You rolled ${player_two_first} for Dice 1 and ${player_two_second} for Dice 2. <br>Choose the order of the dice and key it in the box above`;
+        return `PLAYER TWO please try again. <br> You rolled ${player_two_first} for Dice 1 and ${player_two_second} for Dice 2. <br>Choose the order of the dice and key it in the box above`;
       }
     }
     if (game_mode == "LOWEST") {
-      player_one_order = Math.min(
-        player_two_first + player_two_second,
-        player_two_second + player_two_first
+      gameTurn = "compare_order";
+      player_two_order = Math.min(
+        String(player_two_first) + String(player_two_second),
+        String(player_two_second) + String(player_two_first)
       );
     }
-  }
-  if (gameTurn == "compare_order") {
-    console.log(`player 2 roll: ` + player_two_first);
-    console.log(`player 2 roll 2: ` + player_two_second);
-    player_two_order = input;
   }
 
   if (gameTurn == "compare_order") {
@@ -124,10 +108,12 @@ var main = function (input) {
     if (player_one_order > player_two_order) {
       player_one_win += 1;
       myOutputValue = `<center>PLAYER ONE WINS!</center><br>Player One<br>Total Wins: ${player_one_win}<br><br>Player Two<br>Total Wins: ${player_two_win}<br><br>Total Ties: ${player_tie}<br><br>Click "Play" to continue!<br>`;
-    } else if (player_one_order < player_two_order) {
+    } 
+    if (player_two_order > player_one_order) {
       player_two_win += 1;
       myOutputValue = `<center>PLAYER TWO WINS!</center><br>Player One<br>Total Wins: ${player_one_win}<br><br>Player Two<br>Total Wins: ${player_two_win}<br><br>Total Ties: ${player_tie}<br><br>Click "Play" to continue!<br>`;
-    } else if (player_one_order == player_two_order) {
+    } 
+    if (player_one_order == player_two_order) {
       player_tie += 1;
       myOutputValue = `<center>TIE!</center><br>Player One<br>Total Wins: ${player_one_win}<br><br>Player Two<br>Total Wins: ${player_two_win}<br><br>Total Ties: ${player_tie}<br><br>Click "Play" to continue!<br>`;
     }
