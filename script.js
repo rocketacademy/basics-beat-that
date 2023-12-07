@@ -17,6 +17,16 @@ var Dice = function () {
     return myOutputValue;
     };
 
+var home = function(){
+  stage = "starting";
+  PlayerOneFinalNumber = "";
+  PlayerTwoFinalNumber = "";
+  
+  counterOne = 0;
+  counterTwo = 0;
+  PlayerOneArr = [];
+  PlayerTwoArr = [];
+}
 
 
 
@@ -60,7 +70,7 @@ var main = function (input) {
             };
 
         if ((FirstDigitONETWO == PlayerOneArr[0] || FirstDigitONETWO == PlayerOneArr[1]) && 
-            (LastDigitONETWO == PlayerOneArr[0] || LastDigitONETWO == PlayerOneArr[1])) {
+            (LastDigitONETWO == PlayerOneArr[0] || LastDigitONETWO == PlayerOneArr[1]) && (PlayerOneFinalNumber <= 66)) {
             if(FirstDigitONETWO == PlayerOneArr[0]){
                 PlayerOneFinalNumber = WishONEONE();
             } else if (FirstDigitONETWO == PlayerOneArr[1]){
@@ -100,7 +110,7 @@ var main = function (input) {
             return PlayerTwoFinalNumber;
         }
 
-        if ((FirstDigitTWOTWO == PlayerTwoArr[0] || FirstDigitTWOTWO == PlayerTwoArr[1]) && (LastDigitTWOTWO == PlayerTwoArr[0] || LastDigitTWOTWO == PlayerTwoArr[1])) {
+        if ((FirstDigitTWOTWO == PlayerTwoArr[0] || FirstDigitTWOTWO == PlayerTwoArr[1]) && (LastDigitTWOTWO == PlayerTwoArr[0] || LastDigitTWOTWO == PlayerTwoArr[1]) && (PlayerTwoFinalNumber <= 66)) {
             if(FirstDigitTWOTWO == PlayerTwoArr[0]){
                 PlayerTwoFinalNumber = WishONETWO();
             } else if (FirstDigitTWOTWO == PlayerTwoArr[1]){
@@ -109,7 +119,7 @@ var main = function (input) {
             }
          
             stage = "Totality";
-            return `<b>Player 2</b> Selected Number: <b>${PlayerTwoFinalNumber}</b>`;
+            return `<b>Player 2</b> Selected Number: <b>${PlayerTwoFinalNumber}</b><br> Please press <b>Submit</b> to Winner!`;
         } else {
             return `Kindly Check the result number <b>${PlayerTwoArr}</b> and input which order you want to`;
         };
@@ -223,6 +233,16 @@ var main = function (input) {
       var FirstOneDigit = Math.floor(PlayerOneInputThree/100)%10;
       var SecondOneDigit = Math.floor(PlayerOneInputThree/10)%10;
       var LastOneDigit = Math.floor(PlayerOneInputThree)%10;
+
+      var addOfinputOneThree = (FirstOneDigit + SecondOneDigit + LastOneDigit);
+      var multipleOfinputOneThree = (FirstOneDigit * SecondOneDigit * LastOneDigit);
+      
+      
+      var multiplesOneThree = (PlayerOneArr[0]*PlayerOneArr[1]*PlayerOneArr[2]);
+      var addasOneThree = (PlayerOneArr[0]+ PlayerOneArr[1]+PlayerOneArr[2])
+
+
+
       console.log(LastOneDigit);
 
       var WishOneThree = function(){
@@ -231,35 +251,46 @@ var main = function (input) {
         return PlayerOneFinalNumber;
       };
 
-      if ( (FirstOneDigit == PlayerOneArr[0] || FirstOneDigit == PlayerOneArr[1] || FirstOneDigit == PlayerOneArr[2]) &&
+      if ( ((FirstOneDigit == PlayerOneArr[0] || FirstOneDigit == PlayerOneArr[1] || FirstOneDigit == PlayerOneArr[2]) &&
           (SecondOneDigit == PlayerOneArr[0] || SecondOneDigit == PlayerOneArr[1] || SecondOneDigit == PlayerOneArr[2]) &&
-          (LastOneDigit == PlayerOneArr[0] || LastOneDigit == PlayerOneArr[1] || LastOneDigit == PlayerOneArr[2])) {
-            if (FirstOneDigit == PlayerOneArr[0]) {
+          (LastOneDigit == PlayerOneArr[0] || LastOneDigit == PlayerOneArr[1] || LastOneDigit == PlayerOneArr[2])) && (PlayerOneFinalNumber <= 666) && (addOfinputOneThree == addasOneThree) && (multipleOfinputOneThree == multiplesOneThree)) {
+            if (FirstOneDigit == PlayerOneArr[0]) {                                                              //permutation 123/132
               if (SecondOneDigit == PlayerOneArr[1]) {
                 PlayerOneFinalNumber = WishOneThree();
               } else if (SecondOneDigit == PlayerOneArr[2]) {
                 [PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[2], PlayerOneArr[1]];
                 PlayerOneFinalNumber = WishOneThree();
+                console.log("123/132 "+ PlayerOneFinalNumber);
               }
-            } else if (FirstOneDigit == PlayerOneArr[1]) {
-              if (SecondOneDigit == PlayerOneArr[0]) {
-                [PlayerOneArr[0], PlayerOneArr[1]] = [PlayerOneArr[1], PlayerOneArr[0]];
+            } else if (SecondOneDigit == PlayerOneArr[2]){                                                        //esp for 231 placement due to error.
+              [PlayerOneArr[0], PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[1], PlayerOneArr[2], PlayerOneArr[0]];
+              PlayerOneFinalNumber = WishOneThree();
+            } else if (FirstOneDigit == PlayerOneArr[1]) {                                                        //permutation 312/213
+              if (LastOneDigit == PlayerOneArr[0]) {
+                console.log("no.213" + PlayerOneArr[0], SecondOneDigit);
+                [PlayerOneArr[0], PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[1], PlayerOneArr[0], PlayerOneArr[2]];
                 PlayerOneFinalNumber = WishOneThree();
-              } else if (SecondOneDigit == PlayerOneArr[2]) {
-                [PlayerOneArr[0], PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[2], PlayerOneArr[0], PlayerOneArr[1]];
-                PlayerOneFinalNumber = WishOneThree();}
+              } else if (LastOneDigit == PlayerOneArr[0]); {
+                console.log("no.312+> 231 = 3  " + LastOneDigit, PlayerOneArr[0]);
+                [PlayerOneArr[0], PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[1], PlayerOneArr[0], PlayerOneArr[2]];
+                PlayerOneFinalNumber = WishOneThree();
+              }
                                                                                                                                                               
-            } else if (FirstOneDigit == PlayerOneArr[2]) {
+            } else if (FirstOneDigit == PlayerOneArr[2]) {                                                        //permutation 231*/321
               if (SecondOneDigit == PlayerOneArr[1]) {
-                [PlayerOneArr[0], PlayerOneArr[2]] = [PlayerOneArr[2], PlayerOneArr[0]];
+                console.log("no.321" + PlayerOneArr[1], SecondOneDigit);
+                [PlayerOneArr[0], PlayerOneArr[1],PlayerOneArr[2]] = [PlayerOneArr[2], PlayerOneArr[1],PlayerOneArr[0]];
                 PlayerOneFinalNumber = WishOneThree();
-              } else if (SecondOneDigit == PlayerOneArr[0]) {
-                [PlayerOneArr[0], PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[1], PlayerOneArr[2], PlayerOneArr[0]];
+              } else if (LastOneDigit == PlayerOneArr[1]) {
+                console.log("no.231" + PlayerOneArr[1]+ SecondOneDigit);
+                [PlayerOneArr[0], PlayerOneArr[1], PlayerOneArr[2]] = [PlayerOneArr[2], PlayerOneArr[0], PlayerOneArr[1]];
+                
                 PlayerOneFinalNumber = WishOneThree();
-              }
+                console.log("231/321 "+ PlayerOneFinalNumber)
+              } 
             }
             stage = "ThreeDicePlayer2";
-            return `<b>Player 1</b> Selected Number: <b>${PlayerOneFinalNumber}</b>`;
+            return `<b>Player 1</b> Selected Number: <b>${PlayerOneFinalNumber}</b><br> <b>Player 2</b> Please press <b>Submit</b> to roll ${numberDice} Dice.`;
         } else {
           return `Kindly Check the result number <b>${PlayerOneArr}</b> and input which order you want to.`;
     
@@ -288,6 +319,14 @@ var main = function (input) {
       var FirstTwoDigit = Math.floor(PlayerTwoInputThree/100)%10;
       var SecondTwoDigit = Math.floor(PlayerTwoInputThree/10)%10;
       var LastTwoDigit = Math.floor(PlayerTwoInputThree)%10;
+      
+      //Extra checkers
+      var addOfinputTwoThree = (FirstTwoDigit + SecondTwoDigit + LastTwoDigit);
+      var multipleOfinputTwoThree = (FirstTwoDigit * SecondTwoDigit * LastTwoDigit);
+      
+      
+      var multiplesTwoThree = (PlayerTwoArr[0]*PlayerTwoArr[1]*PlayerTwoArr[2]);
+      var addasTwoThree = (PlayerTwoArr[0]+ PlayerTwoArr[1]+PlayerTwoArr[2])
       console.log(LastTwoDigit);
 
       var WishTwoThree = function(){
@@ -295,36 +334,46 @@ var main = function (input) {
         return PlayerTwoFinalNumber;
       };
 
-      if ( (FirstTwoDigit == PlayerTwoArr[0] || FirstTwoDigit == PlayerTwoArr[1] || FirstTwoDigit == PlayerTwoArr[2]) &&
+      if ( ((FirstTwoDigit == PlayerTwoArr[0] || FirstTwoDigit == PlayerTwoArr[1] || FirstTwoDigit == PlayerTwoArr[2]) &&
           (SecondTwoDigit == PlayerTwoArr[0] || SecondTwoDigit == PlayerTwoArr[1] || SecondTwoDigit == PlayerTwoArr[2]) &&
-          (LastTwoDigit == PlayerTwoArr[0] || LastTwoDigit == PlayerTwoArr[1] || LastTwoDigit == PlayerTwoArr[2])) {
-            
-            if (FirstTwoDigit == PlayerTwoArr[0]) {
+          (LastTwoDigit == PlayerTwoArr[0] || LastTwoDigit == PlayerTwoArr[1] || LastTwoDigit == PlayerTwoArr[2])) && (PlayerTwoFinalNumber <= 666) && (addasTwoThree == addasTwoThree) && (multipleOfinputTwoThree == multipleOfinputTwoThree)) {
+            if (FirstTwoDigit == PlayerTwoArr[0]) {                                                              //permutation 123/132
               if (SecondTwoDigit == PlayerTwoArr[1]) {
                 PlayerTwoFinalNumber = WishTwoThree();
               } else if (SecondTwoDigit == PlayerTwoArr[2]) {
                 [PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[2], PlayerTwoArr[1]];
                 PlayerTwoFinalNumber = WishTwoThree();
+                console.log("123/132 "+ PlayerTwoFinalNumber);
               }
-            } else if (FirstTwoDigit == PlayerTwoArr[1]) {
-              if (SecondTwoDigit == PlayerTwoArr[0]) {
-                [PlayerTwoArr[0], PlayerTwoArr[1]] = [PlayerTwoArr[1], PlayerTwoArr[0]];
+            } else if (SecondTwoDigit == PlayerTwoArr[2]){                                                        //esp for 231 placement due to error.
+              [PlayerTwoArr[0], PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[1], PlayerTwoArr[2], PlayerTwoArr[0]];
+              PlayerTwoFinalNumber = WishTwoThree();
+            } else if (FirstTwoDigit == PlayerTwoArr[1]) {                                                        //permutation 312/213
+              if (LastTwoDigit == PlayerTwoArr[0]) {
+                console.log("no.213" + PlayerTwoArr[0], SecondTwoDigit);
+                [PlayerTwoArr[0], PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[1], PlayerTwoArr[0], PlayerTwoArr[2]];
                 PlayerTwoFinalNumber = WishTwoThree();
-              } else if (SecondTwoDigit == PlayerTwoArr[2]) {
-                [PlayerTwoArr[0], PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[2], PlayerTwoArr[0], PlayerTwoArr[1]];
-                PlayerTwoFinalNumber = WishTwoThree();}
-
-            } else if (FirstTwoDigit == PlayerTwoArr[2]) {
+              } else if (LastTwoDigit == PlayerTwoArr[0]); {
+                console.log("no.312+> 231 = 3  " + LastTwoDigit, PlayerTwoArr[0]);
+                [PlayerTwoArr[0], PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[1], PlayerTwoArr[0], PlayerTwoArr[2]];
+                PlayerTwoFinalNumber = WishTwoThree();
+              }
+                                                                                                                                                              
+            } else if (FirstTwoDigit == PlayerTwoArr[2]) {                                                        //permutation 231*/321
               if (SecondTwoDigit == PlayerTwoArr[1]) {
-                [PlayerTwoArr[0], PlayerTwoArr[2]] = [PlayerTwoArr[2], PlayerTwoArr[0]];
+                console.log("no.321" + PlayerTwoArr[1], SecondTwoDigit);
+                [PlayerTwoArr[0], PlayerTwoArr[1],PlayerTwoArr[2]] = [PlayerTwoArr[2], PlayerTwoArr[1],PlayerTwoArr[0]];
                 PlayerTwoFinalNumber = WishTwoThree();
-              } else if (SecondTwoDigit == PlayerTwoArr[0]) {
-                [PlayerTwoArr[0], PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[1], PlayerTwoArr[2], PlayerTwoArr[0]];
+              } else if (LastTwoDigit == PlayerTwoArr[1]) {
+                console.log("no.231" + PlayerTwoArr[1]+ SecondTwoDigit);
+                [PlayerTwoArr[0], PlayerTwoArr[1], PlayerTwoArr[2]] = [PlayerTwoArr[2], PlayerTwoArr[0], PlayerTwoArr[1]];
+                
                 PlayerTwoFinalNumber = WishTwoThree();
-              }
+                console.log("231/321 "+ PlayerTwoFinalNumber)
+              } 
             }
             stage = "Totality";
-            return `<b>Player 2</b> Selected Number: <b>${PlayerTwoFinalNumber}</b>`;
+            return `<b>Player 2</b> Selected Number: <b>${PlayerTwoFinalNumber}</b><br> Please press <b>Submit</b> to Winner!`;
       } else {
         return `Kindly Check the result number <b>${PlayerTwoArr}</b> and input which order you want to.`;
     
@@ -332,18 +381,54 @@ var main = function (input) {
 
   
     } else if (stage == "Totality") {
+      var massage ="";
           if (PlayerOneFinalNumber > PlayerTwoFinalNumber) {
-                ScoreOne++;
-                return `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>`;
+              
+              
+              massage = `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, ****Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
+              <br> Do you want to play?`;
+              ScoreOne++;
+              home();
             } else if (PlayerOneFinalNumber === PlayerTwoFinalNumber) {
-                return `It's a Tie!! (Player1 : <b>${PlayerOneFinalNumber}</b>, Player2 : <b>${PlayerTwoFinalNumber}</b>`;
+              
+              massage = `It's a Tie!! (Player1 : <b>${PlayerOneFinalNumber}</b>,  Player2 : <b>${PlayerTwoFinalNumber}</b>
+              <br> Do you want to play?`;
+              home();
             } else {
-                ScoreTwo++;
-                return `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>`;
-            }
-        }
+              
+              massage = `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, ****Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
+              <br> Do you want to play?`;
+              ScoreTwo++;
+              home();
+            } 
+            stage = "home";
+            console.log(stage);
+            
+            return massage;
+                
+            
+    } 
     
+    if (stage == "home"){
+      var homeInput = input.toLowerCase();
+      if (homeInput == "yes"){
+        PlayerOneFinalNumber = "";
+        PlayerTwoFinalNumber = "";
+  
+        counterOne = 0;
+        counterTwo = 0;
+        PlayerOneArr = [];
+        PlayerTwoArr = [];
+
+      
+      } else {
+        return "Bye Bye";
         
+      }
+      
+      
+
+    }
           
           
     }; 
