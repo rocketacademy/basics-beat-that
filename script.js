@@ -383,33 +383,29 @@ var main = function (input) {
     } else if (stage == "Totality") {
       var massage ="";
           if (PlayerOneFinalNumber > PlayerTwoFinalNumber) {
-              
-              
-              massage = `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, ****Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
-              <br> Do you want to play?`;
-              ScoreOne++;
-              home();
-            } else if (PlayerOneFinalNumber === PlayerTwoFinalNumber) {
+            massage = `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
+            <br> Do you want to play?`;
+            ScoreOne++;
+            console.log(ScoreOne);
+          } else if (PlayerOneFinalNumber === PlayerTwoFinalNumber) {
               
               massage = `It's a Tie!! (Player1 : <b>${PlayerOneFinalNumber}</b>,  Player2 : <b>${PlayerTwoFinalNumber}</b>
               <br> Do you want to play?`;
-              home();
-            } else {
               
-              massage = `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, ****Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
+          } else if (PlayerOneFinalNumber < PlayerTwoFinalNumber){
+              
+              massage = `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> Player2 Score: <b>${ScoreTwo}</b>
               <br> Do you want to play?`;
               ScoreTwo++;
-              home();
+              console.log(ScoreTwo);
+
             } 
             stage = "home";
-            console.log(stage);
-            
+            console.log("player one and two"+ PlayerOneFinalNumber + PlayerTwoFinalNumber);
+            console.log("stage" + stage);
             return massage;
-                
-            
-    } 
-    
-    if (stage == "home"){
+               
+    } if (stage == "home"){
       var homeInput = input.toLowerCase();
       if (homeInput == "yes"){
         PlayerOneFinalNumber = "";
@@ -419,16 +415,18 @@ var main = function (input) {
         counterTwo = 0;
         PlayerOneArr = [];
         PlayerTwoArr = [];
-
+        home();
       
       } else {
         return "Bye Bye";
         
       }
-      
-      
-
-    }
+            
+                
+            
+    } 
+    
+    
           
           
     }; 
