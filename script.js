@@ -30,7 +30,7 @@ var home = function(){
 
 
 
-var main = function (input) {                   //starting and PlayerRollDice is common gateway for 2 and 3 Dice.
+var main = function (input) {                   //starting is common gateway for 2 and 3 Dice.
     if (stage == "starting"){
         var noDice = Number(input.trim())
         numberDice = noDice
@@ -203,9 +203,9 @@ var main = function (input) {                   //starting and PlayerRollDice is
         } else {
             return `Kindly Check the result number <b>${PlayerTwoArr}</b> and input which order you want to`;
         };
-// ************************
+// ************************ 3 Dice code starts here.
     } else if (stage == "PlayerRoll3Dice") {
-        
+                                                                                                    //Player 1  
       var user = "Player 1";
  
       while (counterOne < numberDice) {
@@ -289,7 +289,7 @@ var main = function (input) {                   //starting and PlayerRollDice is
 
 
   } else if (stage == "ThreeDicePlayer2") {
-      var user = "Player 2";
+      var user = "Player 2";                                                              // Player 2
       console.log("line 268" + stage)
       while (counterTwo < numberDice) {
           var DiceRoll = Dice();
@@ -371,7 +371,7 @@ var main = function (input) {                   //starting and PlayerRollDice is
       };
 
   
-    } else if (stage == "Totality") {
+    } else if (stage == "Totality") {                                                                     //Computation part
       var massage ="";
           if (PlayerOneFinalNumber > PlayerTwoFinalNumber) {
             ScoreOne++;
