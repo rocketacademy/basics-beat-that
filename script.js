@@ -26,7 +26,7 @@ var home = function(){
   counterTwo = 0;
   PlayerOneArr = [];
   PlayerTwoArr = [];
-  return "Hello";
+  return "2 Dice Game Press <b>2</b> or <b>3</b> for 3 Dice Game, and Submit.";
 }
 
 
@@ -300,18 +300,18 @@ var main = function (input) {                   //starting is common gateway for
           if (PlayerOneFinalNumber > PlayerTwoFinalNumber) {
             ScoreOne++;
             massage = `Player1 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> xxxx Player2 Score: <b>${ScoreTwo}</b>
-            <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit Twice</b>`;
+            <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit</b>`;
             
             console.log(ScoreOne);
           } else if (PlayerOneFinalNumber === PlayerTwoFinalNumber) {
               
               massage = `It's a Tie!! (Player1 : <b>${PlayerOneFinalNumber}</b>,  Player2 : <b>${PlayerTwoFinalNumber}</b>
-              <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit Twice</b>`;
+              <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit</b>`;
               
           } else if (PlayerOneFinalNumber < PlayerTwoFinalNumber){
               ScoreTwo++;
               massage = `Player2 is the winner (Player1 : <b>${PlayerOneFinalNumber}</b>, xxxx Player2 : <b>${PlayerTwoFinalNumber})</b><br> Player1 Score: <b>${ScoreOne}</b> xxxx Player2 Score: <b>${ScoreTwo}</b>
-              <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit Twice</b>`;
+              <br> Do you want to play? Input "<b>Yes</b>" to continue and <b>Submit</b>`;
               
               console.log(ScoreTwo);
 
@@ -331,18 +331,11 @@ var main = function (input) {                   //starting is common gateway for
         counterTwo = 0;
         PlayerOneArr = [];
         PlayerTwoArr = [];
-        home();
+        return home();
       
       } else {
         return "Bye Bye";
         
-      }
-            
-                
-            
+      }        
     } 
-    
-    
-          
-          
-    }; 
+}; 
