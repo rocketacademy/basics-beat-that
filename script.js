@@ -26,6 +26,7 @@ var home = function(){
   counterTwo = 0;
   PlayerOneArr = [];
   PlayerTwoArr = [];
+  return "Hello";
 }
 
 
@@ -125,84 +126,7 @@ var main = function (input) {                   //starting is common gateway for
         };
 
     
-        } else if (stage == "PlayerRollDice") {
         
-        var user = "Player 1";
-
-        while (counterOne < numberDice) {
-          var DiceRoll = Dice();
-          PlayerOneArr.push(DiceRoll);
-          counterOne++;
-        }
-        console.log("Player 1: "+ PlayerOneArr);
-        stage = "TwoDicePlayer1Input";
-        return `<b>${user}</b>: Rolled ${numberDice} dice. Results <b>${PlayerOneArr}</b>. <br>Input rearranged number for bigger value.`;
-
-    } else if (stage == "TwoDicePlayer1Input"){
-        var PlayerOneInput = Number(input.trim());
-        console.log("line 50" + stage);
-        var FirstDigitONETWO = Math.floor(PlayerOneInput/10)%10;
-        var LastDigitONETWO = Math.floor(PlayerOneInput)%10;
-
-        var WishONEONE = function(){
-            var PlayerOneFinalNumber = PlayerOneArr[0]*10 + PlayerOneArr[1];
-            return PlayerOneFinalNumber;
-            };
-
-        if ((FirstDigitONETWO == PlayerOneArr[0] || FirstDigitONETWO == PlayerOneArr[1]) && 
-            (LastDigitONETWO == PlayerOneArr[0] || LastDigitONETWO == PlayerOneArr[1])) {
-            if(FirstDigitONETWO == PlayerOneArr[0]){
-                PlayerOneFinalNumber = WishONEONE();
-            } else if (FirstDigitONETWO == PlayerOneArr[1]){
-                [PlayerOneArr[0], PlayerOneArr[1]] = [PlayerOneArr[1], PlayerOneArr[0]];
-                PlayerOneFinalNumber = WishONEONE();
-            } 
-            stage = "TwoDicePlayer2";
-            return `<b>Player 1</b> Selected Number: <b>${PlayerOneFinalNumber}</b> <br> <b>Player 2</b> Please press <b>Submit</b> to roll ${numberDice} Dice.`;
-        } else {
-            return `Kindly Check the result number <b>${PlayerOneArr}</b> and input which order you want to`;
-        };
-
-    } else if (stage == "TwoDicePlayer2") {
-        var user = "Player 2";
-        console.log("Stage3")
-        while (counterTwo < numberDice) {
-            var DiceRoll = Dice();
-            PlayerTwoArr.push(DiceRoll);
-            counterTwo++;
-        }
-            console.log("Player 2: "+ PlayerTwoArr);
-            console.log(stage);
-                
-            stage = "TwoDicePlayer2Input";
-            return `<b>${user}</b>: Rolled ${numberDice} dice. Results <b>${PlayerTwoArr}</b>.<br>
-            Input rearranged number for bigger value.`;
-
-    } else if (stage == "TwoDicePlayer2Input"){
-        
-        var PlayerTwoInput = Number(input.trim());
-    
-        var FirstDigitTWOTWO = Math.floor(PlayerTwoInput/10)%10;
-        var LastDigitTWOTWO = Math.floor(PlayerTwoInput)%10;
-
-        var WishONETWO = function(){
-            var PlayerTwoFinalNumber = (PlayerTwoArr[0]*10)+(PlayerTwoArr[1]);
-            return PlayerTwoFinalNumber;
-        }
-
-        if ((FirstDigitTWOTWO == PlayerTwoArr[0] || FirstDigitTWOTWO == PlayerTwoArr[1]) && (LastDigitTWOTWO == PlayerTwoArr[0] || LastDigitTWOTWO == PlayerTwoArr[1])) {
-            if(FirstDigitTWOTWO == PlayerTwoArr[0]){
-                PlayerTwoFinalNumber = WishONETWO();
-            } else if (FirstDigitTWOTWO == PlayerTwoArr[1]){
-                [PlayerTwoArr[0], PlayerTwoArr[1]] = [PlayerTwoArr[1], PlayerTwoArr[0]];
-                PlayerTwoFinalNumber = WishONETWO();
-            }
-         
-            stage = "Totality";
-            return `<b>Player 2</b> Selected Number: <b>${PlayerTwoFinalNumber}</b>`;
-        } else {
-            return `Kindly Check the result number <b>${PlayerTwoArr}</b> and input which order you want to`;
-        };
 // ************************ 3 Dice code starts here.
     } else if (stage == "PlayerRoll3Dice") {
                                                                                                     //Player 1  
