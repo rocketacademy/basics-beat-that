@@ -20,7 +20,6 @@ function main(input) {
     button.innerText = "Roll";
     outputMsg = `Round ${roundNumber} is starting. Player 1 press roll to begin.`;
     gameMode = "p1Roll";
-    button.innerText = "Roll";
   }
 
   //Player1 rolls dice
@@ -30,7 +29,7 @@ function main(input) {
 
     if (d1Roll == d2Roll) {
       chosenNumber1 = Number(d1Roll + d2Roll);
-      outputMsg = `You rolled ${d1Roll} for both dices. Your number is: ${chosenNumber1}`;
+      outputMsg = `PLayer 1. You rolled ${d1Roll} for both dices. Your number is: ${chosenNumber1}.<br>Player 2. Press Roll to roll your dice.`;
       button.innerText = "Roll";
       gameMode = "p2Roll";
     } else {
@@ -64,8 +63,8 @@ function main(input) {
 
     if (d1Roll == d2Roll) {
       chosenNumber2 = Number(d1Roll + d2Roll);
-      outputMsg = `You rolled ${d1Roll} for both dices. Your number is: ${chosenNumber2}`;
-      button.innerText = "Roll";
+      outputMsg = `Player 2. You rolled ${d1Roll} for both dices. Your number is: ${chosenNumber2}<br> Press Results to continue.`;
+      button.innerText = "Results";
       gameMode = "results";
     } else {
       gameMode = "p2Choose";
@@ -93,19 +92,38 @@ function main(input) {
   }
   //   //Winner
   else if (gameMode == "results") {
-    if (chosenNumber1 > chosenNumber2) {
+    p1Score = p1Score + chosenNumber1;
+    p2Score = p2Score + chosenNumber2;
+    if (chosenNumber1 == chosenNumber2) {
       outputMsg = `Player 1 played ${chosenNumber1}, Player 2 played ${chosenNumber2}.<br>
-  Player 1 wins.`;
+  Its a tie!`;
+    } else if (chosenNumber1 > chosenNumber2) {
+      outputMsg = `Player 1 played ${chosenNumber1}, Player 2 played ${chosenNumber2}.<br>
+  Player 1 wins this round.`;
     } else {
       outputMsg = `Player 1 played ${chosenNumber1}, Player 2 played ${chosenNumber2}.<br>
-  Player 2 wins.`;
+  Player 2 wins this round.`;
     }
+    button.innerText = "View Scores";
+    gameMode = "score";
   }
-  //   //Score
+  //Score
   else if (gameMode == "score") {
+    if (p1Score > p2Score) {
+      outputMsg = `Total Score as of Round ${roundNumber}!<br>
+    Player 1: ${p1Score}<br>Player 2: ${p2Score}<br>Player 1 is winning!`;
+      button.innerText = `Play Round ${roundNumber + 1}`;
+    } else if (p2Score > p1Score) {
+      outputMsg = `Total Score as of Round ${roundNumber}!<br>
+    Player 2: ${p2Score}<br>Player 1: ${p1Score}<br>Player 2 is winning!`;
+      button.innerText = `Play Round ${roundNumber + 1}`;
+    } else {
+      outputMsg = `Total Score as of Round ${roundNumber}!<br>
+    Player 1: ${p1Score}<br>Player 2: ${p2Score}<br>Its a tie!`;
+    }
+    gameMode = "gameStart";
+    roundNumber++;
   }
-  //   //Restart
-  else if (gameMode == "restart") {
-  }
+
   return outputMsg;
 }
