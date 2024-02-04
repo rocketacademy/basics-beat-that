@@ -52,6 +52,26 @@ var getPlayerScore = function(playerInput){
     }
 };
 
+//Need to check this function
+var comparePlayersScore = function(){
+
+    var compareMessage = "Player 1 score:" + allPlayersScore[0]+ "<br>Player 2 score: " + allPlayersScore[1];
+
+    if(allPlayersScore[0] > allPlayersScore[1]){
+      compareMessage = compareMessage + "<br><br>Player 1 wins.";
+    }
+
+    if(allPlayersScore[0] < allPlayersScore[1]){
+      compareMessage = compareMessage + "<br><br>Player 2 wins.";
+    }
+
+    if(allPlayersScore[0] == allPlayersScore[1]){
+      compareMessage = compareMessage + "<br><br>It is a tie.";
+    }
+    
+    return compareMessage;
+};
+
 var main = function (input) {
   console.log('Checking game state on submit click:', gameState);
   console.log('Checking currentPlayer on submit click:', currentPlayer);
@@ -85,4 +105,10 @@ var main = function (input) {
     }
   }
 
+  if(gameState == GAME_STATE_COMPARE_SCORES){
+    console.log('Control flow: gameState == GAME_STATE_COMPARE_SCORES');
+
+    outputMessage = comparePlayersScore();
+    return outputMessage;
+  }
 }
