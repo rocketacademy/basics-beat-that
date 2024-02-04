@@ -1,4 +1,4 @@
-var gameMode = "gameStart";
+var gameMode = "numberOfRounds";
 var roundNumber = 1;
 var button = document.getElementById("submit-button");
 var d1Roll;
@@ -8,6 +8,9 @@ var chosenNumber2;
 var outputMsg = ``;
 var p1Score = 0;
 var p2Score = 0;
+var totalRounds = 0;
+var scoreMsg;
+var winMsg;
 
 function getDiceRoll() {
   var rolledDice = Math.floor(Math.random() * 6 + 1);
@@ -15,8 +18,21 @@ function getDiceRoll() {
 }
 
 function main(input) {
+  //number of rounds
+
+  if (gameMode == "numberOfRounds") {
+    if (isNaN(input) || input == "") {
+      outputMsg = "Invalid input. Enter the number of rounds you wish to play.";
+    } else {
+      totalRounds = Number(input);
+      gameMode = "gameStart";
+      outputMsg = "Press Play to begin.";
+      button.innerText = "Play";
+    }
+  }
+
   //start game
-  if (gameMode == "gameStart") {
+  else if (gameMode == "gameStart") {
     button.innerText = "Roll";
     outputMsg = `Round ${roundNumber} is starting. Player 1 press roll to begin.`;
     gameMode = "p1Roll";
@@ -24,7 +40,7 @@ function main(input) {
 
   //Player1 rolls dice
   else if (gameMode == "p1Roll") {
-    d1Roll = getDiceRoll().toString();
+    d1Roll = getDiceRoll().toString(); //making rolls a string to allow concatenation of rolls to combine dice rolls into a number.
     d2Roll = getDiceRoll().toString();
 
     if (d1Roll == d2Roll) {
@@ -110,19 +126,30 @@ function main(input) {
   //Score
   else if (gameMode == "score") {
     if (p1Score > p2Score) {
-      outputMsg = `Total Score as of Round ${roundNumber}!<br>
-    Player 1: ${p1Score}<br>Player 2: ${p2Score}<br>Player 1 is winning!`;
+      winMsg = "Player 1 Wins!";
+      scoreMsg = `Total Score as of Round ${roundNumber}!<br>
+    Player 1: ${p1Score}<br>Player 2: ${p2Score}`;
       button.innerText = `Play Round ${roundNumber + 1}`;
     } else if (p2Score > p1Score) {
-      outputMsg = `Total Score as of Round ${roundNumber}!<br>
-    Player 2: ${p2Score}<br>Player 1: ${p1Score}<br>Player 2 is winning!`;
+      winMsg = "Player 2 Wins!";
+      scoreMsg = `Total Score as of Round ${roundNumber}!<br>
+    Player 2: ${p2Score}<br>Player 1: ${p1Score}`;
       button.innerText = `Play Round ${roundNumber + 1}`;
     } else {
-      outputMsg = `Total Score as of Round ${roundNumber}!<br>
+      scoreMsg = `Total Score as of Round ${roundNumber}!<br>
     Player 1: ${p1Score}<br>Player 2: ${p2Score}<br>Its a tie!`;
     }
-    gameMode = "gameStart";
-    roundNumber++;
+    if (roundNumber == totalRounds) {
+      outputMsg = `Game Over!<br>${scoreMsg}<br>${winMsg}`;
+      button.innerText = "Restart Game";
+      button.addEventListener("click", function () {
+        location.reload(); // function to refresh page and restart game.
+      });
+    } else {
+      gameMode = "gameStart";
+      roundNumber++;
+      outputMsg = scoreMsg;
+    }
   }
 
   return outputMsg;
