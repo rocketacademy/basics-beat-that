@@ -7,86 +7,190 @@
 // problem brakdown and planning //
 // ver 1. rolls 2 dice and turns the output for player 1. Player 1 chooses the dice order and get the correct return output.
 // ver 2. refectored code to include player 2
+//      - global variables for currentPlayer; allPlayerScore
+//      - refactor outputMessages to interract with each player, 1 and 2
+//      - write logic for player 1 to go first then player 2, and finally point towards comparing score
+
 // ver 3. implement comparing dice scores and declare winner
 // ver 4. resetnthe game to the players can play continually without refreshing the page
 
-// Global variables
-var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
-var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
-var gameState = GAME_STATE_DICE_ROLL;
+var gameMode1 = "p1 roll dice";
+var gameMode2 = "p2 roll dice";
+var gameMode3 = "p1 choose order";
+var gameMode4 = "p2 choose order";
+var gameMode5 = "Compare biggest number";
+var currentGameMode = gameMode1;
+var p1DiceRolls;
+var p2DiceRolls;
+var diceRollArraysP1 = [];
+var diceRollArraysP2 = [];
+var player1selection = 0;
+var player2selection = 0;
 
-var playerRolls = [];
-
-// Helper function
-var rollDice = function () {
-  // Random integer from 1 to 6;
-  return Math.floor(Math.random() * 6) + 1;
-};
-
-var rollDiceForPlayer = function () {
-  var counter = 0;
-  while (counter < 2) {
-    playerRolls.push(rollDice());
-    counter = counter + 1;
+var main = function (input) {
+  var myOutputValue = "hello world";
+  var myOutputValue = "";
+  // p1 rolls the dice
+  if (currentGameMode == gameMode1) {
+    console.log("p1 rolls dice");
+    p1DiceRolls = player1DiceRoll();
+    myOutputValue =
+      "Player 1: " +
+      p1DiceRolls +
+      ". <br>Input 1 to maintain dice order or 2 to flip it.";
+    currentGameMode = gameMode3;
+    //p1 choose dice order
+  } else if (currentGameMode == gameMode3) {
+    console.log("p1 choose order");
+    if (input == 1) {
+      // store p1 selection
+      player1selection = Number(
+        String(diceRollArraysP1[0]) + String(diceRollArraysP1[1])
+      );
+      myOutputValue =
+        "Player 1: You selected " +
+        diceRollArraysP1[0] +
+        diceRollArraysP1[1] +
+        "<br>Please type 'p2' for Player 2 dice rolls.";
+    }
+    if (input == 2) {
+      // store p1 selection
+      player1selection = Number(
+        String(diceRollArraysP1[1]) + String(diceRollArraysP1[0])
+      );
+      myOutputValue =
+        "Player 1, you selected " +
+        diceRollArraysP1[1] +
+        diceRollArraysP1[0] +
+        "<br>Please type 'p2' for Player 2 dice rolls.";
+    }
+  }
+  // initiate p2 dice roll by making p1 type p2
+  if (input == "p2") {
+    currentGameMode = gameMode2;
+  } //p2 rolls dice
+  if (currentGameMode == gameMode2) {
+    console.log("p2 rolls dice");
+    p2DiceRolls = player2DiceRoll();
+    myOutputValue =
+      "Player 2: " +
+      p2DiceRolls +
+      ". <br><br>Input 1 to maintain dice order or 2 to flip it." +
+      "<br><br> Player 1 selection: " +
+      player1selection;
+    //switch mode for p2 to choose dice order
+    currentGameMode = gameMode4;
+    console.log("p2 choose order");
+  } else if (currentGameMode == gameMode4) {
+    if (input == 1) {
+      // store p2 selection
+      player2selection = Number(
+        String(diceRollArraysP2[0]) + String(diceRollArraysP2[1])
+      );
+      myOutputValue =
+        "Player 2, you selected " +
+        diceRollArraysP2[0] +
+        diceRollArraysP2[1] +
+        "<br>Click submit to see results ~" +
+        "<br><br> Player 1 selection: " +
+        player1selection;
+    }
+    if (input == 2) {
+      // store p2 selection
+      player2selection = Number(
+        String(diceRollArraysP2[1]) + String(diceRollArraysP2[0])
+      );
+      myOutputValue =
+        "Player 2, you selected " +
+        diceRollArraysP2[1] +
+        diceRollArraysP2[0] +
+        "<br>Click submit to see results ~";
+      +"<br><br> Player 1 selection: " + player1selection;
+    }
+    if (input == "" || isNaN(input) == true) {
+      myOutputValue = 'Sorry, please enter "1" or "2".';
+    }
+    // switch to last game mode to determine winner
+    if (input == "") {
+      currentGameMode = gameMode5;
+    }
   }
 
+  if (currentGameMode == gameMode5) {
+    console.log("determine current round winner");
+    // p1 win
+    if (player1selection > player2selection) {
+      myOutputValue =
+        "Player 1 wins! <br><br> Player 1 entry: " +
+        player1selection +
+        "<br> Player 2 entry: " +
+        player2selection +
+        "<br><br> Click submit to play again!";
+    }
+    // p2 win
+    if (player1selection < player2selection) {
+      myOutputValue =
+        "Player 2 wins! <br><br> Player 1 entry: " +
+        player1selection +
+        "<br> Player 2 entry: " +
+        player2selection +
+        "<br><br> Click submit to play again!";
+    }
+    // tie result
+    if (player1selection == player2selection) {
+      myOutputValue =
+        "Its a tie!<br><br> Player 1 entry: " +
+        player1selection +
+        "<br> Player 2 entry: " +
+        player2selection +
+        "<br><br> Click submit to play again!";
+    }
+    // restart game without refreshing
+    currentGameMode = gameMode1;
+  }
+
+  return myOutputValue;
+};
+
+var randomDiceRoll = function () {
+  var diceRoll = Math.floor(Math.random() * 6) + 1;
+  return diceRoll;
+};
+
+var player1DiceRoll = function () {
+  var counter = 0;
+  var diceRoll = randomDiceRoll;
+  while (counter < 2) {
+    diceRollArraysP1.push(diceRoll());
+    counter += 1;
+  }
   return (
-    "Welcome<br><br>You rolled:<br>Dice 1: " +
-    playerRolls[0] +
-    " | Dice 2: " +
-    playerRolls[1] +
-    ".<br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value."
+    "Your dice rolls are " +
+    '"' +
+    diceRollArraysP1[0] +
+    '"' +
+    " and " +
+    '"' +
+    diceRollArraysP1[1] +
+    '"'
   );
 };
 
-var getPlayerScore = function (input) {
-  // input validation
-  if (input != "1" && input != "2") {
-    console.log(
-      "Control flow: input validation, invalid input... NOT '1' AND NOT '2'"
-    );
-    return (
-      "Error! Please only input '1' or '2' to choose which dice to use as the first digit.<br><br>Your dice rolls are:<br>Dice 1: " +
-      playerRolls[0] +
-      "| Dice 2: " +
-      playerRolls[1] +
-      "."
-    );
+var player2DiceRoll = function () {
+  var counter = 0;
+  var diceRoll = randomDiceRoll;
+  while (counter < 2) {
+    diceRollArraysP2.push(diceRoll());
+    counter += 1;
   }
-  // input == '1'
-  if (input == "1") {
-    var playerScore = Number(String(playerRolls[0]) + String(playerRolls[1]));
-    return "Your chosen value is: " + playerScore;
-  }
-  // input == '2'
-  if (input == "2") {
-    var playerScore = Number(String(playerRolls[1]) + String(playerRolls[0]));
-    return "Your chosen value is: " + playerScore;
-  }
-};
-
-var main = function (input) {
-  console.log("Checking game state on submit click: ", gameState);
-  var outputMessage = "";
-
-  if (gameState == GAME_STATE_DICE_ROLL) {
-    console.log("Control flow: gameState == GAME_STATE_DICE_ROLL");
-
-    // Display dice rolls as output message
-    outputMessage = rollDiceForPlayer();
-
-    // Change the game state
-    gameState = GAME_STATE_CHOOSE_DICE_ORDER;
-  } else if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
-    console.log("Control flow: gameState == GAME_STATE_CHOOSE_DICE_ORDER");
-
-    // Call getPlayerScore function
-    outputMessage = getPlayerScore(input);
-
-    // Reset the game for the next round
-    gameState = GAME_STATE_DICE_ROLL;
-    playerRolls = [];
-  }
-
-  return outputMessage;
+  return (
+    "Your dice rolls are " +
+    '"' +
+    diceRollArraysP2[0] +
+    '"' +
+    " and " +
+    '"' +
+    diceRollArraysP2[1] +
+    '"'
+  );
 };
