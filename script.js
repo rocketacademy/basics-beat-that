@@ -4,16 +4,26 @@ const SELECTION_MODE = `selectionMode`;
 const BASE = `base`;
 const VARIABLE_DICE_NUM = `variableDiceNum`;
 const VARIABLE_PLAYER_NUM = `variablePlayerNum`;
+const KNOCKOUT_MODE = `knockoutMode`;
 
 //modes in a gameType
 const START_TURN = `startTurn`;
 const SELECT_DICE_ORDER = `selectOrder`;
 const END_GAME = `endGame`;
 const WAITING_FOR_DICE_COUNT = `waitingForDiceCount`;
+const SELECTING_KO_PLAYERS = `selectKoPlayers`;
+const CHECK_BRACKET = `checkBracket`;
+const END_KO_GAME = `endKoGame`;
+
+//brackets for knockout mode
+const UPPER = `upper`;
+const LOWER = `lower`;
+let bracket = UPPER;
 
 //reused Msgs
 const SUBMIT_TO_CONTINUE_MSG = `Press Submit to continue.`;
 const INVALID_INPUT_MSG = `This is an invalid input. Please enter a number that is 2 or greater.`;
+const INVALID_KO_MSG = `This is an invalid input. Please enter a number that is 4 or greater.`;
 
 //game settings
 let mode = ``;
@@ -26,23 +36,35 @@ let numberOfDice;
 const playerProfiles = [];
 const playersDiceRolls = [];
 
+//knockout game settings
+let koPlayerOne;
+let koPlayerTwo;
+let prevPlayer;
+let endKoGame = false;
+const knockoutBrackets = [[], [], []];
+
 //END of global variables
 //functions
 
+//helper functions
 function initPlayersData(numberOfPlayers) {
   for (
     let playerCounter = 1;
     playerCounter <= numberOfPlayers;
     playerCounter += 1
   ) {
-    playerProfiles.push({ id: playerCounter, diceResult: 0, score: 0 });
+    playerProfiles.push({
+      id: playerCounter,
+      diceResult: 0,
+      score: 0,
+    });
     playersDiceRolls.push(0);
   }
 }
 
 //text for selecting gameTypes
 function inquireGameType() {
-  return `Please select from the following game modes: <br> <br> 1: Default (Base Rules) <br> 2: Lowest Combined (Lowest combined dice number wins instead) <br> 3: Variable Number of Dice (Computer will automatically select dice order) <br> 4: Variable Number of Players (Rules are same as Default otherwise) <br> <br> Input 000 to toggle an option for the computer to automatically generate the optimal dice roll order`;
+  return `Please select from the following game modes: <br> <br> 1: Default (Base Rules) <br> 2: Lowest Combined (Lowest combined dice number wins instead) <br> 3: Variable Number of Dice (Computer will automatically select dice order) <br> 4: Variable Number of Players (Rules are same as Default otherwise) <br> 5: Knockout Format (Multiple Players, computer will automatically select dice order) <br> <br> Input 000 to toggle an option for the computer to automatically generate the optimal dice roll order`;
 }
 
 function selectGameType(playerChoice) {
@@ -61,6 +83,11 @@ function selectGameType(playerChoice) {
     case `4`:
       gameType = VARIABLE_PLAYER_NUM;
       return `Input the number of players joining the game! ${SUBMIT_TO_CONTINUE_MSG}`;
+    case `5`:
+      gameType = KNOCKOUT_MODE;
+      aiMode = true;
+      numberOfPlayers = 0;
+      return `Input the number of players entering the knockout tournament! ${SUBMIT_TO_CONTINUE_MSG}`;
     case `000`:
       aiMode = !aiMode;
       let aiMsg;
@@ -73,11 +100,14 @@ function selectGameType(playerChoice) {
       return `${aiMsg} ${SUBMIT_TO_CONTINUE_MSG}`;
     default:
       gameType = ``;
-      return `This is an invalid input. Please select between 1 to 4.`;
+      return `This is an invalid input. Please select between 1 to 5.`;
   }
 }
 
 function validateInput(playerChoice) {
+  if (gameType == KNOCKOUT_MODE && (isNaN(playerChoice) || playerChoice < 4)) {
+    return true;
+  }
   if (isNaN(playerChoice) || playerChoice < 2) {
     return true;
   }
@@ -228,6 +258,7 @@ function displayLeaderBoard() {
   return `${leadPlayerMsg} Leaderboard <br>${leaderBoardMsg} <br> <br> Press Submit to start a new round.`;
 }
 
+//non KO gametypes logic
 //play base, lowest combined or variable players
 function playBaseGame(playerChoice) {
   if (mode === ``) {
@@ -290,6 +321,234 @@ function playMultiDiceGame(playerChoice) {
     return displayLeaderBoard();
   }
 }
+//end non KO gametypes logic
+
+//KO game helper functions//
+
+//initializes each round of the KO game
+function initKnockOutBracket(playerChoice) {
+  if (validateInput(playerChoice)) {
+    return `${INVALID_KO_MSG}`;
+  }
+  numberOfPlayers = playerChoice;
+  initPlayersData(numberOfPlayers);
+  const competitionArray = [];
+  const lowerBracket = [];
+  for (
+    let playerCounter = 1;
+    playerCounter <= numberOfPlayers;
+    playerCounter += 1
+  ) {
+    competitionArray.push(playerCounter);
+  }
+  for (let i = 0; i < numberOfPlayers / 2; i += 1) {
+    randomIndex = Math.random() * competitionArray.length;
+    const lowerBracketPlayers = competitionArray.splice(randomIndex, 1);
+    lowerBracket.push(lowerBracketPlayers[0]);
+  }
+  knockoutBrackets[0] = [...competitionArray];
+  knockoutBrackets[1] = [...lowerBracket];
+  return `${numberOfPlayers} players are taking part in this tournament 😎`;
+}
+
+//random selection of players for KO game
+function selectPlayersforBracket() {
+  if (knockoutBrackets[0].length == 1 && knockoutBrackets[1].length == 1) {
+    koPlayerOne = knockoutBrackets[0][0];
+    koPlayerTwo = knockoutBrackets[1][0];
+    currentPlayer = koPlayerOne;
+    return `Player ${koPlayerOne} and Player ${koPlayerTwo} are competing for the championship! ✌✌ <br> <br> Player ${koPlayerOne} will take the first turn.`;
+  }
+  let bracketIndex;
+  if (bracket == UPPER) {
+    bracketIndex = 0;
+  } else {
+    bracketIndex = 1;
+  }
+  const bracketPulls = knockoutBrackets[bracketIndex];
+  const randomIndex = Math.random() * bracketPulls.length;
+  const koPlayerOneArr = bracketPulls.splice(randomIndex, 1);
+  koPlayerOne = koPlayerOneArr[0];
+  const randomIndexTwo = Math.random() * bracketPulls.length;
+  const koPlayerTwoArr = bracketPulls.splice(randomIndexTwo, 1);
+  koPlayerTwo = koPlayerTwoArr[0];
+  currentPlayer = koPlayerOne;
+  return `Player ${koPlayerOne} and Player ${koPlayerTwo} are up this time! <br> <br> Player ${koPlayerOne} will take the first turn.`;
+}
+
+//automates dice order for both players in each match for KO game, can be refactored alongside function ${automateDiceOrder}
+function automateKoDiceOrder(playersDiceRolls) {
+  const playerIndex = currentPlayer - 1;
+  const diceRolls = playersDiceRolls[playerIndex].toSorted();
+  if (!lowestCombinedMode) {
+    diceRolls.reverse();
+  }
+  const diceResultString = diceRolls.join("");
+  const diceResult = Number(diceResultString);
+  playerProfiles[playerIndex].diceResult = diceResult;
+  playerProfiles[playerIndex].score += diceResult;
+  const diceResultMsg = `Player ${currentPlayer}, your number is ${diceResult}. <br>`;
+  if (currentPlayer === koPlayerTwo) {
+    const endMatch = checkForKoWinner();
+    return `${diceResultMsg} <br> ${endMatch}`;
+  }
+  prevPlayer = koPlayerOne;
+  currentPlayer = koPlayerTwo;
+  mode = START_TURN;
+  return `${diceResultMsg} <br> It is now Player ${currentPlayer}'s turn.`;
+}
+
+//inputs players who won into active player arrays
+function insertWinningPlayers() {
+  let bracketIndex;
+  if (bracket == UPPER) {
+    bracketIndex = 0;
+  } else {
+    bracketIndex = 1;
+  }
+  const winningPlayers = knockoutBrackets[2].length;
+  for (let i = 0; i < winningPlayers; i += 1) {
+    const playerId = knockoutBrackets[2].shift();
+    knockoutBrackets[bracketIndex].push(playerId);
+  }
+}
+
+function displayRemainingPlayers() {
+  const upBracketPlayers = [...knockoutBrackets[0]].toSorted();
+  const lowBracketPlayerCount = [...knockoutBrackets[1]].toSorted();
+  return `- Championship Contenders - <br> <br> Upper Bracket Players: ${upBracketPlayers} <br> Lower Bracket Players: ${lowBracketPlayerCount}`;
+}
+
+//change brackets and manages byes/free wins -> need ideas to refactor
+function checkBracketStatus() {
+  const upBracketCheck = knockoutBrackets[0].length;
+  const lowBracketCheck = knockoutBrackets[1].length;
+  const END_UP_BRACKET_MSG = `The upper bracket matches have ended. The lower bracket matches will now commence.`;
+  const END_LOW_BRACKET_MSG = `The lower bracket matches have ended. The upper bracket matches will now commence.`;
+
+  if (bracket === LOWER) {
+    if (upBracketCheck == 1 && lowBracketCheck == 0) {
+      insertWinningPlayers();
+      const playerCountMsg = displayRemainingPlayers();
+      bracket = UPPER;
+      endKoGame = true;
+      return `And up next... our final contestants! 😍 <br> <br> ${playerCountMsg}`;
+    }
+    if (upBracketCheck > 1 && lowBracketCheck == 1) {
+      const byePlayer = knockoutBrackets[1][0];
+      insertWinningPlayers();
+      const playerCountMsg = displayRemainingPlayers();
+      bracket = UPPER;
+      return `Player ${byePlayer} has got a bye! ${END_LOW_BRACKET_MSG} <br> <br> ${playerCountMsg}`;
+    }
+    if (upBracketCheck > 1 && lowBracketCheck == 0) {
+      insertWinningPlayers();
+      const playerCountMsg = displayRemainingPlayers();
+      bracket = UPPER;
+      return `${END_LOW_BRACKET_MSG} <br> <br> ${playerCountMsg}`;
+    }
+    if (upBracketCheck == 1 && lowBracketCheck == 1) {
+      const byePlayer = knockoutBrackets[1][0];
+      insertWinningPlayers();
+      const playerCountMsg = displayRemainingPlayers();
+      return `Player ${byePlayer} has got a bye! As the upper bracket has finished, the next match will be decisive for the lower bracket. <br> <br> ${playerCountMsg}`;
+    }
+    return `Onto the next match in the lower bracket 😁`;
+  }
+  if (upBracketCheck == 1 && lowBracketCheck > 1) {
+    const byePlayer = knockoutBrackets[0][0];
+    insertWinningPlayers();
+    const playerCountMsg = displayRemainingPlayers();
+    bracket = LOWER;
+    return `Player ${byePlayer} has got a bye! ${END_UP_BRACKET_MSG} <br> <br> ${playerCountMsg}`;
+  }
+  if (upBracketCheck == 0 && lowBracketCheck > 1) {
+    insertWinningPlayers();
+    const playerCountMsg = displayRemainingPlayers();
+    bracket = LOWER;
+    return `${END_UP_BRACKET_MSG} <br> <br> ${playerCountMsg}`;
+  }
+  return `Onto the next match in the upper bracket 😁`;
+}
+
+//checks for game results and pushes winner into holding area for winners
+function checkForKoWinner() {
+  const prevPlayerIndex = prevPlayer - 1;
+  const playerIndex = currentPlayer - 1;
+  const indexOneResult = playerProfiles[prevPlayerIndex].diceResult;
+  const indexTwoResult = playerProfiles[playerIndex].diceResult;
+  let diceResultsMsg = `Player ${prevPlayer} chose ${indexOneResult}. <br> Player ${currentPlayer} chose ${indexTwoResult}. `;
+  if (indexOneResult === indexTwoResult) {
+    currentPlayer = prevPlayer;
+    mode = START_TURN;
+    return `${diceResultsMsg} <br> It's a draw! Time to roll again. <br> <br> It is now Player ${prevPlayer}'s turn.`;
+  }
+  if (indexOneResult < indexTwoResult) {
+    if (endKoGame) {
+      mode = END_KO_GAME;
+      return `${diceResultsMsg} <br> <br> Player ${prevPlayer} has been eliminated. <br> Player ${currentPlayer} is the final winner! 🏆🏆🏆`;
+    }
+    knockoutBrackets[2].push(currentPlayer);
+    mode = CHECK_BRACKET;
+    return `${diceResultsMsg} <br> <br> Player ${prevPlayer} has been eliminated. <br> Player ${currentPlayer} advances to the next round!`;
+  }
+  if (endKoGame) {
+    mode = END_KO_GAME;
+    return `${diceResultsMsg} <br> <br> Player ${currentPlayer} has been eliminated. <br> Player ${prevPlayer} is the final winner! 🏆🏆🏆`;
+  }
+  knockoutBrackets[2].push(prevPlayer);
+  mode = CHECK_BRACKET;
+  return `${diceResultsMsg} <br> <br> Player ${currentPlayer} has been eliminated. <br> Player ${prevPlayer} advances to the next round!`;
+}
+
+//resets all parameters of the KO game that can affect a new game
+function resetKnockOutGame() {
+  mode = ``;
+  playerProfiles.splice(0);
+  playersDiceRolls.splice(0);
+  knockoutBrackets[0].splice(0);
+  knockoutBrackets[1].splice(0);
+  endKoGame = false;
+  numberOfPlayers = 0;
+  return `Game has been reset. To start a new game, input the number of players entering the knockout tournament! ${SUBMIT_TO_CONTINUE_MSG}`;
+}
+
+//end KO game helper functions
+
+function playKnockoutGame(playerChoice) {
+  numberOfDice = 2;
+  if (mode == ``) {
+    mode = SELECTING_KO_PLAYERS;
+    return initKnockOutBracket(playerChoice);
+  }
+
+  if (mode == SELECTING_KO_PLAYERS) {
+    if (numberOfPlayers != 0) {
+      mode = START_TURN;
+      return selectPlayersforBracket();
+    } else {
+      return initKnockOutBracket(playerChoice);
+    }
+  }
+
+  if (mode == START_TURN) {
+    const diceResult = randomizeDiceRolls(numberOfDice);
+    mode = SELECT_DICE_ORDER;
+    return `${diceResult}`;
+  }
+  if (mode == SELECT_DICE_ORDER) {
+    const gameProgressMsg = automateKoDiceOrder(playersDiceRolls);
+    return gameProgressMsg;
+  }
+  if (mode == CHECK_BRACKET) {
+    const bracketMsg = checkBracketStatus();
+    mode = SELECTING_KO_PLAYERS;
+    return bracketMsg;
+  }
+  if (mode == END_KO_GAME) {
+    return resetKnockOutGame();
+  }
+}
 
 function main(input) {
   let myOutputValue = ``;
@@ -307,6 +566,10 @@ function main(input) {
   if (gameType == VARIABLE_DICE_NUM) {
     const multiDiceGame = playMultiDiceGame(input);
     myOutputValue = multiDiceGame;
+  }
+  if (gameType == KNOCKOUT_MODE) {
+    const knockoutGame = playKnockoutGame(input);
+    myOutputValue = knockoutGame;
   }
   return myOutputValue;
 }
