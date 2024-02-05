@@ -17,46 +17,96 @@
         text-align: center;
       }
 
-      #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
+      #h2 {
+        margin-left: 30px;
+        margin-right: 30px;
       }
 
-      input {
+      #container {
+        background-color: #9fd8cb;
+        border-radius: 6px;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 20px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .input-container {
+        display: flex;
+        flex-direction: column; /* Adjusted to column layout */
+        gap: 10px;
+      }
+
+      input,
+      select {
         font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
+        line-height: 40px;
+        border: 0.5px;
+        margin: 0 0 10px 0;
         padding: 0 9px;
         width: 100%;
       }
 
+      select {
+        height: 38px;
+        width: 200px;
+      }
+
       button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
+        background-color: #fbdce2;
+        font-size: 20px;
+        line-height: 40px;
+        border: 0.5px;
+        border-radius: 4px;
+        margin: 0 0 10px 0;
+        padding: 0 20px;
       }
 
       #output-div {
-        background-color: lightgrey;
+        border-radius: 4px;
+        margin: auto;
+        padding: 15px;
+        width: 75%;
+        text-align: center;
+      }
+
+      #instructions {
+        border-radius: 4px;
         margin: 20px auto;
-        padding: 20px;
-        width: 100%;
+        padding: 15px;
+        width: 75%;
+        text-align: center;
       }
     </style>
   </head>
-
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">🎲 🎲 Beat That! 🎲 🎲</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
+      <div class="input-container">
+        <h3>Input:</h3>
+        <input id="input-field" />
+        <select id="dropdown1">
+          <option value="option1">😁 Normal mode</option>
+          <option value="option2">🤡 Special mode</option>
+        </select>
+      </div>
+      <button id="submit-button">🎲 Submit 🎲</button>
       <div id="output-div"></div>
+    </div>
+    <div id="instructions">
+      <h2>Game Instructions:</h2>
+      <p>Choose your game mode (Normal or Special).</p>
+      <p>
+        Normal mode: Roll 2 dice, take turns picking the order, and aim for the
+        highest number to win.
+      </p>
+      <p>
+        Special mode: Roll 2 dice, and the computer generates the best
+        combination for you. Get the highest number to win.
+      </p>
+      <p>Click "Submit" to start!</p>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -66,7 +116,9 @@
       button.addEventListener("click", function () {
         // Set result to input value
         var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        var dropdown = document.querySelector("#dropdown1");
+        var selectedOption = dropdown.value;
+        var result = main(input.value, selectedOption); // Pass selected option to main
 
         // Display result in output element
         var output = document.querySelector("#output-div");
