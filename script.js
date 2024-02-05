@@ -166,8 +166,18 @@ function checkForWinner() {
   return `${diceResultsMsg} <br> Player ${checkResultsArray[0].id} wins!`;
 }
 
+//validate dice order input
+function validateDiceOrderInput(playerChoice) {
+  if (playerChoice != 1 && playerChoice != 2) {
+    return true;
+  }
+}
+
 //dice order selection - manual + 2 dice
 function selectDiceOrderForTwo(playersDiceRolls, playerChoice) {
+  if (validateDiceOrderInput(playerChoice)) {
+    return `This is an invalid input. Please select 1 or 2.`;
+  }
   const playerIndex = currentPlayer - 1;
   const diceRolls = playersDiceRolls[playerIndex];
   const diceOne = Number(diceRolls[0]);
