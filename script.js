@@ -12,23 +12,26 @@
 //      - write logic for player 1 to go first then player 2, and finally point towards comparing score
 
 // ver 3. implement comparing dice scores and declare winner
-// ver 4. resetnthe game to the players can play continually without refreshing the page
+// ver 4. reset the game so the players can play continually without refreshing the page
 
+// global variables
 var gameMode1 = "p1 roll dice";
 var gameMode2 = "p2 roll dice";
 var gameMode3 = "p1 choose order";
 var gameMode4 = "p2 choose order";
-var gameMode5 = "Compare biggest number";
+var gameMode5 = "Compare largest number";
 var currentGameMode = gameMode1;
 var p1DiceRolls;
 var p2DiceRolls;
 var diceRollArraysP1 = [];
 var diceRollArraysP2 = [];
-var player1selection = 0;
-var player2selection = 0;
+var player1selection = [];
+var player2selection = [];
+var player1score = [];
+var player2score = [];
 
+// main
 var main = function (input) {
-  var myOutputValue = "hello world";
   var myOutputValue = "";
   // p1 rolls the dice
   if (currentGameMode == gameMode1) {
@@ -37,7 +40,7 @@ var main = function (input) {
     myOutputValue =
       "Player 1: " +
       p1DiceRolls +
-      ". <br>Input 1 to maintain dice order or 2 to flip it.";
+      ". <br>Input 1 to keep dice order or 2 to invert it.";
     currentGameMode = gameMode3;
     //p1 choose dice order
   } else if (currentGameMode == gameMode3) {
@@ -75,7 +78,7 @@ var main = function (input) {
     myOutputValue =
       "Player 2: " +
       p2DiceRolls +
-      ". <br><br>Input 1 to maintain dice order or 2 to flip it." +
+      ". <br><br>Input 1 to keep dice order or 2 to invert it." +
       "<br><br> Player 1 selection: " +
       player1selection;
     //switch mode for p2 to choose dice order
@@ -117,6 +120,7 @@ var main = function (input) {
   }
 
   if (currentGameMode == gameMode5) {
+    var scoreboard = getScoreBoard();
     console.log("determine current round winner");
     // p1 win
     if (player1selection > player2selection) {
@@ -125,7 +129,8 @@ var main = function (input) {
         player1selection +
         "<br> Player 2 entry: " +
         player2selection +
-        "<br><br> Click submit to play again!";
+        "<br><br> Click submit to play again!" +
+        scoreboard;
     }
     // p2 win
     if (player1selection < player2selection) {
@@ -134,7 +139,8 @@ var main = function (input) {
         player1selection +
         "<br> Player 2 entry: " +
         player2selection +
-        "<br><br> Click submit to play again!";
+        "<br><br> Click submit to play again!" +
+        scoreboard;
     }
     // tie result
     if (player1selection == player2selection) {
@@ -143,10 +149,20 @@ var main = function (input) {
         player1selection +
         "<br> Player 2 entry: " +
         player2selection +
-        "<br><br> Click submit to play again!";
+        "<br><br> Click submit to play again!" +
+        scoreboard;
     }
     // restart game without refreshing
     currentGameMode = gameMode1;
+    if (input == "") {
+      currentGameMode = gameMode1;
+      if (currentGameMode == gameMode1) {
+        diceRollArraysP1 = [];
+        diceRollArraysP2 = [];
+        player1selection = [];
+        player2selection = [];
+      }
+    }
   }
 
   return myOutputValue;
@@ -193,4 +209,33 @@ var player2DiceRoll = function () {
     diceRollArraysP2[1] +
     '"'
   );
+};
+
+// Scoreboard
+var getScoreBoard = function () {
+  var myOutputValue = "";
+  if (player1score > player2score) {
+    myOutputValue =
+      "<br><br>Scoreboard: " +
+      "<br> Player 1 -> " +
+      player1score +
+      "<br> Player 2 -> " +
+      player2score;
+  }
+  if (player2score > player1score) {
+    myOutputValue =
+      "<br><br>Scoreboard: " +
+      "<br> Player 2 -> " +
+      player2score +
+      "<br> Player 1 -> " +
+      player1score;
+  }
+  if (player2score == player1score) {
+    myOutputValue =
+      "<br><br>Scoreboard: " +
+      "It's a draw!" +
+      "<br> Player 1 and Player 2 score: " +
+      player1score;
+  }
+  return myOutputValue;
 };
