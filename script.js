@@ -55,7 +55,7 @@ var getPlayerScore = function(playerInput){
 //Need to check this function
 var comparePlayersScores = function(){
 
-    var compareMessage = "Player 1 score:" + allPlayersScore[0]+ "<br>Player 2 score: " + allPlayersScore[1];
+    var compareMessage = "Player 1 score:" + allPlayersScore[0] + "<br>Player 2 score: " + allPlayersScore[1];
 
     if(allPlayersScore[0] > allPlayersScore[1]){
       compareMessage = compareMessage + "<br><br>Player 1 wins.";
@@ -72,7 +72,7 @@ var comparePlayersScores = function(){
     return compareMessage;
 };
 
-var resetGame = function(){
+var resetGame = function(){ 
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
   allPlayersScore = [];
