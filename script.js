@@ -12,14 +12,17 @@ function rollDice() {
 }
 
 function rollDIceForPlayer() {
-  console.log(`startroll for player 1`);
-  var counter = 0;
+  console.log(`start roll for player ${currentPlayer}`);
+  //var currentPlayerRolls = [];
 
-  for (counter = 0; counter < 2; counter++) {
+  for (var counter = 0; counter < 2; counter++) {
     currentPlayerRolls.push(rollDice());
   }
 
-  console.log(`the player1 roll` + currentPlayerRolls);
+  console.log(
+    `the player ${currentPlayer} roll: ${currentPlayerRolls[0]} and ${currentPlayerRolls[1]}`
+  );
+
   return (
     "Welcome player " +
     currentPlayer +
@@ -27,7 +30,7 @@ function rollDIceForPlayer() {
     currentPlayerRolls[0] +
     " | Dice 2 : " +
     currentPlayerRolls[1] +
-    " . Now please enter 1 or 2 to choose which number to be used as the first digit of ur final value"
+    " <br><br> Now please enter 1 or 2 to choose which number to be used as the first digit of ur final value"
   );
 }
 
@@ -35,7 +38,7 @@ function getplayerScore(playerInput) {
   var playerscore;
   if (playerInput != 1 && playerInput != 2) {
     return (
-      "please put in 1 or 2. Your rolls are:<br>Dice1: " +
+      "please put in 1 or 2. <br><br>Your rolls are:<br>Dice1: " +
       currentPlayerRolls[0] +
       " | Dice 2: " +
       currentPlayerRolls[1]
@@ -46,6 +49,8 @@ function getplayerScore(playerInput) {
     playerscore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
+    currentPlayerRolls = [];
+    allPlayerScores.push(playerscore);
     return "your chosen score is " + playerscore;
   }
 
@@ -53,15 +58,41 @@ function getplayerScore(playerInput) {
     playerscore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
+    currentPlayerRolls = [];
+    allPlayerScores.push(playerscore);
     return "your chosen score is " + playerscore;
   }
 
   //pushing the players score into the array
-  allPlayerScores.push(playerscore);
-
-  currentPlayerRolls = [];
 
   return "player " + currentPlayer + " your chosen value is: " + playerscore;
+}
+
+function comparescores() {
+  var compareMessage =
+    " player 1 score: " +
+    allPlayerScores[0] +
+    "<br><br>player 2 score: " +
+    allPlayerScores[1];
+
+  // if player 1 wins
+  if (allPlayerScores[0] > allPlayerScores[1]) {
+    compareMessage = compareMessage + "<br><br>player 1 wins";
+  }
+  if (allPlayerScores[1] > allPlayerScores[0]) {
+    compareMessage = compareMessage + "<br><br>player 2 wins";
+  }
+
+  if (allPlayerScores[0] == allPlayerScores[1]) {
+    compareMessage = "it is a tie";
+  }
+  return compareMessage;
+}
+
+function resetGame() {
+  currentPlayer = 1;
+  gameState = gameStateDiceRoll;
+  allPlayerScores = [];
 }
 
 function main(input) {
@@ -77,37 +108,31 @@ function main(input) {
   if (gameState == gameStateChooseDiceOrder) {
     myOutputMessage = getplayerScore(input);
 
+    if (currentPlayer == 0) {
+      gameState = gameStateChooseDiceOrder;
+      return myOutputMessage;
+    }
+
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameState = gameStateDiceRoll;
       return myOutputMessage + "<br><br> it is now player 2's turn";
-    }
-
-    if (currentPlayer == 2) {
+    } else if (currentPlayer == 2) {
       gameState = gameStateCompareScores;
       return myOutputMessage + "<br><br> press to calculate score";
+    } else {
+      gameState = gameStateChooseDiceOrder;
+      return myOutputMessage;
     }
   }
 
   if (gameState == gameStateCompareScores) {
     console.log("The game state now : " + gameStateCompareScores);
-    myOutputMessage =
-      " player 1 score: " +
-      allPlayerScores[0] +
-      "player 2 score" +
-      allPlayerScores[1];
 
-    // if player 1 wins
-    if (allPlayerScores[0] > allPlayerScores[1]) {
-      myOutputMessage = myOutputMessage + "player 1 wins";
-    }
-    if (allPlayerScores[1] > allPlayerScores[0]) {
-      myOutputMessage = myOutputMessage + "player 2 wins";
-    }
+    myOutputMessage = comparescores();
 
-    if (allPlayerScores[0] == allPlayerScores[1]) {
-      myOutputMessage = "it is a tie";
-    }
+    resetGame();
+
     return myOutputMessage;
   }
 }
