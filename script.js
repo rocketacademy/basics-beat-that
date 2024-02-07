@@ -19,6 +19,7 @@ var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
 var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
 var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES";
 var GAME_STATE_LEADERBOARD = "GAME_STATE_LEADERBOARD";
+var INVALID_STATE = "INVALID_STATE";
 //first step of the game
 var gameState = GAME_STATE_DICE_ROLL;
 
@@ -58,29 +59,25 @@ var rollDiceForPlayer = function () {
   }
 
   console.log(`rollDiceForPlayer changes, playerRolls: `, currentPlayerRolls);
-  return `ROUND ${roundCounter}!!!<br><br>
-  Welcome, Player ${currentPlayer} <br> <br> You rolled: <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]} <br><br> Now, please input either "1" or "2" to choose corresponding dice to be used as the first digit of your final value.</br>`;
+  return `ROUND ${roundCounter}!<br><br>
+  Welcome, Player ${currentPlayer}. <br> <br> You rolled: <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]} <br><br> Now, please input either "1" or "2" to choose corresponding dice to be used as the first digit of your final value.</br>`;
 };
 
 var getPlayerScore = function (playerInput) {
   var playerScore;
   // input validation
   if (playerInput != 1 && playerInput != 2) {
-    console.log(
-      `Control flow: input validation, invalid input... NOT 1 AND NOT 2`
-    );
-    return `Error! Please only input "1" or "" to choose which dice to use as the first digit. <br><br> Your dice rolls are: <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}.`;
+    gameState = INVALID_STATE;
   }
   // input == 1
-  if (playerInput == 1) {
+  else if (playerInput == 1) {
     console.log(`Control flow: input == 1`);
     playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
   }
-
   // input == 2
-  if (playerInput == 2) {
+  else if (playerInput == 2) {
     console.log(`Control flow: input == 2`);
     playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
