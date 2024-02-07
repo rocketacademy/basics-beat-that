@@ -107,12 +107,18 @@ var comparePlayersScores = function () {
 // need a function that will calculate the sum of numbers based on when/where they were pushed in the array
 var runningSumOfNumbers = function () {
   console.log(`adding player scores`);
-  var runningPlayerScore = 0;
+  var runningPlayerScore1 = 0;
+  var runningPlayerScore2 = 0;
   var runningMessage = ``;
   for (var i = 0; i < overallPlayersScore.length; i += 2) {
-    runningPlayerScore += overallPlayersScore[i];
-    runningMessage = `Player 1 running score is: ${runningPlayerScore}`;
+    runningPlayerScore1 += overallPlayersScore[i];
   }
+  for (var j = 1; j < overallPlayersScore.length; j += 2) {
+    runningPlayerScore2 += overallPlayersScore[j];
+  }
+  runningMessage = `<br>Overall total score:<br>
+  Player 1 is: ${runningPlayerScore1}<br>
+  Player 2 is: ${runningPlayerScore2}`;
   return runningMessage;
 };
 
