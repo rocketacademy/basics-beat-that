@@ -18,6 +18,7 @@
 var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
 var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
 var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES";
+var GAME_STATE_LEADERBOARD = "GAME_STATE_LEADERBOARD";
 //first step of the game
 var gameState = GAME_STATE_DICE_ROLL;
 
@@ -25,6 +26,15 @@ var currentPlayerRolls = [];
 var currentPlayer = 1;
 var allPlayersScore = [];
 var overallPlayersScore = [];
+var player1Scores = [];
+var player2Scores = [];
+var runningPlayerScore1 = 0;
+var runningPlayerScore2 = 0;
+var i = 0;
+var j = 1;
+var k = 0;
+var l = 1;
+var roundCounter = 1;
 
 // helper function = rollDice
 var rollDice = function () {
@@ -48,7 +58,8 @@ var rollDiceForPlayer = function () {
   }
 
   console.log(`rollDiceForPlayer changes, playerRolls: `, currentPlayerRolls);
-  return `Welcome, Player ${currentPlayer} <br> <br> You rolled: <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]} <br><br> Now, please input either "1" or "2" to choose corresponding dice to be used as the first digit of your final value.</br>`;
+  return `ROUND ${roundCounter}!!!<br><br>
+  Welcome, Player ${currentPlayer} <br> <br> You rolled: <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]} <br><br> Now, please input either "1" or "2" to choose corresponding dice to be used as the first digit of your final value.</br>`;
 };
 
 var getPlayerScore = function (playerInput) {
@@ -107,19 +118,58 @@ var comparePlayersScores = function () {
 // need a function that will calculate the sum of numbers based on when/where they were pushed in the array
 var runningSumOfNumbers = function () {
   console.log(`adding player scores`);
-  var runningPlayerScore1 = 0;
-  var runningPlayerScore2 = 0;
-  var runningMessage = ``;
-  for (var i = 0; i < overallPlayersScore.length; i += 2) {
+  while (i < overallPlayersScore.length) {
     runningPlayerScore1 += overallPlayersScore[i];
+    console.log(`running player 1 score is: ${runningPlayerScore1}`);
+    i += 2;
   }
-  for (var j = 1; j < overallPlayersScore.length; j += 2) {
+  while (j < overallPlayersScore.length) {
     runningPlayerScore2 += overallPlayersScore[j];
+    console.log(`running player 2 score is: ${runningPlayerScore2}`);
+    j += 2;
   }
-  runningMessage = `<br>Overall total score:<br>
-  Player 1 is: ${runningPlayerScore1}<br>
-  Player 2 is: ${runningPlayerScore2}`;
-  return runningMessage;
+};
+
+// need a function that will store overall scores of each player
+var leaderboard = function () {
+  var rankingMessage = ``;
+  console.log(`store each player roll`);
+  while (k < overallPlayersScore.length) {
+    player1Scores.push(overallPlayersScore[k]);
+    console.log(`summary player 1 scores: ${player1Scores}`);
+    var sortedPlayer1Scores = player1Scores.slice().sort(function (a, b) {
+      return b - a;
+    });
+    k += 2;
+  }
+  while (l < overallPlayersScore.length) {
+    player2Scores.push(overallPlayersScore[l]);
+    console.log(`summary player 2 scores: ${player2Scores}`);
+    var sortedPlayer2Scores = player2Scores.slice().sort(function (a, b) {
+      return b - a;
+    });
+    l += 2;
+  }
+  if (runningPlayerScore1 > runningPlayerScore2) {
+    rankingMessage = `Leaderboard as of Round ${roundCounter}:<br>
+  Rank 1 🥇 is Player 1 with total of: ${runningPlayerScore1}<br>
+  Rolled Dices: ${sortedPlayer1Scores}<br>
+  Rank 2 🥈 is Player 2 with: ${runningPlayerScore2}<br>
+  Rolled Dices: ${sortedPlayer2Scores}<br>`;
+  } else if (runningPlayerScore1 < runningPlayerScore2) {
+    rankingMessage = `Leaderboard as of Round ${roundCounter}:<br>
+  Rank 1 🥇 is Player 2 with: ${runningPlayerScore2}<br>
+  Rolled Dices: ${sortedPlayer2Scores}<br>
+  Rank 2 🥈 is Player 1 with: ${runningPlayerScore1}<br>
+  Rolled Dices: ${sortedPlayer1Scores}<br>`;
+  } else {
+    rankingMessage = `Leaderboard as of Round ${roundCounter}: It's a tie!<br>
+  Player 1 with: ${runningPlayerScore1}<br>
+  Rolled Dices: ${sortedPlayer1Scores}<br>
+  Player 2 with: ${runningPlayerScore2}<br>
+  Rolled Dices: ${sortedPlayer2Scores}`;
+  }
+  return rankingMessage;
 };
 
 var resetGame = function () {
@@ -132,7 +182,7 @@ var main = function (input) {
   console.log(`Checking game state on submit click: `, gameState);
   console.log(`Checking currentPlayer on submit click: `, currentPlayer);
   var outputMessage = ``;
-  var runningScoreMessage = ``;
+  var leaderboardMessage = ``;
   if (gameState == GAME_STATE_DICE_ROLL) {
     console.log(`Control flow: gameState == GAME_STATE_DICE_ROLL`);
     // Display dice rolled as output message
@@ -167,14 +217,22 @@ var main = function (input) {
   if (gameState == GAME_STATE_COMPARE_SCORES) {
     console.log(`Control flow: gameState == GAME_STATE_COMPARE_SCORES`);
 
-    outputMessage = `${comparePlayersScores()}
-    <br> Click Submit again to continue playing for another round.`;
+    gameState = GAME_STATE_LEADERBOARD;
+    outputMessage = `${comparePlayersScores()}`;
+    return `${outputMessage}<br>
+    Click Submit to see the Leaderboard.`;
+  }
+  if (gameState == GAME_STATE_LEADERBOARD) {
+    console.log(`Control flow: gameState == GAME_STATE_LEADERBOARD`);
+    runningSumOfNumbers();
+    leaderboardMessage = leaderboard();
     resetGame();
     console.log(`Current player after reset: ${currentPlayer}`);
     console.log(`Game state after reset: ${gameState}`);
     console.log(`allPlayersScoreArray: ${allPlayersScore}`);
     console.log(`overallPlayersScoreArray: ${overallPlayersScore}`);
-    runningScoreMessage = runningSumOfNumbers();
-    return `${outputMessage} <br> ${runningScoreMessage}`;
+    roundCounter = roundCounter + 1;
+    return `${outputMessage} <br> ${leaderboardMessage}
+    <br><br> Click Submit again to continue playing for another round.`;
   }
 };
