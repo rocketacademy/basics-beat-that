@@ -16,6 +16,7 @@
 // Global Variables
 var GAME_STATE_DICE_ROLL = "GAME_STATE_DICE_ROLL";
 var GAME_STATE_CHOOSE_DICE_ORDER = "GAME_STATE_CHOOSE_DICE_ORDER";
+var GAME_STATE_COMPARE_SCORES = "GAME_STATE_COMPARE_SCORES";
 var gameState = GAME_STATE_DICE_ROLL;
 
 var currentPlayerRolls = [];
@@ -47,14 +48,15 @@ var rollDiceForPlayer = function () {
     "rollDiceForPlayer changes, currentPlayerRolls: ",
     currentPlayerRolls
   );
-  return;
-  "Welcome, Player " +
+  return (
+    "Welcome, Player " +
     currentPlayer +
     "<br><br>You rolled:<br>Dice 1; " +
     currentPlayerRolls[0] +
     " | Dice 2:" +
     currentPlayerRolls[1] +
-    ".<br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value.";
+    ".<br><br>Now, please input either '1' or '2' to choose the corresponding dice to be used as the first digit of your final value."
+  );
 };
 
 var getPlayerScore = function (playerInput) {
@@ -64,12 +66,13 @@ var getPlayerScore = function (playerInput) {
     console.log(
       "Control flow: input validation, invalid inout... NOT 1 AND NOT 2"
     );
-    return;
-    "Error! Please only input '1' or '' to choose which dice to use as the first digit.<br><br>Your dice rolls are:<br>Dice 1: " +
+    return (
+      "Error! Please only input '1' or '' to choose which dice to use as the first digit.<br><br>Your dice rolls are:<br>Dice 1: " +
       currentPlayerRolls[0] +
       " | Dice 2: " +
       currentPlayerRolls[1] +
-      ".";
+      "."
+    );
   }
   // input == 1
   if (playerInput == 1) {
@@ -91,14 +94,14 @@ var getPlayerScore = function (playerInput) {
   allPlayersScore.push(playerScore);
 
   // clear current player rolls array
-  currentPlayer = [];
+  currentPlayerRolls = [];
   return "Player" + currentPlayer + ", your chosen value is: " + playerScore;
 };
 
 var main = function (input) {
   console.log("Checking game state on submit click: ", gameState);
   console.log("Checking game state on submit click: ", currentPlayer);
-  var myOutputMessage = "";
+  var outputMessage = "";
 
   if (gameState == GAME_STATE_DICE_ROLL) {
     console.log("Control flow: gameState == GAME_STATE_DICE_ROLL");
@@ -114,7 +117,7 @@ var main = function (input) {
   if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
     console.log("Control flow: gameState == GAME_STATE_CHOOSE_DICE_ORDER");
 
-    // Cal playerScore function
+    // Call playerScore function
     outputMessage = getPlayerScore(input);
 
     if (currentPlayer == 1) {
@@ -125,7 +128,37 @@ var main = function (input) {
     }
 
     if (currentPlayer == 2) {
+      console.log(
+        "Control flow: end of player 2's turn, Next submit click will calculate score"
+      );
+      gameState = GAME_STATE_COMPARE_SCORES;
+
+      return outputMessage + "<br><br>Press submit to calculate scores!";
     }
+  }
+
+  if (gameState == GAME_STATE_COMPARE_SCORES) {
+    console.log("Control flow: gameState == GAME_STATE_COMPARE_SCORES");
+
+    outputMessage =
+      "Player 1 score: " +
+      allPlayersScore[0] +
+      "<br>Player 2 score: " +
+      allPlayersScore[1];
+
+    // player 1 wins
+    if (allPlayerScore[0] > allPlayersScore[1]) {
+      outputMessage = outputMessage + "<br><br>Player 1 wins!";
+    }
+    // player 2 wins
+    if (allPlayerScore[0] > allPlayersScore[1]) {
+      outputMessage = outputMessage + "<br><br>Player 2 wins!";
+    }
+    // tie
+    if (allPlayersScore[0] == allPlayersScore(1)) {
+      outputMessage = outputMessage + "<br><br>It's a tie!";
+    }
+
     return outputMessage;
   }
 };
