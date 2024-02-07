@@ -167,7 +167,8 @@ var main = function (input) {
   if (gameState == GAME_STATE_COMPARE_SCORES) {
     console.log(`Control flow: gameState == GAME_STATE_COMPARE_SCORES`);
 
-    outputMessage = comparePlayersScores();
+    outputMessage = `${comparePlayersScores()}
+    <br> Click Submit again to continue playing for another round.`;
     resetGame();
     console.log(`Current player after reset: ${currentPlayer}`);
     console.log(`Game state after reset: ${gameState}`);
