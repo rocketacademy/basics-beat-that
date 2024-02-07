@@ -24,8 +24,7 @@ var gameState = GAME_STATE_DICE_ROLL;
 var currentPlayerRolls = [];
 var currentPlayer = 1;
 var allPlayersScore = [];
-
-// create an array that will store player values
+var overallPlayersScore = [];
 
 // helper function = rollDice
 var rollDice = function () {
@@ -80,6 +79,9 @@ var getPlayerScore = function (playerInput) {
   // Store playerScore in array
   allPlayersScore.push(playerScore);
 
+  // store overall player score until browser is refreshed
+  overallPlayersScore.push(playerScore);
+
   // clear current player rolls array
   currentPlayerRolls = [];
   return `Player ${currentPlayer}, your chosen value is: ${playerScore}`;
@@ -101,6 +103,19 @@ var comparePlayersScores = function () {
   }
   return compareMessage;
 };
+
+// need a function that will calculate the sum of numbers based on when/where they were pushed in the array
+var runningSumOfNumbers = function () {
+  console.log(`adding player scores`);
+  var runningPlayerScore = 0;
+  var runningMessage = ``;
+  for (var i = 0; i < overallPlayersScore.length; i += 2) {
+    runningPlayerScore += overallPlayersScore[i];
+    runningMessage = `Player 1 running score is: ${runningPlayerScore}`;
+  }
+  return runningMessage;
+};
+
 var resetGame = function () {
   currentPlayer = 1;
   gameState = GAME_STATE_DICE_ROLL;
@@ -111,6 +126,7 @@ var main = function (input) {
   console.log(`Checking game state on submit click: `, gameState);
   console.log(`Checking currentPlayer on submit click: `, currentPlayer);
   var outputMessage = ``;
+  var runningScoreMessage = ``;
   if (gameState == GAME_STATE_DICE_ROLL) {
     console.log(`Control flow: gameState == GAME_STATE_DICE_ROLL`);
     // Display dice rolled as output message
@@ -127,11 +143,11 @@ var main = function (input) {
 
     if (currentPlayer == 1) {
       console.log(
-        `Control flow: end of player 1's turn, now it's player 2's turn`
+        `Control flow: end of player 1's turn, now it's player 2's turn.`
       );
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
-      return `${outputMessage} <br> <br> It is now player 2's turn!`;
+      return `${outputMessage} <br> <br> It is now player 2's turn!<br>Please click Submit again to roll the dice.`;
     }
 
     if (currentPlayer == 2) {
@@ -146,11 +162,12 @@ var main = function (input) {
     console.log(`Control flow: gameState == GAME_STATE_COMPARE_SCORES`);
 
     outputMessage = comparePlayersScores();
-
     resetGame();
     console.log(`Current player after reset: ${currentPlayer}`);
     console.log(`Game state after reset: ${gameState}`);
     console.log(`allPlayersScoreArray: ${allPlayersScore}`);
-    return outputMessage;
+    console.log(`overallPlayersScoreArray: ${overallPlayersScore}`);
+    runningScoreMessage = runningSumOfNumbers();
+    return `${outputMessage} <br> ${runningScoreMessage}`;
   }
 };
