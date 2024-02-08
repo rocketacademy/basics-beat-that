@@ -66,8 +66,9 @@ var rollDiceForPlayer = function () {
 var getPlayerScore = function (playerInput) {
   var playerScore;
   // input validation
-  if (playerInput != 1 && playerInput != 2) {
-    gameState = INVALID_STATE;
+  if (!(playerInput == 1 || playerInput == 2)) {
+    return `Invalid input. Game will not continue until you enter either "1" or "2".<br><br>
+    You rolled: <br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}`;
   }
   // input == 1
   else if (playerInput == 1) {
@@ -194,16 +195,16 @@ var main = function (input) {
     // Caller playerScore function
     outputMessage = getPlayerScore(input);
 
-    if (currentPlayer == 1) {
+    if (outputMessage.includes("Invalid input")) {
+      return outputMessage;
+    } else if (currentPlayer == 1) {
       console.log(
         `Control flow: end of player 1's turn, now it's player 2's turn.`
       );
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
       return `${outputMessage} <br> <br> It is now player 2's turn!<br>Please click Submit again to roll the dice.`;
-    }
-
-    if (currentPlayer == 2) {
+    } else if (currentPlayer == 2) {
       console.log(
         `Control flow: end of player 2's turn, next submit click will calculate scores`
       );
