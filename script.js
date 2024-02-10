@@ -6,8 +6,6 @@ var gameState = GAME_STATE_DICE_ROLL;
 
 var INSTRUCTIONS_FOR_NEXT_GAME_STATE = `Please choose the order of the dice by inputting 1 or 2`;
 
-var MODE_SELECTION_INSTRUCTIONS = `please choose a mode to play:<br><br>${regularMode} or ${lowestMode}`;
-
 var currentPlayerRolls = [];
 
 var player1ScoreCounter = 0;
@@ -19,6 +17,7 @@ var allPlayersScore = [];
 var mode = "";
 var regularMode = "regular";
 var lowestMode = "lowest";
+var MODE_SELECTION_INSTRUCTIONS = `please choose a mode to play:<br><br>${regularMode} or ${lowestMode}`;
 
 // Helper Function
 var diceRoll = function () {
@@ -29,16 +28,13 @@ var rollDiceForPlayer = function () {
   var counter = 0;
   for (var counter = 0; counter < 2; counter += 1) {
     currentPlayerRolls.push(diceRoll());
+    console.log("error check " + currentPlayerRolls);
   }
   return `Player ${currentPlayer}, your rolls are ${currentPlayerRolls[0]} and ${currentPlayerRolls[1]}<br><br>${INSTRUCTIONS_FOR_NEXT_GAME_STATE}`;
 };
 
 var getPlayerScore = function (playerInput) {
   var playerScore;
-  //playerInput validation
-  if (playerInput != 1 && playerInput != 2) {
-    return `Error! ${INSTRUCTIONS_FOR_NEXT_GAME_STATE}<br><br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}`;
-  }
   //playerInput == 1
   if (playerInput == 1) {
     playerScore = Number(
@@ -61,40 +57,25 @@ var getPlayerScore = function (playerInput) {
   return `Player ${currentPlayer}, your chosen value is: ${playerScore}`;
 };
 
-var comparePlayersScoresLowMode = function () {
-  compareMessage = `Player 1 value: ${allPlayersScore[0]}<br>Player 2 value: ${allPlayersScore[1]}`;
-  // player 1 wins
-  if (allPlayersScore[0] < allPlayersScore[1]) {
-    player1ScoreCounter = player1ScoreCounter + 1;
-    compareMessage = `${compareMessage}<br><br>Player 1 wins!`;
-  }
-  //player 2 wins
-  if (allPlayersScore[1] < allPlayersScore[0]) {
-    player2ScoreCounter = player2ScoreCounter + 1;
-    compareMessage = `${compareMessage}<br><br>Player 2 wins!`;
-  }
-  // tie
-  if (allPlayersScore[0] == allPlayersScore[1]) {
-    compareMessage = `${compareMessage}<br><br>It's a tie!`;
-  }
-  return compareMessage;
-};
-
 var comparePlayersScores = function () {
   compareMessage = `Player 1 value: ${allPlayersScore[0]}<br>Player 2 value: ${allPlayersScore[1]}`;
-  // player 1 wins
-  if (allPlayersScore[0] > allPlayersScore[1]) {
-    player1ScoreCounter = player1ScoreCounter + 1;
-    compareMessage = `${compareMessage}<br><br>Player 1 wins!`;
-  }
-  //player 2 wins
-  if (allPlayersScore[1] > allPlayersScore[0]) {
-    player2ScoreCounter = player2ScoreCounter + 1;
-    compareMessage = `${compareMessage}<br><br>Player 2 wins!`;
-  }
-  // tie
+  var checkPlayer1Win = false;
   if (allPlayersScore[0] == allPlayersScore[1]) {
     compareMessage = `${compareMessage}<br><br>It's a tie!`;
+    return compareMessage;
+  }
+  if (allPlayersScore[0] > allPlayersScore[1]) {
+    checkPlayer1Win = true;
+  }
+  if (mode == lowestMode) {
+    checkPlayer1Win = !checkPlayer1Win;
+  }
+  if (checkPlayer1Win == true) {
+    player1ScoreCounter = player1ScoreCounter + 1;
+    compareMessage = `${compareMessage}<br><br>Player 1 wins!`;
+  } else {
+    player2ScoreCounter = player2ScoreCounter + 1;
+    compareMessage = `${compareMessage}<br><br>Player 2 wins!`;
   }
   return compareMessage;
 };
@@ -105,7 +86,7 @@ var resetGame = function () {
   allPlayersScore = [];
 };
 
-var regularBeatThat = function (input) {
+var beatThat = function (input) {
   var outputMessage = "";
   if (gameState == GAME_STATE_DICE_ROLL) {
     // Display Dice rolled as output message
@@ -118,7 +99,11 @@ var regularBeatThat = function (input) {
   if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
     //Call playerScore Function
     outputMessage = getPlayerScore(input);
-
+    //playerInput validation
+    if (input != 1 && input != 2) {
+      return `Error! ${INSTRUCTIONS_FOR_NEXT_GAME_STATE}
+      <br><br> Dice 1: ${currentPlayerRolls[0]} | Dice 2: ${currentPlayerRolls[1]}`;
+    }
     if (currentPlayer == 1) {
       currentPlayer = 2;
       gameState = GAME_STATE_DICE_ROLL;
@@ -132,46 +117,11 @@ var regularBeatThat = function (input) {
   }
 
   if (gameState == GAME_STATE_COMPARE_SCORES) {
-    outputMessage = comparePlayersScores();
-
-    resetGame();
-
-    return `${outputMessage}<br><br>Current scores<br><br> Player 1: ${player1ScoreCounter} | Player 2: ${player2ScoreCounter}`;
-  }
-};
-
-var lowModeBeatThat = function (input) {
-  var outputMessage = "";
-  if (gameState == GAME_STATE_DICE_ROLL) {
-    // Display Dice rolled as output message
-    outputMessage = rollDiceForPlayer();
-    // Change the gamestate
-    gameState = GAME_STATE_CHOOSE_DICE_ORDER;
-    return outputMessage;
-  }
-
-  if (gameState == GAME_STATE_CHOOSE_DICE_ORDER) {
-    //Call playerScore Function
-    outputMessage = getPlayerScore(input);
-
-    if (currentPlayer == 1) {
-      currentPlayer = 2;
-      gameState = GAME_STATE_DICE_ROLL;
-      return `${outputMessage}<br><br> It is now player 2's turn!`;
+    if (mode == lowestMode) {
+      outputMessage = comparePlayersScores();
     }
-    if (currentPlayer == 2) {
-      gameState = GAME_STATE_COMPARE_SCORES;
 
-      return `${outputMessage}<br><br> Press submit to calculate scores!`;
-    }
-  }
-
-  if (gameState == GAME_STATE_COMPARE_SCORES) {
-    outputMessage = comparePlayersScoresLowMode();
-
-    resetGame();
-
-    return `${outputMessage}<br><br>Current scores<br><br> Player 1: ${player1ScoreCounter} | Player 2: ${player2ScoreCounter}`;
+    return `${outputMessage}<br><br>Current scores<br>Player 1: ${player1ScoreCounter} | Player 2: ${player2ScoreCounter}`;
   }
 };
 
@@ -198,11 +148,8 @@ var main = function (input) {
     mode = input;
     var GameInstructions = getGameInstructions();
     return GameInstructions;
-  } else if (mode == regularMode) {
-    myOutputValue = regularBeatThat(input);
-    return myOutputValue;
-  } else if (mode == lowestMode) {
-    myOutputValue = lowModeBeatThat(input);
+  } else {
+    myOutputValue = beatThat(input);
     return myOutputValue;
   }
 };
