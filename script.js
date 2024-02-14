@@ -7,7 +7,7 @@ var gameState = GAME_STATE_DICE_ROLL;
 var currentPlayerRolls = [];
 
 var currentPlayer = 1;
-var allPlayerScore = [];
+var allPlayersScore = [];
 
 // Helper Function
 var rollDice = function () {
@@ -62,7 +62,7 @@ var getPlayerScore = function (playerInput) {
   // input == 1
   if (playerInput == 1) {
     console.log("Control flow: input == 1");
-    var playerScore = Number(
+    playerScore = Number(
       String(currentPlayerRolls[0]) + String(currentPlayerRolls[1])
     );
     return "Your chosen value is: " + playerScore;
@@ -71,12 +71,12 @@ var getPlayerScore = function (playerInput) {
   // input == 2
   if (playerInput == 2) {
     console.log("Control flow: input == 2");
-    var playerScore = Number(
+    playerScore = Number(
       String(currentPlayerRolls[1]) + String(currentPlayerRolls[0])
     );
   }
   // Store playerScore in array
-  allPlayerScore.push(playerScore);
+  allPlayersScore.push(playerScore);
 
   // clear current player rolls array
   currentPlayerRolls = [];
@@ -84,22 +84,26 @@ var getPlayerScore = function (playerInput) {
 };
 
 var comparePlayerScore = function () {
+  if (allPlayersScore.length < 2) {
+    return "Error: Not all player scores are defined.";
+  }
+
   var outputMessage =
     "Player 1 score: " +
-    allPlayerScore[0] +
+    allPlayersScore[0] +
     "<br>Player 2 score: " +
-    allPlayerScore[1];
+    allPlayersScore[1];
 
   // player 1 wins
-  if (allPlayerScore[0] > allPlayerScore[1]) {
+  if (allPlayersScore[0] > allPlayersScore[1]) {
     outputMessage = outputMessage + "<br><br>Player 1 wins!";
   }
   // player 2 wins
-  if (allPlayerScore[0] < allPlayerScore[1]) {
+  if (allPlayersScore[0] < allPlayersScore[1]) {
     outputMessage = outputMessage + "<br><br>Player 2 wins!";
   }
   // tie
-  if (allPlayerScore[0] == allPlayerScore[1]) {
+  if (allPlayersScore[0] == allPlayersScore[1]) {
     outputMessage = outputMessage + "<br><br>It's a tie!";
     return outputMessage;
   }
@@ -107,7 +111,7 @@ var comparePlayerScore = function () {
 
 var main = function (input) {
   console.log("Checking game state on submit click: ", gameState);
-  console.log("Checking game state on submit click: ", currentPlayer);
+  console.log("Checking currentPlayer on submit click: ", currentPlayer);
   var outputMessage = "";
 
   if (gameState == GAME_STATE_DICE_ROLL) {
@@ -144,10 +148,10 @@ var main = function (input) {
     }
   }
 
-  if (gameState == GAME_STATE_COMPARE_SCORES) {
-    console.log("Control flow: gameState == GAME_STATE_COMPARE_SCORES");
+  // if (gameState == GAME_STATE_COMPARE_SCORES) {
+  //   console.log("Control flow: gameState == GAME_STATE_COMPARE_SCORES");
 
-    outputMessage = comparePlayerScore();
-    return outputMessage;
-  }
+  //   outputMessage = comparePlayerScore();
+  //   return outputMessage;
+  // }
 };
