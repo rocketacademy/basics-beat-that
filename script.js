@@ -11,6 +11,11 @@ var player1DiceRoll = [];
 var player2DiceRoll = [];
 var player1Number;
 var player2Number;
+var player1WinCount = 0;
+var player2WinCount = 0;
+var player1LoseCount = 0;
+var player2LoseCount = 0;
+var drawCount = 0;
 
 //2 game modes, start with first player
 var modeRollDice = "modeRollDice";
@@ -64,8 +69,10 @@ var getPlayerNumber = function (orderChosen) {
 var determineWinner = function () {
   if (player1Number > player2Number) {
     return "Player 1";
-  } else {
+  } else if (player2Number > player1Number) {
     return "Player 2";
+  } else {
+    return "Draw";
   }
 };
 
@@ -109,11 +116,26 @@ Indicate your choice of order by entering 1 or 2 to assume the first value of th
   //Determine winner and reset game
   if (currentPlayer === "Player 2") {
     var winningPlayer = determineWinner();
+    if (winningPlayer === "Player 1") {
+      player1WinCount += 1;
+      player2LoseCount += 1;
+      var winningMessage = `${winningPlayer} has won this round. 👻`;
+    } else if (winningPlayer === "Player 2") {
+      player1LoseCount += 1;
+      player2WinCount += 1;
+      var winningMessage = `${winningPlayer} has won this round. 🥷`;
+    } else {
+      drawCount += 1;
+      var winningMessage = "No one won this round. It's a draw. 🤝";
+    }
     currentPlayer = "Player 1";
     gameMode = modeRollDice;
-    var winningMessage = `${winningPlayer} has won. <br> 
-      Player 1's number is ${player1Number} while Player 2's number is ${player2Number}. <br> 
+    var tallyWinMessage =
+      winningMessage +
+      `<br>Player 1's number is ${player1Number} while Player 2's number is ${player2Number}. <br> 
+      Player 1 - Wins: ${player1WinCount} || Losses ${player1LoseCount} <br>
+      Player 2 - Wins: ${player2WinCount} || Losses ${player2LoseCount} <br>
       Press submit to play again.`;
-    return winningMessage;
+    return tallyWinMessage;
   }
 };
