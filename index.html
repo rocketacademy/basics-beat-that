@@ -62,16 +62,25 @@
       .centered-text {
         text-align: center;
       }
+      .hidden-text {
+        display: none;
+      }
     </style>
-    <div class="centered-text">
-      <p>Hello! Welcome to Beat That! 🎲</p>
-      <p>Grab a friend because this is a two-player game.👥</p>
-      <p>
+    <div id="gameInstructions" class="centered-text">
+      <p class="instruction-text">Hello! Welcome to Beat That! 🎲</p>
+      <p class="instruction-text">
+        Grab a friend because this is a two-player game.👥
+      </p>
+      <p class="instruction-text">
         The rules are simple. Roll two dice, and create a two-digit number from
         the numbers rolled.
       </p>
-      <p>The player with the highest number wins! 🏆</p>
-      <p>Ready to play? Player 1, click submit to start the game.</p>
+      <p class="instruction-text">
+        The player with the highest number wins! 🏆
+      </p>
+      <p class="instruction-text">
+        Ready to play? Player 1, click submit to start the game.
+      </p>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
@@ -89,6 +98,12 @@
 
         // Reset input value
         input.value = "";
+
+        // Hide game instructions text once the game starts
+        var instructions = document.querySelectorAll(".instruction-text");
+        instructions.forEach(function (instruction) {
+          instruction.classList.add("hidden-text");
+        });
       });
     </script>
   </body>
