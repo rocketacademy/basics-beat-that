@@ -42,16 +42,16 @@ console.log("Player 1's dice numbers are", player1DiceRoll);
 
 var getPlayerNumber = function (orderChosen) {
   var diceArray;
-  if (currentPlayer === "Player 1") {
+  if (currentPlayer === "player1") {
     diceArray = player1DiceRoll;
   } else {
     diceArray = player2DiceRoll;
   }
 
   if (orderChosen === 1) {
-    playerNumber = combineNumbers(diceArray[0], diceArray[1]);
+    playerNumber = Number(String(diceArray[0]) + String(diceArray[1]));
   } else {
-    playerNumber = combineNumbers(diceArray[1], diceArray[0]);
+    playerNumber = Number(String(diceArray[1]) + String(diceArray[0]));
   }
 
   if (currentPlayer === 1) {
@@ -61,6 +61,14 @@ var getPlayerNumber = function (orderChosen) {
   }
   return playerNumber;
 };
-var orderChosen = 1;
+var orderChosen = 2;
 var player1Number = getPlayerNumber(orderChosen);
 console.log("Player 1's number:", player1Number);
+
+var determineWinner = function () {
+  if (player1Number > player2Number) {
+    return "player1";
+  } else {
+    return "player2";
+  }
+};
