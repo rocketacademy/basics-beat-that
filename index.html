@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coding Basics</title>
+    <title>Beat That!</title>
     <style>
       * {
         box-sizing: border-box;
@@ -18,7 +18,7 @@
       }
 
       #container {
-        background-color: pink;
+        background-color: rgb(225, 251, 186);
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -40,7 +40,7 @@
       }
 
       #output-div {
-        background-color: lightgrey;
+        background-color: rgb(254, 255, 243);
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -49,18 +49,27 @@
   </head>
 
   <body>
-    <h1 id="header">Basics: Beat That! 🚀</h1>
+    <h1 id="header">Welcome to Beat That 🎲</h1>
     <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+      <body>
+          Create a two-digit number by selecting the order of your dice rolls.
+          <br />
+          The player with the highest number wins!
+        </p>
+
+        👇 Click <b>submit</b> to start the game.
+        <p>Input:</p>
+        <input id="input-field" />
+        <br />
+        <button id="submit-button">Submit</button>
+        <p>Current state:</p>
+        <div id="output-div"></div>
+      </body>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
+
     <script>
       var button = document.querySelector("#submit-button");
       button.addEventListener("click", function () {
