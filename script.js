@@ -10,8 +10,9 @@ var currentPlayer = 1;
 var GAME_STATE_DICE_ROLL = `GAME_STATE_DICE_ROLL`;
 var GAME_STATE_CHOOSE_DICE_ORDER = `GAME_STATE_CHOOSE_DICE_ORDER`;
 var gamestate = GAME_STATE_DICE_ROLL;
-
+var GAME_STATE_COMPARE_SCORE = `GAME_STATE_COMPARE_SCORE`;
 var PlayerRolls = [];
+var allPlayerRolls = [];
 
 var rollDice = function () {
   console.log(`Randoming Dice`);
@@ -29,7 +30,30 @@ var rollDiceForPlayer = function () {
   }
   return `Welcome ! Player ${currentPlayer} , You Have Rolled <br><br> Dice 1 : ${PlayerRolls[0]} <br><br> Dice 2 : ${PlayerRolls[1]} <br><br> Please input either "1" or "2" to choose corresponding dice to be used as the first digit of the final value.`;
 };
+var getPlayerScore = function (PlayerInput) {
+  var PlayerScore;
+
+  if (PlayerInput != 1 && PlayerInput != 2) {
+    console.log(`Invalid Choice`);
+    return `Error ! Please only input '1' or '2' to choose the order of the dice to be first digit <br><br> Your Dice Rolls Are <br><br> Dice 1 : ${PlayerRolls[0]} <br><br> Dice 2 : ${PlayerRolls[1]}.`;
+  }
+  if (PlayerInput == 1) {
+    console.log(`Input is = 1`);
+    var PlayerScore = Number(String(PlayerRolls[0]) + String(PlayerRolls[1]));
+  }
+  if (PlayerInput == 2) {
+    console.log(`input is = 2`);
+    var PlayerScore = Number(String(PlayerRolls[1]) + String(PlayerRolls[0]));
+  
+  }
+  // Player Score Stored
+  allPlayerRolls.push(PlayerScore);
+  // Reset Player Scores
+  PlayerRolls = [];
+ return `Your Chosen Value is ${PlayerScore} .`;
+};
 var main = function (input) {
+  console.log(`CurrentPlayer on submit click`, currentPlayer);
   console.log("DiceRolled", rollDice());
   if (gamestate == GAME_STATE_DICE_ROLL) {
     console.log(`Control Flow :First Stage`);
@@ -41,19 +65,22 @@ var main = function (input) {
   }
   if (gamestate == GAME_STATE_CHOOSE_DICE_ORDER) {
     console.log(`Control Flow : Choose Dice Order`);
-    if (input != 1 && input != 2) {
-      console.log(`Invalid Choice`);
-      return `Error ! Please only input '1' or '2' to choose the order of the dice to be first digit <br><br> Your Dice Rolls Are <br><br> Dice 1 : ${PlayerRolls[0]} <br><br> Dice 2 : ${PlayerRolls[1]}.`;
+    outputMessage = getPlayerScore(input);
+    if (currentPlayer == 1) {
+      console.log(`End Of Player 1 Turn !`);
+      currentPlayer = 2;
+      gamestate = GAME_STATE_DICE_ROLL;
+      return outputMessage + `<br><br> It Is Now Player's 2 Turn!`;
     }
-    if (input == 1) {
-      console.log(`Input is = 1`);
-      var PlayerScore = Number(String(PlayerRolls[0]) + String(PlayerRolls[1]));
-      return `Your Chosen Value is ${PlayerScore} .`;
+    if (currentPlayer == 2) {
+      console.log(
+        `Control Flow : end of Player's 2 Turn , Next Submit Click Will Calculate Score`
+      );
+      gamestate = GAME_STATE_COMPARE_SCORE;
+      return outputMessage + `<br><br> Press Submit to calculate scores`;
     }
-    if (input == 2) {
-      console.log(`input is = 2`);
-      var PlayerScore = Number(String(PlayerRolls[1]) + String(PlayerRolls[0]));
-      return `Your Chosen Value is ${PlayerScore} .`;
+    if (gamestate == GAME_STATE_COMPARE_SCORE) {
+      if
     }
   }
 };
