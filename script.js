@@ -13,6 +13,11 @@ var gamestate = GAME_STATE_DICE_ROLL;
 var GAME_STATE_COMPARE_SCORE = `GAME_STATE_COMPARE_SCORE`;
 var PlayerRolls = [];
 var allPlayerRolls = [];
+var resetgame = function () {
+  currentPlayer = 1;
+  gamestate = GAME_STATE_DICE_ROLL;
+  allPlayerRolls = [];
+};
 
 var rollDice = function () {
   console.log(`Randoming Dice`);
@@ -44,13 +49,12 @@ var getPlayerScore = function (PlayerInput) {
   if (PlayerInput == 2) {
     console.log(`input is = 2`);
     var PlayerScore = Number(String(PlayerRolls[1]) + String(PlayerRolls[0]));
-  
   }
   // Player Score Stored
   allPlayerRolls.push(PlayerScore);
   // Reset Player Scores
   PlayerRolls = [];
- return `Your Chosen Value is ${PlayerScore} .`;
+  return `Your Chosen Value is ${PlayerScore} .`;
 };
 var main = function (input) {
   console.log(`CurrentPlayer on submit click`, currentPlayer);
@@ -79,8 +83,23 @@ var main = function (input) {
       gamestate = GAME_STATE_COMPARE_SCORE;
       return outputMessage + `<br><br> Press Submit to calculate scores`;
     }
-    if (gamestate == GAME_STATE_COMPARE_SCORE) {
-      if
+  }
+  if (gamestate == GAME_STATE_COMPARE_SCORE) {
+    console.log(`Control Flow : GAME_STATE_COMPARE_SCORE`);
+    outputMessage = ` Player 1 Score: ${allPlayerRolls[0]} <br><br> Player 2 Score: ${allPlayerRolls[1]}`;
+    if (allPlayerRolls[0] > allPlayerRolls[1]) {
+      outputMessage = outputMessage + `<br><br>Player 1 Wins! `;
     }
+    if (allPlayerRolls[0] < allPlayerRolls[1]) {
+      outputMessage = outputMessage + `<br><br>Player 2 Wins! `;
+    }
+    if (allPlayerRolls[0] == allPlayerRolls[1]) {
+      outputMessage = outputMessage + `<br><br>Its a Tie !`;
+    }
+    resetgame();
+    console.log(`Current Player After Reset`, currentPlayer);
+    console.log(`Current Game State After Reset`, gamestate);
+    console.log(`All Players Roll Reset`, allPlayerRolls);
+    return outputMessage;
   }
 };
